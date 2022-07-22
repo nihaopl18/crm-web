@@ -1,0 +1,10 @@
+.tag {
+    font-size: 12px;
+}
+.isSelect {
+    background: #E30A2A;
+    display: inline-block;
+    min-width: 20px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}

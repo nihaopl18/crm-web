@@ -1,0 +1,55 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2020-7-2 17:12:54.
+  @updated by
+  @description 考核方案测算
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="考核方案ID" ctype="input" name="schemeId"></yu-xform-item>
+      <yu-xform-item placeholder="考核方案名称" ctype="input" name="schemeName"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-search" @click="previewFn">方案测算</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+    <yu-xtable-column label="考核方案ID" prop="schemeId"></yu-xtable-column>
+    <yu-xtable-column label="考核方案名称" prop="schemeName"></yu-xtable-column>
+    <yu-xtable-column label="机构名称" prop="orgName"></yu-xtable-column>
+    <yu-xtable-column label="考核对象类型" prop="evlObjType" data-code="OBJ"></yu-xtable-column>
+    <yu-xtable-column label="状态" prop="statFlag" data-code="STAT_FLAG"></yu-xtable-column>
+    <yu-xtable-column label="创建人" prop="creatorName"></yu-xtable-column>
+    <yu-xtable-column label="创建时间" prop="createDate"></yu-xtable-column>
+    <yu-xtable-column label="修改人" prop="updaterName"></yu-xtable-column>
+    <yu-xtable-column label="修改时间" prop="updateDate"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 方案测算 -->
+  <yu-xdialog title="考核方案测算" :visible.sync="previewFormDialogVisible" width="40%">
+    <yu-xform ref="previewRefForm" label-width="130px" v-model="previewFormData">
+      <yu-xform-group column="1">
+        <yu-xform-item label="考核方案名称" ctype="input" name="schemeName" :disabled="true"></yu-xform-item>
+        <yu-xform-item label="数据日期" ctype="datepicker" name="etlDate" format="yyyy-MM-dd" 
+          :editable="false" :required="true"></yu-xform-item>
+        <!-- 考核对象放大镜 -->
+        <yu-xform-item label="考核对象" ctype="yufp-schemeobj-selector" :params="previewSchemeObjParams" 
+          @select-fn="previewSchemeObjSel" name="evlObjId" 
+          v-show="previewFormEvlObjShow" :required="previewFormEvlObjShow"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button type="primary" @click="showPreviewFn">测算</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yu-xdialog :title="previewDialogTitle" :visible.sync="previewDialogVisible" width="98%" top="2%">
+    <div class="yu-toolBar">
+      <yu-button-group>
+        <yu-button icon="yx-download" @click="exportExcelFn">导出excel</yu-button>
+      </yu-button-group>
+    </div>
+    <yufp-scheme-excel ref="previewSchemeExcel" :scheme-id="schemeId" :template-type="templateType" :evl-obj-type="evlObjType" :params="schemeExcelParams"
+      v-if="previewDialogVisible"></yufp-scheme-excel>
+  </yu-xdialog>
+</div>

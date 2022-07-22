@@ -1,0 +1,247 @@
+<!--
+  @created by luoshun 2019-1-4
+  @updated by 
+  @description 积分账户管理
+-->
+<div>
+    <yu-row>
+        <yu-col :span="6">
+            <!-- 机构分组树按钮 -->
+            <div style="margin-top: 10px">
+                <yu-xform ref="refFormDemo" label-width="120px" :hidden-rule="true" v-model="orgModel" form-type="edit">
+                    <yu-xform-item placeholder="归属机构" name="orgName" ctype="yufp-org-tree" @select-fn="selectFn"></yu-xform-item>
+                </yu-xform>
+            </div>
+            <!-- 目录树 -->
+            <yufp-ext-tree ref="mytree" :height="height - 310" @node-click="nodeClickFn" data-url="/api/loyacequcatalog/list" data-id="catalogId" data-label="catalogName" node-key="catalogId" data-pid="supCatalogId" :data-async="async" :data-params="catalogParam"
+                data-root="0" style="margin:10px 10px 0 0;">
+            </yufp-ext-tree>
+            <div class="yu-toolBar">
+                <yu-button-group>
+                    <yu-button icon="plus" @click="addGroupFn">新增</yu-button>
+                    <yu-button icon="delete" @click="deletGroupFn">删除</yu-button>
+                    <yu-button icon="edit" @click="modifyGroupFn">修改</yu-button>
+                </yu-button-group>
+            </div>
+            <yu-xform ref="catalogRefForm" label-width="85px" v-model="catalogFormdata" :disabled="catalogInfoDisabled">
+                <yu-xform-group>
+                    <yu-xform-item label="目录名称" :colspan="22" ctype="input" name="catalogName" rules="required"></yu-xform-item>
+                    <yu-xform-item label="目录顺序" :colspan="22" ctype="input" name="catalogOrder" rules="required"></yu-xform-item>
+                    <yu-xform-item label="上级目录" :colspan="22" ctype="input" name="supCatalogName" :disabled="true" rules="required"></yu-xform-item>
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                    <yu-button icon="check" type="primary" @click="catalogSaveFn" v-show="addSaveBtnShow">保存</yu-button>
+                    <yu-button icon="check" type="primary" @click="updCatalogSaveFn" v-show="updSaveBtnShow">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-col>
+        <yu-col :span="18">
+            <!-- 查询表单 -->
+            <yu-xform related-table-name="refTable" form-type="search">
+                <yu-xform-group :column="4">
+                    <yu-xform-item placeholder="账户编号" name="accountId" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="账户类型" name="acctType" ctype="select" data-code="ACCT_TYPE_ID"></yu-xform-item>
+                    <yu-xform-item placeholder="账户名称" name="accountName" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="账户状态" name="acctStat" ctype="select" data-code="ACCT_STAT"></yu-xform-item>
+                    <yu-xform-item placeholder="审批状态" name="apprStat" ctype="select" data-code="WF_APP_STATUS"></yu-xform-item>
+                    <yu-xform-item placeholder="所属金融机构" name="financeOrgCode" ctype="select" :value="defultInstu" :options="financeOrgOptions" @change="changeInstuToOrg"></yu-xform-item>
+                    <yu-xform-item placeholder="所属机构机构" name="orgCode" ctype="yufp-instuorg-tree" :params="instuParams"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+            <!-- 工具按钮 -->
+            <div class="yu-toolBar">
+                <yu-button-group>
+                    <yu-button icon="plus" @click="addFn">新增</yu-button>
+                    <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+                    <yu-button icon="document" @click="infoFn">详情</yu-button>
+                    <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+                    <yu-button @click="uploadFn">上架</yu-button>
+                    <yu-button @click="downFn">下架</yu-button>
+                    <yu-button @click="commitFn">提交</yu-button>
+                    <yu-button @click="exRateFn">汇率</yu-button>
+                    <!-- <yu-button icon="minus" @click="commitFn">上架</yu-button>
+        <yu-button icon="minus" @click="commitFn">下架</yu-button>
+        <yu-button icon="minus" @click="commitFn">提交</yu-button> -->
+                </yu-button-group>
+            </div>
+            <!-- 查询显示表格 -->
+            <yu-xtable ref="refTable" row-number :data-url="dataUrl" :default-load="false" selection-type="checkbox" :base-params="baseParam">
+                <yu-xtable-column label="账户编号" prop="accountNo" width="200" sortable>
+                </yu-xtable-column>
+                <yu-xtable-column label="账户名称" prop="accountName" width="200" sortable>
+                </yu-xtable-column>
+                <yu-xtable-column label="账户类型" prop="acctTypeId" width="110" data-code="ACCT_TYPE_ID">
+                </yu-xtable-column>
+                <yu-xtable-column label="汇率" prop="exchRate" width="110">
+                </yu-xtable-column>
+                <yu-xtable-column label="账户状态" prop="acctStat" width="110" data-code="ACCT_STAT">
+                </yu-xtable-column>
+                <yu-xtable-column label="审批状态" prop="apprStat" width="110" data-code="WF_APP_STATUS">
+                </yu-xtable-column>
+                <yu-xtable-column label="所属金融机构" prop="instuName" width="110">
+                </yu-xtable-column>
+                <yu-xtable-column label="所属机构机构" prop="orgName" width="110">
+                </yu-xtable-column>
+                <yu-xtable-column label="描述" prop="remark" width="110">
+                </yu-xtable-column>
+                <yu-xtable-column label="创建人" prop="createUserName" width="110">
+                </yu-xtable-column>
+                <yu-xtable-column label="创建日期" prop="createDate" width="150" :formatter="dateFormatter">
+                </yu-xtable-column>
+                <yu-xtable-column label="创建机构" prop="createOrgName" width="110">
+                </yu-xtable-column>
+                <yu-xtable-column label="最近修改人" prop="updateUserName" width="110">
+                </yu-xtable-column>
+                <yu-xtable-column label="最近修改时间" prop="updateDate" width="150" :formatter="dateFormatter">
+                </yu-xtable-column>
+                <yu-xtable-column label="最近修改机构" prop="updateOrgName" width="110">
+                </yu-xtable-column>
+            </yu-xtable>
+            <!-- 新增弹窗 -->
+            <yu-xdialog title="新增" :visible.sync="dialogVisible" width="800px">
+                <yu-xform ref="refForm" label-width="120px" v-model="formdata">
+                    <yu-xform-group>
+                        <yu-xform-item label="所属分类" ctype="yufp-equcata-tree" name="subType" @select-fn="addSubTypeFn" rules="required" :params="catalogParam1"></yu-xform-item>
+                        <yu-xform-item label="账户名称" ctype="input" name="accountName" :rules="rules.accountName"></yu-xform-item>
+                        <yu-xform-item label="账户类型" ctype="select" name="acctType" data-code="ACCT_TYPE_ID" @change="subTypeChange" rules="required"></yu-xform-item>
+                        <yu-xform-item label="汇率" ctype="input" name="exchRate" :disabled="exchRateDisabled"></yu-xform-item>
+                        <yu-xform-item label="账户状态" ctype="select" name="acctStat" data-code="ACCT_STAT" :disabled="true" rules="required"></yu-xform-item>
+                        <yu-xform-item label="所属金融机构" ctype="select" :options="financeOrgOptions" :disabled="disableInstu" name="financeOrgCode" rules="required" @change="changeInstuToOrg"></yu-xform-item>
+                        <!-- <yu-xform-item label="所属机构" ctype="yufp-org-tree" name="orgCode" rules="required"></yu-xform-item> -->
+                        <yu-xform-item label="所属机构" ctype="yufp-instuorg-tree" name="orgCode" :params="instuParams" rules="required"></yu-xform-item>
+                        <yu-xform-item label="描述" colspan="24" ctype="textarea" name="remark" placeholder="1024个字符以内" :rules="rules.remark"></yu-xform-item>
+                    </yu-xform-group>
+                    <div class="yu-grpButton">
+                        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+                        <yu-button icon="yx-undo2" type="primary" @click="dialogVisible = false">取消</yu-button>
+                    </div>
+                </yu-xform>
+            </yu-xdialog>
+            <!-- 修改，详情弹窗 -->
+            <yu-xdialog :title="viewTitle" :visible.sync="updDialogVisible" width="800px">
+                <yu-xform ref="updRefForm" label-width="120px" v-model="updformdata" :disabled="updInfoDisabled">
+                    <yu-xform-group>
+                        <yu-xform-item label="所属分类" ctype="yufp-equcata-tree" name="subType" @select-fn="addSubTypeFn" rules="required"></yu-xform-item>
+                        <yu-xform-item label="账户名称" ctype="input" name="accountName" :rules="rules.accountName"></yu-xform-item>
+                        <yu-xform-item label="账户类型" ctype="select" name="acctTypeId" data-code="ACCT_TYPE_ID" :disabled="true" rules="required"></yu-xform-item>
+                        <yu-xform-item label="汇率" ctype="input" name="exchRate" :disabled="updformdata.acctTypeId != '1'"></yu-xform-item>
+                        <yu-xform-item label="账户状态" ctype="select" name="acctStat" data-code="ACCT_STAT" :disabled="true" rules="required"></yu-xform-item>
+                        <yu-xform-item label="所属金融机构" ctype="select" :options="financeOrgOptions" :disabled="disableInstu" name="financeOrgCode" rules="required" @change="changeInstuToOrg"></yu-xform-item>
+                        <yu-xform-item label="所属机构" ctype="yufp-instuorg-tree" name="orgCode" rules="required" :params="instuParams"></yu-xform-item>
+                        <yu-xform-item label="描述" colspan="24" ctype="textarea" name="remark" placeholder="1024个字符以内" :rules="rules.remark"></yu-xform-item>
+                    </yu-xform-group>
+                    <div class="yu-grpButton">
+                        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="updteFn" :disabled="updInfoDisabled">保存</yu-button>
+                        <yu-button icon="yx-undo2" type="primary" @click="updDialogVisible = false">取消</yu-button>
+                    </div>
+                </yu-xform>
+            </yu-xdialog>
+            <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" :common-params="wfCommonParams" />
+        </yu-col>
+    </yu-row>
+    <!-- 新增目录树弹窗 -->
+    <!-- <yu-xdialog title="新增目录" :visible.sync="catalogVisible" width="800px">
+      <yu-xform ref="catalogRefForm" label-width="120px" v-model="catalogFormdata">
+        <yu-xform-group>
+          <yu-xform-item label="目录名称" ctype="input" name="catalogName" ></yu-xform-item>
+          <yu-xform-item label="目录顺序" ctype="input" name="catalogOrder" ></yu-xform-item>
+          <yu-xform-item label="上级目录" ctype="input" name="supCatalogName" :disabled="true"></yu-xform-item>
+        </yu-xform-group>
+        <div class="yu-grpButton">
+          <yu-button icon="check" type="primary" @click="catalogSaveFn">保存</yu-button>
+          <yu-button icon="yx-undo2" type="primary" @click="catalogVisible = false">取消</yu-button>
+        </div>
+      </yu-xform>
+    </yu-xdialog> -->
+    <!-- 修改目录树弹窗 -->
+    <!-- <yu-xdialog title="修改目录" :visible.sync="updCatalogVisible" width="800px">
+      <yu-xform ref="updCatalogRefForm" label-width="120px" v-model="updCatalogFormdata">
+        <yu-xform-group>
+          <yu-xform-item label="目录名称" ctype="input" name="catalogName" ></yu-xform-item>
+          <yu-xform-item label="目录顺序" ctype="input" name="catalogOrder" ></yu-xform-item>
+          <yu-xform-item label="上级目录" ctype="input" name="supCatalogName" :disabled="true"></yu-xform-item>
+        </yu-xform-group>
+        <div class="yu-grpButton">
+          <yu-button icon="check" type="primary" @click="updCatalogSaveFn">保存</yu-button>
+          <yu-button icon="yx-undo2" type="primary" @click="updCatalogVisible = false">取消</yu-button>
+        </div>
+      </yu-xform>
+    </yu-xdialog> -->
+    <!-- 汇率 -->
+    <yu-xdialog title="联盟汇率" :visible.sync="exRateVisible" width="1200px" height="500px">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addRateFn">新增</yu-button>
+                <yu-button icon="edit" @click="updRateFn">修改</yu-button>
+                <yu-button icon="document" @click="infoRateFn">详情</yu-button>
+                <yu-button icon="yx-bin" @click="delRateFn">删除</yu-button>
+            </yu-button-group>
+        </div>
+        <!-- 查询显示表格 -->
+        <yu-xtable ref="rateRefTable" row-number :data="exRateData" selection-type="checkbox">
+            <yu-xtable-column label="生效标识" prop="effectiveId" width="80" data-code="EFFECT_IDENT">
+            </yu-xtable-column>
+            <yu-xtable-column label="联盟标识" prop="leaId" width="80">
+            </yu-xtable-column>
+            <yu-xtable-column label="联盟名称" prop="leaName" width="180">
+            </yu-xtable-column>
+            <yu-xtable-column label="兑入开关" prop="switchIn" data-code="ON_OFF">
+            </yu-xtable-column>
+            <yu-xtable-column label="兑入汇率" prop="exRateIn">
+            </yu-xtable-column>
+            <yu-xtable-column label="兑出开关" prop="switchOut" data-code="ON_OFF">
+            </yu-xtable-column>
+            <yu-xtable-column label="兑出汇率" prop="exRateOut">
+            </yu-xtable-column>
+            <!-- <yu-xtable-column label="创建人" prop="createUserName" >
+            </yu-xtable-column>
+            <yu-xtable-column label="创建日期" prop="createDate" width="150" :formatter="dateFormatter">
+            </yu-xtable-column> -->
+            <!-- <yu-xtable-column label="创建机构" prop="createOrgName" width="110">
+            </yu-xtable-column> -->
+            <yu-xtable-column label="最近修改人" prop="updateUserName">
+            </yu-xtable-column>
+            <yu-xtable-column label="最近修改时间" prop="updateDate" :formatter="dateFormatter">
+            </yu-xtable-column>
+            <!-- <yu-xtable-column label="最近修改机构" prop="updateOrgName" width="110">
+            </yu-xtable-column> -->
+        </yu-xtable>
+    </yu-xdialog>
+    <!-- 新增汇率弹窗 -->
+    <yu-xdialog title="新增汇率" :visible.sync="addRateVisible" width="800px">
+        <yu-xform ref="addRateRefForm" label-width="120px" v-model="addRateformdata">
+            <yu-xform-group>
+                <yu-xform-item label="账户名称" ctype="input" name="accountName" :disabled="true"></yu-xform-item>
+                <yu-xform-item label="联盟标识" ctype="input" name="leaId" :rules="rules.leaId"></yu-xform-item>
+                <yu-xform-item label="联盟名称" ctype="input" name="leaName" :rules="rules.leaName"></yu-xform-item>
+                <yu-xform-item label="生效标识" ctype="select" name="effectiveId" data-code="EFFECT_IDENT" rules="required"></yu-xform-item>
+                <yu-xform-item label="兑入开关" ctype="select" name="switchIn" data-code="ON_OFF"></yu-xform-item>
+                <yu-xform-item label="兑出开关" ctype="select" name="switchOut" data-code="ON_OFF"></yu-xform-item>
+                <yu-xform-item label="兑入汇率" ctype="input" name="exRateIn" :rules="rules.exRateIn"></yu-xform-item>
+                <yu-xform-item label="兑出汇率" ctype="input" name="exRateOut" :rules="rules.exRateOut"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveAddRateFn">保存</yu-button>
+                <yu-button icon="yx-undo2" type="primary" @click="addRateVisible = false">取消</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+    <!-- 修改汇率弹窗 -->
+    <yu-xdialog :title="rateTitle" :visible.sync="updRateVisible" width="800px">
+        <yu-xform ref="updRateRefForm" label-width="120px" v-model="updRateformdata" :disabled="updRateDisabled">
+            <yu-xform-group>
+                <yu-xform-item label="联盟标识" ctype="input" name="leaId" :rules="rules.leaId"></yu-xform-item>
+                <yu-xform-item label="联盟名称" ctype="input" name="leaName" :rules="rules.leaName"></yu-xform-item>
+                <yu-xform-item label="生效标识" ctype="select" name="effectiveId" data-code="EFFECT_IDENT" rules="required"></yu-xform-item>
+                <yu-xform-item label="兑入开关" ctype="select" name="switchIn" data-code="ON_OFF"></yu-xform-item>
+                <yu-xform-item label="兑出开关" ctype="select" name="switchOut" data-code="ON_OFF"></yu-xform-item>
+                <yu-xform-item label="兑入汇率" ctype="input" name="exRateIn" :rules="rules.exRateIn"></yu-xform-item>
+                <yu-xform-item label="兑出汇率" ctype="input" name="exRateOut" :rules="rules.exRateOut"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveUpdRateFn" :disabled="updRateDisabled">保存</yu-button>
+                <yu-button icon="yx-undo2" type="primary" @click="updRateVisible = false">取消</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+</div>

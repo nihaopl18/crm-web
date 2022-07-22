@@ -1,0 +1,121 @@
+<!--
+  @created by chenlin on 2019-3-12 17:57:21
+  @updated by
+  @description 集卡组件
+-->
+<div class='yu-page pc' style="width: 100%;">
+  <yu-collapse :accordion="false" v-model="collapseName0">
+    <yu-collapse-item title="输入" name="1">
+    </yu-collapse-item>
+    <yu-collapse-item title="操作" name="2">
+      <yu-xform v-model="formData" :inline="false" label-position="right" label-width="120px" :show-message="true" :disabled="false"
+        :groupColumn="2" ref="cardform">
+        <yu-xform-group :column="2">
+          <yu-xform-item ctype="input" name="avtivityTitle" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1"
+            placeholder="不超过50个字" :rows="1" :readonly="false" label="活动标题" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="select" name="displayType" placeholder="请选择" :multiple="false" :disabled="false" :multiple-limit="0"
+            :filterable="false" label="素材类型" data-code="DISPLAY_TYPE" rules="required"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="活动头图" colspan="24" name="activityStartPic" v-if="formData.displayType=='1' || formData.displayType=='2'">
+            <yu-upload class="avatar-uploader" :action="uploadAction" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </yu-upload>
+          </yu-xform-item>
+          <yu-xform-item ctype="select" name="activityStartPic" :options="displayList" type="textarea" :maxlength="2000" :minlength="0"
+            :max="0" :min="0" :step="1" :rows="3" :readonly="false" label="文章" colspan="24" v-if="formData.displayType=='3'"></yu-xform-item>
+          <yu-xform-item ctype="datepicker" name="startTime" type="datetime" :readonly="false" :disabled="false" :editable="true" :clearable="true"
+            placeholder="选择时间" align="left" label="活动开始" :picker-options="startTime"></yu-xform-item>
+          <yu-xform-item ctype="datepicker" name="endTime" type="datetime" :readonly="false" :disabled="false" :editable="true" :clearable="true"
+            placeholder="选择时间" align="left" label="活动结束" :picker-options="endTime"></yu-xform-item>
+          <yu-xform-item ctype="select" label="支持金融机构" name="activityInstu" :options="instuOptions">
+          </yu-xform-item>
+          <yu-xform-item ctype="yufp-org-tree" label="支持机构" name="activityOrg">
+          </yu-xform-item>
+          <yu-xform-item ctype="switch" name="ifIdentOrg" on-color="green" off-color="blue" on-text="ON" off-text="OFF" :width="55"
+            :disabled="false" on-value="false" off-value="true" :allow-focus="false" label="同机构活动" :params="paramsOrg"></yu-xform-item>
+          <yu-xform-item ctype="input" name="routeUrl" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="不超过200个字"
+            :rows="1" :readonly="false" label="路由地址" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="报名必填" colspan="24" name="mastItems" rules="required">
+            <yu-tag :label="item.label" type="primary" v-for="item in mustItems" :key="item.key" :closable="false" :hit="false" :close-transition="false">{{item.label}}</yu-tag>
+            <yu-button draggable="true" label="添加" icon="yx-plus" size="small" :disabled="false" :loading="false" native-type="undefined"
+              @click="custInfoAddFn">
+              添加
+            </yu-button>
+          </yu-xform-item>
+          <yu-xform-item ctype="radio" name="prodType" placeholder="请选择商品类型" :rows="1" :readonly="false" label="商品类型" colspan="24"
+            data-code="RELATE_PROD_TYPE"></yu-xform-item>
+          <yu-xform-item ctype="yufp-prod-selector" name="prodInfo" v-if="formData.prodType=='prod'" placeholder="请选择金融产品" :rows="1"
+            :readonly="false" label="金融产品" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="yufp-goods-selector" name="prodInfo" v-if="formData.prodType=='goods'" placeholder="请选择实物商品" :rows="1"
+            :readonly="false" label="实物商品" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="yufp-vituer-selector" name="prodInfo" v-if="formData.prodType=='coupon'" placeholder="请选择虚拟票券" :rows="1"
+            :readonly="false" label="虚拟票券" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="input" name="originPrice" type="number" :maxlength="20" :minlength="0" :max="0" :min="0" :step="1"
+            placeholder="集卡获得礼品的市场价值" :rows="1" :readonly="false" label="原价"></yu-xform-item>
+          <yu-xform-item ctype="input" name="cardPrice" type="number" :maxlength="20" :minlength="0" :max="0" :min="0" :step="1" placeholder="单张卡片价格（留空则不可购买）"
+            :rows="1" :readonly="false" label="卡片价格"></yu-xform-item>
+          <yu-xform-item ctype="input" name="limitNumDay" type="number" :maxlength="20" :minlength="0" :max="0" :min="0" :step="1"
+            :rows="1" :readonly="false" label="每日限抽"></yu-xform-item>
+          <yu-xform-item ctype="input" name="shareReward" type="number" :maxlength="20" :minlength="0" :max="0" :min="0" :step="1"
+            :rows="1" :readonly="false" label="分享奖励"></yu-xform-item>
+          <!-- <yu-xform-item ctype="radio" name="cardType" placeholder="请选择" :multiple="false" :disabled="false" :multiple-limit="0" :filterable="false"
+             label="卡片类型" data-code="CARD_TYPE" colspan="24"></yu-xform-item> -->
+          <yu-xform-item ctype="input" name="cardContent" type="text" :maxlength="12" :minlength="3" :max="0" :min="0" :step="1" placeholder="卡片内容，请输入3-12个字"
+            :rows="1" :readonly="false" label="卡片内容" colspan="24" v-if="formData.cardType=='01'"></yu-xform-item>
+          <yu-xform-item ctype="input" name="cardContent" type="number" :maxlength="10" :minlength="1" :max="0" :min="0" :step="1"
+            placeholder="卡片内容，请输入1-10个字" :rows="1" :readonly="false" label="卡片内容" colspan="24" v-if="formData.cardType=='03'"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="卡片内容" colspan="24" name="cardContent">
+            <yu-upload class="avatar-uploader" :action="uploadAction" :multiple="true" :file-list="cardFileList" list-type="picture-card"
+              :on-success="handleAvatarSuccess2" :on-remove="handleRemove2" :before-upload="beforeAvatarUpload">
+              <!-- <img v-if="imageUrl1" :src="imageUrl1" class="avatar"> -->
+              <i class="el-icon-plus avatar-uploader-icon"></i>
+            </yu-upload>
+          </yu-xform-item>
+          <yu-xform-item ctype="input" name="personNum" type="number" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1"
+            :rows="1" :readonly="false" label="单人份数"></yu-xform-item>
+          <yu-xform-item ctype="input" name="prodNum" rules="required" type="number" :maxlength="2000" :minlength="0" :max="0" :min="0"
+            :step="1" placeholder="请合理设置勿超卖" :rows="1" :readonly="false" label="商品数量"></yu-xform-item>
+          <yu-xform-item ctype="input" name="mark" type="textarea" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="insert text here……"
+            :rows="3" :readonly="false" label="活动介绍" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="活动图片" colspan="24" name="markPic">
+            <yu-upload :action="uploadAction" :multiple="false" :disabled="false" list-type="picture-card" :on-preview="handlePictureCardPreview"
+              :on-success="handleAvatarSuccess1" :before-upload="beforeAvatarUpload" :file-list="fileList" :on-remove="handleRemove"
+              tips="只能上传jpg/png文件，且不超过500kb">
+              <i class="el-icon-plus"></i>
+            </yu-upload>
+          </yu-xform-item>
+          <yu-xform-item ctype="input" name="acitvityRule" type="textarea" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1"
+            :rows="3" :readonly="false" label="活动规则" colspan="24"></yu-xform-item>
+        </yu-xform-group>
+        <div class="button-group">
+          <el-button type="primary" icon="check" @click="saveFn" v-show="ifShowButton">保存</el-button>
+          <el-button type="primary" icon="el-icon-yx-undo2" @click="preview">预览</el-button>
+        </div>
+      </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="输出" name="11">
+    </yu-collapse-item>
+  </yu-collapse>
+  <yu-xdialog :visible.sync="dialogVisible">
+    <img width="100%" :src="dialogImageUrl">
+  </yu-xdialog>
+  <yu-xdialog :visible.sync="dialogVisible1" width="420px" top="5%">
+    <img :src="dialogImageUrl1">
+  </yu-xdialog>
+  <yu-xdialog :visible.sync="fieldsVisible" width="800px">
+    <yu-xform ref="selectFieldForm" label-width="100px" label-suffix="：" v-model="selectFormData">
+      <yu-xform-group>
+        <yu-xform-item label="必输选项" ctype="checkbox" name="mustSelect" data-code="MUST_FIELDS"></yu-xform-item>
+      </yu-xform-group>
+      <div class="button-group">
+        <el-button type="primary" @click="selectFieldFn">确定</el-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>
+<style type="text/css">
+  .el-form-item {
+    padding-right: 10px;
+    margin-bottom: 22px;
+  }
+</style>

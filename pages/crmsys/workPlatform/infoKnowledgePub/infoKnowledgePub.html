@@ -1,0 +1,86 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:37
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2019-1-22 16:03:04.
+  @updated by
+  @description 知识库发布
+-->
+<div>
+    <yu-row>
+        <yu-col :span="5">
+            <yufp-ext-tree ref="mytree" @node-click="nodeClickFn" :show-checkbox="false" :height="height - 20" :data-url="treeUrl" data-id="sectionId" data-label="sectionName" style="margin-top: 10px" data-pid="parentSection" :data-root="treeRootId" :root-visible="true"
+                :render-content="renderContent" :expand-on-click-node="false">
+            </yufp-ext-tree>
+        </yu-col>
+        <yu-col :span="19">
+            <yu-xform ref="queryForm" related-table-name="refTable" form-type="search">
+                <yu-xform-group :column="3">
+                    <yu-xform-item ref="refSectionIdTree" ctype="yufp-org-tree" name="sectionId" :params="treeParams" :disabled="false"></yu-xform-item>
+                    <yu-xform-item placeholder="文档名称" ctype="input" name="messageTitle" clearable></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+            <div class="yu-toolBar" style="padding-left: 20px;">
+                <yu-button-group>
+                    <yu-button icon="plus" @click="addFn" v-if="addButton">新增</yu-button>
+                    <yu-button icon="edit" @click="modifyFn" v-if="updButton">修改</yu-button>
+                    <yu-button icon="document" @click="infoFn" v-if="viewButton">详情</yu-button>
+                    <yu-button icon="yx-bin" @click="deleteFn" v-if="delButton">删除</yu-button>
+                    <!-- <yu-button icon="el-icon-yx-telegram" @click="pubFn">发布</yu-button>
+                    <yu-button icon="el-icon-yx-undo" @click="drawBackFn">撤回</yu-button> -->
+                </yu-button-group>
+            </div>
+            <yu-xtable style="padding:20px 20px;" :border="false" ref="refTable" row-number :data-url="dataUrl" selection-type="radio" @row-dblclick="rowDblClick" :base-params="baseParams">
+                <yu-xtable-column label="所属栏目" prop="sectionName" width="110"></yu-xtable-column>
+                <yu-xtable-column label="文档名称" prop="messageTitle" width="180"></yu-xtable-column>
+                <yu-xtable-column label="文档描述" prop="messageIntroduce" width="270" show-overflow-tooltip="true"></yu-xtable-column>
+                <yu-xtable-column label="发布者" prop="publishUserName" width="100"></yu-xtable-column>
+                <yu-xtable-column label="发布日期" prop="publishDate" sortable></yu-xtable-column>
+                <!-- <yu-xtable-column label="状态" prop="publishType" data-code="IS_DRAFT" width="100"></yu-xtable-column> -->
+
+            </yu-xtable>
+            <yu-dialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="60%">
+                <yu-xform label-width="120px" ref="refForm" v-model="formdata" :disabled="formDisabled">
+                    <yu-xform-group>
+
+                        <yu-xform-item label="所属栏目" ctype="yufp-org-tree" name="sectionId" :params="treeParams" :rules="rule.sectionId"></yu-xform-item>
+                        <yu-xform-item label="文档名称" ctype="input" name="messageTitle" :rules="rule.messageTitle" placeholder="50个字符以内"></yu-xform-item>
+                        <yu-xform-item label="共享范围" ctype="select" name="publicType" data-code="CD0337" :rules="rule.publicType" :hidden="!searchScrope"></yu-xform-item>
+                        <yu-xform-item label="共享范围" ctype="select" name="publicType" data-code="PUBLIC_TYPE" :rules="rule.publicType" :hidden="searchScrope"></yu-xform-item>
+                        <yu-xform-item label="文档描述" ctype="input" name="messageIntroduce" :rules="rule.messageIntroduce" placeholder="100个字符以内" :colspan="24"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+                <el-collapse value="1">
+                    <el-collapse-item title="附件列表" name="1">
+                        <yufp-upload-table ref="fileTable" :data-params="initFilesParams" :data="fileUpLoadBusNo" :multiple="false" :upload-visible="fileBtnVisible" :download-visible="fileBtnxzVisible" :delete-visible="fileBtnVisible" :before-upload="beforeFileUpload" :success-fn="uploadSuccessFn"></yufp-upload-table>
+                    </el-collapse-item>
+                </el-collapse>
+                <div class="yu-grpButton">
+                    <yu-button v-show="cancelBtnShow" icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+                </div>
+            </yu-dialog>
+            <yu-dialog :title="treeDialogTitle" :visible.sync="treeDialogVisible" width="50%">
+                <yu-xform label-width="120px" ref="treeForm" v-model="treeFormData">
+                    <yu-xform-group :column="1">
+                        <yu-xform-item label="所属栏目编号" ctype="input" name="parentSection" :hidden="true"></yu-xform-item>
+                        <yu-xform-item label="所属栏目名称" ctype="input" name="parentSectionName" disabled></yu-xform-item>
+                        <yu-xform-item label="栏目编号" ctype="input" name="sectionId" :hidden="true"></yu-xform-item>
+                        <yu-xform-item label="栏目名称" ctype="input" name="sectionName" :rules="rule.sectionName" placeholder="50个字符以内"></yu-xform-item>
+                        <yu-xform-item label="序号" ctype="input" name="sectionSort" :rules="rule.sectionSort" placeholder="输入数字"></yu-xform-item>
+                    </yu-xform-group>
+                    <div class="yu-grpButton">
+                        <yu-button icon="yx-undo2" type="primary" @click="cancelTreeFn">取消</yu-button>
+                        <yu-button icon="check" type="primary" @click="saveTreeFn">保存</yu-button>
+                    </div>
+                </yu-xform>
+            </yu-dialog>
+            <!-- 工作报告审批流程提交组件-->
+            <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" @endrefresh="refreshfn" :common-params="wfCommonParams">
+            </yufp-wf-init>
+        </yu-col>
+    </yu-row>
+</div>

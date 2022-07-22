@@ -1,0 +1,50 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:37
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 闫天一 yanty1@yusys.com.cn on 2019-1-29 10:11:51.
+  @updated by
+  @description 产品视图-类似产品
+-->
+<div>
+  <yu-row>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button>
+          <yu-button icon="delete" @click="deleteFn" v-if="deleteBtn">删除</yu-button>  
+        </yu-button-group>
+      </div>
+
+      <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+        <yu-xtable-column label="产品编号"  prop="likeProdId" width="250"></yu-xtable-column>
+        <yu-xtable-column label="产品名称" prop="likeProductName" width="200"></yu-xtable-column>
+        <yu-xtable-column label="产品分类" prop="catlName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="是否在售" prop="prodState" width="120" data-code="CD0242"></yu-xtable-column>
+        <yu-xtable-column label="币种" prop="cuyyenType" width="120" data-code="CD0071"></yu-xtable-column>
+        <yu-xtable-column label="产品期限" prop="prodTerm" width="120"></yu-xtable-column>
+        <yu-xtable-column label="产品发布日期" prop="prodStartDate" width="120"></yu-xtable-column>
+        <yu-xtable-column label="产品截止日期" prop="prodEndDate" width="120"></yu-xtable-column>
+        <yu-xtable-column label="风险等级" prop="riskLevel" width="120" data-code="CD0201"></yu-xtable-column>
+        <yu-xtable-column label="管理部门" prop="managerDept" width="120"></yu-xtable-column>
+        <yu-xtable-column label="产品来源" prop="pdSource" width="120"></yu-xtable-column>
+      </yu-xtable>
+
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1050px">
+        <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+          <yu-xform-group :column="2">
+            <yu-xform-item label="产品名称" ref="likeProdId" name="likeProdId" ctype="yufp-prod-selector" rules="likeProdId" :rules="rule.likeProdId"></yu-xform-item>
+          </yu-xform-group>
+          <yu-xform-group :column="1">
+            <yu-xform-item label="说明" name="remark" ctype="textarea" :rules="rule.remark"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+  </yu-row>
+</div>

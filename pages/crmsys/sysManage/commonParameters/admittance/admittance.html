@@ -1,0 +1,42 @@
+<!--
+  @created by  on 2019-1-15 10:42:22
+  @updated by
+  @description admittance
+-->
+<div>
+  <template ref="refbox">
+
+  
+  <h3>零售</h3>
+  <el-checkbox  v-model="checkAll2" @change="handleCheckAllChange2">全选</el-checkbox>
+  <div style="margin:15px 30px;"></div>
+  <el-checkbox-group v-model="checkConditions2" @change="handleChecked2">
+    <el-checkbox label="12">有贷户</el-checkbox>
+    <el-checkbox label="16">AUM上季日均大于等于<el-input v-model="input16" size="small"  style="width:100px;height:5px;" placeholder=""></el-input></el-checkbox>
+    <el-checkbox label="13">上一年存款日均余额大于等于<el-input v-model="input13" size="small"  style="width:100px;height:5px;" placeholder=""></el-input></el-checkbox>
+    <el-checkbox label="15">本年存款日均余额大于等于<el-input v-model="input15" size="small"  style="width:100px;height:5px;" placeholder=""></el-input></el-checkbox>
+    <el-checkbox label="17">企事业单位</el-checkbox>
+    <el-checkbox label="18">客户持有产品数量大于等于<el-input v-model="input18" size="small"  style="width:100px;height:5px;" placeholder=""></el-input></el-checkbox>
+    <el-checkbox label="11">全部</el-checkbox>
+  </el-checkbox-group>
+ 
+
+<div style="margin:100px 0px;">
+  <h3>对公</h3>
+  <el-checkbox  v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+  <div style="margin:15px 30px;"></div>
+  <el-checkbox-group v-model="checkConditions" @change="handleChecked">
+ <!-- <el-checkbox v-for="conditon in conditions" :label="condition" :key="condition">{{conditon}}</el-checkbox> -->
+    <el-checkbox label="22" >有贷户</el-checkbox>
+    <el-checkbox label="23">上一年日均存款大于等于<el-input v-model="input23" size="small"  style="width:100px;height:5px;" placeholder=""></el-input></el-checkbox>
+    <el-checkbox label="24" >存款时点余额大于等于<el-input v-model="input24" size="small"  style="width:100px;height:5px;" placeholder=""></el-input></el-checkbox>
+    <el-checkbox label="25" >本年日均存款余额大于等于<el-input v-model="input25" size="small"  style="width:100px;height:5px;margin-left:5px" placeholder=""></el-input></el-checkbox>
+    <el-checkbox label="21">全部</el-checkbox>
+  </el-checkbox-group>
+</div>
+<div class="yu-grpButton" style="margin:150px 0px;">
+  <el-button type="primary" circle @click='saveFn'>保存</el-button>
+</div>
+
+</template>
+</div>

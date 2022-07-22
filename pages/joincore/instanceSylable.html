@@ -1,0 +1,30 @@
+<div>
+    <el-row><el-col :span="24"><h2>灵活导出</h2></el-col></el-row>
+    <el-form label-width="100px" class="lin-search">
+    <el-row>
+        <el-col :span="11">
+            <el-form-item label="查询条件">
+                <el-input class="text-ellipsis" v-model="wifntableData.columnName" disabled></el-input>
+            </el-form-item> 
+        </el-col>
+        <el-col :span="11">
+            <el-form-item label="显示列">
+                <el-input class="text-ellipsis" v-model="wifntableData.spread" disabled></el-input>
+            </el-form-item> 
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="11">
+            <el-form-item label="创建人">
+                <el-input class="text-ellipsis" v-model="wifntableData.createUser" disabled></el-input>
+            </el-form-item>
+        </el-col>
+        <el-col :span="11">
+            <el-form-item label="创建时间">
+                <el-input class="text-ellipsis" v-model="wifntableData.createDate" disabled></el-input>
+            </el-form-item>
+        </el-col>
+    </el-row>
+    </el-form>
+</div>
+<link rel="stylesheet" href="pages/dy/custGroupManage/groupDetail/groupDetail.css">

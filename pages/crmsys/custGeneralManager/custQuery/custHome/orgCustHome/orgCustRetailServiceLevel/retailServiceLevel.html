@@ -1,0 +1,129 @@
+<!--
+  @created by 张成龙 on 2019-2-20 09:52:26
+  @updated by
+  @description 客户等级手工
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+      <yu-button-group>
+        <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+        <yu-button icon="edit" @click="custTz" v-if="editBtn">评级调整</yu-button>
+      </yu-button-group>
+    </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" :base-params="baseParams">
+    <yu-xtable-column label="审批状态" prop="approveStat" :options="APPROVE_STAT"></yu-xtable-column>
+    <!-- <yu-xtable-column label="客户类型" prop="custType" :hidden="true" data-code="CD0016"></yu-xtable-column>
+    <yu-xtable-column label="客户号" prop="custId" :hidden="true"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" :hidden="true"></yu-xtable-column>
+    <yu-xtable-column label="证件类型" prop="certType" :hidden="true" data-code="CD0011"></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="certNo" :hidden="true"></yu-xtable-column>
+    <yu-xtable-column label="主办机构" prop="belongBrchName" :hidden="true"></yu-xtable-column>
+    <yu-xtable-column label="主办客户经理" prop="belongMgrName" :hidden="true"></yu-xtable-column> -->
+    <yu-xtable-column label="评级日期" prop="handEvaluateDate" ></yu-xtable-column>
+    <yu-xtable-column label="价值等级" prop="valueLev" data-code="CD0243"></yu-xtable-column>
+    <yu-xtable-column label="服务等级" prop="servLev"  data-code="CD0032"></yu-xtable-column>
+    <yu-xtable-column label="剔除风险前服务等级" width="150px" prop="preMinusLevel" data-code="CD0032"></yu-xtable-column>
+    <yu-xtable-column label="风险影响因子内容" width="150px" prop="gradeMinusContent" ></yu-xtable-column>
+    <yu-xtable-column label="评级方式" prop="evaluateType" data-code="CD0421"></yu-xtable-column>
+    <yu-xtable-column label="服务等级有效期" prop="handExpiredDate" ></yu-xtable-column>
+    <!-- <yu-xtable-column label="服务等级生效日期" prop="evaluateDate" :hidden="true" :formatter="formData"></yu-xtable-column> -->
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="800px">
+      <yu-xform ref="refForm" label-width="160px" v-model="formdata" :disabled="formDisabled">
+        <yu-xform ref="refForm0" label-width="160px" v-model="formdata0" :disabled="formDisabled">
+          <yu-xform-group>
+              <yu-xform-item label="客户号" name="custId" ctype="input" :hidden="true" ></yu-xform-item>
+              <yu-xform-item label="客户名称" name="custName" ctype="input" :readonly="true" :disabled="true" :rules="rule[0]"></yu-xform-item>
+              <yu-xform-item label="当前价值等级" name="curSerLevel" ctype="select"  :readonly="true" :disabled="true" data-code="CD0243" :rules="rule[0]" :hidden=viewType=="EDIT"></yu-xform-item>
+              <yu-xform-item label="当前服务等级" name="servLev" ctype="select"  :readonly="true" :disabled="true" data-code="CD0032" ></yu-xform-item>
+              <yu-xform-item label="剔除风险前服务等级" name="preMinusLevel" ctype="select"  :readonly="true" :disabled="true" data-code="CD0032" :hidden=viewType=="EDIT"></yu-xform-item>
+              <yu-xform-item label="申请服务等级" name="appSerLevel" ctype="select" data-code="CD0032" :rules="rule[0]"></yu-xform-item>
+              <yu-xform-item label="评级日期" name="handEvaluateDate" ctype="datepicker" :editable="false" :hidden=viewType=="EDIT"></yu-xform-item>
+              <yu-xform-item label="服务等级评级方式" name="evaluateType" ctype="select" :editable="false" data-code="CD0421" :hidden=viewType=="EDIT"></yu-xform-item>  
+              <yu-xform-item label="评级有效期" name="ratVal" ctype="datepicker" :editable="false"></yu-xform-item>    
+              <yu-xform-item label="风险影响因子内容" name="gradeMinusContent" :colspan="24" ctype="input"  :readonly="true" :disabled="true" :hidden=viewType=="EDIT"></yu-xform-item>
+              <yu-xform-item label="申请理由" ctype="textarea" name="appRea" :rows="2" :colspan="24" placeholder="600个字符以内" :rules="rule[0]"></yu-xform-item>
+            </yu-xform-group>
+            </yu-xform>
+          <el-collapse  v-model="activeNames">
+         <!-- <el-collapse-item name="1" title="评级申请信息">
+        </el-collapse-item> -->
+      <el-collapse-item name="2" title="价值评级指标项">
+        <!--<el-collapse  v-model="activeNames2">
+          <el-collapse-item name ="1" title="近三个月日均|单位：元">
+              <yu-xform ref="refForm1" label-width="200px" v-model="formdata1" :disabled="true">
+              <yu-xform-group>
+              <yu-xform-item label="总资产" name="lastThreeMonDayTotalAss" :readonly="true" :disabled="true" ctype="input"></yu-xform-item>
+              <yu-xform-item label="总负债" name="lastThreeMonDayTotalLia" :readonly="true" :disabled="true"  ctype="input"></yu-xform-item>
+              </yu-xform-group> 
+              </yu-xform>
+         </el-collapse-item>
+          <el-collapse-item name ="2" title="近一年|单位：元">
+              <yu-xform ref="refForm2" label-width="200px" v-model="formdata2" :disabled="true">
+              <yu-xform-group>
+              <yu-xform-item label="中间业务贡献值" name="lateYearMidBusDegree" :readonly="true" :disabled="true" ctype="input"></yu-xform-item>
+              <yu-xform-item label="结算量" name="lateYearSetVol" ctype="input" :readonly="true" :disabled="true" ></yu-xform-item>
+              <yu-xform-item label="刷卡消费金额" name="lateYearCreCardConAmo" :readonly="true" :disabled="true"  ctype="input"></yu-xform-item>
+              </yu-xform-group>
+              </yu-xform>
+          </el-collapse-item>
+        </el-collapse>-->
+         <yu-xform ref="refForm5" label-width="160px" v-model="formdata5">
+            <yu-xform-group :column="2" v-if="!isCon">
+                <yu-xform-item label="月日均AUM" name="aumMAvg_3" :disabled="true"></yu-xform-item>
+                <yu-xform-item label="评级结果" name="gradeLevel1" ctype="select" :disabled="true" data-code="CD0243"></yu-xform-item>
+              </yu-xform-group>
+           <b><div style="font-size:15px" v-if="isCon">评级标准一</div></b>
+           <yu-xform-group :column="2" v-if="isCon">
+             <yu-xform-item label="近三个月日均AUM" name="aumMAvg_3" :disabled="true"></yu-xform-item>
+             <yu-xform-item label="评级结果" name="gradeLevel1" ctype="select" :disabled="true" data-code="CD0243"></yu-xform-item>
+           </yu-xform-group>
+           <b><div style="font-size:15px" v-if="isCon">评级标准二</div></b>
+            <yu-xform-group :column="2"  v-if="isCon">
+                <yu-xform-item label="近三个月日均总负债" name="debtMAvgBal_3" :disabled="true"></yu-xform-item>
+                <yu-xform-item label="近三个月日均AUM" name="aumMAvg_3" :disabled="true"></yu-xform-item>
+                <yu-xform-item label="评级结果" ctype="select" name="gradeLevel2" :disabled="true" data-code="CD0243"></yu-xform-item>
+            </yu-xform-group>
+            <b><div style="font-size:15px" v-if="isCon">评级标准三</div></b>
+            <yu-xform-group :column="2" v-if="isCon">
+                <yu-xform-item label="近1年中间业务贡献值" name="reportMid_12" :disabled="true"></yu-xform-item>
+                <yu-xform-item label="评级结果" name="gradeLevel3" ctype="select" :disabled="true" data-code="CD0243"></yu-xform-item>
+            </yu-xform-group>
+            <b><div style="font-size:15px" v-if="isCon">评级标准四</div></b>
+            <yu-xform-group :column="2" v-if="isCon">
+                <yu-xform-item label="近1年结算量" name="setVol_12" :disabled="true"></yu-xform-item>
+                <yu-xform-item label="评级结果" name="gradeLevel4" ctype="select" :disabled="true" data-code="CD0243"></yu-xform-item>
+            </yu-xform-group>
+            <b><div style="font-size:15px" v-if="isCon">评级标准五</div></b>
+            <yu-xform-group :column="2" v-if="isCon">
+                <yu-xform-item label="近3个月综合贡献度" name="reportSum_3" :disabled="true"></yu-xform-item>
+                <yu-xform-item label="评级结果" name="gradeLevel5" ctype="select" :disabled="true" data-code="CD0243"></yu-xform-item>
+            </yu-xform-group>
+          </yu-xform>
+      </el-collapse-item>
+      <el-collapse-item name="3" title="服务评级指标项">
+        <yu-xform ref="refForm6" label-width="160px" v-model="formdata6">
+          <yu-xform-group :column="2">
+            <yu-xform-item label="近3个月综合贡献度" name="reportSum_3" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="评级结果" name="servLev" ctype="select" :disabled="true" data-code="CD0032"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+      </el-collapse-item>
+      </el-collapse>
+  <div class="yu-grpButton">
+    <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">评级申请</yu-button>
+  </div>
+</yu-xform-item>
+  </yu-xdialog>
+
+    <!-- afterinit——  -->
+<!-- 审批流组件 -->
+<yufp-wf-init ref="approvalRef" :common-params="wfCommonParams" @afterinit="sheacherTable"></yufp-wf-init>
+</div>

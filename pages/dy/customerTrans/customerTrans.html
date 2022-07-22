@@ -1,0 +1,150 @@
+<!--
+  @created by lufl on 2021-9-1 10:21:41
+  @updated by
+  @description 东亚银行客户交易查询
+-->
+<div>
+    <link rel="stylesheet" type="text/css" href="pages/dy/customerTrans/customerTrans.css">
+    <div class="yu-toolBar">
+        <yu-dropdown @command="handleExportCommand">
+            <yu-button>
+                导出<i class="el-icon-arrow-down el-icon--right"></i>
+            </yu-button>
+            <yu-dropdown-menu slot="dropdown">
+                <yu-dropdown-item command="1">PDF报告</yu-dropdown-item>
+                <yu-dropdown-item command="2">EXCEL报告</yu-dropdown-item>
+            </yu-dropdown-menu>
+        </yu-dropdown>
+        <!-- <yu-button-group>
+            <yu-button icon="el-icon-back" @click="returnCustomer">返回</yu-button>
+        </yu-button-group> -->
+    </div>
+    <yu-xform ref="refForm" v-model="formData">
+        <yu-xform-group :column="2">
+            <yu-xform-item label="账户类型" name="acctType" :colspan="5" ctype="select" :options="acctType" @change="setAcctId" rules="required">
+            </yu-xform-item>
+            <yu-xform-item label="账户号" name="acctId" ctype="select" :colspan="6" :options="acctId"></yu-xform-item>
+            <yu-xform-item label="时间范围" name="rangeDate" :colspan="7" start-placeholder="生效日期" end-placeholder="结束日期" value-format="yyyy-MM-dd" ctype="datepicker" type="daterange" @change="chgRangeDate" rules="required"></yu-xform-item>
+            <yu-xform-item label ctype="custom" :colspan="5" name="defaultRangeDate">
+                <yu-row>
+                    <yu-col :span="1">
+                        <span>&nbsp;</span>
+                    </yu-col>
+                    <yu-col :span="4">
+                        <span class="tag" :class="{'isSelect':isAll}" @click="setSelectVal('1')">全部</span>
+                    </yu-col>
+                    <yu-col :span="4">
+                        <span class="tag" :class="{'isSelect':isWeek}" @click="setSelectVal('7')">7天内</span>
+                    </yu-col>
+                    <yu-col :span="4">
+                        <span class="tag" :class="{'isSelect':isMonth}" @click="setSelectVal('30')">30天内</span>
+                    </yu-col>
+                </yu-row>
+            </yu-xform-item>
+        </yu-xform-group>
+        <yu-xform-group :column="1">
+            <yu-xform-item ctype="custom" :colspan="9">
+                <yu-row>
+                    <yu-col :span="1">
+                        <span>&nbsp;</span>
+                    </yu-col>
+                    <yu-col :span="4">
+                        <yu-button type="primary" @click="search">查询</yu-button>
+                    </yu-col>
+                    <yu-col :span="4">
+                        <yu-button type="primary" @click="reset">重置</yu-button>
+                    </yu-col>
+                </yu-row>
+            </yu-xform-item>
+        </yu-xform-group>
+    </yu-xform>
+    <yu-xtable class="export-containerAG" style="background-color: white;" :id="idag" ref="AG" :data="listdataAG" :data-url="dataUrlAG" v-show="acctTypeVal==='0'" :default-load="false">
+        <yu-xtable-column label="交易流水号" prop="transSerialNo" width="110"></yu-xtable-column>
+        <yu-xtable-column label="交易币种" prop="transCcy" width="100" data-code="CD0433"></yu-xtable-column>
+        <yu-xtable-column label="交易金额" prop="transAmt" width="100"></yu-xtable-column>
+        <yu-xtable-column label="交易日期" prop="transDate" width="100" :formatter="fromatDate"></yu-xtable-column>
+        <yu-xtable-column label="交易时间" prop="transTime" width="100" :formatter="fromatTime"></yu-xtable-column>
+        <yu-xtable-column label="交易机构" prop="transOrg" width="100"></yu-xtable-column>
+        <yu-xtable-column label="交易分类" prop="transClass" width="100" data-code="TRANS_CLASS"></yu-xtable-column>
+        <yu-xtable-column label="交易类型" prop="transType" width="100" data-code="TRANS_TYPE"></yu-xtable-column>
+        <yu-xtable-column label="交易渠道代码" prop="transChannel" width="120" data-code="TRANS_CHANNEL"></yu-xtable-column>
+        <yu-xtable-column label="借贷方向" prop="debitOrCredit" width="100" data-code="DEBIT_CREDIT"></yu-xtable-column>
+        <yu-xtable-column label="现金转账标识" prop="cashTransferFlag" width="120" data-code="TRANS_FLAG"></yu-xtable-column>
+        <yu-xtable-column label="跨行标志" prop="interBankFlag" width="100" data-code="INTER_FLAG"></yu-xtable-column>
+        <yu-xtable-column label="交易对手主账号" prop="opponentMainAcctNo" width="130"></yu-xtable-column>
+        <yu-xtable-column label="交易对手子账号" prop="opponentSubAcctNo" width="130"></yu-xtable-column>
+        <yu-xtable-column label="交易柜员" prop="transTeller" width="100"></yu-xtable-column>
+        <yu-xtable-column label="代办人姓名" prop="agentName" width="110"></yu-xtable-column>
+        <yu-xtable-column label="代办人证件类型" prop="agentCertType" width="130" data-code="CD0429"></yu-xtable-column>
+        <yu-xtable-column label="代办人证件号" prop="agentCretNo" width="120"></yu-xtable-column>
+    </yu-xtable>
+    <yu-xtable class="export-containerFA" style="background-color: white;" :id="idfa" ref="FA" :data="listdataFA" :data-url="dataUrlFA" v-show="acctTypeVal==='4'" :default-load="false">
+        <yu-xtable-column label="银行账号" prop="bankAcct" width="100"></yu-xtable-column>
+        <yu-xtable-column label="交易机构" prop="transOrg" width="100"></yu-xtable-column>
+        <yu-xtable-column label="流水号" prop="transSerialNo" width="100"></yu-xtable-column>
+        <yu-xtable-column label="交易日期" prop="transDate" width="100" :formatter="fromatDate"></yu-xtable-column>
+        <yu-xtable-column label="交易时间" prop="transTime" width="100" :formatter="fromatTime"></yu-xtable-column>
+        <!--<yu-xtable-column label="交易名称" prop="transName" width="100"></yu-xtable-column>-->
+        <yu-xtable-column label="理财业务分类" prop="financeBussinessType" width="100" data-code="FINANCE_TYPE">
+        </yu-xtable-column>
+        <yu-xtable-column label="交易状态" prop="transStatus" width="100" data-code="TRANS_STATE"></yu-xtable-column>
+        <yu-xtable-column label="原系统产品代码" prop="srcProdCode" width="130"></yu-xtable-column>
+        <yu-xtable-column label="理财产品名称" prop="prodName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="产品币种" prop="prodCcy" width="100" data-code="CD0433"></yu-xtable-column>
+        <yu-xtable-column label="交易币种" prop="transCcy" width="100" data-code="CD0433"></yu-xtable-column>
+        <yu-xtable-column label="交易金额" prop="transAmt" width="100"></yu-xtable-column>
+        <yu-xtable-column label="交易份额" prop="transShare" width="100"></yu-xtable-column>
+        <yu-xtable-column label="确认日期" prop="confirmDate" width="100"></yu-xtable-column>
+        <yu-xtable-column label="确认金额" prop="confirmAmt" width="100"></yu-xtable-column>
+        <yu-xtable-column label="确认份额" prop="confirmShare" width="100"></yu-xtable-column>
+        <yu-xtable-column label="手续费" prop="feeAmt" width="100"></yu-xtable-column>
+        <yu-xtable-column label="数据状态" prop="dataStatus" width="100" data-code="DATA_STATE"></yu-xtable-column>
+        <yu-xtable-column label="交易渠道" prop="transChannel" width="100" data-code="TRANS_CHANNEL"></yu-xtable-column>
+        <yu-xtable-column label="交易柜员" prop="transTeller" width="100"></yu-xtable-column>
+        <yu-xtable-column label="业务类型" prop="businessType" width="100" data-code="BUSINESS_TYPE"></yu-xtable-column>
+        <yu-xtable-column label="QD产品类别" prop="qdProdClass" width="110" data-code="QD_TYPE"></yu-xtable-column>
+        <yu-xtable-column label="收费类别" prop="feeType" width="100"></yu-xtable-column>
+        <yu-xtable-column label="费用币种" prop="feeCcy" width="100"></yu-xtable-column>
+        <yu-xtable-column label="对方网点号" prop="opponentOrg" width="110"></yu-xtable-column>
+        <yu-xtable-column label="对方理财账号" prop="opponentFinaceAcct" width="120"></yu-xtable-column>
+        <yu-xtable-column label="分红方式" prop="bounsType" width="100"></yu-xtable-column>
+        <yu-xtable-column label="分红比例(%)" prop="bonusRate" width="110"></yu-xtable-column>
+        <yu-xtable-column label="TA确认流水号" prop="taConfirmSerialNo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="跨行标志" prop="interBankFlag" width="100" data-code="INTER_FLAG"></yu-xtable-column>
+    </yu-xtable>
+    <yu-xtable class="export-containerLA" style="background-color: white;" :id="idla" ref="LA" :data="listdataLA" :data-url="dataUrlLA" v-show="acctTypeVal==='1'" :default-load="false">
+        <yu-xtable-column label="数据日期" prop="dataDate" width="100"></yu-xtable-column>
+        <yu-xtable-column label="流水号" prop="transSerialNo" width="100"></yu-xtable-column>
+        <yu-xtable-column label="ECIF客户号" prop="ecifCustNo" width="110"></yu-xtable-column>
+        <yu-xtable-column label="源系统客户号" prop="srcCustNo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="客户类型" prop="custType" width="100"></yu-xtable-column>
+        <yu-xtable-column label="合同号" prop="contractNo" width="100"></yu-xtable-column>
+        <yu-xtable-column label="借据号" prop="loanBillNo" width="100"></yu-xtable-column>
+        <yu-xtable-column label="贷款产品类别代码" prop="prodCode" width="140"></yu-xtable-column>
+        <yu-xtable-column label="产品代码" prop="srcProdCode" width="100"></yu-xtable-column>
+        <yu-xtable-column label="业务币种" prop="businessCcy" width="100" data-code="CD0433"></yu-xtable-column>
+        <yu-xtable-column label="放款金额（原币）" prop="loanAmt" width="130"></yu-xtable-column>
+        <yu-xtable-column label="发放日期" prop="publishDate" width="100" :formatter="fromatDate"></yu-xtable-column>
+        <yu-xtable-column label="本金到期日期" prop="principalExpiryDate" width="120" :formatter="fromatDate"></yu-xtable-column>
+        <yu-xtable-column label="利息到期日期" prop="intExpiryDate" width="120" :formatter="fromatDate"></yu-xtable-column>
+        <yu-xtable-column label="入账机构" prop="entryOrg" width="100"></yu-xtable-column>
+        <yu-xtable-column label="跨行标志" prop="interBankFlag" width="100" data-code="INTER_FLAG"></yu-xtable-column>
+        <yu-xtable-column label="经办机构" prop="dealOrg" width="100"></yu-xtable-column>
+        <yu-xtable-column label="经办人" prop="dealUser" width="100"></yu-xtable-column>
+        <yu-xtable-column label="经办日期" prop="dealDate" width="100" :formatter="fromatDate"></yu-xtable-column>
+        <yu-xtable-column label="登记机构" prop="registerOrg" width="100"></yu-xtable-column>
+        <yu-xtable-column label="登记人" prop="registrant" width="100"></yu-xtable-column>
+        <yu-xtable-column label="放款账户开户行" prop="loanAcctOpenOrg" width="130"></yu-xtable-column>
+        <yu-xtable-column label="放款账户/卡号" prop="loanAcct" width="130"></yu-xtable-column>
+        <yu-xtable-column label="支付系统" prop="paySystem" width="100"></yu-xtable-column>
+        <yu-xtable-column label="在线划款标识" prop="onlineTransferFlag" width="120"></yu-xtable-column>
+        <yu-xtable-column label="收款人地址" prop="payeeAddr" width="110"></yu-xtable-column>
+        <yu-xtable-column label="收款方账户开户行" prop="payeeAcctOpenOrg" width="140"></yu-xtable-column>
+        <yu-xtable-column label="收款方账户币种" prop="payeeAcctCcy" width="130" data-code="CD0433"></yu-xtable-column>
+        <yu-xtable-column label="收款方账户号" prop="payeeAcctNo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="收款方账户标识" prop="payeeAcctFlag" width="130" data-code="ACCT_FLAG"></yu-xtable-column>
+        <yu-xtable-column label="还款账户开户行" prop="repayAcctOpenOrg" width="130"></yu-xtable-column>
+        <yu-xtable-column label="还款账户号" prop="repayAcct" width="110"></yu-xtable-column>
+        <yu-xtable-column label="源系统代码" prop="srcSystemNo" width="110"></yu-xtable-column>
+    </yu-xtable>
+</div>

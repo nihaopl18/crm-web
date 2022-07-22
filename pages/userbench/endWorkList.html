@@ -1,0 +1,5 @@
+<!-- 必须全局拥有唯一的id -->
+<div id="endWorkList">
+    <el-form-q form="query" :field-data="queryFields" search-table="WorkListEndList" :buttons="endListButtons"></el-form-q>
+    <el-table-x ref="WorkListEndList" :border="false" :data-url="urls.dataUrl" :base-params="dataParams" :table-columns="tableColumns" @custom-click="customClick"></el-table-x>
+</div>

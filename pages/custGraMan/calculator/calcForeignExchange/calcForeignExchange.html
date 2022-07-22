@@ -1,0 +1,51 @@
+<!--
+  @created by 张成龙 on 2019-1-25 17:49:28
+  @updated by
+  @description 外汇兑换计算器
+-->
+<div>
+    <yu-row>
+        <yu-col :span="23">
+         <div class="yu-gridRightPanel" >
+  <yu-xform ref="searchFrom" v-model="searchformdata" label-width="160px" :height="grpFormHeight" >
+      <h1 style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;font-size:16px;margin-bottom: 20px;" borderStyle="border:0;">外汇兑换计算器(仅供参考)</h1>
+      <yu-xform-group :column="2">
+          <yu-xform-item label="汇率标志" placeholder="汇率标志" ctype="radio" name="param1" :options="options1" value="1"  :rules="rules.allowBlank"  ></yu-xform-item>                  
+          <yu-xform-item label="买卖标志" placeholder="买卖标志" ctype="radio" name="param2" :options="options2" value="1" @change="setHl" :rules="rules.allowBlank"  ></yu-xform-item>                  
+          <yu-xform-item label="外币币种" placeholder="外币币种" ctype="select" name="param3" data-code="CURR" :rules="rules.allowBlank"  ></yu-xform-item>                  
+          <yu-xform-item label="外币金额" placeholder="外币金额" ctype="num"  name="param4"   value="":rules="rules.all"></yu-xform-item>                            
+          <yu-xform-item :label="name1" :placeholder="name1"  ctype="num" name="param5" :rules="rules.all" v-show="param5"></yu-xform-item>   
+         <!-- <yu-xform-item label="现钞卖出价" placeholder="现钞卖出价"  ctype="num" name="param6" :rules="rules.all" v-show="param6"></yu-xform-item>    -->
+          </yu-xform-group>
+    <div class="yu-grpButton">                                                                                      
+      <yu-button-group>                                                                                                
+        <yu-button icon="check" type="primary" @click="calculate">计算</yu-button>                                                        
+        <yu-button icon="yx-undo2" type="" @click="restSeacher">重置</yu-button>                                                  
+      </yu-button-group>                                                                                               
+    </div>               
+  </yu-xform>
+  </div>
+  </yu-col>
+    <yu-col :span="23">
+      <div class="yu-gridRightPanel" :style="{ 'height': (height - 200) + 'px' }">
+        <h1>计算结果</h1>
+        <yu-xform ref="refForm" label-width="140px" :height="grpFormHeight" v-model="formdata" :disabled="formDisabled">
+          <yu-xform-group :column="2">
+              <yu-xform-item label="人民币金额(元)" ctype="num" name="resultMoney1" :readonly="readFlag"></yu-xform-item> 
+            </yu-xform-group>
+        </yu-xform>
+      </div>
+        <div property="footer"style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;" borderStyle="border:0;">
+            <br/>
+            <p style="font-size: 14px;color: #D83C3B">兑入、直接标价汇率：</p>                          
+            <p style="font-size: 14px;color: #D83C3B">人民币金额(元)=外币金额*汇率;</p>    
+            <p style="font-size: 14px;color: #D83C3B">兑入、简介标价汇率：</p>   
+            <p style="font-size: 14px;color: #D83C3B">人民币金额(元)=外币金额/汇率;</p>          
+            <p style="font-size: 14px;color: #D83C3B">兑出：</p>   
+            <p style="font-size: 14px;color: #D83C3B">人民币金额(元)=外币金额/汇率;</p>                        
+            <br/>
+            <p style="font-size: 14px;color: #D83C3B">本计算器结果仅供参考!</p>
+          </div>
+    </yu-col>
+  </yu-row>
+</div>

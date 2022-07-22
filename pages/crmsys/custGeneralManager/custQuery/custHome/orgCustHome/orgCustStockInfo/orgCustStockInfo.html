@@ -1,0 +1,63 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-2-12 19:30:18.
+  @updated by
+  @description 对公股票信息
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+    <yu-xtable-column label="客户标识" prop="custId" width="150"></yu-xtable-column>
+    <yu-xtable-column label="股票代码" prop="stockNo" width="150"></yu-xtable-column>
+    <yu-xtable-column label="股票名称" prop="stockName" width="150"></yu-xtable-column>
+    <yu-xtable-column label="股票类型" prop="stockType" width="150" data-code="CD0122"></yu-xtable-column>
+    <yu-xtable-column label="股票状态" prop="stockStatus" width="150" data-code="CD0290"></yu-xtable-column>
+    <yu-xtable-column label="最新更新人" prop="userName" width="150"></yu-xtable-column>
+    <yu-xtable-column label="最新更新人机构" prop="orgName" width="200"></yu-xtable-column>
+    <yu-xtable-column label="最新更新日期" prop="lastChgDt" ></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+    <yu-xform ref="refForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="id" name="id" :hidden="true"  ctype="input"></yu-xform-item>
+        <yu-xform-item label="客户标识" name="custId" :hidden="true" :disabled="inputIdDisabled" ctype="input"></yu-xform-item>
+        <yu-xform-item label="股票代码" name="stockNo" :disabled="stockNoDisabled" ctype="input" :rules="rule.stockNo"></yu-xform-item>
+        <yu-xform-item label="股票名称" name="stockName" ctype="input" :rules="rule.stockName"></yu-xform-item>
+        <yu-xform-item label="股票类型" name="stockType" ctype="select" data-code="CD0122" :rules="rule.stockType"></yu-xform-item>
+        <yu-xform-item label="股票状态" name="stockStatus" ctype="select" data-code="CD0290" :rules="rule.stockStatus"></yu-xform-item>
+        <yu-xform-item label="上市日期" name="ipoDate" ctype="datepicker"></yu-xform-item>
+        <yu-xform-item label="上市地点" name="marketPlace" ctype="input" :rules="rule.marketPlace"></yu-xform-item>
+        <yu-xform-item label="上市交易所名称" name="exchangeName" ctype="input" :rules="rule.exchangeName"></yu-xform-item>
+        <yu-xform-item label="首次发行价" name="issuePrice" ctype="input" :rules="rule.issuePrice"></yu-xform-item>
+        <yu-xform-item label="股票当前价" name="currPrice" ctype="input" :rules="rule.currPrice"></yu-xform-item>
+        <yu-xform-item label="股票评估价" name="estPrice" ctype="input" :rules="rule.estPrice"></yu-xform-item>
+        <yu-xform-item label="当前股本总量" name="totalStockNum" ctype="input" :rules="rule.totalStockNum"></yu-xform-item>
+        <yu-xform-item label="当前流通股数" name="flowStockNum" ctype="input" :rules="rule.flowStockNum"></yu-xform-item>
+        <yu-xform-item label="维护人" name="userName" ctype="input" :hidden="hiddened"></yu-xform-item>
+        <yu-xform-item label="维护人机构" name="orgName" ctype="input" :hidden="hiddened"></yu-xform-item>
+        <yu-xform-item label="维护日期" name="lastChgDt" ctype="input" :hidden="hiddened"></yu-xform-item>
+        <yu-xform-item label="备注" name="remark" ctype="textarea" :rows="3" :colspan="24" :rules="rule.remark"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="btnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

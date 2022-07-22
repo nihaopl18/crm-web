@@ -1,0 +1,163 @@
+<!--
+  @created by hujun3 on 2019-4-10 17:57:21
+  @updated by
+  @description 裂变组件
+-->
+<div class='yu-page pc sign-up' style="width: 100%;">
+  <link rel="stylesheet" href="pages/climp_qy/marketingMode/fission/fissionInfo.css">
+  <yu-row>
+    <yu-col ref="previewHtml" :span="8">
+      <div  class="pre-view" v-if="previewVisible">
+        <p class="title">{{ formData.fissionTitle }}</p>
+        <div class="body-content" :style="{'background-image': `url(${fileIdToURL(backgroundImage.url)})`}">
+          <div>
+            <img v-if="headImage.url" :src="fileIdToURL(headImage.url)" class="bannerImg">
+            <img v-else class="bannerImg" src="pages/cimp/marketcenter/marketcomptform/signUp/signBanner.svg" alt="">
+          </div>
+          <div class="input-box">
+            <yu-button type="primary" v-if="formData.fissionMode === '1'">立即分享 </yu-button>
+          </div>
+          <div class="rule-box">
+            <p class="rule-title">活动规则</p>
+            <div>
+              <p class="rule-sub-title">一、报名时间：</p>
+              <p class="content">{{ formData.startTime }} - {{ formData.endTime }}</p>
+              <p class="rule-sub-title">一、活动类容：</p>
+              <p v-html="formData.content"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </yu-col>
+    <yu-col :span="16">
+      <yu-xform v-model="formData" label-width="120px" label-suffix="" :rules="rules" ref="cardform">
+        <yu-xform-item label="裂变方式" ctype="radio" :options="options2" name="fissionMode" ></yu-xform-item>
+        <yu-xform-item label="报名标题" ctype="input" name="fissionTitle" style="width: 400px"></yu-xform-item>
+        <yu-xform-item label="报名时间" ctype="custom" name="startTime">
+          <yu-date-picker style="width: 400px"
+                          v-model="signUpDate"
+                          type="daterange"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"
+                          value-format="yyyy-MM-dd"
+                          @change="handleDateChange">
+          </yu-date-picker>
+          <span>注：报名时间范围应控制不大于活动时间范围</span>
+        </yu-xform-item>
+        <yu-xform-item label="活动海报" ctype="custom" name="imageurl">
+          <div v-if="formData.imageurl">
+            <img :src="fileIdToURL(formData.imageurl)" class="avatar">
+        </div>
+          <i class="el-icon-plus avatar-uploader-icon" @click="addPic()"></i>
+        </yu-xform-item>
+        <yu-xform-item v-for="item in imgTypeOpt" :key="item.id" :label="item.mktSetName" :rules="[{required: true, message: '字段不能为空'}]" ctype="custom" name="imgUrl">
+          <div v-if="imgForm[item.id].imgUrl">
+            <img :src="fileIdToURL(imgForm[item.id].imgUrl)" class="avatar">
+        </div>
+          <i class="el-icon-plus avatar-uploader-icon" @click="addPic(item.id)"></i>
+        </yu-xform-item>
+        <yu-xform-item label="活动内容" ctype="custom" name="content">
+          <el-tinymce-x :id="tinymceId" :visible="true" :toolbar="toolbar" ref="tinymce" v-model="formData.content" :bus-no="busNo"></el-tinymce-x>
+        </yu-xform-item>
+        <yu-xform-item label=" " ctype="custom" name="custom">
+          <yu-button @click="preSeeFn">预览</yu-button>
+        </yu-xform-item>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="plus" @click="addPrizeFn">新增奖励</yu-button>
+          <yu-button icon="edit" @click="updPrizepFn">修改奖励</yu-button> 
+          <yu-button icon="plus" @click="delPrizeFn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable row-number
+                 selection-type="checkbox"
+                 ref="yutable"
+                 :data="prizeTableData"
+                 :pageable="false"
+                 style="width: 100%"
+      >
+        <yu-xtable-column prop="frequency" label="分享次数"> </yu-xtable-column>
+        <yu-xtable-column prop="prizeType" label="奖品类型" :options="prizeTypeOptions"> </yu-xtable-column>
+        <yu-xtable-column prop="prizeName" label="奖品名称" :options="prizeTypeOptionsAll"> </yu-xtable-column>
+        <yu-xtable-column prop="prizeId" label="奖品编号"> </yu-xtable-column>
+      </yu-xtable>
+      <div class="button-group">
+        <el-button type="primary" icon="check" @click="saveFn">保存</el-button>
+      </div>
+      <!-- <yu-collapse :accordion="false" v-model="collapseName0">
+        <yu-collapse-item title="操作" name="2">
+          
+        </yu-collapse-item>
+      </yu-collapse> -->
+    </yu-col>
+  </yu-row>
+  <yu-xdialog :title="dialogTittle" :visible.sync="dialogVisible" width="800px" :before-close="handleDialogClose">
+    <yu-xform ref="addrefForm" label-width="120px" v-model="addformdata">
+      <yu-xform-group>
+        <yu-xform-item label="分享次数" ctype="input" name="frequency" rules="required"></yu-xform-item>
+        <yu-xform-item label="奖品类型" ctype="radio" name="prizeType" :options="prizeTypeOptions" @change="prizeTypeChange" rules="required"></yu-xform-item>
+        <yu-xform-item label="奖品名称" ctype="select" :options="prizeData" @change="prizeChange" filterable name="prizeName" rules="required"></yu-xform-item>
+        <yu-xform-item label="奖品编号" ctype="input" name="prizeId" :disabled="true"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="surePriceFn">确定</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="handleDialogClose">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+    <yu-xdialog title="素材选择" :visible.sync="dialogVisible1" width="960px" :before-close="handleMaterialClose">
+      <material-center ref="material" @send-data="getPicData" :modelKey="imgType" :modelKey1="1"></material-center>
+      <span slot="footer">
+          <yu-button @click="handleMaterialClose">取消</yu-button>
+          <yu-button type="primary" @click="sureFn">确定</yu-button>
+      </span>
+  </yu-xdialog>
+</div>
+<style type="text/css">
+  .el-form-item {
+    padding-right: 10px;
+    margin-bottom: 22px;
+  }
+  .material {
+        width: 220px;
+        height: 280px;
+        margin: 5px;
+    }
+    .material-image{
+        width: 220px;
+        height: 220px;
+        display: block;
+    }
+    .material-span {
+        font-size: 17px;
+        position: absolute;
+        left: 18px;
+        top: 83%;
+    }
+    .el-card {
+        box-sizing: border-box;
+        cursor: pointer
+    }
+    .el-card.is-select {
+        border: 1px solid red
+    }
+    .dialog-footer {
+        padding: 10px;
+        text-align: center
+    }
+    .avatar {
+        width: 100px;
+        height: 100px;
+        display: block;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 100px;
+        line-height: 100px;
+        /* line-height: 178px; */
+        text-align: center;
+        border: 1px dashed #ccc
+    }
+</style>

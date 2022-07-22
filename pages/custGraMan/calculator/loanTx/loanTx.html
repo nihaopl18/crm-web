@@ -1,0 +1,50 @@
+<!--
+  @created by 张成龙 on 2019-1-24 10:33:03
+  @updated by
+  @description 贴现计算器
+-->
+<div>
+    <yu-row>
+        <yu-col :span="23">
+         <div class="yu-gridRightPanel" >
+  <yu-xform ref="searchFrom" v-model="searchformdata" label-width="160px"  >
+      <h1 style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;font-size:16px;margin-bottom: 20px;" borderStyle="border:0;">贴现计算器(仅供参考)</h1>
+    <yu-xform-group :column="2">
+      <yu-xform-item label="票面金额(元)" placeholder="票面金额(元)"  ctype="num" name="pmje"  :rules="rules.all" ></yu-xform-item>                  
+      <yu-xform-item label="贴现时间"placeholder="贴现时间"      ctype="datepicker" name="txsj" :editable="false"  rules="required"></yu-xform-item>                            
+      <yu-xform-item label="票面到期日"placeholder="票面到期日"    ctype="datepicker" name="pmdqr" :editable="false" :rules="rules.allowBlank" ></yu-xform-item>                            
+      <yu-xform-item label="贴现年利率(%)" placeholder="贴现年利率(%)" ctype="num" name="txnlv" :rules="rules.all"></yu-xform-item>                               
+      <yu-xform-item label="调整天数(天)" placeholder="调整天数(天)"  ctype="num" name="tzts" :rules="rules.all"></yu-xform-item>   
+    </yu-xform-group>
+    <div class="yu-grpButton">                                                                                      
+      <yu-button-group>                                                                                                
+        <yu-button icon="check" type="primary" @click="calculate">计算</yu-button>                                                        
+        <yu-button icon="yx-undo2" type="" @click="restSeacher">重置</yu-button>                                                  
+      </yu-button-group>                                                                                               
+    </div>               
+  </yu-xform>
+  </div>
+  </yu-col>
+    <yu-col :span="23">
+      <div class="yu-gridRightPanel" :style="{ 'height': (height - 200) + 'px' }">
+        <h1>计算结果</h1>
+        <yu-xform ref="refForm" label-width="140px" :height="grpFormHeight" v-model="formdata" :disabled="formDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="计息天数" ctype="num" name="resultMoney1" :readonly="readFlag"></yu-xform-item>                                
+            <yu-xform-item label="贴现利息" ctype="num" name="resultMoney2" :readonly="readFlag"></yu-xform-item>                           
+            <yu-xform-item label="贴现金额" ctype="num" name="resultMoney3" :readonly="readFlag"></yu-xform-item>                               
+            <yu-xform-item v-if="false" label="本息合计" ctype="num" name="resultMoney4" :readonly="readFlag"></yu-xform-item>  
+          </yu-xform-group>
+        </yu-xform>
+      </div>
+        <div property="footer"style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;" borderStyle="border:0;">
+            <br/>
+            <p style="font-size: 14px;color: #D83C3B">计息天数=汇票到期日-贴现日期+调整天数;</p>                          
+            <p style="font-size: 14px;color: #D83C3B">贴现利息=票面金额*年利率*计息天数/360;</p>                         
+            <p style="font-size: 14px;color: #D83C3B">贴现金额=票面金额-贴现利息;</p>                  
+            <br/>
+            <p style="font-size: 14px;color: #D83C3B">本计算器结果仅供参考!</p>
+          </div>
+    </yu-col>
+  </yu-row>
+</div>

@@ -1,0 +1,66 @@
+/**
+ * @created by zhangkun6 on 2021-8-27 16:59:38
+ * @updated by
+ * @description 客群分析
+ */
+.cust-group-analysis {
+  background: #f5f5f5
+}
+
+.cust-group-analysis .tab-box {
+  background: #fff;
+}
+
+.cust-group-analysis .export-option {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 54px;
+}
+
+.table-list,
+.cust-chart,
+.condition-box {
+  padding: 24px;
+  border-radius: 2px;
+  /* border: 1px solid #d1dbe5; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: #fff
+}
+
+.table-list i.red {
+  color: #E63C22
+}
+
+.table-list i.green {
+  color: #13BF4F
+}
+
+.table-list .el-date-editor .el-range-separator {
+  line-height: 20px
+}
+
+.cust-chart .title {
+  font-size: 16px;
+  color: #061225;
+  font-weight: bold
+}
+
+.cust-chart .unit {
+  font-size: 12px;
+  color: #909399;
+  line-height: 20px;
+  font-weight: 400;
+  float: right;
+  margin-top: 4px;
+}
+
+.condition-box .warning-text {
+  color: #909399;
+  margin-left: 16px
+}
+
+.condition-box .warning-text i {
+  margin-right: 6px;
+}

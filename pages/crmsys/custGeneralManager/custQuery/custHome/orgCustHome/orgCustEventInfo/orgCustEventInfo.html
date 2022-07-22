@@ -1,0 +1,59 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-2-15 15:38:38.
+  @updated by
+  @description 客户事件
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+      
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+      <yu-xtable-column label="事件名称" prop="eventName" ></yu-xtable-column>
+      <yu-xtable-column label="事件状态" prop="eventStat" data-code="CD0259"></yu-xtable-column>
+      <yu-xtable-column label="事件发生日期" prop="eventDate" ></yu-xtable-column>
+      <yu-xtable-column label="维护人" prop="userName" ></yu-xtable-column>
+      <yu-xtable-column label="维护人机构" prop="orgName" ></yu-xtable-column>
+      <yu-xtable-column label="最后维护日期" prop="maintDate" ></yu-xtable-column>
+
+    
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+          <yu-xform-item label="事件名称" name="eventName" ctype="input" :colspan="24" :rules="rule.eventName"></yu-xform-item>
+          <yu-xform-item label="事件状态" name="eventStat" ctype="select" data-code="CD0259"></yu-xform-item>
+          <yu-xform-item label="事件发生日期" name="eventDate" ctype="datepicker" width="120"></yu-xform-item>
+          <!-- <yu-xform-item label="事件类型" name="eventType" ctype="select" data-code=""></yu-xform-item> -->
+          <!-- <yu-xform-item label="事件影响程度" name="eventAffectDegree" ctype="select" data-code="CD0260" width="120"></yu-xform-item> -->
+          <!-- <yu-xform-item label="事件分类" name="eventSort" ctype="select"></yu-xform-item> -->
+          <yu-xform-item label="事件内容" name="eventDesc" ctype="textarea" :colspan="24" :rules="rule.eventDesc"></yu-xform-item>
+          <yu-xform-item label="提醒内容" name="remindInfo" ctype="textarea" :colspan="24"></yu-xform-item>
+          <yu-xform-item label="是否提醒" name="warnFlg" ctype="select"  data-code="CD0242" @change="changeEvent"></yu-xform-item>
+          <yu-xform-item label="提醒日期" name="remindTime" ctype="datepicker"></yu-xform-item>
+         
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

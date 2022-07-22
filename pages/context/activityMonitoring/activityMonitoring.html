@@ -1,0 +1,29 @@
+<!-- 
+ * @Created by zhanghan zhanghan3@yusys.com.cn on 2018-12-12 15:10:23.
+ * @description 客户经理监控
+-->
+<div>
+  <el-form-q :field-data="queryFields" :buttons="queryButtons"></el-form-q>
+  <div class="yu-toolBar">
+    <!-- <el-button-group>
+      <el-button icon="yx-file-excel" @click="exportFn">导出</el-button>
+    </el-button-group> -->
+  </div>
+  <el-table-x ref="reftable" :row-index="true" :base-params="baseParams"  
+    :data-url="dataUrl" :table-columns="tableColumns" @implementing-detail-click="openIngFn"
+    @success-detail-click="openSuccessFn" @failed-detail-click="openFailedFn"></el-table-x>
+  <!-- 执行中下钻面板 -->
+  <el-dialog-x title="执行中详情" :visible.sync="impIngVisible" width="800px">
+      <el-table-x ref="impIngtable" :row-index="true" :base-params="baseParams"  
+      :data-url="impUrl" :table-columns="impIngColumns" :default-load="false" ></el-table-x>
+  </el-dialog-x>
+   <!-- 执行成功下钻面板 -->
+   <el-dialog-x title="执行成功详情" :visible.sync="successVisible" width="800px">
+      <el-table-x ref="successtable" :row-index="true" :base-params="baseParams"  
+      :data-url="successUrl" :table-columns="successColumns" :default-load="false" ></el-table-x>
+  </el-dialog-x>\<!-- 执行成功下钻面板 -->
+  <el-dialog-x title="执行失败详情" :visible.sync="failedVisible" width="800px">
+     <el-table-x ref="failedtable" :row-index="true" :base-params="baseParams"  
+     :data-url="failedUrl" :table-columns="failColumns" :default-load="false" ></el-table-x>
+ </el-dialog-x>
+</div>

@@ -1,0 +1,90 @@
+<!--
+  @created by 冉珣 on 2021-10-27 16:42:37
+  @updated by
+  @description 指标分配
+-->
+<div class="indicator_allocation">
+    <link rel="stylesheet" type="text/css" href="./pages/dy/performance/indicatorAllocation/indicatorAllocation.css">
+    <yu-row>
+        <yu-col :span="12">
+            <div class="indicator_left">
+                <div class="title">
+                    <div>
+                        <span>选择指标</span>
+                        <yu-date-picker v-model="triumphParams.triumphYear" type="year" value-format="yyyy" placeholder="选择年" @change="handleYearChange">
+                        </yu-date-picker>
+                    </div>
+                    <span>输入数额后可分配该指标</span>
+                </div>
+                <yu-xtable :data="list" :pageable="false" height="600">
+                    <!-- 加标签 -->
+                    <yu-xtable-column prop="triumphName" label="指标">
+                        <template slot-scope="scope">
+                        <span style="font-size: 14px;">{{scope.row.triumphName}}</span>
+                        <span style="color:white;font-size: 10px;background-color:#fa7f7f;border: #fa7f7f;" v-if="scope.row.triumphLine=='1'">理财</span>
+                        <span style="color:white;font-size: 10px;background-color:#4aafe8;border: #4aafe8;" v-if="scope.row.triumphLine=='2'">个贷</span>
+                      </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="amount" label="数额">
+                        <template slot-scope="scope">
+                <div style="display: flex; align-items: center">
+                  <div style="width: 300px">
+                    <p v-if="scope.row.isShow" 
+                       :style="{lineHeight: '36px',color: scope.row.amount ? '#606266' : '#C0C4CC'}"
+                       @click="changeCount(scope.row)" 
+                    >
+                        <span v-if="scope.row.amount && scope.row.unit === '元'">￥</span>
+                        {{scope.row.amount ? scope.row.unit === '元' ? yufp.util.moneyFormatter(scope.row.amount) : yufp.util.moneyFormatter(scope.row.amount).split('.')[0] : '请输入数额'}}
+                      </p>
+                    <yu-input :ref="'countInput-'+scope.row.triumphId" v-else v-model="scope.row.amount" placeholder="请输入数额" @blur="handleLeftCountBlur(scope.row)" :disabled="!canAllocate()"></yu-input>
+                  </div>
+                  <span style="margin-left: 10px;color: #606266;">{{scope.row.unit}}</span>
+                </div>
+              </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column label="操作" width="74px">
+                        <template slot-scope="scope">
+                <yu-link :underline="false" type="danger" v-if="(isNaN(Number(scope.row.amount)) || Number(scope.row.amount))&&canAllocate()" @click="allocate(scope.row)">分配</yu-link>
+                <yu-link :underline="false" type="info" v-else @click="allocate(scope.row)">分配</yu-link>
+              </template>
+                    </yu-xtable-column>
+                </yu-xtable>
+            </div>
+        </yu-col>
+        <yu-col :span="12">
+            <div class="indicator_right">
+                <p class="title">
+                    <span>{{title}} 分配至</span>
+                    <span>默认平均分配目标数额，可点击调整数额</span>
+                </p>
+                <yu-xtable :data="personList" :pageable="false" show-summary height="670px" :summary-method="getSummaries">
+                    <div slot="empty">
+                        <p>暂无数据</p>
+                        <p style="color: #909399;font-size: 12px">请先选择指标、输入数额分配</p>
+                    </div>
+                    <yu-xtable-column prop="targetName" :label="'接收人（'+ personList.length + '）'">
+                        <template slot-scope="scope">
+                <span>{{scope.row.targetName}}/{{scope.row.targetId}}</span>
+              </template>
+                    </yu-xtable-column>
+                    <!-- <yu-xtable-column prop="amount" :label="`目标(${unitName ? unitName : '-'})`"> -->
+
+                    <yu-xtable-column prop="amount" :label="'目标'+ unitName ? unitName : '-'">
+                        <template slot-scope="scope">
+                <div style="display: flex; align-items: center">
+                  <div style="width: 300px">
+                    <p v-if="scope.row.isShow" @click="changeAimCount(scope.row)" :style="{lineHeight: '36px',color: scope.row.amount ? '#606266' : '#C0C4CC'}"><span v-if="scope.row.amount && unitName === '元'">￥</span>{{scope.row.amount ? unitName === '元' ? yufp.util.moneyFormatter(scope.row.amount) : yufp.util.moneyFormatter(scope.row.amount).split('.')[0] : '请输入数额'}}</p>
+                    <yu-input :ref="'aimCountInput'+scope.row.targetId" v-else v-model="scope.row.amount" placeholder="请输入数额" @blur="handleRightCountBlur(scope.row)"></yu-input>
+                  </div>
+                </div>
+              </template>
+                    </yu-xtable-column>
+                </yu-xtable>
+            </div>
+            <div class="confirm_btn">
+                <yu-button @click="cancelFn">取消</yu-button>
+                <yu-button type="primary" @click="saveFn">下发</yu-button>
+            </div>
+        </yu-col>
+    </yu-row>
+</div>

@@ -1,0 +1,14 @@
+<div>
+  <yu-xform ref="refForm" label-width="130px" v-model="formdata" :disabled="true" style="margin-top:20px">
+    <!-- 积分调加和调减 -->
+    <yu-xform-group>
+      <yu-xform-item label="积分价格比率编号" ctype="input" name="priceRatioId"></yu-xform-item>
+      <yu-xform-item label="积分价格比率" ctype="input" name="priceRatio"></yu-xform-item>
+      <yu-xform-item label="审批状态" ctype="select" name="wfApprSts" data-code="WF_APP_STATUS"></yu-xform-item>
+      <yu-xform-item label="创建人" ctype="input" name="createUser"></yu-xform-item>
+      <yu-xform-item label="创建日期" ctype="input" name="createDate"></yu-xform-item>
+      <yu-xform-item label="最近维护人" ctype="input" name="updateUser"></yu-xform-item>
+      <yu-xform-item label="最近维护日期" ctype="input" name="updateDate"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+</div>

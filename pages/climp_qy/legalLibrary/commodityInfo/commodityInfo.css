@@ -1,0 +1,52 @@
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-uploader .el-upload:hover {
+    border-color: #20a0ff;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+}
+
+body .el-table th.gutter {
+    display: table !important;
+}
+
+.el-table,
+.el-table .el-table__tbody {
+    position: relative;
+    background-color: #ffffff;
+}
+
+.el-table__body,
+.el-table__footer,
+.el-table__header {
+    table-layout: fixed;
+    background-color: #eef1f6;
+}
+
+.bgWhite {
+    background-color: #fff;
+}
+
+.el-table--fit td.gutter,
+.el-table--fit th.gutter {
+    background-color: white;
+}

@@ -1,0 +1,15 @@
+<!--
+  @created by helin3 on 2018/07/18.
+  @description 演示查询
+-->
+<div>
+  <el-form-q :field-data="queryFields" :buttons="queryButtons"></el-form-q>
+  <!-- 主页面表格工具栏 -->
+  <div class="yu-toolBar">
+    <el-button-group>
+      <el-button icon="yx-menu-4" @click="close">关闭</el-button>
+    </el-button-group>
+  </div>
+  <el-table-x ref="reftable" :height="height" row-index :table-columns="tableColumns" data-url="/trade/cust/custQueryInfo">
+  </el-table-x>
+</div>

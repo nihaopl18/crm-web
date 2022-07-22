@@ -1,0 +1,73 @@
+<!--
+客户价值服务
+-->
+<div>
+	<el-collapse v-model="activeNames">
+		<el-collapse-item title="输入" name="1">
+			<el-row>
+				<el-col :span="6">
+					<template>
+						<el-table :data="options1" border style="width: 100%" height="120">
+							<el-table-column prop="input" label="输入集合">
+							</el-table-column>
+						</el-table>
+					</template>
+				</el-col>
+				<el-col :span="18">
+					<template>
+						<el-table :data="options2" border style="width: 100%" height="120">
+							<el-table-column prop="sort">
+							</el-table-column>
+							<el-table-column prop="cust">
+							</el-table-column>
+							<el-table-column prop="risk">
+							</el-table-column>
+						</el-table>
+					</template>
+				</el-col>
+			</el-row>
+		</el-collapse-item>
+		<el-collapse-item title="操作" name="2">
+			<template>
+				<el-table :data="options6" border style="width: 100%" height="150">
+					<el-table-column type="selection" width="55">
+					</el-table-column>
+					<el-table-column prop="group" label="分组标签" width="200">
+					</el-table-column>
+					<el-table-column prop="where" label="条件">
+					</el-table-column>
+					<el-table-column label="操作" width="150">
+			      <template slot-scope="scope">
+			        <el-button @click="handleEdit(scope.$index, scope.row)" size="small">编辑</el-button>
+			        <el-button type="danger" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+			      </template>
+			    </el-table-column>
+				</el-table>
+			</template>
+		</el-collapse-item>
+		<el-collapse-item title="输出" name="3">
+			<el-row>
+				<el-col :span="6">
+					<template>
+						<el-table :data="options5" border style="width: 100%" height="120">
+							<el-table-column prop="output" label="输出集合">
+							</el-table-column>
+						</el-table>
+					</template>
+				</el-col>
+				<el-col :span="18">
+					<template>
+						<el-table :data="options4" border style="width: 100%" height="120">
+							<el-table-column prop="field"  width="200">
+							</el-table-column>
+							<el-table-column prop="field1">
+							</el-table-column>
+							<el-table-column prop="field2">
+							</el-table-column>
+						</el-table>
+					</template>
+				</el-col>
+			</el-row>
+		</el-collapse-item>
+	</el-collapse>
+</div>

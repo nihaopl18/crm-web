@@ -1,0 +1,66 @@
+<!-- 
+  @Created by chenlin chenlin2@yusys.com.cn on 2019-2-26 14:22:11.
+  @updated by
+  @description 商品类别管理
+-->
+<div>
+    <yu-row>
+        <yu-col :span="5">
+            <!-- 机构分组树按钮 -->
+            <div style="margin-top: 10px; width: 235px;">
+                <yu-xform ref="refFormDemo" label-width="120px" :hidden-rule="true" v-model="orgModel" form-type="edit">
+                    <yu-xform-item placeholder="请选择金融机构" name="orgName" ctype="select" :options="instuOption" @change="selectFn"></yu-xform-item>
+                </yu-xform>
+            </div>
+            <yufp-ext-tree ref="refTree" :height="height - 20" @node-click="nodeClickFn" :data-url="treeUrl" data-id="categoryCode" data-label="categoryName" data-pid="parentCategoryCode" :data-async="async" data-root="0000" :data-params="catalogParam" style="margin:10px 10px 0 0;">
+            </yufp-ext-tree>
+        </yu-col>
+        <yu-col :span="19">
+            <yu-xform related-table-name="refTable" form-type="search">
+                <yu-xform-group :column="4">
+                    <yu-xform-item placeholder="类目编号" name="categoryCode" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="类目名称" name="categoryName" ctype="input"></yu-xform-item>
+                    <!-- <yu-xform-item placeholder="金融机构编号" name="instuCde" ctype="yufp-org-tree"></yu-xform-item> -->
+                </yu-xform-group>
+            </yu-xform>
+            <div class="yu-toolBar">
+                <yu-button-group>
+                    <yu-button icon="plus" @click="addFn">新增</yu-button>
+                    <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+                    <yu-button icon="document" @click="infoFn">详情</yu-button>
+                    <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+                </yu-button-group>
+            </div>
+            <yu-xtable ref="refTable" row-number :data-url="dataUrl" :base-params="baseParams" highlight-current-row :default-load="defaultLoad">
+                <yu-xtable-column label="类目编号" prop="categoryCode" width="120"></yu-xtable-column>
+                <yu-xtable-column label="类目名称" prop="categoryName" width="120"></yu-xtable-column>
+                <yu-xtable-column label="父类目名称" prop="parentCategoryName" width="120"></yu-xtable-column>
+                <yu-xtable-column label="类目状态" prop="categoryStatus" width="100" data-code="USE_FLAG"></yu-xtable-column>
+                <yu-xtable-column label="层级" prop="categoryLevel" width="80"></yu-xtable-column>
+                <yu-xtable-column label="类目顺序号" prop="categorySeq" width="100"></yu-xtable-column>
+                <yu-xtable-column label="类目类型" prop="categoryType" width="120" data-code="CATEGORY_TYPE"></yu-xtable-column>
+                <yu-xtable-column label="适用金融机构" prop="instuCdeName" width="120"></yu-xtable-column>
+                <yu-xtable-column label="创建人" prop="createUserName" width="120"></yu-xtable-column>
+                <yu-xtable-column label="创建日期" prop="createDate" width="120" :formatter="dateFormatter"></yu-xtable-column>
+            </yu-xtable>
+            <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+                <yu-xform ref="refForm" label-width="130px" v-model="formdata" :disabled="formDisabled">
+                    <yu-xform-group :column="2">
+                        <yu-xform-item label="类目名称" name="categoryName" rules="required" ctype="input"></yu-xform-item>
+                        <!-- <yu-xform-item label="适用金融机构" name="instuCde" rules="required" ctype="yufp-org-tree"></yu-xform-item> -->
+                        <yu-xform-item label="类目顺序" name="categorySeq" rules="required" ctype="num"></yu-xform-item>
+                        <yu-xform-item label="类目状态" name="categoryStatus" rules="required" ctype="radio" :options="optionStatus"></yu-xform-item>
+                        <yu-xform-item :colspan="24" label="类目类型" name="categoryType" rules="required" ctype="radio" data-code="CATEGORY_TYPE"></yu-xform-item>
+                        <yu-xform-item label="上级类目编号" name="parentCategoryCode" rules="required" disabled ctype="input"></yu-xform-item>
+                        <yu-xform-item label="上级类目名称" name="parentCategoryName" rules="required" disabled ctype="input"></yu-xform-item>
+                        <!-- <yu-xform-item label="层级" name="categoryLevel" rules="required" disabled ctype="num"></yu-xform-item> -->
+                    </yu-xform-group>
+                    <div class="yu-grpButton">
+                        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+                        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                    </div>
+                </yu-xform>
+            </yu-xdialog>
+        </yu-col>
+    </yu-row>
+</div>

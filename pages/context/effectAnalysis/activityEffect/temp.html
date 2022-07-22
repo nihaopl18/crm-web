@@ -1,0 +1,47 @@
+<!--
+  @created by houyx3 on 2019/05/13.
+  @description 实时数据
+-->
+<div id="temp">
+	<link rel="stylesheet" href="pages/context/effectAnalysis/activityEffect/temp.css">
+	<div class="title">
+		<h2>活动效果详情</h2>
+		<div>
+			<span>活动名称：xxx活动1</span>
+		<span>所属机构：总行</span>
+		<span>创建人：王xx</span>
+		</div>
+		<yu-button type="primary">活动效果详情导出</yu-button>
+	</div>
+	<div id="content">
+		<div id="contentMenu">
+			<yu-tabs @tab-click="handleClick" v-model="activeName">
+				<yu-tab-pane label="实时数据" name="first"></yu-tab-pane>
+				<yu-tab-pane label="活动流量" name="second"></yu-tab-pane>
+				<yu-tab-pane label="活动转化" name="third"></yu-tab-pane>
+				<yu-tab-pane label="活动ROI" name="four"></yu-tab-pane>
+				<yu-tab-pane label="社交分析" name="five"></yu-tab-pane>
+			</yu-tabs>
+			<!-- <div style="width: 80%;margin-left:auto; margin-right:auto; height: 40px;">
+          <div style="width: 19.5% ; height: 100%;border-right-style: solid;border-right-color: #e4d1d1; float: left; background-color: #ece5e5">
+                <p style="font-size: 16px; margin-top: 10px; margin-left: 5%;cursor: pointer" @click="realTimeDataFn">
+                  实时数据
+                </p>
+          </div>
+          <div style="width: 19.5% ; height: 100%;border-right-style: solid;border-right-color: #e4d1d1; float: left; background-color: #ece5e5">
+                <p style="font-size: 16px; margin-top: 10px; margin-left: 5%;cursor: pointer" @click="activityFlowFn">活动流量</p>
+          </div>
+          <div style="width: 19.5% ; height: 100%;border-right-style: solid;border-right-color: #e4d1d1; float: left; background-color: #ece5e5">
+                <p style="font-size: 16px; margin-top: 10px; margin-left: 5%;cursor: pointer" @click="activityTransFn">活动转化</p>
+          </div>
+          <div style="width: 19.5% ; height: 100%;border-right-style: solid;border-right-color: #e4d1d1; float: left; background-color: #ece5e5">
+                <p style="font-size: 16px; margin-top: 10px; margin-left: 5%;cursor: pointer" @click="activityRoiFn">活动ROI</p>
+          </div>
+          <div style="width: 19.5% ; height: 100%; float: left; background-color: #ece5e5">
+                <p style="font-size: 16px; margin-top: 10px; margin-left: 5%;cursor: pointer" @click="socialAnalysisFn">社交分析</p>
+          </div>
+     </div> -->
+		</div>
+		<div :id="Div"></div>
+	</div>
+</div>

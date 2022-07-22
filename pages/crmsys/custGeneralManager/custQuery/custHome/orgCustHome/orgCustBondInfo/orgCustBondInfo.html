@@ -1,0 +1,50 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-2-12 19:30:18.
+  @updated by
+  @description 对公债券信息
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+    <yu-xtable-column label="债券名称" prop="bondName" width="200"></yu-xtable-column>
+    <yu-xtable-column label="发行金额" prop="issueAmt" width="200" align="right"></yu-xtable-column>
+    <yu-xtable-column label="最新更新人" prop="userName" width="200"></yu-xtable-column>
+    <yu-xtable-column label="最新更新人机构" prop="orgName" width="200"></yu-xtable-column>
+    <yu-xtable-column label="最新更新日期" prop="lastChgDt" ></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+    <yu-xform ref="refForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="发行债券ID" :hidden="true" name="bondId" ctype="input"></yu-xform-item>
+        <yu-xform-item label="客户标识" name="custId" :hidden="true" :disabled="inputIdDisabled" ctype="input"></yu-xform-item>
+        <yu-xform-item label="债券名称" name="bondName" ctype="input" :rules="rule.bondName"></yu-xform-item>
+        <yu-xform-item label="发行金额" name="issueAmt" ctype="input" :rules="rule.issueAmt"></yu-xform-item>
+        <yu-xform-item label="维护人" name="userName" ctype="input" :hidden="hiddened"></yu-xform-item>
+        <yu-xform-item label="维护人机构" name="orgName" ctype="input" :hidden="hiddened"></yu-xform-item>
+        <yu-xform-item label="维护日期" name="lastChgDt" ctype="input" :hidden="hiddened"></yu-xform-item>
+        <yu-xform-item label="备注" name="remark" ctype="textarea" :rows="3" :colspan="24" :rules="rule.remark"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="btnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

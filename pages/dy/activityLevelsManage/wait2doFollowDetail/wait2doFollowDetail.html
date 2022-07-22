@@ -1,0 +1,55 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-09-17 17:01:50
+ * @update by: 
+ * @description: 待办跟进详情
+-->
+<div class="wait2do-follow-detail">
+  <p class="title">{{orgName}}</p>
+  <yu-xtable :data-url="dataUrl" :base-params="baseParam" :border="false" style="width: 100%">
+    <yu-xtable-column prop="rank" label="名次"></yu-xtable-column>
+    <yu-xtable-column prop="name" label="机构名称">
+      <!-- <template slot-scope="scope">
+        <el-link type="primary" @click="toBankDetail(scope.row)">{{scope.row.name}}</el-link>
+      </template> -->
+    </yu-xtable-column>
+    <yu-xtable-column prop="count" label="待办数"></yu-xtable-column>
+    <yu-xtable-column label="操作">
+      <template slot-scope="scope">
+        <yu-button type="text" @click="detailFn(scope.row)">查看</yu-button>
+      </template>
+    </yu-xtable-column>
+  </yu-xtable>
+  <yu-dialog title="待办明细" append-to-body :visible.sync="detailVisible" class="detailBox" min-width="920" :before-close="handleClose">
+    <yu-xtable ref="detailTable" :data-url="dataUrl" :default-load="false" base-params="" style="width: 100%" max-height="550">
+      <yu-xtable-column prop="todoWorkId" label="编号"></yu-xtable-column>
+      <yu-xtable-column prop="todoWorkType" label="待办类型" data-code="DY0002"></yu-xtable-column>
+      <yu-xtable-column prop="createDate" label="创建日期"></yu-xtable-column>
+      <yu-xtable-column prop="startDate" label="截止日期"></yu-xtable-column>
+      <yu-xtable-column label="状态">
+        <template slot-scope="scope">
+          <span>{{scope.row.todoWorkState === '1' ? '待处理' : '已处理'}}</span>
+        </template>
+      </yu-xtable-column>
+      <yu-xtable-column prop="todoWorkContent" label="详情"></yu-xtable-column>
+      <yu-xtable-column prop="creatorName" label="客户经理"></yu-xtable-column>
+    </yu-xtable>
+  </yu-dialog>
+    
+</div>
+<style>
+  .wait2do-follow-detail {
+    padding: 24px;
+  }
+
+  .wait2do-follow-detail .title {
+    font-size: 16px;
+    color: #303133;
+    line-height: 24px;
+    font-weight: bold;
+  }
+
+  .detailBox .el-dialog {
+    width: 920px;
+  }
+</style>

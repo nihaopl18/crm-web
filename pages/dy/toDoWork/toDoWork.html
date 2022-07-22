@@ -1,0 +1,448 @@
+<!-- 
+  @Created by lufl lufl@yusys.com.cn on 2021-08-30 9:34:45.
+  @updated by
+  @description 待办事项
+-->
+<div>
+    <yu-tabs v-model="tabName">
+        <yu-tab-pane label="我的" name="1">
+            <div class="yu-toolBar" style="padding-left: 20px;padding-top: 10px;">
+                <yu-button-group>
+                    <yu-button icon="yx-bin" @click="deleteMulFn">删除</yu-button>
+                    <yu-button icon="yx-folder-upload" @click='exportMulFn'>导出</yu-button>
+                    <yu-button icon="plus" @click="addFn">待办事项</yu-button>
+                </yu-button-group>
+            </div>
+            <yu-xform ref="myQueryForm" related-table-name="myTable" form-type="search">
+                <yu-xform-group :column="4">
+                    <yu-xform-item label="执行日期" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '23:59:59']" ctype="datepicker" name="rangeDate" type="daterange" colspan="8">
+                    </yu-xform-item>
+                    <yu-xform-item label="待办状态" colspan="8" ctype="select" name="todoWorkState" data-code="DY0001">
+                    </yu-xform-item>
+                    <yu-xform-item label="待办类型" colspan="8" ctype="select" name="todoWorkType" data-code="DY0002">
+                    </yu-xform-item>
+                    <!-- <yu-xform-item label="待办主题" ctype="input" name="todoWorkTitle"></yu-xform-item> -->
+                    <!-- <yu-xform-item label="关联客户姓名" ctype="input" name="relationCust"></yu-xform-item> -->
+                    <!-- <yu-xform-item label="执行人姓名" ctype="input" name="finisher" ></yu-xform-item> -->
+                </yu-xform-group>
+            </yu-xform>
+            <yu-xtable ref="myTable" :border="false" style="padding: 20px 20px;" row-number :data-url="dataUrl" :data="listdata" :base-params="myParams" selection-type="checkbox">
+                <yu-xtable-column label="类型" prop="todoWorkType" width="90" data-code="DY0002"></yu-xtable-column>
+                <yu-xtable-column label="主题" width="170">
+                    <template slot-scope="scope">
+                        <el-link type="primary" @click="toDetail(scope.row)">{{ scope.row.todoWorkTitle }}
+                        </el-link>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="创建人" width="120">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.creatorName}}-{{scope.row.creatorId}}</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="属性" prop="isNotice" width="170">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.isNotice == 'N'? '一次性待办':'周期性待办'}}</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="关联客户姓名" width="170">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.relationCust">&nbsp;</span>
+                        <span
+                            v-else-if="scope.row.relationCust.split(';').length == 1">{{scope.row.relationCust}}</span>
+                        <span v-else-if="scope.row.relationCust.split(';').length > 1">多个</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="待办事项状态" prop="todoWorkState" width="100" data-code="DY0001"></yu-xtable-column>
+                <!-- <yu-xtable-column label="执行时间" prop="startDate" width="170" :formatter="formJE"> 
+                </yu-xtable-column>-->
+                <yu-xtable-column label="执行时间" width="270">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.startDate}}</span>
+                        <span v-if="scope.row.isNotice == 'Y'">~{{scope.row.endDate}}</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="操作" width="60">
+                    <template slot-scope="scope">
+                        <el-dropdown trigger="click" @command="handleOptionSelect"
+                            @visible-change="handleOptionVisibleChange(scope.row)"
+                            v-show="scope.row.todoWorkState == '1'">
+                            <span class="el-icon-more"></span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="state" v-show="scope.row.isNotice == 'N'"><i
+                                        class="el-icon-document-checked"></i> 已跟进
+                                </el-dropdown-item>
+                                <el-dropdown-item command="edit" v-show="returnIsupdate(scope.row.creatorId)"><i class="el-icon-edit"></i> 编辑
+                                </el-dropdown-item>
+                                <el-dropdown-item command="delete" v-show="returnIsupdate(scope.row.creatorId)"><i class="el-icon-delete"></i> 删除
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </template>
+                </yu-xtable-column>
+            </yu-xtable>
+        </yu-tab-pane>
+        <yu-tab-pane label="我下发的" name="2" v-if="isManager">
+            <div class="yu-toolBar" style="padding-left: 20px;padding-top: 10px;">
+                <yu-button-group>
+                    <yu-button icon="yx-bin" @click="deleteMulFn">删除</yu-button>
+                    <yu-button icon="yx-folder-upload" @click='exportMulFn'>导出</yu-button>
+                    <yu-button icon="plus" @click="addFn">待办事项</yu-button>
+                </yu-button-group>
+            </div>
+            <yu-xform ref="managerQueryForm" related-table-name="managerTable" form-type="search">
+                <yu-xform-group :column="5">
+                    <yu-xform-item label="执行日期" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '23:59:59']" ctype="datepicker" name="rangeDate" type="daterange" colspan="8">
+                    </yu-xform-item>
+                    <yu-xform-item label="待办状态" ctype="select" name="todoWorkState" data-code="DY0001" colspan="8">
+                    </yu-xform-item>
+                    <yu-xform-item label="待办类型" ctype="select" name="todoWorkType" data-code="DY0002" colspan="8">
+                    </yu-xform-item>
+                    <!-- <yu-xform-item label="待办主题" ctype="input" name="todoWorkTitle"></yu-xform-item>
+                    <yu-xform-item label="关联客户姓名" ctype="input" name="relationCust"></yu-xform-item>
+                    <yu-xform-item label="执行人姓名" ctype="input" name="finisher"></yu-xform-item> -->
+                </yu-xform-group>
+            </yu-xform>
+            <yu-xtable ref="managerTable" :border="false" style="padding: 20px 20px;" row-number :data-url="dataUrl" :data="listdata" :base-params="managerParams" selection-type="checkbox">
+                <yu-xtable-column label="类型" prop="todoWorkType" width="90" data-code="DY0002"></yu-xtable-column>
+                <yu-xtable-column label="主题" width="170">
+                    <template slot-scope="scope">
+                        <el-link type="primary" @click="toDetail(scope.row)">{{ scope.row.todoWorkTitle }}
+                        </el-link>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="执行人" width="120">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.finisher.replace('/','-')}}</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="属性" prop="isNotice" width="170">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.isNotice == 'N'? '一次性待办':'周期性待办'}}</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="关联客户姓名" width="170">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.relationCust">&nbsp;</span>
+                        <span
+                            v-else-if="scope.row.relationCust.split(';').length == 1">{{scope.row.relationCust}}</span>
+                        <span v-else-if="scope.row.relationCust.split(';').length > 1">多个</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="待办事项状态" prop="todoWorkState" width="100" data-code="DY0001"></yu-xtable-column>
+                <!-- <yu-xtable-column label="执行时间" prop="startDate" width="170" :formatter="formJE">
+                </yu-xtable-column> -->
+                <yu-xtable-column label="执行时间" width="270">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.startDate}}</span>
+                        <span v-if="scope.row.isNotice == 'Y'">~{{scope.row.endDate}}</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="操作" width="60">
+                    <template slot-scope="scope">
+                        <el-dropdown trigger="click" @command="handleOptionSelect"
+                            @visible-change="handleOptionVisibleChange(scope.row)"
+                            v-show="scope.row.todoWorkState == '1'">
+                            <span class="el-icon-more"></span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="edit"><i class="el-icon-edit"></i> 编辑
+                                </el-dropdown-item>
+                                <el-dropdown-item command="delete"><i class="el-icon-delete"></i> 删除
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </template>
+                </yu-xtable-column>
+            </yu-xtable>
+        </yu-tab-pane>
+    </yu-tabs>
+
+    <yu-xdialog title="新增日程-待办事项" :visible.sync="addVisible" width="600px" :before-close="cancelFn">
+        <yu-tabs v-model="addName">
+            <yu-tab-pane label="一次性待办" name="1">
+                <yu-xform ref="addOneForm" label-width="120px" label-position="top" v-model="addOneFormData" v-if="addVisible">
+                    <yu-row :getters="20">
+                        <yu-xform-group>
+                            <yu-xform-item label="主题" ctype="input" name="todoWorkTitle" placeholder="20个字符以内" :rules="rule.todoWorkTitle" colspan="22" clearable></yu-xform-item>
+                            <yu-col :span="20">
+                                <yu-xform-item label="待办类型" ctype="select" name="todoWorkType" data-code="DY0002" :rules="rule.todoWorkType"></yu-xform-item>
+                            </yu-col>
+                            <yu-col :span="20">
+                                <yu-xform-item label="执行时间" ctype="datepicker" name="startDate" type="datetime" format="yyyy-MM-dd HH:mm" :rules="rule.required" :picker-options="pickerOptions">
+                                </yu-xform-item>
+                            </yu-col>
+                            <yu-xform-item label="执行人" ctype="yufp-mgr-selector" :params="selectUserParams" @select-fn="userSelFn" name="finisher" colspan="22" :rules="rule.required" :hidden="tabName == '1'">
+                            </yu-xform-item>
+                            <!-- <yu-xform-item label="关联客户" ctype="yufp-governed-cust-selector" :params="selectCustParams" @select-fn="custSelFn" name="relationCust" colspan="22">
+                            </yu-xform-item> -->
+                            <!-- <yu-xform-item label="关联客户" ctype="input" name="relationCust" @focus="onfocusone" colspan="22">
+                            </yu-xform-item> -->
+                            <yu-xform-item label="关联客户" ctype="yufp-single-many-query" @selectfn="custSelFn" name="relationCust" colspan="22">
+                            </yu-xform-item>
+                            <yu-col :span="20" v-show="addOneFormData.todoWorkType == '5'">
+                                <yu-xform-item label="跟进类型" ctype="select" name="contactType" data-code="DY0006" :rules="rule.todoWorkType"></yu-xform-item>
+                            </yu-col>
+                            <yu-col :span="20" v-show="addOneFormData.todoWorkType == '5'">
+                                <yu-xform-item label="跟进目的" ctype="select" name="contactGoal" data-code="DY0005" :rules="rule.todoWorkType"></yu-xform-item>
+                            </yu-col>
+                            <yu-xform-item label="内容" ctype="textarea" name="todoWorkContent" :rows="2" :colspan="22" placeholder="200个字符以内" :rules="rule.todoWorkContent"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-row>
+                    <div class="yu-grpButton">
+                        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                        <yu-button icon="check" type="primary" id="addone" @click="saveFn('add','1')">确定</yu-button>
+                    </div>
+                </yu-xform>
+            </yu-tab-pane>
+            <yu-tab-pane label="周期性待办" name="2">
+                <yu-xform ref="addCycleForm" label-width="120px" label-position="top" v-model="addCycleFormData" v-if="addVisible">
+                    <yu-row :getters="20">
+                        <yu-xform-group>
+                            <yu-xform-item label="主题" ctype="input" name="todoWorkTitle" placeholder="20个字符以内" :rules="rule.todoWorkTitle" colspan="22" clearable></yu-xform-item>
+                            <yu-col :span="20">
+                                <yu-xform-item label="待办类型" ctype="select" name="todoWorkType" data-code="DY0002" :rules="rule.todoWorkType"></yu-xform-item>
+                            </yu-col>
+                            <yu-xform-item label="执行人" ctype="yufp-mgr-selector" :params="selectUserParams" @select-fn="userSelFn" name="finisher" colspan="22" :rules="rule.required" :hidden="tabName == '1'">
+                            </yu-xform-item>
+                            <!-- <yu-xform-item label="关联客户" ctype="yufp-governed-cust-selector" :params="selectCustParams" @select-fn="custSelFn" name="relationCust" colspan="22">
+                            </yu-xform-item> -->
+                            <!-- <yu-xform-item label="关联客户" ctype="input" name="relationCust" @focus="onfocustwo" colspan="22">
+                            </yu-xform-item> -->
+                            <yu-xform-item label="关联客户" ctype="yufp-single-many-query" @selectfn="custSelFn" name="relationCust" colspan="22">
+                            </yu-xform-item>
+                            <yu-col :span="20" v-show="addCycleFormData.todoWorkType == '5'">
+                                <yu-xform-item label="跟进类型" ctype="select" name="contactType" data-code="DY0006" :rules="rule.todoWorkType"></yu-xform-item>
+                            </yu-col>
+                            <yu-col :span="20" v-show="addCycleFormData.todoWorkType == '5'">
+                                <yu-xform-item label="跟进目的" ctype="select" name="contactGoal" data-code="DY0005" :rules="rule.todoWorkType"></yu-xform-item>
+                            </yu-col>
+                            <yu-xform-item label="内容" ctype="textarea" name="todoWorkContent" :rows="2" :colspan="22" placeholder="200个字符以内" :rules="rule.todoWorkContent"></yu-xform-item>
+                            <yu-xform-item label="提醒周期" ctype="radio" name="noticeCycle" data-code="NOTICE_CYCLE" colspan="22" @change="chgNoticeCycle" :rules="rule.required">
+                            </yu-xform-item>
+                            <yu-col :span="20">
+                                <yu-xform-item label="开始时间" ctype="datepicker" name="startDate" type="datetime" format="yyyy-MM-dd HH:mm" @change="chgNoticeStartDate" :rules="rule.required" :picker-options="pickerOptions">
+                                </yu-xform-item>
+                            </yu-col>
+                            <yu-col :span="20">
+                                <yu-xform-item label="结束时间" ctype="datepicker" name="endDate" type="datetime" format="yyyy-MM-dd HH:mm" @change="chgNoticeEndDate" :rules="rule.required" :picker-options="pickerOptions">
+                                </yu-xform-item>
+                            </yu-col>
+                            <yu-col :span="20">
+                                <div>
+                                    <i class="el-icon-time"></i>下次执行时间:&nbsp;{{nextNoticeDate}}
+                                </div>
+                            </yu-col>
+                        </yu-xform-group>
+                    </yu-row>
+                    <div class="yu-grpButton">
+                        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                        <yu-button icon="check" type="primary" id="addtwo" @click="saveFn('add','2')">确定</yu-button>
+                    </div>
+                </yu-xform>
+            </yu-tab-pane>
+        </yu-tabs>
+    </yu-xdialog>
+
+    <yu-xdialog title="编辑日程-待办事项" :visible.sync="editVisible" width="600px" :before-close="cancelFn">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button v-if="tableEditFormdata.isNotice == 'N'">一次性待办</yu-button>
+                <yu-button v-if="tableEditFormdata.isNotice == 'Y'">周期性待办</yu-button>
+            </yu-button-group>
+        </div>
+        <hr />
+        <yu-xform ref="editForm" label-width="120px" label-position="top" v-model="editFormData" v-if="editVisible">
+            <yu-row :getters="20">
+                <yu-xform-group>
+                    <yu-xform-item label="主题" ctype="input" name="todoWorkTitle" colspan="22" disabled="true">
+                    </yu-xform-item>
+                    <yu-col :span="20">
+                        <yu-xform-item label="待办类型" ctype="select" name="todoWorkType" data-code="DY0002" disabled="true"></yu-xform-item>
+                    </yu-col>
+                    <yu-col :span="20">
+                        <yu-xform-item label="执行人" ctype="yufp-mgr-selector" :params="selectUserParams" @select-fn="userSelFn" name="finisher" colspan="22" :rules="rule.required" disabled="true" :hidden="tabName == '1'"></yu-xform-item>
+                        <yu-xform-item label="创建人" ctype="input" name="creator" colspan="22" disabled="true" :hidden="tabName == '2'">
+                        </yu-xform-item>
+                    </yu-col>
+                </yu-xform-group>
+                <yu-xform-group v-if="tableEditFormdata.isNotice == 'N'">
+                    <yu-col :span="20">
+                        <yu-xform-item label="执行时间" ctype="datepicker" name="startDate" type="datetime" format="yyyy-MM-dd HH:mm" :rules="rule.required" :picker-options="pickerOptions">
+                        </yu-xform-item>
+                    </yu-col>
+                    <!-- <yu-xform-item label="关联客户" ctype="yufp-governed-cust-selector" :params="selectCustParams" @select-fn="custSelFn" name="relationCust" colspan="22">
+                    </yu-xform-item> -->
+                    <!-- <yu-xform-item label="关联客户" ctype="input" name="relationCust" @focus="onfocusthree" colspan="22">
+                    </yu-xform-item> -->
+                    <yu-xform-item label="关联客户" ctype="yufp-single-many-query" :raw-value="custvalue" @selectfn="custSelFn" name="relationCust" colspan="22">
+                    </yu-xform-item>
+                    <yu-xform-item label="内容" ctype="textarea" name="todoWorkContent" :rows="2" :colspan="22" placeholder="200个字符以内" :rules="rule.todoWorkContent"></yu-xform-item>
+                </yu-xform-group>
+                <yu-xform-group v-if="tableEditFormdata.isNotice == 'Y'">
+                    <yu-xform-item label="提醒周期" ctype="radio" name="noticeCycle" data-code="NOTICE_CYCLE" colspan="22" @change="chgNoticeCycle" :rules="rule.required">
+                    </yu-xform-item>
+                    <yu-col :span="20">
+                        <yu-xform-item label="开始时间" ctype="datepicker" name="startDate" type="datetime" format="yyyy-MM-dd HH:mm" @change="chgNoticeStartDate" :rules="rule.required" :disabled="isStart" :picker-options="pickerOptions">
+                        </yu-xform-item>
+                    </yu-col>
+                    <yu-col :span="20">
+                        <yu-xform-item label="结束时间" ctype="datepicker" name="endDate" type="datetime" format="yyyy-MM-dd HH:mm" @change="chgNoticeEndDate" :rules="rule.required" :picker-options="pickerOptions">
+                        </yu-xform-item>
+                    </yu-col>
+                    <yu-col :span="20">
+                        <div>
+                            <i class="el-icon-time"></i>下次执行时间:&nbsp;{{nextNoticeDate}}
+                        </div>
+                    </yu-col>
+                </yu-xform-group>
+            </yu-row>
+            <div class="yu-grpButton" v-if="tableEditFormdata.isNotice == 'N'">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                <yu-button icon="check" type="primary" id="editone" @click="saveFn('edit','1')">确定</yu-button>
+            </div>
+            <div class="yu-grpButton" v-if="tableEditFormdata.isNotice == 'Y'">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn(2)">取消</yu-button>
+                <yu-button icon="check" type="primary" id="edittwo" @click="saveFn('edit','2')">确定</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+
+    <yu-xdialog title="日程详情-待办事项" :visible.sync="detailVisible" width="600px" :before-close="cancelFn">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button v-if="detail.isNotice == 'N'">一次性待办</yu-button>
+                <yu-button v-if="detail.isNotice == 'Y'">周期性待办</yu-button>
+            </yu-button-group>
+        </div>
+        <yu-xform ref="detailForm" label-width="120px" label-position="top" v-model="detailFormData" :disabled="detail.flag">
+            <yu-row :getters="20">
+                <yu-xform-group>
+                    <yu-xform-item label="主题" ctype="input" name="todoWorkTitle" colspan="22">
+                    </yu-xform-item>
+                    <yu-col :span="20">
+                        <yu-xform-item label="待办类型" ctype="select" name="todoWorkType" data-code="DY0002">
+                        </yu-xform-item>
+                    </yu-col>
+                    <yu-col :span="20">
+                        <yu-xform-item label="执行人" ctype="input" name="finisher" colspan="22" :hidden="tabName == '1'">
+                        </yu-xform-item>
+                        <yu-xform-item label="创建人" ctype="input" name="creator" colspan="22" :hidden="tabName == '2'">
+                        </yu-xform-item>
+                    </yu-col>
+                </yu-xform-group>
+                <yu-xform-group v-if="detail.isNotice == 'N'">
+                    <yu-col :span="20">
+                        <yu-xform-item label="执行时间" ctype="input" name="startDate">
+                        </yu-xform-item>
+                    </yu-col>
+                    <!-- <yu-xform-item label="关联客户" ctype="input" name="relationCust" colspan="22">
+                    </yu-xform-item> -->
+                    <yu-xform-item label="关联客户" ctype="custom" :colspan="22" name="defaultRangeDate">
+                        <yu-row>
+                            <yu-col>
+                                <el-link v-for="item in custList" type="primary" @click="toCustomer360View(item)">{{ item}}；
+                                </el-link>
+                            </yu-col>
+                        </yu-row>
+                    </yu-xform-item>
+                    <yu-xform-item label="内容" ctype="textarea" name="todoWorkContent" :rows="2" :colspan="22">
+                    </yu-xform-item>
+                </yu-xform-group>
+                <yu-xform-group v-if="detail.isNotice == 'Y'">
+                    <yu-xform-item label="提醒周期" ctype="radio" name="noticeCycle" data-code="NOTICE_CYCLE" colspan="22">
+                    </yu-xform-item>
+                    <yu-col :span="20">
+                        <yu-xform-item label="状态" ctype="select" name="todoWorkState" data-code="DY0001" colspan="22">
+                        </yu-xform-item>
+                    </yu-col>
+                </yu-xform-group>
+            </yu-row>
+            <div class="yu-grpButton" v-if="detail.isNotice == 'N' && detail.todoWorkState == '1'">
+                <yu-button icon="yx-undo2" type="primary" v-if="tabName == '1'" @click="detailAndState(detailFormData)">已跟进
+                </yu-button>
+                <yu-button icon="yx-undo2" type="primary" v-show="returnIsupdate(detail.creatorId)" @click="detailAndModify(detailFormData)">编辑</yu-button>
+                <yu-button icon="check" type="primary" v-show="returnIsupdate(detail.creatorId)" @click="detailAndDelete(detailFormData)">删除</yu-button>
+            </div>
+            <div class="yu-grpButton" v-if="detail.isNotice == 'Y' && detail.todoWorkState == '1' && returnIsupdate(detail.creatorId)">
+                <yu-button icon="yx-undo2" type="primary" @click="detailAndModify(detailFormData)">编辑</yu-button>
+                <yu-button icon="check" type="primary" @click="detailAndDelete(detailFormData)">删除</yu-button>
+            </div>
+        </yu-xform>
+        <yu-xtable ref="sonTable" :data="sonlistdata" row-number v-if="detail.isNotice == 'Y'" @row-dblclick="toSonDetail" :data-url="dataUrlSon" :base-params="sonParams">
+            <yu-xtable-column label="执行人" prop="finisher" width="170"></yu-xtable-column>
+            <yu-xtable-column label="内容" prop="todoWorkContent" width="170"></yu-xtable-column>
+            <yu-xtable-column label="执行时间" prop="startDate" width="170"></yu-xtable-column>
+            <yu-xtable-column label="关联客户" prop="relationCust" width="170"></yu-xtable-column>
+            <yu-xtable-column label="待办事项状态" prop="todoWorkState" width="100" data-code="DY0001">
+            </yu-xtable-column>
+            <yu-xtable-column label="操作" width="60">
+                <template slot-scope="scope">
+                    <el-dropdown trigger="click" @command="handleOptionSelect"
+                        @visible-change="handleOptionVisibleChange(scope.row)" v-show="scope.row.todoWorkState=='1'">
+                        <span class="el-icon-more"></span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="state" v-show="tabName == '1'"><i class="el-icon-document-checked"></i> 已跟进
+                            </el-dropdown-item>
+                            <el-dropdown-item command="edit"><i class="el-icon-edit"></i> 编辑
+                            </el-dropdown-item>
+                            <el-dropdown-item command="delete"><i class="el-icon-delete"></i> 删除
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </template>
+            </yu-xtable-column>
+        </yu-xtable>
+    </yu-xdialog>
+
+    <yu-xdialog title="日程详情-子待办事项" :visible.sync="sonDetailVisible" width="600px" :before-close="cancelFn">
+        <yu-xform ref="sonDetailForm" label-width="120px" label-position="top" v-model="sonDetailFormData" disabled="true">
+            <yu-row :getters="20">
+                <yu-xform-group>
+                    <yu-xform-item label="编号" ctype="input" name="rowId" colspan="22">
+                    </yu-xform-item>
+                    <yu-col :span="20">
+                        <yu-xform-item label="执行人" ctype="input" name="finisher" colspan="22" :hidden="tabName == '1'">
+                        </yu-xform-item>
+                    </yu-col>
+                    <yu-xform-item label="内容" ctype="textarea" name="todoWorkContent" :rows="2" :colspan="22">
+                    </yu-xform-item>
+                    <!-- <yu-xform-item label="关联客户" ctype="yufp-governed-cust-selector" name="relationCust" colspan="22">
+                    </yu-xform-item> -->
+                    <!-- <yu-xform-item label="关联客户" ctype="input" name="relationCust" @focus="onfocusfour" colspan="22">
+                    </yu-xform-item> -->
+                    <yu-xform-item label="关联客户" ctype="yufp-single-many-query" @selectfn="custSelFn" name="relationCust" colspan="22">
+                    </yu-xform-item>
+                </yu-xform-group>
+            </yu-row>
+        </yu-xform>
+    </yu-xdialog>
+
+    <yu-xdialog title="日程编辑-子待办事项" :visible.sync="sonEditVisible" width="600px" :before-close="cancelFn">
+        <yu-xform ref="sonEditForm" label-width="120px" label-position="top" v-model="sonEditFormData">
+            <yu-row :getters="20">
+                <yu-xform-group>
+                    <yu-col :span="20">
+                        <yu-xform-item label="执行人" ctype="yufp-mgr-selector" :params="selectUserParams" @select-fn="userSelFn" name="finisher" colspan="22" :rules="rule.required" disabled="true" :hidden="tabName == '1'">
+                        </yu-xform-item>
+                    </yu-col>
+                    <yu-xform-item label="执行时间" ctype="datepicker" name="startDate" type="datetime" format="yyyy-MM-dd HH:mm" disabled="true"></yu-xform-item>
+                    <!-- <yu-xform-item label="执行时间" ctype="input" name="startDate" disabled="true">
+                    </yu-xform-item> -->
+                    <yu-xform-item label="内容" ctype="textarea" name="todoWorkContent" :rows="2" :colspan="22">
+                    </yu-xform-item>
+                    <!-- <yu-xform-item label="关联客户" ctype="yufp-governed-cust-selector" :params="selectCustParams" @select-fn="custSelFn" name="relationCust" colspan="22">
+                    </yu-xform-item> -->
+                    <!-- <yu-xform-item label="关联客户" ctype="input" name="relationCust" @focus="onfocusfive" colspan="22">
+                    </yu-xform-item> -->
+                    <!-- <yu-xform-item label="关联客户" ctype="yufp-single-many-query" @selectfn="custSelFn" name="relationCust" colspan="22"> -->
+                    <yu-xform-item label="关联客户" ctype="yufp-single-many-query" :raw-value="custvalueson" @selectfn="custSelFn" name="relationCust" colspan="22">
+                    </yu-xform-item>
+                </yu-xform-group>
+            </yu-row>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" id="saveson" @click="saveFn('son','2')">保存</yu-button>
+                <yu-button icon="check" type="primary" @click="cancelFn">取消</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+</div>
+<link rel="stylesheet" href="pages/crmsys/workPlatform/workReport/workReport.css">

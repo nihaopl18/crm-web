@@ -1,0 +1,182 @@
+<!-- 
+  @Created by hujun3 hujun3@yusys.com.cn on 2019-2-21 20:43:26.
+  @updated by
+  @description 虚拟票券商户视图
+-->
+<div>
+  <yu-row>
+    <yu-col :span="5">
+      <!-- <div style="margin-top: 10px">
+        <yu-xform ref="refFormDemo" label-width="120px" :hidden-rule="true" v-model="orgModel" form-type="edit">
+          <yu-xform-item placeholder="归属机构" name="orgName" ctype="yufp-org-tree" @select-fn="selectFn"></yu-xform-item>
+        </yu-xform>
+      </div> -->
+      <yu-xtree ref="mytree" :height="height - 310" @node-click="nodeClickFn"
+        data-url="/api/loyqyvirtticket/listtree" data-id="kindId" data-label="kindName"
+         node-key="kindId"
+        data-pid="supKindId" :data-async="async" :data-params="kindParam" data-root="0" style="margin:10px 10px 0 0;">
+      </yu-xtree>
+    </yu-col>
+    <yu-col :span="19">
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="票券名称" name="ticketName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="票券类别" name="ticketType" ctype="select" data-code="TICKET_TYPE"></yu-xform-item>
+      <yu-xform-item placeholder="适用机构" name="suitOrg" ctype="yufp-org-tree"></yu-xform-item>
+      <yu-xform-item placeholder="状态" name="ticketStatus" ctype="select" data-code="DATA_STS"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="yx-drawer" @click="stockManagerFn">库存管理</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :default-load="false" selection-type="checkbox" :base-params="baseParam" >
+    <!-- <yu-xtable-column label="记录编号" prop="ticketId" width="120" :hidden="true"></yu-xtable-column> -->
+    <yu-xtable-column label="票券编号" prop="ticketNo" width="120" ></yu-xtable-column>
+    <yu-xtable-column label="票券名称" prop="ticketName" width="150" :show-overflow-tooltip="true"></yu-xtable-column>
+    <yu-xtable-column label="票券类别" prop="ticketType" width="100"  data-code="TICKET_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="商户名称" prop="merchantName" width="150"></yu-xtable-column>
+    <!-- <yu-xtable-column label="商户名称" prop="merchantNo" v-show="false"></yu-xtable-column> -->
+    <yu-xtable-column label="总库存" prop="totalNum" width="100"></yu-xtable-column>
+    <yu-xtable-column label="领取方式" prop="receiveType" width="120"  data-code="RECEIVE_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="适用机构" prop="suitName" width="120"></yu-xtable-column>
+    <!-- <yu-xtable-column label="适用机构" prop="suitOrg" width="120" :hidden="true"></yu-xtable-column> -->
+    <yu-xtable-column label="状态" prop="ticketStatus" width="120"  data-code="DATA_STS"></yu-xtable-column>
+    <yu-xtable-column label="审批状态" prop="wfApprSts" width="120"  data-code="WF_APP_STATUS"></yu-xtable-column>
+    <yu-xtable-column label="创建人" prop="createUserName" width="120" :hidden="true"></yu-xtable-column>
+    <yu-xtable-column label="创建日期" prop="createDate" width="100" :formatter="dateFormatterSimple"></yu-xtable-column>
+    <yu-xtable-column label="创建机构" prop="createOrgName" width="120" :hidden="true"></yu-xtable-column>
+    <yu-xtable-column label="最近修改人" prop="updateUserName" width="120" :hidden="true"></yu-xtable-column>
+    <yu-xtable-column label="最近修改日期" prop="updateDate" width="120" :formatter="dateFormatterSimple"></yu-xtable-column>
+    <yu-xtable-column label="最近修改机构" prop="updateOrgName" width="120"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="850px">
+    <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="记录编号" name="ticketId"  ctype="input" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="票券编号" name="ticketNo"  ctype="input" :rules="ticketNo" :disabled="viewType=='EDIT'"></yu-xform-item>
+        <yu-xform-item label="票券名称" name="ticketName" ctype="input" :rules="ticketName"></yu-xform-item>
+        <yu-xform-item label="票券类别" name="ticketType" ctype="select" data-code="TICKET_TYPE"></yu-xform-item>
+        <yu-xform-item label="商户名称" name="merchantNo" ctype="yufp-merchant" rules="required"></yu-xform-item>
+        <yu-xform-item label="领取方式" name="receiveType" ctype="select" data-code="RECEIVE_TYPE" rules="required"></yu-xform-item>
+        <yu-xform-item label="适用机构" name="suitOrg" ctype="yufp-org-tree" rules="required"></yu-xform-item>
+        <yu-xform-item label="使用条件" name="useCondition" ctype="textarea" :rows="2" :colspan="24" :rules="useCondition"></yu-xform-item>
+        <yu-xform-item label="使用说明" name="useRemark" ctype="textarea" :rows="4" :colspan="24" :rules="useRemark"></yu-xform-item>
+        <yu-xform-item label="状态" name="ticketStatus" ctype="input" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="审批状态" name="wfApprSts" ctype="input" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="创建人" name="createUser" ctype="input" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="创建日期" name="createDate" ctype="datepicker" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="创建机构" name="createOrg" ctype="input" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="最近修改人" name="updateUser" ctype="input" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="最近修改日期" name="updateDate" ctype="datepicker" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="最近修改机构" name="updateOrg" ctype="input" :hidden="true"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yu-xdialog title="库存管理" :visible.sync="dialogBatchVisible" width="1450px">
+    <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="plus" @click="addBatchFn">新增</yu-button> 
+            <yu-button icon="edit" @click="modifyBatchFn">修改</yu-button> 
+            <yu-button icon="document" @click="infoBatchFn">详情</yu-button>
+            <yu-button icon="yx-bin" @click="deleteBatchFn">删除</yu-button>
+            <yu-button icon="yx-drawer" @click="stockInfoFn">库存明细</yu-button>
+            <yu-button icon="yx-folder-minus" @click="commitBatchFn">提交</yu-button>
+            <yu-button icon="yx-upload" @click="importBatchFn">批量导入</yu-button>
+          </yu-button-group>
+    </div>
+    <yu-xtable ref="batchTable" row-number selection-type="radio" :data-url="dataBatchUrl" :default-load="false" >
+      <!-- <yu-xtable-column label="记录编号" prop="batchId" width="120" :hidden="true"></yu-xtable-column> -->
+      <!-- <yu-xtable-column label="票券编号" prop="ticketNo" width="120" ></yu-xtable-column> -->
+      <!-- <yu-xtable-column label="票券名称" prop="ticketName" width="150" :show-overflow-tooltip="true"></yu-xtable-column> -->
+      <yu-xtable-column label="批次号" prop="batchNo" width="120"  ></yu-xtable-column>
+      <yu-xtable-column label="总数" prop="ticketAllNum" width="100" ></yu-xtable-column>
+      <yu-xtable-column label="票券来源" prop="sourceType"  data-code="SOURCE_TYPE" width="120" ></yu-xtable-column>
+      <yu-xtable-column label="已使用数量" prop="usedNum" width="100"></yu-xtable-column>
+      <yu-xtable-column label="未使用数量 " prop="unUsedNum" width="100"></yu-xtable-column>
+      <yu-xtable-column label="已发货数" prop="shippedNum" width="120"></yu-xtable-column>
+      <yu-xtable-column label="未发货数" prop="unShippedNum" width="120" ></yu-xtable-column>
+      <yu-xtable-column label="生效开始日期" prop="validStartDate" width="120" :formatter="dateFormatterSimple"></yu-xtable-column>
+      <yu-xtable-column label="生效结束日期" prop="validEndDate" width="120" :formatter="dateFormatterSimple"></yu-xtable-column>
+      <yu-xtable-column label="审批状态" prop="wfApprSts" width="120"  data-code="WF_APP_STATUS"></yu-xtable-column>
+      <yu-xtable-column label="创建人" prop="createUserName" width="120" ></yu-xtable-column>
+      <yu-xtable-column label="创建日期" prop="createDate" width="100" :formatter="dateFormatterSimple"></yu-xtable-column>
+      <yu-xtable-column label="创建机构" prop="createOrgName" width="120" ></yu-xtable-column>
+      <yu-xtable-column label="最近修改人" prop="updateUserName" width="120" ></yu-xtable-column>
+      <yu-xtable-column label="最近修改日期" prop="updateDate" width="120" :formatter="dateFormatterSimple"></yu-xtable-column>
+      <yu-xtable-column label="最近修改机构" prop="updateOrgName" width="120"></yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+  <yu-xdialog :title="viewTitle1[viewType1]" :visible.sync="dialogBatchInfoVisible" width="1000px">
+      <yu-xform ref="refBatchForm" label-width="120px" v-model="formBatchdata" :disabled="formBatchDisabled">
+        <yu-xform-group>
+          <yu-xform-item label="记录编号" name="batchId"  ctype="input" v-show="false"></yu-xform-item>
+          <yu-xform-item label="票券编号" name="ticketNo"  ctype="input" rules="required" disabled></yu-xform-item>
+          <yu-xform-item label="批次号" name="batchNo"  ctype="input" rules="required" disabled></yu-xform-item>
+          <yu-xform-item label="总数" name="ticketAllNum" ctype="input" :rules="ticketAllNum"></yu-xform-item>
+          <yu-xform-item label="票券来源" name="sourceType" ctype="select" data-code="SOURCE_TYPE" rules="required"></yu-xform-item>
+          <yu-xform-item label="已使用数量" name="usedNum" ctype="input" v-show="isShow"></yu-xform-item>
+          <yu-xform-item label="未使用数量" name="unUsedNum" ctype="input" v-show="isShow"></yu-xform-item>
+          <yu-xform-item label="已发货数" name="shippedNum" ctype="input" v-show="isShow"></yu-xform-item>
+          <yu-xform-item label="未发货数" name="unShippedNum" ctype="input" v-show="isShow"></yu-xform-item>
+          <yu-xform-item label="生效开始日期" name="validStartDate" ctype="datepicker" rules="required" :picker-options="validStartDate"></yu-xform-item>
+          <yu-xform-item label="生效结束日期" name="validEndDate" ctype="datepicker" rules="required" :picker-options="validEndDate"></yu-xform-item>
+          <yu-xform-item label="审批状态" name="wfApprSts" ctype="select" data-code="WF_APP_STATUS" v-show="isShow"></yu-xform-item>
+          <yu-xform-item label="创建人" name="createUserName" ctype="input" v-show="isShow"></yu-xform-item>
+          <yu-xform-item label="创建日期" name="createDate" ctype="datepicker" v-show="isShow"></yu-xform-item>
+          <yu-xform-item label="创建机构" name="createOrgName" ctype="input" v-show="isShow"></yu-xform-item>
+          <yu-xform-item label="最近修改人" name="updateUserName" ctype="input" v-show="isShow"></yu-xform-item>
+          <yu-xform-item label="最近修改日期" name="updateDate" ctype="datepicker" v-show="isShow"></yu-xform-item>
+          <yu-xform-item label="最近修改机构" name="updateOrgName" ctype="input" v-show="isShow"></yu-xform-item>
+        </yu-xform-group>
+        <div class="yu-grpButton">
+          <yu-button v-show="saveBtnShow1" icon="check" type="primary" @click="saveBatchFn">保存</yu-button>
+          <yu-button icon="yx-undo2" type="primary" @click="cancelBatchFn">取消</yu-button>
+        </div>
+      </yu-xform>
+    </yu-xdialog>
+    <yu-xdialog title="库存信息" :visible.sync="dialogStockInfoVisible" width="1300px">
+      <yu-xtable ref="stockTable" row-number selection-type="radio" :data-url="dataStockUrl" :default-load="false" >
+        <yu-xtable-column label="虚拟识别码" prop="virtNo" width="150"  ></yu-xtable-column>
+        <yu-xtable-column label="使用密码" prop="virtPwd" width="150" ></yu-xtable-column>
+        <yu-xtable-column label="使用状态" prop="usedSts"  data-code="USE_STS"></yu-xtable-column>
+        <yu-xtable-column label="创建人" prop="createUserName" width="120" ></yu-xtable-column>
+        <yu-xtable-column label="创建日期" prop="createDate" width="100" :formatter="dateFormatterSimple"></yu-xtable-column>
+        <yu-xtable-column label="创建机构" prop="createOrgName" width="120" ></yu-xtable-column>
+        <yu-xtable-column label="最近修改人" prop="updateUserName" width="120" ></yu-xtable-column>
+        <yu-xtable-column label="最近修改日期" prop="updateDate" width="120" :formatter="dateFormatterSimple"></yu-xtable-column>
+        <yu-xtable-column label="最近修改机构" prop="updateOrgName" width="120"></yu-xtable-column>
+      </yu-xtable>
+    </yu-xdialog>
+    <el-dialog-x :title="uploadTitle" :visible.sync="uploadDialog" width="570px" height="240px">
+      <div id="template_tinymce">
+        <textarea ref="dataSqlTemp" cols="70" rows="8">
+            导入注意事项：
+            
+        一. Excel文件的需严格安照模板格式(可以先下载模板)。
+        二. 票券识别码和使用密码字段不能为空。 
+        </textarea>
+      </div>
+        <el-upload style="display: inline-block;" :show-file-list="true" 
+          :multiple="false" :file-list="fileList"  
+          :action="action"  ref="verUpload" :auto-upload="false" :headers="headers" :data="uploaddata"
+          :on-success="onSuccess" :on-error="onError" :before-upload="beforeAvatarUpload">
+          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" 
+              @click="submitUpload">上传到服务器</el-button>
+              <el-button style="margin-left: 10px;" size="large" type="warning" 
+              @click="downTable">下载模板</el-button>
+        </el-upload>
+        
+      </el-dialog-x>
+      <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" :common-params="wfCommonParams" />
+    </yu-col>
+  </yu-row>
+</div>

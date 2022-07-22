@@ -1,0 +1,109 @@
+#productmain h2::before {
+    /* position: absolute; */
+    display: inline-block;
+    content: ' ';
+    width: 4px;
+    height: 20px;
+    background: #E30A2A;
+    margin-right: 4px;
+    margin-bottom: -3px;
+}
+
+.el-input.is-disabled .el-input__inner {
+    background-color: white;
+    /* border-color: #d1dbe5; */
+    color: #333;
+    cursor: not-allowed;
+    border-top: 1px solid #E4E8EB;
+    border-bottom: 1px solid #E4E8EB;
+    border-left: 1px solid #E4E8EB;
+    border-radius: 0;
+    height: 36px;
+}
+
+.jieucalss>.el-row>.el-col>.el-form-item>.el-form-item__label {
+    border-top: 1px solid #E4E8EB;
+    border-bottom: 1px solid #E4E8EB;
+    border-left: 1px solid #E4E8EB;
+    border-right: 0px solid #E4E8EB;
+    text-align: right;
+    vertical-align: middle;
+    float: left;
+    font-size: 14px;
+    color: #333;
+    line-height: 1;
+    padding: 11px 12px 11px 0;
+    box-sizing: border-box;
+    background-color: #F8F9FA;
+    height: 36px;
+}
+
+.dy-tabs .el-tabs__content {
+    background: #fff;
+    padding: 24px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    height: 150px;
+    width: 100%;
+    /* margin: 0 12px;
+    border-bottom: 4px solid #333; */
+}
+
+.containermain {
+    width: 98%;
+    margin: 20px;
+    border-bottom: 4px solid #ccc;
+}
+
+.el-icon-yx-star-full {
+    color: #fcc102
+}
+
+.labelmore>.el-col-6>div {
+    padding-left: 10px;
+    width: 100px;
+    height: 40px;
+    text-align: left;
+    line-height: 40px;
+    border-radius: 10px;
+    /* background-color: #f0f0f0; */
+    color: #333;
+    font-size: 12px;
+    /* box-shadow: 2px 2px 10px #909090; */
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.cpmcclass {
+    margin-left: 2px;
+    margin-top: 20px;
+    width: 200px;
+    height: 70px;
+    padding-left: px;
+    padding-right: 10px;
+    text-align: center;
+    line-height: 70px;
+    border-radius: 4px;
+    /* background-color: #b64f60; */
+    color: #333;
+    font-size: 24px;
+    /* box-shadow: 2px 2px 10px #909090; */
+}
+
+.focusclass {
+    width: 80px;
+    height: 40px;
+    position: relative;
+    /* top: 70px;
+    right: 20%; */
+    text-align: center;
+    line-height: 40px;
+    border-radius: 20px;
+    background-color: #ee434c;
+    color: white;
+    font-size: 12px;
+    /* box-shadow: 2px 2px 10px #909090; */
+}

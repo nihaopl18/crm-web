@@ -1,0 +1,151 @@
+<!--
+  @created by raop
+  @updated by
+  @description 业绩分配历史查询
+-->
+<div>
+  <div>
+    <yu-tabs v-model="tabName">
+      <yu-tab-pane label="存款业绩分配历史" name="1">
+
+        <yu-xform related-table-name="yutable1" ref="queryFormRef">
+          <yu-xform-group :column="4">
+            <yu-xform-item placeholder="客户号" ctype="input" name="custNumber"></yu-xform-item>
+            <yu-xform-item placeholder="客户名称" ctype="input" name="custName"></yu-xform-item>
+            <yu-xform-item placeholder="主账号" ctype="input" name="acctNo"></yu-xform-item>
+            <yu-xform-item placeholder="账户类型" ctype="yu-xselect" name="accountType" data-code="DS0003" ></yu-xform-item>
+            <yu-xform-item placeholder="开户机构" ctype="yufp-org-tree" name="orgId"></yu-xform-item>
+            <yu-xform-item placeholder="开户日期从" ctype="datepicker" name="openDateStart"></yu-xform-item>
+            <yu-xform-item placeholder="开户日期到" ctype="datepicker" name="openDateEnd"></yu-xform-item>
+            <yu-xform-item placeholder="分配人" ctype="yufp-user-selector" :params="userSelectorParams" name="operUserId"></yu-xform-item>
+            <yu-xform-item placeholder="分配日期起" ctype="datepicker" name="operTimeStart"></yu-xform-item>
+            <yu-xform-item placeholder="分配日期止" ctype="datepicker" name="operTimeEnd"></yu-xform-item>
+
+          </yu-xform-group>
+        </yu-xform>
+        <div style="float:right;">
+          <yu-button icon="search" type="primary" @click="searchFn(1)">查询</yu-button>
+          <yu-button icon="yx-loop2" type="primary" @click="resetFn(1)">重置</yu-button>
+        </div>
+        <yu-xtable ref="yutable1" row-number :base-params="params1"   :data-url="dataUrl" :default-load="false" @loaded="loadedHandler">
+          <yu-xtable-column label="客户号" prop="custNumber" ></yu-xtable-column>
+          <yu-xtable-column label="客户名称" prop="custName"  ></yu-xtable-column>
+          <yu-xtable-column label="主账号" prop="acctNo"  ></yu-xtable-column>
+          <yu-xtable-column label="子账号" prop="subAcctNo"  ></yu-xtable-column>
+          <yu-xtable-column label="账户类型" prop="accountType"  data-code="DS0003" ></yu-xtable-column>
+          <yu-xtable-column label="开户机构号" prop="orgId"  ></yu-xtable-column>
+          <yu-xtable-column label="开户机构名称" prop="orgName"  ></yu-xtable-column>
+          <yu-xtable-column label="开户日期" prop="openDate"  ></yu-xtable-column>
+          <yu-xtable-column label="客户经理编号" prop="managerId"  ></yu-xtable-column>
+          <yu-xtable-column label="客户经理名称" prop="managerName"  ></yu-xtable-column>
+          <yu-xtable-column label="生效日期" prop="effectDate"  ></yu-xtable-column>
+          <yu-xtable-column label="失效日期" prop="expirateDate"  ></yu-xtable-column>
+          <yu-xtable-column label="起始金额" prop="startAmt"  >
+            <template slot-scope="scope">
+              <span v-if="scope.row.startAmt != '-'">{{ yufp.util.moneyFormatter(scope.row.startAmt || 0, 2) }}</span>
+              <span v-if="scope.row.startAmt == '-'">-</span>
+            </template>
+          </yu-xtable-column>
+          <yu-xtable-column label="结束金额" prop="endAmt"  >
+            <template slot-scope="scope">
+              <span v-if="scope.row.endAmt != '-'">{{ yufp.util.moneyFormatter(scope.row.endAmt || 0, 2) }}</span>
+              <span v-if="scope.row.endAmt == '-'">-</span>
+            </template>
+          </yu-xtable-column>
+          <yu-xtable-column label="业绩分配比例" prop="distrRate"  ></yu-xtable-column>
+          <yu-xtable-column label="分配人" prop="operUserName"  ></yu-xtable-column>
+          <yu-xtable-column label="分配时间" prop="operTime"  ></yu-xtable-column>
+        </yu-xtable>
+
+      </yu-tab-pane>
+
+      <yu-tab-pane label="贷款业绩分配历史" name="2">
+        <yu-xform related-table-name="yutable2" ref="queryFormRef2">
+          <yu-xform-group :column="4">
+            <yu-xform-item placeholder="客户号" ctype="input" name="custId"></yu-xform-item>
+            <yu-xform-item placeholder="客户名称" ctype="input" name="custName" ></yu-xform-item>
+            <yu-xform-item placeholder="借据号" ctype="input" name="billNo"></yu-xform-item>
+            <yu-xform-item placeholder="机构号" ctype="yufp-org-tree" name="orgId"></yu-xform-item>
+            <yu-xform-item placeholder="发放日期从" ctype="datepicker" name="openDateStart"></yu-xform-item>
+            <yu-xform-item placeholder="发放日期到" ctype="datepicker" name="openDateEnd"></yu-xform-item>
+            <yu-xform-item placeholder="分配人" ctype="yufp-user-selector" :params="userSelectorParams"  name="operUserId"></yu-xform-item>
+            <yu-xform-item placeholder="分配日期起" ctype="datepicker" name="operTimeStart"></yu-xform-item>
+            <yu-xform-item placeholder="分配日期止" ctype="datepicker" name="operTimeEnd"></yu-xform-item>
+
+          </yu-xform-group>
+        </yu-xform>
+        <div style="float:right;">
+          <yu-button icon="search" type="primary" @click="searchFn(2)">查询</yu-button>
+          <yu-button icon="yx-loop2" type="primary" @click="resetFn(2)">重置</yu-button>
+        </div>
+
+        <yu-xtable ref="yutable2" row-number :base-params="params2"   :data-url="dataUrl2" :default-load="false" @loaded="loadedHandler">
+          <yu-xtable-column label="借据号" prop="billNo"></yu-xtable-column>
+          <yu-xtable-column label="客户号" prop="custId"></yu-xtable-column>
+          <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+          <yu-xtable-column label="客户经理号" prop="managerId"></yu-xtable-column>
+          <yu-xtable-column label="客户经理名称" prop="managerName"></yu-xtable-column>
+          <yu-xtable-column label="机构名称" prop="orgName"></yu-xtable-column>
+          <yu-xtable-column label="发放日期" prop="openDate"></yu-xtable-column>
+          <yu-xtable-column label="生效日期" prop="effectDate"></yu-xtable-column>
+          <yu-xtable-column label="失效日期" prop="expirateDate"></yu-xtable-column>
+          <yu-xtable-column label="业绩分配比例" prop="distrRate"></yu-xtable-column>
+          <yu-xtable-column label="分配人" prop="operUserName"></yu-xtable-column>
+          <yu-xtable-column label="分配时间" prop="operTime"></yu-xtable-column>
+        </yu-xtable>
+      </yu-tab-pane>
+
+      <yu-tab-pane label="中收业绩分配历史" name="3">
+        <yu-xform related-table-name="yutable3" ref="queryFormRef3">
+          <yu-xform-group :column="4">
+            <yu-xform-item placeholder="客户号" name="customerNumber" ctype="input"></yu-xform-item>
+            <yu-xform-item placeholder="客户名称" name="customerName" ctype="input"></yu-xform-item>
+            <yu-xform-item placeholder="交易流水号" name="transactionMark" ctype="input"></yu-xform-item>
+            <yu-xform-item placeholder="业务类型" name="bussType" ctype="select" data-code="CD0501"></yu-xform-item>
+            <yu-xform-item placeholder="交易机构" name="orgId" ctype="yufp-org-tree"></yu-xform-item>
+            <yu-xform-item placeholder="交易日期从" ctype="datepicker" name="transactionDateStart"></yu-xform-item>
+            <yu-xform-item placeholder="交易日期到" ctype="datepicker" name="transactionDateEnd"></yu-xform-item>
+            <yu-xform-item placeholder="分配人" ctype="yufp-user-selector" :params="userSelectorParams"  name="operUserId"></yu-xform-item>
+            <yu-xform-item placeholder="分配日期起" ctype="datepicker" name="operTimeStart"></yu-xform-item>
+            <yu-xform-item placeholder="分配日期止" ctype="datepicker" name="operTimeEnd"></yu-xform-item>
+
+          </yu-xform-group>
+        </yu-xform>
+        <div style="float:right;">
+          <yu-button icon="search" type="primary" @click="searchFn(3)">查询</yu-button>
+          <yu-button icon="yx-loop2" type="primary" @click="resetFn(3)">重置</yu-button>
+        </div>
+        <yu-xtable ref="yutable3" row-number :base-params="params"   :data-url="dataUrl3"  :default-load="false" @loaded="loadedHandler">
+          <yu-xtable-column label="交易流水号" prop="transactionMark"></yu-xtable-column>
+          <yu-xtable-column label="客户号" prop="customerNumber"></yu-xtable-column>
+          <yu-xtable-column label="客户名称" prop="customerName"></yu-xtable-column>
+          <yu-xtable-column label="交易日期" prop="transactionDate"></yu-xtable-column>
+          <yu-xtable-column label="业务类型" prop="bussType" data-code="CD0501"></yu-xtable-column>
+          <yu-xtable-column label="产品代码" prop="productNumber"></yu-xtable-column>
+          <yu-xtable-column label="产品名称" prop="productName"></yu-xtable-column>
+          <yu-xtable-column label="交易金额" prop="transactionAmount">
+            <template slot-scope="scope">
+              <span v-if="scope.row.transactionAmount != '-'">{{ yufp.util.moneyFormatter(scope.row.transactionAmount || 0, 2) }}</span>
+              <span v-if="scope.row.transactionAmount == '-'">-</span>
+            </template>
+          </yu-xtable-column>
+          <yu-xtable-column label="手续费" prop="serviceCharge">
+            <template slot-scope="scope">
+              <span v-if="scope.row.serviceCharge != '-'">{{ yufp.util.moneyFormatter(scope.row.serviceCharge || 0, 2) }}</span>
+              <span v-if="scope.row.serviceCharge == '-'">-</span>
+            </template>
+          </yu-xtable-column>
+          <yu-xtable-column label="交易机构号" prop="orgId"></yu-xtable-column>
+          <yu-xtable-column label="交易机构名称" prop="orgName"></yu-xtable-column>
+          <yu-xtable-column label="客户经理号" prop="managerId"></yu-xtable-column>
+          <yu-xtable-column label="客户经理名称" prop="managerName"></yu-xtable-column>
+          <yu-xtable-column label="业绩分配比例" prop="distrRate"></yu-xtable-column>
+          <yu-xtable-column label="分配人" prop="creator"></yu-xtable-column>
+          <yu-xtable-column label="分配时间" prop="opertime"></yu-xtable-column>
+        </yu-xtable>
+
+      </yu-tab-pane>
+    </yu-tabs>
+  </div>
+
+</div>

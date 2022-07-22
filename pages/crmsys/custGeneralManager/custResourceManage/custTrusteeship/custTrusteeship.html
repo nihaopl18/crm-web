@@ -1,0 +1,190 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-4 11:43:28.
+  @updated by
+  @description 客户托管
+-->
+<div class="custTrusteeship">
+    <yu-xform ref="custforSearchForm" v-model="forqueryFormdata" form-type="search" class="hide-form-search-btn" :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn">
+        <yu-xform-group :column="8">
+          <yu-xform-item placeholder="客户类型" name="custType" ctype="select" rules="required" data-code="CD0016"></yu-xform-item>
+          <yu-xform-item placeholder="托管状态" name="trustStutas" ctype="select" data-code="TRUST_STUTAS"></yu-xform-item>
+          <!-- <yu-xform-item placeholder="客户状态" name="custStatus" ctype="select" data-code="CD0019"></yu-xform-item> -->
+          <yu-xform-item placeholder="客户号" name="custId" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+    <!-- 对公证件类型 -->
+    <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+    <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+    <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != undefined" data-code="CD0011"></yu-xform-item>
+    <yu-xform-item placeholder="证件号" name="certNo" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="机构号" name="oneOrg" ctype="input" hidden = "true"></yu-xform-item>
+        </yu-xform-group>
+        <!-- <div class="yu-grpButton" style="text-align: right;">
+          <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+          <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+        </div> -->
+      </yu-xform>
+      <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="yx-point-right" @click="trusteFn" :disabled="forqueryFormdata.trustStutas == '2'">客户托管</yu-button>
+            <yu-button icon="yx-point-right" @click="trusteCustFn">已托管客户</yu-button>
+            <!-- <yu-button icon="yx-undo2" @click="recycleTrusteFn">回收托管</yu-button> 
+            <yu-button icon="yx-profile" @click="trusteHistoryFn">托管客户清单</yu-button> -->
+          </yu-button-group>
+        </div>
+      <yu-xtable ref="forrefTable" row-number :data-url="dataUrl" :default-load="false" selection-type="checkbox">
+        <yu-xtable-column label="客户类型" prop="custType" width="90" data-code="CD0016"></yu-xtable-column>
+        <yu-xtable-column label="客户状态" prop="custStatus" width="90" data-code="CD0019"></yu-xtable-column>
+        <yu-xtable-column label="客户号" prop="custId" width="100"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="200"></yu-xtable-column>
+        <yu-xtable-column label="证件类型" prop="certType" width="100" data-code="CD0011"></yu-xtable-column>
+        <yu-xtable-column label="证件号码" prop="certNo" width="180"></yu-xtable-column>
+        <yu-xtable-column label="主办机构" prop="orgName" width="150"></yu-xtable-column>
+        <yu-xtable-column label="主办客户经理" prop="mgrName" width="160"></yu-xtable-column>
+        <yu-xtable-column label="客户价值等级" prop="valueLev" width="150" data-code="CD0243"></yu-xtable-column>
+        <yu-xtable-column label="客户服务等级" prop="servLev" width="110" data-code="CD0032"></yu-xtable-column>
+      </yu-xtable>
+  <!-- <yu-xform related-table-name="refTable" form-type="search" class="search-form-layout">
+    <yu-xform-group :column="6">
+      <yu-xform-item placeholder="客户类型" name="custType" ctype="select" :clospan="3"  data-code="CD0016"></yu-xform-item>
+      <yu-xform-item placeholder="客户编号" name="custId"  ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" :clospan="3" ctype="select" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item placeholder="证件号码" name="certNo" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="托管状态" name="trustStat" :clospan="3" ctype="select" data-code="CD0345"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-point-right" @click="trusteFn">客户托管</yu-button>
+      <yu-button icon="yx-undo2" @click="recycleTrusteFn">回收托管</yu-button> 
+      <yu-button icon="yx-profile" @click="trusteHistoryFn">托管客户清单</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :default-load="false" selection-type="checkbox">
+    <yu-xtable-column label="客户数" prop="custNum" ></yu-xtable-column>
+    <yu-xtable-column label="客户经理" prop="mgrName" ></yu-xtable-column>
+    <yu-xtable-column label="托管状态" prop="trustStat"  data-code="CD0345"></yu-xtable-column>
+    <yu-xtable-column label="托管客户经理" prop="trustMgrName" ></yu-xtable-column>
+    <yu-xtable-column label="托管日期" prop="setDate" :formatter="dateFormatter"></yu-xtable-column>
+    <yu-xtable-column label="托管有效期" prop="deadLine" :formatter="dateFormatter"></yu-xtable-column>
+  </yu-xtable> -->
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog title="客户托管" :visible.sync="dialogVisible" width="50%">
+    <yu-xform ref="refForm" v-model="formdata" label-width="150px">
+      <yu-xform-group :column="2">
+        <yu-xform-item label="托管客户经理" name="trustMgrId" ctype="yufp-mgr-selector" rules="required" :params="custManagerParams" @select-fn="mgrSelectFn"></yu-xform-item>
+        <yu-xform-item label="托管有效期" name="deadLine" ctype="datepicker" rules="required" format="yyyy-MM-dd"></yu-xform-item>
+        <yu-xform-item label="托管理由" name="trustReason" ctype="textarea" rules="required" :rows="3" :colspan="24"></yu-xform-item>
+      </yu-xform-group>
+      <!-- <div class="yu-toolBar">
+        <yu-button-group> 
+          <yufp-governed-cust-selector ref="selectCust"  class="select-cust-btn"  @select-fn="custSeletFn" :params="selectCustParams">
+            <template slot="trigerEl">
+              <yu-button icon="plus"  @click="addCustFn">新增</yu-button>
+            </template>
+          </yufp-governed-cust-selector>
+          <yu-button icon="yx-bin" @click="deleteCustFn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="refCustTable" row-number :data="custTrusteeData" :pageable="false">
+        <yu-xtable-column label="客户类型" prop="custType" width="80" data-code="CD0016"></yu-xtable-column>
+        <yu-xtable-column label="客户状态" prop="custStatus" width="80" data-code="CD0019"></yu-xtable-column>
+        <yu-xtable-column label="客户号" prop="custId" width="180"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="200"></yu-xtable-column>
+        <yu-xtable-column label="价值等级" prop="valueLev"  data-code="CD0243"></yu-xtable-column>
+        <yu-xtable-column label="服务等级" prop="servLev"  data-code="CD0032"></yu-xtable-column>
+      </yu-xtable>-->
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div> 
+    </yu-xform>
+  </yu-xdialog>
+  <yu-xdialog title="历史托管客户清单" :visible.sync="histroyTrusteedialogVisible" width="70%">
+      <yu-xtable ref="refCustHistoryTable" row-number :data-url="historyDataUrl">
+        <yu-xtable-column label="客户类型" prop="custType" width="80" data-code="CD0016"></yu-xtable-column>
+        <yu-xtable-column label="客户状态" prop="custStatus" width="120" data-code="CD0019"></yu-xtable-column>
+        <yu-xtable-column label="客户号" prop="custId" width="120"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="证件类型" prop="certType" width="80" data-code="CD0011"></yu-xtable-column>
+        <yu-xtable-column label="证件号码" prop="certNo" width="180"></yu-xtable-column>
+        <yu-xtable-column label="托管状态" prop="grantStat" data-code="CD0345"></yu-xtable-column>
+      </yu-xtable>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="histroyTrusteedialogVisible = false">取消</yu-button>
+      </div>
+    </yu-xdialog>
+    <yu-xdialog title="托管客户信息" :visible.sync="trustCustVisible" width="70%">
+        <!-- <yu-xform ref="trustCustSearchForm" v-model="trustCustFormdata" form-type="search" class="hide-form-search-btn">
+            <yu-xform-group :column="8">
+              <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016"></yu-xform-item>
+              <yu-xform-item placeholder="托管客户经理" name="trustMgrId" ctype="yufp-mgr-selector" :params="custManagerParams"></yu-xform-item>
+              <yu-xform-item placeholder="客户状态" name="custStatus" ctype="select" data-code="CD0019"></yu-xform-item>
+              <yu-xform-item placeholder="客户号" name="custId" ctype="input"></yu-xform-item>
+              <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+              <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="trustCustFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+        <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="trustCustFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+        <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="trustCustFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+              <yu-xform-item placeholder="证件号" name="certNo" ctype="input"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton" style="text-align: right;">
+              <yu-button icon="search" type="primary" @click="trustCustSearchFn">查询</yu-button>
+              <yu-button icon="yx-loop2" type="primary" @click="trustCustResetFn">重置</yu-button>
+            </div>
+          </yu-xform> -->
+        <yu-xtable ref="trustCustTable" default-load="false"  row-number :data-url="trustCustUrl" :base-params="trustCustParams">
+          <yu-xtable-column label="客户类型" prop="custType" width="80" data-code="CD0016"></yu-xtable-column>
+          <yu-xtable-column label="客户状态" prop="custStatus" width="120" data-code="CD0019"></yu-xtable-column>
+          <yu-xtable-column label="客户号" prop="custId" width="120"></yu-xtable-column>
+          <yu-xtable-column label="客户名称" prop="custName" ></yu-xtable-column>
+          <yu-xtable-column label="托管客户经理" prop="trustMgrName" ></yu-xtable-column>
+          <yu-xtable-column label="托管到期日" prop="deadLine"  :formatter="dateFormatter"></yu-xtable-column>
+          <yu-xtable-column label="证件类型" prop="certType" width="80" data-code="CD0011"></yu-xtable-column>
+          <yu-xtable-column label="证件号码" prop="certNo" width="180"></yu-xtable-column>
+          <yu-xtable-column label="托管状态" prop="trustStat" data-code="CD0345"></yu-xtable-column>
+        </yu-xtable>
+        <div class="yu-grpButton">
+          <yu-button icon="yx-undo2" type="primary" @click="trustCustVisible = false">取消</yu-button>
+        </div>
+      </yu-xdialog>
+
+
+      <!-- 托管中列表 -->
+      <yu-xdialog title="托管中列表" :visible.sync="trustListVisible" width="70%">
+          <yu-xform ref="trustListSearchForm" v-model="trustListFormdata" form-type="search" class="hide-form-search-btn">
+              <yu-xform-group :column="8">
+                  <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016"></yu-xform-item>
+                  <yu-xform-item placeholder="托管客户经理" name="trustMgrId" ctype="yufp-mgr-selector" :params="custManagerParams"></yu-xform-item>
+                  <yu-xform-item placeholder="客户状态" name="custStatus" ctype="select" data-code="CD0019"></yu-xform-item>
+                  <yu-xform-item placeholder="客户号" name="custId" ctype="input"></yu-xform-item>
+                  <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+                  <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="trustListFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+            <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="trustListFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+            <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="trustListFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+            <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="trustListFormdata.custType != undefined" data-code="CD0011"></yu-xform-item>      
+            <yu-xform-item placeholder="证件号" name="certNo" ctype="input"></yu-xform-item>
+                </yu-xform-group>
+                <div class="yu-grpButton" style="text-align: right;">
+                  <yu-button icon="search" type="primary" @click="trustListSearchFn">查询</yu-button>
+                  <yu-button icon="yx-loop2" type="primary" @click="trustListResetFn">重置</yu-button>
+                </div>
+          </yu-xform>
+            <yu-button-group>
+                 <yu-button icon="yx-undo2" @click="recycleTrusteFn">回收托管</yu-button> 
+                 <yu-button icon="yx-undo2" @click="trusteListInfoFn">托管详情</yu-button>
+              </yu-button-group>
+              <yu-xtable ref="trustListrefTable" row-number :data-url="trustListdataUrl" selection-type="checkbox" :base-params="trustCustParams">
+                  <yu-xtable-column label="客户数" prop="custNum" ></yu-xtable-column>
+                  <yu-xtable-column label="客户经理" prop="mgrName" ></yu-xtable-column>
+                  <yu-xtable-column label="托管状态" prop="trustStat"  data-code="CD0345"></yu-xtable-column>
+                  <yu-xtable-column label="托管客户经理" prop="trustMgrName" ></yu-xtable-column>
+                  <yu-xtable-column label="托管日期" prop="setDate" :formatter="timeFormatter"></yu-xtable-column>
+                  <yu-xtable-column label="托管有效期" prop="deadLine" :formatter="dateFormatter"></yu-xtable-column>
+                </yu-xtable> 
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="trustListVisible = false">取消</yu-button>
+          </div>
+        </yu-xdialog>
+</div>

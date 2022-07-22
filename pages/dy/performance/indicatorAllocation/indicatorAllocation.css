@@ -1,0 +1,51 @@
+/**
+ * @created by 冉珣 on 2021-10-27 16:42:37
+ * @updated by
+ * @description 指标分配
+ */
+
+.indicator_allocation .indicator_left,
+.indicator_allocation .indicator_right {
+    padding: 24px;
+}
+
+.indicator_allocation .indicator_left {
+    border-right: 1px solid #E5E7ED;
+    height: 780px;
+}
+
+.indicator_allocation .title {
+    margin-bottom: 24px;
+}
+
+.indicator_allocation .title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.indicator_allocation .title span {
+    font-size: 16px;
+    color: #303133;
+    font-weight: bold;
+    margin-right: 20px
+}
+
+.indicator_allocation .title span:last-child {
+    font-size: 14px;
+    color: #909399;
+    font-weight: normal
+}
+
+.indicator_allocation .confirm_btn {
+    border-top: 1px solid #E5E7ED;
+    text-align: right;
+    padding: 20px 24px;
+}
+
+.indicator_allocation .indicator_right .el-table__empty-text {
+    line-height: 20px;
+}
+
+.el-table__footer-wrapper {
+    margin-top: -40px;
+}

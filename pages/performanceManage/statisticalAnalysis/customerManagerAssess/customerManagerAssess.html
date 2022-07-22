@@ -1,0 +1,87 @@
+<!-- 
+  @Created by 万爽 wanshuang@yusys.com.cn on 2020-1-7 10:00:26.
+  @updated by
+  @description 业绩转移
+-->
+<div>
+    <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+    <div style="margin: 10px 0px;">
+        <yu-xform related-table-name="refTable" ref="refQuery">
+            <yu-xform-group :column="4">
+                <!-- <yu-xform-item placeholder="考核周期" ctype="datepicker" name="schemeCycle"></yu-xform-item> -->
+                <!-- <yu-xform-item placeholder="考核周期" ctype="daterange" name="schemeCycle"></yu-xform-item> -->
+                <yu-date-picker v-model="schemeCycle" type="daterange" placeholder="选择日期范围" start-placeholder="开始日期"
+                    end-placeholder="结束日期" value-format="yyyy-MM-dd">
+                </yu-date-picker>
+                <yu-xform-item placeholder="考核方案" ctype="yufp-dy-scheme-selector" :params="obj" name="schemeId"
+                    rules="required">
+                </yu-xform-item>
+                <yu-xform-item placeholder="客户经理名称" ctype="yufp-manager-selector" name="managerId"></yu-xform-item>
+                <yu-xform-item placeholder="排名方式" ctype="yu-xselect" name="rankMethod" :options="rankOptions"
+                    value="desc" @change="rankChangeFn"></yu-xform-item>
+            </yu-xform-group>
+        </yu-xform>
+        <div style="float:right;">
+            <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+            <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+        </div>
+    </div>
+    <div class="yu-toolBar">
+        <yu-button-group>
+            <yu-button icon="document" @click="detailFn">评分详情</yu-button>
+            <yu-button icon="document" @click="performanceFn">业绩结果</yu-button>
+            <yu-button icon="yx-download" @click="downloadFn">导出</yu-button>
+        </yu-button-group>
+    </div>
+    <yu-xtable ref="refTable" row-number :base-params="params" selection-type="checkbox" :data-url="dataUrl"
+        :default-load="false" @loaded="loadedHandler" request-type="post">
+        <yu-xtable-column label="考核周期" prop="schemeCycle"></yu-xtable-column>
+        <yu-xtable-column label="客户经理编号" prop="managerId"></yu-xtable-column>
+        <yu-xtable-column label="客户经理姓名" prop="managerName"></yu-xtable-column>
+        <yu-xtable-column label="考核方案编号" prop="schemeId"></yu-xtable-column>
+        <yu-xtable-column label="考核方案" prop="schemeName"></yu-xtable-column>
+        <yu-xtable-column label="总评分" prop="totalScore"></yu-xtable-column>
+        <yu-xtable-column label="总评分排名" prop="totalScoreRank"></yu-xtable-column>
+    </yu-xtable>
+
+    <yu-xdialog title="评分详情" :visible.sync="dialogVisible" width="1000px">
+        <yu-xform ref="scoreRefForm" label-width="150px">
+            <yu-xform-group :column='2'>
+                <yu-xform-item label="考核指标得分" ctype="radio" name="scoreRankMethod" :options="options1"
+                    v-model="scoreRankMethod">
+                </yu-xform-item>
+                <yu-xform-item label="指标完成率" ctype="radio" name="compRateRankMethod" :options="options2"
+                    v-model="compRateRankMethod">
+                </yu-xform-item>
+                <yu-xform-item label="考核指标" ctype="yufp-index-selector" :params="indexParams" name="indexId">
+                </yu-xform-item>
+            </yu-xform-group>
+        </yu-xform>
+        <div style="float:right; margin: 10px 0px;">
+            <yu-button icon="search" type="primary" @click="scoreSearchFn">查询</yu-button>
+            <yu-button icon="yx-loop2" type="primary" @click="scoreResetFn">重置</yu-button>
+        </div>
+        <yu-xtable ref="scoreRefTable" row-number :base-params="scoreParams" selection-type="radio"
+            :data-url="scoreDataUrl" :default-load="false" request-type="post">
+            <yu-xtable-column label="考核指标编号" prop="indexId"></yu-xtable-column>
+            <yu-xtable-column label="考核指标" prop="indexName"></yu-xtable-column>
+            <yu-xtable-column label="考核指标计划值" prop="indexTargetValue"></yu-xtable-column>
+            <yu-xtable-column label="考核指标结果值" prop="indexRes"></yu-xtable-column>
+            <yu-xtable-column label="考核指标完成率(%)" prop="compRate"></yu-xtable-column>
+            <yu-xtable-column label="考核评分算法" prop="scoreFormula"></yu-xtable-column>
+            <yu-xtable-column label="权重" prop="scoreWeight"></yu-xtable-column>
+            <yu-xtable-column label="考核指标得分" prop="score"></yu-xtable-column>
+        </yu-xtable>
+        <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn">关闭</yu-button>
+        </div>
+    </yu-xdialog>
+
+    <yu-xdialog title="业绩结果" :visible.sync="dialogVisibleTwo" width="95%" top="2%">
+        <yu-xtable ref="refTableResult" :data="listData" selection-type="radio">
+            <yu-xtable-column :label="item.value" :prop="item.key" v-for="item in titleData" width="120">
+
+            </yu-xtable-column>
+        </yu-xtable>
+    </yu-xdialog>
+</div>

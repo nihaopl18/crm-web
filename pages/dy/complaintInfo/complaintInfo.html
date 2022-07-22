@@ -1,0 +1,49 @@
+<!-- 
+  @Created by mabintao on 2022-02-26
+  @updated by
+  @description 投诉管理
+-->
+<div id="complaintInfo">
+    <!-- test  allCustomerSearch -->
+    <link href="./pages/dy/complaintInfo/complaintInfo.css" rel="stylesheet" type="text/css">
+    <div>
+        <div class="mt20 bgWhite" style="padding: 0px 20px;">
+            <yu-row :gutter="20">
+                <yu-col :span="23" :offset="1">
+                    <yu-xform size="small" v-model="queryParams" label-width="140px" ref="queryParams" related-table-name="yutable1" responsive>
+                        <yu-xform-group :column="2">
+                            <yu-xform-item label="工单编号" ctype="input" placeholder="请输入" name="sheetId" clearable></yu-xform-item>
+                            <yu-xform-item label="ECIF客户号" ctype="input" placeholder="请输入" name="custEcifNo" clearable></yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-group :column="2">
+                            <yu-xform-item label="工单处理状态" ctype="select" data-code="IS_HANDLE" placeholder="请输入" name="handleState" clearable></yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-item ctype="custom" style="text-align: right;">
+                            <yu-button @click="resetFormFn">重置</yu-button>
+                            <yu-button type="primary" @click="searchFn('queryParams')">查询</yu-button>
+                            <!-- <yu-button type="primary" @click="editDialogVisible = true">测试弹窗</yu-button> -->
+                        </yu-xform-item>
+                    </yu-xform>
+                </yu-col>
+            </yu-row>
+        </div>
+        <div class="bgWhite" style="padding: 0px 20px;">
+            <yu-xtable :borde="false" :select-on-indeterminate="false" ref="multipleTable" data-url="/api/complaintFeedBackResources/queryprepare" class="mt20" :default-load="true" @selection-change="selectChange" clearSelection>
+                <yu-xtable-column type="index" label="序号" width="60px"></yu-xtable-column>
+                <yu-xtable-column prop="sheetId" label="工单编号" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="custEcifNo" label="ECIF客户号" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="custName" label="客户姓名" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="handleStateDo" label="工单处理状态" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="handleTime" label="最近处理时间" width="200px"></yu-xtable-column>
+                <yu-xtable-column label="操作" width="200px">
+                    <template slot-scope="scope">
+                        <yu-button @click.native.prevent="editRow(scope.row)" type="text" style="color: #B96D06;" size="small">投诉处理</yu-button>
+                    </template>
+                </yu-xtable-column>
+            </yu-xtable>
+        </div>
+    </div>
+    <yu-dialog title="投诉处理" :visible.sync="editDialogVisible">
+        <complaint-edit ref="customerEdite" :sheet-id="sheetId" @handleediteclose="closeeditebox" />
+    </yu-dialog>
+</div>

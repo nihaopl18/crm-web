@@ -1,0 +1,31 @@
+<!--
+  @created by geyun geyun@yusys.com.cn on 2019-1-28 15:48:59.
+  @updated by 
+  @description 积分统计报表
+-->
+<div>
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="8">
+      <yu-xform-item placeholder="统计日期" ctype="datepicker" name="etlDt"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 查询显示表格 -->
+  <yu-xtable ref="refTable" :data-url="dataUrl" :summary-method="getSummaries"
+  show-summary>
+    <yu-xtable-column label="积分大类" prop="acctBtype" data-code="ACCT_B_TYPE" width="120px"></yu-xtable-column>
+    <yu-xtable-column label="积分小类" prop="acctStype" data-code="ACCT_S_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="当月产生积分" prop="addScoreM" ></yu-xtable-column>
+    <yu-xtable-column label="当年产生积分" prop="addScoreY" ></yu-xtable-column>
+    <yu-xtable-column label="可用积分" prop="availScore"></yu-xtable-column>
+    <yu-xtable-column label="当月过期积分" prop="expiredScoreM"></yu-xtable-column>
+    <yu-xtable-column label="当年过期积分" prop="expiredScoreY"></yu-xtable-column>
+    <yu-xtable-column label="当月已兑换积分" prop="exchangedScoreM"></yu-xtable-column>
+    <yu-xtable-column label="当年已兑换积分" prop="exchangedScoreY"></yu-xtable-column>
+    <yu-xtable-column label="当月将到期积分" prop="expireScoreM"></yu-xtable-column>
+    <yu-xtable-column label="当年将到期积分" prop="expireScoreY"></yu-xtable-column>
+    <yu-xtable-column label="客户数" prop="custNum"></yu-xtable-column>
+    <yu-xtable-column label="当月消费客户数" prop="exchangedCustM"></yu-xtable-column>
+    <yu-xtable-column label="当年消费客户数" prop="exchangedCustY"></yu-xtable-column>
+  </yu-xtable>
+</div>

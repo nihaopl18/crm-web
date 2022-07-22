@@ -1,0 +1,16 @@
+<div>
+    <br/>
+    <div style="color:red">
+        <h2> PDF示例：pdf预览、下载</h2>
+    </div>
+    <br>
+    <el-button icon="el-icon-download" @click="doShowHtml">预览html</el-button>
+    <el-button icon="el-icon-download" @click="doShow">预览pdf</el-button>
+    <el-button icon="el-icon-download" @click="doDownload">下载pdf</el-button>
+    <br />
+    <hr />
+    <br />
+    <div id="pdfDemoShow" v-if="pdfShow" style="margin: 10px">
+        <iframe id="pdfDemoShowIframe" style="width: 100%; min-height: 500px;"></iframe>
+    </div>
+</div>

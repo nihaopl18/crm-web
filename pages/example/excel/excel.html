@@ -1,0 +1,41 @@
+<!-- 必须全局拥有唯一的id -->
+<div id="el_table_excel_demo" class="filter-container" >
+    <br/>
+    <div style="color:red">
+        <h2> EXCEL导入、导出示例：</h2>
+    </div>
+
+    <div slot="tip">Tip：先选取Excel文件后，再点击导入按钮。</div>
+    <br/>
+
+    <el-dialog-x title="导出" :visible.sync="dialogFormVisible"  height="120px" width="300px">
+        <el-form-x ref="ExportForm" :group-fields="fetchSizeFields" label-width="80px"></el-form-x>
+        <div slot="footer" align="center">
+            <el-button type="primary" @click="dialogFormVisible = false">关闭</el-button>
+            <el-button type="primary" @click="realExportFn()">导出</el-button>
+        </div>
+    </el-dialog-x>
+
+    <el-row :gutter="20" >
+        <el-col :span="11">
+            <el-upload
+                    class="upload-demo"
+                    ref="upload"
+                    :action="uploadUrl()"
+                    :on-remove="handleRemove"
+                    :on-success="handleUploadSuccess"
+                    :auto-upload="false"
+                    :data="upLoadData">
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                <el-button style="margin-left: 10px;" size="small" type="success" @click="importFn">导入</el-button>
+                <el-button size="small" type="primary" icon="document" @click="exportFn">导出</el-button>
+                <el-button size="small" type="primary" icon="document" @click="exportTemplateFn">导出模板</el-button>
+            </el-upload>
+        </el-col>
+    </el-row>
+    <el-progress :percentage="percentage" color="#8e71c7"></el-progress>
+    <el-table-x ref="excelDemo" :radiobox="false"
+                :checkbox="excelDemoGrid.checkbox" :height="excelDemoGrid.height"
+                :data-url="excelDemoGrid.dataUrl" :base-params="excelDemoGrid.dataParams" :table-columns="excelDemoGrid.tableColumns">
+    </el-table-x>
+</div>

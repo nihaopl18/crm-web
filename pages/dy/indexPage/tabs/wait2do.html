@@ -1,0 +1,135 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-06 14:54:41
+ * @update by: 
+ * @description: 待办事项
+-->
+<div class="wait2do">
+    <link rel="stylesheet" type="text/css" href="pages/dy/indexPage/tabs/common.css">
+    <ul v-if="list.length">
+        <li v-for="(item, index) in list" :key="index">
+            <div :class="['line', returnBgColor(item.todoWorkType)]"></div>
+            <!-- <div class="first"> -->
+            <yu-row class="first">
+                <yu-col :span="18">
+                    <div>
+                        <span :class="['tag', returnTextColor(item.todoWorkType)]">{{ itemTypes[item.todoWorkType] }}</span>
+                        <p class="todotitle" @click="detail(item)">{{ item.todoWorkTitle }}</p>
+                    </div>
+                </yu-col>
+                <yu-col :span="6">
+                    <div>
+                        <span class="status1" v-if="item.todoWorkState == '1'">{{ workStatus[item.todoWorkState] }}</span>
+                        <span class="status2" v-if="item.todoWorkState == '2'">{{ workStatus[item.todoWorkState] }}</span>
+                        <el-dropdown trigger="click" @command="handleOptionSelect" @visible-change="handleOptionVisibleChange(item)" v-if="item.todoWorkState == '1'">
+                            <span class="el-icon-more" style="cursor: pointer;"></span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="state"><i class="el-icon-document-checked"></i> 已跟进
+                                </el-dropdown-item>
+                                <el-dropdown-item command="edit"><i class="el-icon-edit-outline"></i> 编辑</el-dropdown-item>
+                                <el-dropdown-item command="delete"><i class="el-icon-document-delete"></i>删除</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </yu-col>
+            </yu-row>
+
+
+            <!-- </div> -->
+            <!-- <div class="second">
+        <el-avatar :size="20" :src="circleUrl"></el-avatar>
+        <span>{{ item.name }}</span>
+        <span>{{ item.createTime }}</span>
+      </div> -->
+            <div class="last">
+                <span class="yu-icon-time"></span>
+                <span>执行时间：当日{{ item.startDateCopy }}</span>
+            </div>
+        </li>
+    </ul>
+    <div v-else class="no-data">暂无数据</div>
+    <yu-xdialog :title="tableEditFormdata.title" :visible.sync="waitdoVisible" width="600px" :before-close="handleClose">
+        <yu-xform ref="refFormDemo" label-width="120px" label-position="top" v-model="wait2doForm" v-if="waitdoVisible">
+            <yu-row :getters="20">
+                <yu-xform-group>
+                    <yu-xform-item label="主题" ctype="input" name="todoWorkTitle" colspan="22" disabled="true" v-show="tableEditFormdata.notice == '1'">
+                    </yu-xform-item>
+                    <yu-col :span="20">
+                        <yu-xform-item label="待办类型" ctype="select" name="todoWorkType" data-code="DY0002" disabled="true" v-show="tableEditFormdata.notice == '1'">
+                        </yu-xform-item>
+                    </yu-col>
+                    <yu-col :span="20">
+                        <yu-xform-item label="创建人" ctype="input" name="creator" colspan="22" disabled="true" v-show="tableEditFormdata.notice == '1'">
+                        </yu-xform-item>
+                    </yu-col>
+                </yu-xform-group>
+                <yu-xform-group>
+                    <yu-col :span="20">
+                        <yu-xform-item label="执行时间" ctype="datepicker" name="startDate" type="datetime" format="yyyy-MM-dd HH:mm" :rules="rule.required" v-show="tableEditFormdata.notice == '1'" :picker-options="pickerOptions">
+                        </yu-xform-item>
+                        <yu-xform-item label="执行时间" ctype="input" name="startDate" v-show="tableEditFormdata.notice == '2'" disabled="true">
+                        </yu-xform-item>
+                    </yu-col>
+                    <!-- <yu-xform-item label="关联客户" ctype="yufp-governed-cust-selector" :params="selectCustParams"
+            @select-fn="custSelFn" name="relationCust" colspan="22"> -->
+                    <!-- <yu-xform-item label="关联客户" ctype="input" name="relationCust" @focus="onfocusone" colspan="22">
+                    </yu-xform-item> -->
+                    <!-- <yu-xform-item label="关联客户" ctype="yufp-single-many-query" @selectfn="custSelFn" name="relationCust" colspan="22"> -->
+                    <yu-xform-item label="关联客户" ctype="yufp-single-many-query" :raw-value="custvalue" @selectfn="custSelFn" name="relationCust" colspan="22">
+                    </yu-xform-item>
+                    </yu-xform-item>
+                    <yu-xform-item label="内容" ctype="textarea" name="todoWorkContent" :rows="2" :colspan="22" placeholder="200个字符以内" :rules="rule.todoWorkContent"></yu-xform-item>
+                </yu-xform-group>
+            </yu-row>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="handleClose">取消</yu-button>
+                <yu-button id="handleEditid" icon="check" type="primary" @click="handleEdit">确定</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+
+    <yu-xdialog :title="title" :visible.sync="detailVisible" width="600px" :before-close="handleClose">
+        <yu-xform ref="detailForm" label-width="120px" label-position="top" v-model="detailFormData" disabled="true">
+            <yu-row :getters="20">
+                <yu-xform-group>
+                    <yu-xform-item label="主题" ctype="input" name="todoWorkTitle" colspan="22" v-show="detailFormData.notice == '1'">
+                    </yu-xform-item>
+                    <yu-col :span="20">
+                        <yu-xform-item label="待办类型" ctype="select" name="todoWorkType" data-code="DY0002" v-show="detailFormData.notice == '1'">
+                        </yu-xform-item>
+                    </yu-col>
+                    <yu-col :span="20">
+                        <yu-xform-item label="创建人" ctype="input" name="creator" colspan="22" v-show="detailFormData.notice == '1'">
+                        </yu-xform-item>
+                    </yu-col>
+                </yu-xform-group>
+                <yu-xform-group>
+                    <yu-col :span="20">
+                        <yu-xform-item label="执行时间" ctype="input" name="startDate" v-show="detailFormData.notice == '1'" :picker-options="pickerOptions">
+                        </yu-xform-item>
+                    </yu-col>
+                    <!-- <yu-xform-item label="关联客户" ctype="input" name="relationCust" colspan="22">
+                </yu-xform-item> -->
+                    <yu-xform-item label="关联客户" ctype="custom" :colspan="22" name="defaultRangeDate">
+                        <yu-row>
+                            <yu-col>
+                                <el-link v-for="item in custList" type="primary" @click="toCustomer360View(item)">{{ item}}；
+                                </el-link>
+                            </yu-col>
+                        </yu-row>
+                    </yu-xform-item>
+                    <yu-xform-item label="内容" ctype="textarea" name="todoWorkContent" :rows="2" :colspan="22">
+                    </yu-xform-item>
+                </yu-xform-group>
+            </yu-row>
+            <div class="yu-grpButton" v-if="detailFormData.todoWorkState == '1'">
+                <yu-button icon="yx-undo2" type="primary" @click="detailAndState(detailFormData)">已跟进
+                </yu-button>
+                <yu-button icon="yx-undo2" type="primary" @click="detailAndModify(detailFormData)">编辑</yu-button>
+                <yu-button icon="check" type="primary" @click="detailAndDelete(detailFormData)">删除</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+</div>
+
+<link rel="stylesheet" href="pages/crmsys/workPlatform/workReport/workReport.css">

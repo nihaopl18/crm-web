@@ -1,0 +1,108 @@
+<!-- 
+  @Created by chenlin chenlin2@yusys.com.cn on 2019-2-18 17:55:09.
+  @updated by yangxiao2 on 2019-6-6
+  @description 订单管理
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="订单号" name="orderNumber" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="主订单号" name="majorOrderNumber" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="商品编号" name="commodityCode" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="商品名称" name="commodityName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="订单状态" name="orderState" ctype="select" data-code="ORDER_STATE"></yu-xform-item>
+      <yu-xform-item placeholder="城市" name="orderCity" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CUST_TYPE"></yu-xform-item>
+      <yu-xform-item placeholder="客户编号" name="orderCustId" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar" style="margin:10px 10px 0 0;">
+    <yu-button-group>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :default-load=false :highlight-current-row="highlidght" :base-params="baseParams">
+    <yu-xtable-column label="订单号" prop="orderNumber" width="120"></yu-xtable-column>
+    <yu-xtable-column label="主订单号" prop="majorOrderNumber" width="120"></yu-xtable-column>
+    <yu-xtable-column label="商品编号" prop="commodityCode" width="120"></yu-xtable-column>
+    <yu-xtable-column label="商品名称" prop="commodityName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="商品数量" prop="commodityNumber" width="120"></yu-xtable-column>
+    <yu-xtable-column label="商品积分价值" prop="commodityLValue" width="120"></yu-xtable-column>
+    <yu-xtable-column label="商品总价值" prop="commodityTValue" width="120"></yu-xtable-column>
+    <yu-xtable-column label="商品现金价值" prop="commodityMValue" width="120"></yu-xtable-column>
+    <yu-xtable-column label="订单状态" prop="orderState" width="120" data-code="ORDER_STATE"></yu-xtable-column>
+    <yu-xtable-column label="客户类型" prop="custType" width="120"></yu-xtable-column>
+    <yu-xtable-column label="订单客户" prop="custName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="下单日期" prop="orderStartDate" width="120"></yu-xtable-column>
+    <yu-xtable-column label="完成日期" prop="orderEndDate" width="120"></yu-xtable-column>
+    <yu-xtable-column label="收货人" prop="consigneeName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="收货人联系方式" prop="consigneeNumber" width="120"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="800px">
+    <yu-xform ref="refForm" label-width="130px" v-model="formdata" :disabled="formDisabled">
+      <yu-tabs v-model="tabModel">
+        <yu-tab-pane label="订单信息" name="first">
+          <yu-xform-group style="margin: 10px 0 0 0;">
+            <yu-xform-item label="订单号" name="orderNumber" ctype="input"></yu-xform-item>
+            <yu-xform-item label="主订单号" name="majorOrderNumber" ctype="input"></yu-xform-item>
+            <yu-xform-item label="商品编号" name="commodityCode" ctype="input"></yu-xform-item>
+            <yu-xform-item label="商品名称" name="commodityName" ctype="input"></yu-xform-item>
+            <yu-xform-item label="商品数量" name="commodityNumber" ctype="input"></yu-xform-item>
+            <yu-xform-item label="商品积分价值" name="commodityLValue" ctype="input"></yu-xform-item>
+            <yu-xform-item label="商品总价值" name="commodityTValue" ctype="input"></yu-xform-item>
+            <yu-xform-item label="商品现金价值" name="commodityMValue" ctype="input"></yu-xform-item>
+            <yu-xform-item label="订单状态" name="orderState" ctype="select" data-code="ORDER_STATE"></yu-xform-item>
+            <yu-xform-item label="客户类型" name="custType" ctype="input"></yu-xform-item>
+            <yu-xform-item label="订单客户" name="custName" ctype="input"></yu-xform-item>
+            <yu-xform-item label="下单日期" name="orderStartDate" ctype="input"></yu-xform-item>
+            <yu-xform-item label="完成日期" name="orderEndDate" ctype="input"></yu-xform-item>
+          </yu-xform-group>
+        </yu-tab-pane>
+        <yu-tab-pane label="物流信息" name="second">
+          <yu-xform-group style="margin: 10px 0 0 0;">
+            <yu-xform-item label="收货人" name="consigneeName" ctype="input"></yu-xform-item>
+            <yu-xform-item label="收货人联系方式" name="consigneeNumber" ctype="input"></yu-xform-item>
+            <yu-xform-item label="运单号" name="trackingNumber" ctype="input"></yu-xform-item>
+            <yu-xform-item label="物流商" name="logistics" ctype="input"></yu-xform-item>
+            <yu-xform-item label="收货人地址" name="consigneeAddress" ctype="textarea" colspan="24"></yu-xform-item>
+          </yu-xform-group>
+        </yu-tab-pane>
+      </yu-tabs>
+    </yu-xform>
+    <div class="yu-grpButton">
+      <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+    </div>
+  </yu-xdialog>
+  <yu-xdialog title="物流信息" :visible.sync="dialogVisibleTrack" width="650px">
+    <yu-xform ref="refFormTrack" lable-width="120px" v-model="formdataTrack">
+      <yu-xform-group>
+        <yu-xform-item label="收货人" name="consigneeName" ctype="input" rules="required"></yu-xform-item>
+        <yu-xform-item label="联系方式" name="consigneeNumber" ctype="input" rules="mobile"></yu-xform-item>
+        <yu-xform-item v-show="trackShow" label="运单号" name="trackingNumber" ctype="input" rules="required"></yu-xform-item>
+        <yu-xform-item v-show="trackShow" label="物流商" name="logistics" ctype="input" rules="required"></yu-xform-item>
+        <yu-xform-item label="收货人地址" colspan="24" ctype="textarea" name="consigneeAddress" rules="required"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveTrackFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 换货关闭 -->
+  <yu-xdialog :title="Retitle" :visible.sync="dialogVisibleOff" width="650px">
+    <yu-xform ref="refFormOff" lable-width="120px" v-model="formdataOff">
+      <yu-xform-group>
+        <yu-xform-item v-if="Retitle == '换货'" label="换货原因" name="orderExcReason" ctype="input" rules="required"></yu-xform-item>
+        <yu-xform-item v-else="Retitle == '关闭'" label="关闭原因" name="orderOffReason" ctype="input" rules="required"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveOffFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

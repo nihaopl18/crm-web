@@ -1,0 +1,61 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-4 15:45:48.
+  @updated by
+  @description 视图树管理——视图树配置
+-->
+<div>
+  <yu-row :gutter="20">
+    <yu-col :span="6">
+      <div class="yu-toolBar">
+        <h2 style="margin-top: 10px;">视图树</h2>
+        <!-- <yu-button icon="plus" class="btn" @click="createFn" v-if="createCheck">新增</yu-button>
+        <yu-button icon="delete" class="btn" @click="deleteFn" v-if="deleteCheck">删除</yu-button> -->
+        <yu-button icon="plus" class="btn" @click="createFn">新增</yu-button>
+        <yu-button icon="delete" class="btn" @click="deleteFn">删除</yu-button>
+      </div>
+      <yufp-ext-tree ref="menuTree" :show-checkbox="false" :height="height - 112" :data-url="menuTreeUrl" :data-params="requestParams" data-id="id" data-label="name"
+        @node-click="nodeClickFn" data-pid="parentId" :data-root="{id:'0',label:'主菜单'}" :expand-level='2' :highlight-current="true">
+      </yufp-ext-tree>
+    </yu-col>
+    <yu-col :span="7">
+      <h2 class="yu-formTitle" style="margin-top: 10px;">子节点维护</h2>
+      <!-- <yu-form-x ref="menuForm" :group-fields="menuFields" :buttons="formButtons" labyu-width="80px"></yu-form-x> -->
+      <yu-xform ref="menuForm" v-model="formdata">
+        <yu-xform-group :column="1">
+          <yu-xform-item label="视图菜单名称" name="name" ctype="input" :rules="rules.nameRules"></yu-xform-item>
+          <yu-xform-item label="视图项名称" placeholder="请从视图项列表选择" name="viewItemName" :readonly="true" ctype="input" icon="circle-close" @focus="activeCollFn('funcList')" :on-icon-click="iconClickFn"></yu-xform-item>
+          <yu-xform-item label="排序" name="orders" ctype="input" :rules="rules.orderRules"></yu-xform-item>
+          <yu-xform-item label="上级节点" name="parentName" ctype="input" :readonly="true" :rules="rules.upNodeRules" @focus="activeCollFn('upMenu')"></yu-xform-item>
+          <yu-xform-item label="说明" name="notes" ctype="textarea" :rules="rules.descriptionRules"></yu-xform-item>
+        </yu-xform-group>
+        <div class="yu-grpButton">
+          <yu-button icon="check" type="primary" @click="saveFn">保存</yu-button>
+          <yu-button icon="yx-undo2" type="primary" @click="cancelFn">重置</yu-button>
+        </div>
+      </yu-xform>
+    </yu-col>
+    <yu-col :span="11">
+      <yu-collapse v-model="expandCollapseName" accordion>
+        <yu-collapse-item title="视图项列表" name="funcList">
+          <yu-xform related-table-name="funcTable" form-type="search">
+            <yu-xform-group :column="2">
+              <!-- 视图名称或者视图项名称或者视图项地址 -->
+              <yu-xform-item placeholder="关键字" name="queryKey" ctype="input"></yu-xform-item>
+            </yu-xform-group>
+          </yu-xform>
+          <yu-xtable ref="funcTable" :data-url="funcUrl" :height="height - 185" @row-click="funcSelect">
+            <yu-xtable-column label="视图名称" prop="viewName" width="145" :sortable="true" :resizable="true"></yu-xtable-column>
+            <yu-xtable-column label="视图项名称" prop="viewItemName" width="150" :sortable="true" :resizable="true"></yu-xtable-column>
+            <yu-xtable-column label="URL链接" prop="viewAddr" :sortable="true" :resizable="true" :show-overflow-tooltip="true"></yu-xtable-column>
+          </yu-xtable>
+        </yu-collapse-item>
+        <yu-collapse-item title="上级视图树菜单" name="upMenu">
+          <yufp-ext-tree ref="upMenuTree" :show-checkbox="false" :height="height - 130" :highlight-current="true" :data-params="requestParams" :data-url="menuTreeUrl"
+            data-id="id" data-label="name" @node-click="upMenuClickFn" data-pid="parentId" :data-root="{id:'0',label:'主菜单'}"
+            :expand-level='2' :filter-node-method="filterFn">
+          </yufp-ext-tree>
+        </yu-collapse-item>
+      </yu-collapse>
+    </yu-col>
+  </yu-row>
+</div>

@@ -1,0 +1,20 @@
+{
+	"Extends":[
+		
+	],
+	"build-time":"Thu May 30 17:34:50 CST 2019",
+	"complie_date":"2018-02-12",
+	"license_code":"0000012115",
+	"license_end_time":"2019-11-20",
+	"license_start_time":"2019-05-30",
+	"license_type":"内部试用许可证",
+	"pro_code":"YTEC-2019-1135-B",
+	"pro_name":"统一前端平台2019年上半年推广及维护项目",
+	"product_code":"0000001182",
+	"product_name_en-us":"YUFP",
+	"product_name_zh-cn":"宇信科技统一前端平台",
+	"validate-code":"096798652962B65834E8460259C9953411948363F15B68D15ACF5BB115429F93",
+	"version_major":"1",
+	"version_publish":"1",
+	"version_sub":"0"
+}

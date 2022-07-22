@@ -1,0 +1,145 @@
+<!--
+  @created by luoshun 2019-1-4
+  @updated by 
+  @description 积分调整
+-->
+<div>
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="6">
+      <yu-xform-item placeholder="客户号" ctype="input" name="custId"></yu-xform-item>
+      <yu-xform-item placeholder="客户姓名" ctype="input" name="custName"></yu-xform-item>
+      <!--<yu-xform-item placeholder="证件类型" ctype="select" name="identType" data-code="CD0011"></yu-xform-item>-->
+      <yu-xform-item placeholder="审批状态" ctype="select" name="approveStatus" data-code="WF_APP_STATUS"></yu-xform-item>
+      <yu-xform-item placeholder="证件号码" ctype="input" name="identNo"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 工具按钮 -->
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-lock" @click="freezeScoreFn">积分冻结</yu-button>
+      <yu-button icon="yx-unlocked" @click="scoreFn">积分解冻</yu-button>
+      <yu-button icon="plus" @click="adjustAddFn">调加</yu-button>
+      <yu-button icon="minus" @click="adjustReduceFn">调减</yu-button>
+      <yu-button icon="yx-user-plus" @click="freezeCustFn">冻结客户</yu-button>
+      <yu-button icon="yx-user-minus" @click="custFn">解冻客户</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+      <yu-button icon="check" @click="commitFn">提交</yu-button>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+    </yu-button-group>
+  </div>
+  <!-- 查询显示表格 -->
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" :default-load="false">
+    <yu-xtable-column label="客户号" prop="custId" width="100" sortable>
+    </yu-xtable-column>
+    <yu-xtable-column label="客户姓名" prop="custName" width="100">
+    </yu-xtable-column>
+    <!--<yu-xtable-column label="证件类型" prop="identType" width="110" data-code="CD0011">
+    </yu-xtable-column>-->
+    <yu-xtable-column label="证件号码" prop="identNo" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="变动类型" prop="transType" width="80" :options="options">
+    </yu-xtable-column>
+    <yu-xtable-column label="积分余额" prop="totalNum" width="80">
+    </yu-xtable-column>
+    <yu-xtable-column label="可用积分" prop="scoreNum" width="80">
+    </yu-xtable-column>
+    <yu-xtable-column label="冻结积分" prop="freezeNum" width="80">
+    </yu-xtable-column>
+    <!-- <yu-xtable-column label="账户编号" prop="accountNo" width="110" :hidden="true">
+    </yu-xtable-column> -->
+    <yu-xtable-column label="账户名称" prop="accountName" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="变动分值" prop="adjustNum" width="80">
+    </yu-xtable-column>
+    <yu-xtable-column label="变动原因" prop="adjustReason" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="积分大类" prop="acctBType" width="80" data-code="ACCT_B_TYPE">
+    </yu-xtable-column>
+    <yu-xtable-column label="积分小类" prop="acctSType" width="80" data-code="ACCT_S_TYPE">
+    </yu-xtable-column>
+    <yu-xtable-column label="积分有效期" prop="validDate" width="100" :formatter="dateFormatterSimple">
+    </yu-xtable-column>
+    <yu-xtable-column label="审批状态" prop="approveStatus" width="100" data-code="WF_APP_STATUS">
+    </yu-xtable-column>
+    <yu-xtable-column label="创建人" prop="createUserName" width="90">
+    </yu-xtable-column>
+    <yu-xtable-column label="创建日期" prop="createDate" width="135" :formatter="dateFormatterSimple">
+    </yu-xtable-column>
+    <yu-xtable-column label="创建机构" prop="createOrgName" width="150">
+    </yu-xtable-column>
+    <yu-xtable-column label="成本归属机构" prop="costassignOrgName" width="150">
+    </yu-xtable-column>
+    <yu-xtable-column label="调整日期" prop="adjustDate"  width="135" :formatter="dateFormatterSimple">
+    </yu-xtable-column>
+    <yu-xtable-column label="客户是否冻结" prop="isFreeze" width="100" data-code="CD0238">
+    </yu-xtable-column>
+  </yu-xtable>
+  <!-- 弹窗 -->
+  <yu-xdialog :title="viewTitle" :visible.sync="dialogVisible" width="800px">
+    <yu-xform v-show="flag1" ref="refForm" label-width="120px" v-model="formdata">
+      <!-- 积分解冻和冻结 -->
+      <yu-xform-group>
+        <yu-xform-item label="客户姓名" ctype="yufp-custInfo1" name="custName" :disabled="isTrue" rules="required" :params="paramsInfo" @select-fn="selectCustbackFn"></yu-xform-item>
+        <yu-xform-item label="客户号"  ctype="input" name="custId" :disabled="isCust" rules="required"></yu-xform-item>
+        <yu-xform-item label="证件类型" ctype="select" name="identType" rules="required" data-code="CD0011" :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="证件号码" ctype="input" name="identNo" rules="required" :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="可用积分" ctype="input" name="scoreNum"  :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="调整类型" ctype="select" name="transType" :options="options" rules="required" :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="冻结积分" v-if="isShow" ctype="input" name="adjustNum" :rules="rules" :disabled="formDisabled"></yu-xform-item>
+        <yu-xform-item label="冻结原因" v-if="isShow" ctype="textarea" name="adjustReason" rules="required" :colspan="24" :disabled="formDisabled"></yu-xform-item>
+        <yu-xform-item label="已冻结积分" v-show="!isShow" ctype="input" name="freezeNum"  :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="解冻积分" v-if="!isShow" ctype="input" name="adjustNum" :rules="rules" :disabled="formDisabled"></yu-xform-item>
+        <yu-xform-item label="解冻原因" v-if="!isShow" ctype="textarea" name="adjustReason" rules="required" :colspan="24" :disabled="formDisabled"></yu-xform-item>
+        <yu-xform-item label="创建人" ctype="input" name="createUser" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="创建日期" ctype="input" name="createDate" :hidden="true"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="check" v-show="isSave" type="primary" @click="saveFn('refForm')">提交</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+    <yu-xform v-show="flag2" ref="refForm1" label-width="120px" v-model="formdata1">
+      <!-- 积分调加和调减 -->
+      <yu-xform-group>
+        <yu-xform-item label="客户姓名" ctype="yufp-custInfo1" name="custName" rules="required" :disabled="isTrue" :params="paramsInfo" @select-fn="selectCustbackFn"></yu-xform-item>
+        <yu-xform-item label="客户号" ctype="input" name="custId" rules="required" :disabled="isCust" ></yu-xform-item>
+        <yu-xform-item label="证件类型" ctype="select" name="identType" rules="required" data-code="CD0011" :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="证件号码" ctype="input" name="identNo" rules="required" :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="调整类型" ctype="select" name="transType" :options="options" rules="required" :disabled="isCust"></yu-xform-item>
+        <!-- <yu-xform-item label="账户名称" ctype="input" name="accountNo" rules="required" :disabled="formDisabled"></yu-xform-item> -->
+        <yu-xform-item label="可用积分"  v-show="!isAdjust" ctype="input" name="scoreNum"  :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="成本归属机构" v-show="isAdjust" :rules="sectionRule" name="costassignOrgId" ctype="yufp-org-tree" :disabled="formDisabled" ></yu-xform-item>
+        <yu-xform-item label="账户名称" v-show="isAdjust" :rules="sectionRule" ctype="select" placeholder="请选择" name="accountNo" :data-url="accountNoDataUrl" :disabled="formDisabled" @change="selectAccountbackFn"></yu-xform-item>
+        <yu-xform-item label="积分大类" v-show="isAdjust" :rules="sectionRule" ctype="select" :maxlength="20" name="acctBType" data-code="ACCT_B_TYPE" :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="积分小类" v-show="isAdjust" :rules="sectionRule" ctype="select" :maxlength="20" name="acctSType" data-code="ACCT_S_TYPE" :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="调整分值" ctype="input" name="adjustNum" :rules="rules" :disabled="formDisabled"></yu-xform-item>
+        <yu-xform-item label="积分有效期(月末)" v-if="isAdjust" ctype="datepicker" type="month" :disabled="formDisabled" :picker-options="pickerOptions" name="validDate" rules="required"></yu-xform-item>
+        <yu-xform-item label="调整原因" ctype="textarea" name="adjustReason" rules="required" :disabled="formDisabled"></yu-xform-item>
+        <yu-xform-item label="创建人" ctype="input" name="createUser" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="创建日期" ctype="input" name="createDate" :hidden="true"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="check" v-show="isSave" type="primary" @click="saveFn('refForm1')">提交</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+    <yu-xform v-show="flag3" ref="refForm2" label-width="120px" v-model="formdata2">
+      <!-- 客户解冻和冻结 -->
+      <yu-xform-group>
+        <yu-xform-item label="客户姓名" ctype="yufp-custInfo1" name="custName" rules="required" :disabled="isTrue" :params="paramsInfo" @select-fn="selectCustbackFn"></yu-xform-item>
+        <yu-xform-item label="客户号" ctype="input" name="custId" rules="required" :disabled="isCust" ></yu-xform-item>
+        <yu-xform-item label="证件类型" ctype="select" name="identType" rules="required" data-code="CD0011" :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="证件号码" ctype="input" name="identNo" rules="required" :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="调整类型" ctype="select" name="transType" :options="options" rules="required" :disabled="isCust"></yu-xform-item>
+        <yu-xform-item label="调整原因" ctype="textarea" name="adjustReason" rules="required" :colspan="24" :disabled="formDisabled"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="check" v-show="isSave" type="primary" @click="saveFn('refForm2')">提交</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" :common-params="wfCommonParams" />
+</div>

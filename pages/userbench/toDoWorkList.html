@@ -1,0 +1,5 @@
+<!-- 必须全局拥有唯一的id -->
+<div id="toDoWorkList">
+    <el-form-q form="query" :field-data="queryFields" search-table="WorkListTodoList" :buttons="WorkListButtons"></el-form-q>
+    <el-table-x ref="WorkListTodoList" :border="false" :data-url="urls.dataUrl" :base-params="dataParams" :table-columns="tableColumns" @custom-click="rowDblclick"></el-table-x>
+</div>

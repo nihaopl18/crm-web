@@ -1,0 +1,24 @@
+<!-- 
+  @Created by zjy zhangjy14@yuys.com.cn on 2019-7-2 16:58:00.
+  @updated by
+  @description 数据查询
+-->
+<div>
+  <yu-xform related-table-name="refTable" v-model="queryFormdata"  ref="refForm" form-type="search" class="hide-form-search-btn">
+    <yu-xform-group :column="1">
+      <yu-xform-item placeholder="sql语句" name="sql" ctype="textarea" rules="required"  style="margin-left: 5px;"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="document" @click="queryFn">查询</yu-button>
+      <yu-button icon="yx-file-excel" @click="exportFn">导出</yu-button>
+    </yu-button-group>
+  </div>
+<div class="div1">
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :default-load="false" :highlight-current-row="true" :stripe="true" >
+    <yu-xtable-column v-for="(item, index) in tablelable" :key="index" :label="item.columnothname" :prop="item.columnName" >
+    </yu-xtable-column>
+  </yu-xtable>
+</div>
+</div>

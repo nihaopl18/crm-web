@@ -1,0 +1,36 @@
+/**
+ * @created by jiangcheng 2017-11-15
+ * @updated by
+ * @description 登录页
+ */
+ #login{width:100%;height:100%;margin:0;padding:0;overflow:hidden;font-size:12px;color:#333; outline:0;;background: url(../../../themes/common/images/login_bg.png) #387cdb center center no-repeat;background-size: auto;}
+ #login div,#login ul,#login li,#login h1{margin:0;padding:0;list-style:none}
+ *{font-family: Helvetica, Tahoma, Arial, "Microsoft YaHei","微软雅黑","Heiti SC","黑体-简", "WenQuanYi Micro Hei", sans-serif;}
+ #login .yu-headerContainer{display:block; background-color:#fff;height: 90px;}
+ #login .yu-headerContainer .logo{position:relative;float:left; margin-top:5px; background: url(../../../themes/common/images/pic_00.png) left center no-repeat;background-size: 40%; padding-left: 465px;margin-left: 20px;font-size: 24px;height: 67px;line-height: 67px;}
+ #login .yu-bottomBar{position:absolute;z-index:1;bottom:0;width:100%;text-align:center;height:120px;line-height:42px;font-size:12px;color:#999;background-color: #fff;}
+ #login .yu-centerPic{width: 900px; height: 468px;position: absolute;top: 50%;margin-top: -234px;z-index: 2; left: 50%;margin-left: -600px;NObackground: url(../../../themes/common/images/pic_02_wh.png) left center no-repeat;}
+ #login .yu-loginBox{position:absolute;z-index:2; width:350px;height:380px;border-radius: 3px; right:50%;top:50%;margin-right:-520px;margin-top:-205px;background:rgba(255,255,255,.98);box-shadow:0 2px 15px rgba(0,0,0,.25);overflow:hidden;}
+ #login .yu-loginBox>h1{display:block;height:64px;line-height:64px; font-size: 22px;font-weight: normal;text-align: center;color: #016ec7ef;overflow: hidden;}
+ #login .yu-loginBox>ul{display:block;margin:0px 25px 0 25px;}
+ #login .yu-loginBox>ul>li{padding:6px 0;position:relative;}
+ #login .yu-loginBox>ul>li>i{display:block;position:absolute;width:30px;height:16px;line-height:16px;left:8px;top:25px;text-align:center;color:#016ec7ef;font-size:16px;border-right: 1px #e5e5e5 solid;}
+ #login .yu-lbTxt,.yu-lbBt{display:block;width:298px;border:0;outline:0;transition: .2s;}
+ #login .yu-lbTxt{width:296px;font-size:14px;border:1px rgb(212, 209, 209) solid;background-color:#fff;height:40px;line-height:42px;vertical-align:middle;border-radius:3px;text-indent:45px;}
+ #login .yu-lbBt{box-sizing: border-box; background-color:#016ec7ef;border-bottom: 2px #016ec7ef solid; height:44px;border-radius:3px;color:#fff;font-size:18px;position:relative;box-shadow:0 0 10px rgba(0,0,0,.25);}
+ #login .yu-lbTxt:focus{border-color:#016ec7ef;}
+ #login .yu-lbTxt:focus+i{color:#016ec7ef;}
+ #login .yu-lbBt:hover{background-color:#016ec7ef;border-bottom: 2px #016ec7ef solid;}
+ #login .yu-lbBt:active{background-color:#016ec7ef;border-bottom: 2px #016ec7ef solid;}
+ #login .yu-loginBox>ul>li>a:link,.yu-loginBox>ul>li>a:visited{font-size:12px;color:#666;text-decoration:none;outline:0;}
+ #login .yu-loginBox>ul>li>a:hover{color:#a50001;text-decoration:none;}
+ #login .yu-loginBox>ul>li>a:active{color:#666;}
+ #login .yu-loginMsg{ color: #ff4949;}
+ #login .yu-loginMsg:before{margin-right: 5px;}
+ @media screen and (max-height: 680px) {#login .yu-headerContainer,#login .yu-bottomBar{height: 80px;} #login .yu-headerContainer .logo{margin-top: 5px;}}
+ /* #login .logo>span{padding-right: 16px;background: url(../../../themes/default/images/pic_02.gif) right center no-repeat;cursor: pointer;} */
+ #login .logo>span.ck{background: url(../../../themes/default/images/pic_02_1.gif) right center no-repeat;}
+ #login .logo>span+ul{display:none;border-radius: 3px; position: absolute;top:55px;right: 0; width: auto;line-height: 29px;z-index: 10;background-color: #fff;border: 1px solid #d1dbe5 ;height: auto; box-shadow:0 2px 4px rgba(0,0,0,.2);}
+ #login .logo>span+ul>li{display: block;clear: left;cursor:pointer; position:relative; padding: 0 15px; text-align: left;height: 29px;line-height:29px;border-bottom:0px solid #bfdaee;font-size: 12px;color: #666; transition: .2s;overflow: hidden; text-overflow: ellipsis;white-space: nowrap;}
+ #login .logo>span+ul>li:hover{color: #a50001;background-color: #e4e8f1;}
+ /*login end*/

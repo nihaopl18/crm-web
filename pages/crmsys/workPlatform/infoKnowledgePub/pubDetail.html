@@ -1,0 +1,17 @@
+<div>
+    <yu-xform label-width="120px" ref="refForm" v-model="formdata" :disabled="true">
+        <yu-xform-group>
+            <yu-xform-item label="所属栏目" ctype="yufp-org-tree" name="sectionId" :params="treeParams"></yu-xform-item>
+            <yu-xform-item label="文档名称" ctype="input" name="messageTitle" placeholder="50个字符以内"></yu-xform-item>
+            <yu-xform-item label="共享范围" ctype="select" name="publicType" data-code="CD0337" :hidden="!searchScrope"></yu-xform-item>
+            <yu-xform-item label="共享范围" ctype="select" name="publicType" data-code="PUBLIC_TYPE" :hidden="searchScrope"></yu-xform-item>
+
+            <yu-xform-item label="文档描述" ctype="input" name="messageIntroduce" placeholder="100个字符以内" :colspan="24"></yu-xform-item>
+        </yu-xform-group>
+    </yu-xform>
+    <el-collapse value="1">
+        <el-collapse-item title="附件列表" name="1">
+            <yufp-upload-table ref="fileTable" :data-params="initFilesParams" :data="fileUpLoadBusNo" :multiple="false" :upload-visible="false" :download-visible="true" :delete-visible="false" :before-upload="false"></yufp-upload-table>
+        </el-collapse-item>
+    </el-collapse>
+</div>

@@ -1,0 +1,59 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-2-12 19:30:18.
+  @updated by
+  @description 对公项目信息
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+      <yu-xform-group :column="4">
+          <yu-xform-item placeholder="项目编号" ctype="input" name="proId"></yu-xform-item>
+          <yu-xform-item placeholder="项目名称" ctype="input" name="proName"></yu-xform-item>
+          <yu-xform-item placeholder="项目类型" ctype="select" name="proType" data-code="CD0114"></yu-xform-item>
+      </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+    <yu-xtable-column label="项目名称" prop="projName" width="200"></yu-xtable-column>
+    <yu-xtable-column label="项目类型" prop="projType" width="200" data-code="CD0114"></yu-xtable-column>
+    <yu-xtable-column label="最新更新人" prop="userName" width="200"></yu-xtable-column>
+    <yu-xtable-column label="最新更新人机构" prop="orgName" width="200"></yu-xtable-column>
+    <yu-xtable-column label="最新更新日期" prop="lastChgDt" ></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+    <yu-xform ref="refForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="项目编号" :hidden="true" name="comProId" ctype="input"></yu-xform-item>
+        <yu-xform-item label="客户标识" name="custId" :hidden="true" :disabled="inputIdDisabled" ctype="input"></yu-xform-item>
+        <yu-xform-item label="项目名称" name="projName" ctype="input" :rules="rule.projName"></yu-xform-item>
+        <yu-xform-item label="项目类型" name="projType" ctype="select" data-code="CD0114" :rules="rule.projType"></yu-xform-item>
+        <yu-xform-item label="备注" name="remarks" ctype="input" :rows="3" :colspan="24" :rules="rule.remarks"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <el-collapse value="1">
+        <el-collapse-item title="附件列表" name="1">
+            <yufp-upload-table ref="fileTable" :data-params="initFilesParams" :data ="fileUpLoadBusNo" :multiple="false"
+              :upload-visible="fileBtnVisible" :download-visible="downBtn" :delete-visible="fileBtnVisible" 
+              :before-upload="beforeFileUpload" :success-fn="uploadSuccessFn"></yufp-upload-table>
+        </el-collapse-item>
+    </el-collapse>
+    <div class="yu-grpButton">
+      <yu-button v-show="cancelBtnShow" icon="yx-undo2" type="primary" @click="cancelFn">返回</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+  </yu-xdialog>
+</div>

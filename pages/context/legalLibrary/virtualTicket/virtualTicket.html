@@ -1,0 +1,64 @@
+<!-- 
+  @Created by chenlin chenlin2@yusys.com.cn on 2019-2-18 17:28:35.
+  @updated by
+  @description 虚拟票券管理
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="电子卡券编号" name="ticketNo" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="电子卡券名称" name="ticketName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="所属机构" name="defaultOrg" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="生效时间" name="effectiveDate" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="有效时长" name="effectiveDuration" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="状态" name="status" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+      <yu-button icon="check" @click="submitFn">提交</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+    <yu-xtable-column label="电子卡券ID" prop="ticketId" width="120"></yu-xtable-column>
+    <!-- <yu-xtable-column label="电子卡券编号" prop="ticketNo" width="120"></yu-xtable-column> -->
+    <yu-xtable-column label="电子卡券名称" prop="ticketName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="供应商" prop="supplier" width="120"></yu-xtable-column>
+    <yu-xtable-column label="所属机构" prop="defaultOrg" width="120"></yu-xtable-column>
+    <yu-xtable-column label="支行/部门" prop="defaultDpt" width="120"></yu-xtable-column>
+    <yu-xtable-column label="总量" prop="totalNum" width="80"></yu-xtable-column>
+    <yu-xtable-column label="消耗量" prop="consumeNum" width="80"></yu-xtable-column>
+    <yu-xtable-column label="剩余量" prop="surplusNum" width="80"></yu-xtable-column>
+    <yu-xtable-column label="生效时间" prop="effectiveDate" width="120"></yu-xtable-column>
+    <yu-xtable-column label="有效时长" prop="effectiveDuration" width="180"></yu-xtable-column>
+    <yu-xtable-column label="状态" prop="status"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="电子卡券ID" :hidden="true" name="ticketId" rules="required" ctype="input"></yu-xform-item>
+        <yu-xform-item label="电子卡券编号" name="ticketNo" rules="required" ctype="input"></yu-xform-item>
+        <yu-xform-item label="电子卡券名称" name="ticketName" rules="required" ctype="input"></yu-xform-item>
+        <yu-xform-item label="供应商" name="supplier" rules="required" ctype="input"></yu-xform-item>
+        <yu-xform-item label="所属机构" name="defaultOrg" rules="required" ctype="input"></yu-xform-item>
+        <yu-xform-item label="支行/部门" name="defaultDpt" ctype="input"></yu-xform-item>
+        <yu-xform-item label="总量" name="totalNum" ctype="input"></yu-xform-item>
+        <yu-xform-item label="消耗量" name="consumeNum" ctype="input"></yu-xform-item>
+        <yu-xform-item label="剩余量" name="surplusNum" ctype="input"></yu-xform-item>
+        <yu-xform-item label="生效时间" name="effectiveDate" ctype="input"></yu-xform-item>
+        <yu-xform-item label="有效时长" name="effectiveDuration" ctype="input"></yu-xform-item>
+        <yu-xform-item label="状态" name="status" ctype="input"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

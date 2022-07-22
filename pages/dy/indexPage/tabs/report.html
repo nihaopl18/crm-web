@@ -1,0 +1,148 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-06 15:20:03
+ * @update by: 
+ * @description: 工作日报
+-->
+<div class="wait2do">
+    <link rel="stylesheet" type="text/css" href="pages/dy/indexPage/tabs/common.css">
+    <ul v-if="list.length">
+        <li v-for="(item, index) in list" :key="index">
+            <div :class="['line', 'yellow-bg']"></div>
+            <!-- <div class="first"> -->
+            <yu-row>
+                <yu-col :span="18">
+                    <div style="flex:1">
+                        <el-avatar :size="22" src="../../../../themes/common/images/avatar-126.png"></el-avatar><span @click="handleOptionVisibleChange(item, 'detail')" class="title">{{ item.creatorName }} {{ item.startDate }}</span>
+                    </div>
+                </yu-col>
+                <yu-col :span="6">
+                    <div>
+                        <span class="status2">已审批</span>
+                        <el-dropdown trigger="click" @command="handleOptionSelect" @visible-change="handleOptionVisibleChange(item)">
+                            <span class="el-icon-more" style="cursor: pointer;"></span>
+                            <el-dropdown-menu slot="dropdown">
+                                <!-- <el-dropdown-item command="edit"><i class="el-icon-edit-outline"></i> 编辑</el-dropdown-item> -->
+                                <el-dropdown-item command="detail"><i class="el-icon-document-checked"></i> 详情</el-dropdown-item>
+                                <!-- <el-dropdown-item command="delete"><i class="el-icon-document-delete"></i>删除</el-dropdown-item> -->
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </yu-col>
+            </yu-row>
+
+
+            <!-- </div> -->
+            <!-- <div class="second">
+        <el-avatar :size="20" :src="circleUrl"></el-avatar>
+        <span>{{ item.name }}</span>
+        <span>{{ item.createTime }}</span>
+      </div> -->
+            <div class="last">
+                <span>#{{ workReportTypes[item.workReportBusiType]}}&nbsp;</span>
+                <span v-for="res in item.workSummaryList">#{{ workSummery[res]
+          }}&nbsp;</span>
+            </div>
+        </li>
+    </ul>
+    <div v-else class="no-data">尚未添加工作报告</div>
+    <yu-xdialog :title="viewTitle" :visible.sync="dialogVisible" width="60%" top="5vh" @close="cancelFn">
+        <yu-xform ref="refForm" label-width="170px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group :column="2">
+                <yu-xform-item label="类型" ctype="select" name="workReportBusiType" data-code="DY0004" :rules="rule.workReportBusiType" :editable="false" @change="chgReportType"></yu-xform-item>
+                <yu-xform-item v-show="workType.isDay" label="工作日期" ctype="datepicker" name="startDate" type="date" format="yyyy-MM-dd" :rules="rule.required" :editable="false" @change="chgCreateDate">
+                </yu-xform-item>
+                <yu-xform-item v-show="workType.isWeek" label="工作日期" ctype="datepicker" name="startDate" type="week" format="yyyy-MM-dd" :rules="rule.required" :editable="false" @change="chgCreateDate">
+                </yu-xform-item>
+                <yu-xform-item v-show="workType.isMonth" label="工作日期" ctype="datepicker" name="startDate" type="month" format="yyyy-MM" :rules="rule.required" :editable="false" @change="chgCreateDate">
+                </yu-xform-item>
+            </yu-xform-group>
+            <yu-xform-group :column="1" v-show="!isDetail">
+                <yu-xform-item v-show="workType.isDay" label="当日您已跟进以下待办事项" ctype="custom"></yu-xform-item>
+                <yu-xform-item v-show="workType.isWeek" label="本周您已跟进以下待办事项" ctype="custom"></yu-xform-item>
+                <yu-xform-item v-show="workType.isMonth" label="本月您已跟进以下待办事项" ctype="custom"></yu-xform-item>
+            </yu-xform-group>
+            <yu-xtable v-show="!isDetail" ref="finishedWork" :data="finishedWorkSdata" :data-url="todoDataUrl" :default-load="false" style="width: 70%;margin: auto;">
+                <yu-xtable-column label="类型" prop="todoWorkType" width="90" data-code="DY0002"></yu-xtable-column>
+                <yu-xtable-column label="主题" prop="todoWorkTitle" width="170"></yu-xtable-column>
+                <yu-xtable-column label="执行时间" prop="startDate" width="170" :formatter="formJE">
+                </yu-xtable-column>
+                <yu-xtable-column label="关联客户" prop="relationCust" width="170">
+                </yu-xtable-column>
+            </yu-xtable>
+
+            <yu-xform-group :column="2">
+                <yu-xform-item v-show="workType.isDay" label="工作内容" :colspan="24" ctype="select" data-code="DY0003" name="workSummary" @change="chgWorkSummary" multiple>
+                </yu-xform-item>
+            </yu-xform-group>
+            <yu-xform-group :column="1" v-show="workType.isDay">
+                <yu-xform-item label="培训/会议" ctype="textarea" name="workContent2" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.workContent" :hidden="!workSummary.second"></yu-xform-item>
+                <yu-xform-item label="外访" ctype="textarea" name="workContent3" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.workContent" :hidden="!workSummary.three"></yu-xform-item>
+                <yu-xform-item label="商机" ctype="textarea" name="workContent4" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.workContent" :hidden="!workSummary.fouth"></yu-xform-item>
+                <yu-xform-item label="材料整理" ctype="textarea" name="workContent5" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.workContent" :hidden="!workSummary.five"></yu-xform-item>
+            </yu-xform-group>
+            <!-- 新增、修改 客户接触 -->
+            <yu-xtable row-number selection-type="radio" ref="customerContactTable" :data="customerContactData" style="width: 100%" :hidden="!isCustContact" v-show="!isDetail">
+                <yu-xtable-column label="客户" width="100" prop="contactCustName" ctype="yufp-governed-cust-selector" :rules="rule.required" :params="selectCustParams" @select-fn="custSelFn">
+                </yu-xtable-column>
+                <yu-xtable-column label="跟进时间" prop="contactDate" ctype="datepicker" width="100" :rules="rule.required" :formatter="formJE">
+                </yu-xtable-column>
+                <yu-xtable-column label="跟进类型" prop="contactType" ctype="select" data-code="DY0006" :rules="rule.contactType">
+                </yu-xtable-column>
+                <yu-xtable-column label="跟进目的" prop="contactGoal" ctype="select" data-code="DY0005" :rules="rule.contactGoal">
+                </yu-xtable-column>
+                <yu-xtable-column label="产品" prop="product" ctype="input" width="140">
+                </yu-xtable-column>
+                <yu-xtable-column label="跟进反馈" prop="contactBack" ctype="input" width="140">
+                </yu-xtable-column>
+                <yu-xtable-column label="下次跟进时间" prop="nextContactDate" ctype="datepicker" width="100" :formatter="formJE" :picker-options="pickerOptions">
+                </yu-xtable-column>
+                <yu-xtable-column label="操作">
+                    <template slot-scope="scope">
+            <yu-button type="text" size="small" :disabled="formDisabled"
+              @click.native.prevent="deleteRow(scope.$index,customerContactData)">
+              移除
+            </yu-button>
+          </template>
+                </yu-xtable-column>
+            </yu-xtable>
+            <div class="yu-grpButton" v-show="!isDetail && isCustContact">
+                <yu-button type="primary" v-show="!isDetail && isCustContact" icon="edit" @click="newData">新增数据
+                </yu-button>
+            </div>
+            <!-- 详情 客户接触 -->
+            <yu-xtable ref="detailCustomerContactTable" :data="detailCustomerContactData" style="width: 100%" :hidden="!isCustContact" v-show="isDetail">
+                <yu-xtable-column label="客户" width="190" prop="contactCustName"></yu-xtable-column>
+                <yu-xtable-column label="跟进类型" prop="contactType" data-code="DY0006"></yu-xtable-column>
+                <yu-xtable-column label="跟进目的" prop="contactGoal" data-code="DY0005"></yu-xtable-column>
+                <yu-xtable-column label="产品" prop="product" width="190"></yu-xtable-column>
+                <yu-xtable-column label="跟进反馈" prop="contactBack" width="190"></yu-xtable-column>
+                <yu-xtable-column label="下次跟进时间" prop="nextContactDate" width="100" :formatter="formJE" :picker-options="pickerOptions"></yu-xtable-column>
+            </yu-xtable>
+
+            <yu-xform-group v-show="workType.isDay" :column="1">
+                <!-- <yu-xform-item label="报告内容" ctype="textarea" name="workContent" :rows="2" :colspan="24" placeholder="200个字符以内"
+          :rules="rule.workContent"></yu-xform-item> -->
+                <yu-xform-item label="补充" ctype="textarea" name="annex" :rows="2" :colspan="24" placeholder="500个字符以内" :rules="rule.max50Len"></yu-xform-item>
+                <yu-xform-item label="总结及后续工作计划" ctype="textarea" name="laterPlan" :rows="2" :colspan="24" placeholder="500个字符以内" :rules="rule.max50Len"></yu-xform-item>
+            </yu-xform-group>
+
+            <yu-xform-group v-show="workType.isWeek" :column="1">
+                <yu-xform-item label="本周总结" ctype="textarea" name="annex" :rows="2" :colspan="24" placeholder="500个字符以内" :rules="rule.max50Len"></yu-xform-item>
+                <yu-xform-item label="后续工作计划" ctype="textarea" name="laterPlan" :rows="2" :colspan="24" placeholder="500个字符以内" :rules="rule.max50Len"></yu-xform-item>
+            </yu-xform-group>
+
+            <yu-xform-group v-show="workType.isMonth" :column="1">
+                <yu-xform-item label="本月总结" ctype="textarea" name="annex" :rows="2" :colspan="24" placeholder="500个字符以内" :rules="rule.max50Len"></yu-xform-item>
+                <yu-xform-item label="后续工作计划" ctype="textarea" name="laterPlan" :rows="2" :colspan="24" placeholder="500个字符以内" :rules="rule.max50Len"></yu-xform-item>
+            </yu-xform-group>
+            <yufp-upload-table ref="filesTable" :data-params="initFilesParams" :data="reportUpLoadBusNo" :before-upload="beforeAvatarUpload" :upload-visible="uploadVisible" :download-visible="downloadVisible" :delete-visible="deleteVisible"></yufp-upload-table>
+
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">返回</yu-button>
+                <yu-button v-show="isSave" icon="check" type="primary" @click="saveFn">保存</yu-button>
+                <!-- <yu-button v-show="isAdd" icon="check" type="primary" @click="saveFn(2)">确定</yu-button> -->
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+</div>

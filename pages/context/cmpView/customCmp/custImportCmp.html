@@ -1,0 +1,70 @@
+<!--
+  @created by helin3 on 2018/07/18.
+  @description 演示查询
+-->
+<div>
+	<link rel="stylesheet" type="text/css" href="pages/context/custTagQuery/custTagQuery.css" />
+
+	<el-collapse v-model="activeNames">
+		<el-collapse-item title="操作" name="1">
+			<!--查询字段和查询按钮及重置按钮-->
+			<el-form-q :field-data="queryFields" ref="searchForm" :buttons="queryButtons"></el-form-q>
+			<!--显示表格数据，选择表格样式以及配置url链接地址-->
+			<!-- <el-table-x ref="reftable" 
+		    :row-index="true"
+		    :checkbox="true"
+		    :table-columns="tableColumns" data-url="/clientsmanager/temp/clientsShow"  >
+			</el-table-x> -->
+			<el-table-x ref="reftable" :row-index="true" :checkbox="true" :table-columns="tableColumns" :data-url="Url"
+				:default-load="false">
+			</el-table-x>
+			<!-- 主页面表格工具栏 -->
+			<!-- <div class="yu-toolBar" style="margin-top: 10px;">
+				<el-button-group>
+					<el-button icon="edit" @click="">编辑</el-button>
+					<el-button icon="yx-bin" @click="">删除</el-button>
+					<el-button icon="yx-switch" @click="close">关闭</el-button>
+				</el-button-group>
+			</div> -->
+		</el-collapse-item>
+		<el-collapse-item title="输出" name="2">
+			<!-- <el-table-x ref="reftable" 
+		    :row-index="true"
+		    :checkbox="true"
+				:table-columns="tableColumns" :data-url="Url"
+				:default-load="false"  >
+		  </el-table-x> -->
+			<el-table-x ref="reftableCust" :row-index="true" :checkbox="true" :table-columns="tableColumnsCust"
+				:data-url="custUrl" :default-load="false">
+			</el-table-x>
+			<el-dialog-x :title="uploadTitle" :visible.sync="uploadDialog" width="540px" height="330px">
+				<div id="template_tinymce">
+					<textarea ref="dataSqlTemp" cols="70" rows="15">
+						导入注意事项：
+						
+	一. Excel文件的需严格安照模板格式(可以先下载模板)。
+	二. 字段不能为空。
+	三. 证件类型为数字;
+			0：境内居民身份证  1:户口簿  3:军官证 4:士兵证
+			5:港澳居民来往内地通行证 6:台湾同胞来往内地通行证,
+			7:临时身份证 8:外国人居留证 9:警官证 10:个体工商户营业执照
+			10:个体工商户营业执照 20:境内组织机构代码
+	四. 客户类型为数字
+			1:个人 2：企业 
+	
+				</textarea>
+				</div>
+				<el-upload style="display: inline-block;" :show-file-list="true" :multiple="false" :file-list="fileList"
+					:action="action" ref="verUpload" :auto-upload="false" :headers="headers" :data="uploaddata"
+					:on-success="onSuccess" :on-error="onError" :before-upload="beforeAvatarUpload">
+					<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+					<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器
+					</el-button>
+					<el-button style="margin-left: 10px;" size="large" type="warning" @click="downTable">下载模板
+					</el-button>
+				</el-upload>
+
+			</el-dialog-x>
+		</el-collapse-item>
+	</el-collapse>
+</div>

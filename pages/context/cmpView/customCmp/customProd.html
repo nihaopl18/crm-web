@@ -1,0 +1,47 @@
+<!--
+  @created by yangxiao2 on 2018/11/19.
+  @description 产品目标客户
+-->
+<div>
+    <el-collapse v-model="activeNames">
+        <el-collapse-item title="输入" name="1">
+            <el-row>
+                <el-col :span="8">
+                    <el-form-x ref="refformProd" :group-fields="prodFields" :buttons="prodButtons" label-width="80px" inline>
+                    </el-form-x>
+                </el-col>
+                <el-col :span="16">
+
+                </el-col>
+            </el-row>
+        </el-collapse-item>
+        <el-collapse-item title="操作" name="2">
+            <el-row>
+                <el-col :span="8">
+                    <el-form-x ref="refformCust" :group-fields="custFields" :buttons="custButtons" label-width="80px" inline>
+                    </el-form-x>
+                </el-col>
+                <el-col :span="16">
+                    <template>
+                        <yu-xtable selection-type="checkbox" ref="optable" :data="prodTable" :pageable="true" style="width: 100%">
+                            <yu-xtable-column prop="productId" label="产品编号">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="prodName" label="产品名称">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="catlName" label="产品类别">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="customName" label="客户群名称">
+                            </yu-xtable-column>
+                        </yu-xtable>
+                    </template>
+                </el-col>
+            </el-row>
+        </el-collapse-item>
+        <el-collapse-item title="输出" name="3">
+            <el-table-x ref="reftable" :checkbox="false" data-url="/api/cmfrcproductmanager/getprodcust" :table-columns="tableColumns"
+                :default-load="load" @loaded="loadTableData">
+            </el-table-x>
+        </el-collapse-item>
+    </el-collapse>
+    <yu-button type="primary" style="margin-top: 10px;" @click="confirm">保存</yu-button>
+</div>

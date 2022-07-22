@@ -1,0 +1,221 @@
+<!--
+  @created by zhangxs4 on 2018/12/13.
+  @description 营销组件FORM表单-流程组件-分流
+-->
+<div>
+<link rel="stylesheet" type="text/css" href="pages/cimp/marketcenter/marketcomptform/shunt/shunt.css"/>
+	<el-collapse v-model="activeNames">
+		<el-collapse-item title="输入" name="1">
+			 <el-col :span="4">
+				<el-form-q ref="aaa" :field-data="queryFieldss" :buttons="queryButtonss"  :columns="1"  class="tagCmpSingle"></el-form-q>
+			 </el-col>
+		</el-collapse-item>
+		<el-collapse-item title="操作" name="2">
+			<el-form label-width="100px"  ref="customersTemp" :model="customersTemp" :rules="ruless">
+		    <el-row>
+			   	<el-col :span="8">
+			   		<el-form-item label="客户群名称" class="mustWrite" prop="custGroupName">
+					    <el-input placeholder='请填写' v-model="customersTemp.custGroupName" ></el-input>
+					</el-form-item>
+				</el-col>
+			   	<el-col :span="8">
+			   		<el-form-item label="客户群类型" class="mustWrite" prop="custGroupType">
+					    <el-select   placeholder="请选择" v-model="customersTemp.custGroupType">
+						      <el-option v-for="(item,index) in customersOptions" :key="index" :label="item.value"
+	                                               :value="item.key">
+	                          </el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+			   	<el-col :span="8">
+			   		<el-form-item label="群成员类型" class="mustWrite" prop="groupMemberType">
+					    <el-select   placeholder="请选择" v-model="customersTemp.groupMemberType">
+						      <el-option v-for="(item,index)  in membersOptions" :key="index" :label="item.value"
+	                                               :value="item.key">
+	                          </el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			   	<el-col :span="8">
+			   		<el-form-item label="跑批标识" class="mustWrite"  prop="batchType">
+					    <el-select   placeholder="请选择" v-model="customersTemp.batchType">
+						      <el-option v-for="(item,index) in batchTypeOptions" :key="index" :label="item.value"
+	                                               :value="item.key">
+	                          </el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			</el-form>
+			<el-row>
+				<div>
+					<el-button type="primary" icon="plus" :disabled="customersbuttonsDisabled" @click="savecustomers">新增客户群</el-button>
+					<el-button type="primary" icon="setting" :disabled="buttonsDisabled" @click="fieldSubFn">维护</el-button>
+				</div>
+			</el-row>
+	<el-table ref="fieldParamDataTable"   :data="fieldParamDatas" @current-change="handleCurrentChange1"  height="350" :max-height="height" stripe border fit highlight-current-row element-loading-text="加载中..." >
+        		<!--<el-table-column type="selection" width="55"></el-table-column>-->
+        		<el-table-column label="客户群名称" width="410" prop="custGroupName">
+        		</el-table-column>
+        		<el-table-column label="客户群编号" width="410" prop="custGroupId">
+        		</el-table-column>
+        		<el-table-column label="客户群类型" width="410" prop="custGroupType">
+	        	</el-table-column>
+	</el-table>
+	<!--<div>
+		<el-button type="primary" icon="plus" :disabled="customersbuttonsDisabled" @click="saveinout">保存</el-button>
+	</div>-->
+	<!-- 灵活查询展示-->	
+	<el-dialog-x ref="qrypub" title="灵活查询"  :visible.sync="qrydialogVisible"  width="800px"  height="600px" class="dialogOne" >
+			<el-form label-width="100px"  ref="qryTemp" :model="qryTemp">
+			<el-row :gutter="10">
+			    <el-col :span="4">
+		        <template>
+			         <el-select v-model="value" placeholder="请选择" class="searchselect">
+						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+						</el-option>
+			        </el-select>
+		        </template>
+		        <el-tree-x ref="flexytree" :height="height - 20" v-bind:style="{height: (height-114) + 'px' }" draggable :allow-drop="allowDroprow" @node-drag-start="handleDragStart"
+		                   data-url="/api/cimpffqdbcol/prepare" data-id="nodeid" data-label="name" data-pid="parentId"  node-key="nodeid" 
+		                    :root-visible="false" data-root="0" style="margin:10px 0 0 0;" @load-all-data='getdata'>
+		        </el-tree-x>
+		    </el-col>
+		    <el-col :span="20" class="custFlexytab">
+		        <template>
+		            <el-tabs v-model="activeName" @tab-click="handleClick" >
+						<el-tab-pane label="查询条件" name="first">
+							<div id="queryCon" v-bind:style="{height: (height-104) + 'px' }" style="background-color:#FAFAFA" @drop="allowDrop($event)" @dragover='allowDropover($event)'>
+		                        <div class="ys-stGroup"  v-for="(item,index) in list" :key="index">
+								   <el-form label-width="80px"  ref="item.id" :model="dataSqlTemp[item.id]">
+										<el-row class="conDisable" >
+											<el-col :span="6">
+												<el-radio-group v-model="dataSqlTemp[item.id].radio2" v-show="radioshow">
+													<el-radio :label="item.and"></el-radio>
+													<el-radio :label="item.or"></el-radio>
+												</el-radio-group>
+											</el-col>
+										</el-row>
+										<div  @drop='childrenallowDrop($event,index)' @dragover='Dragover($event)'>
+										<div  class="formrow">
+								   		<el-row>
+				                        		<el-col :span="7">
+												<el-form-item label="属性" class="mustWrite" >
+												    <el-input :placeholder="item.name" v-model="dataSqlTemp[item.id].proPer" readonly></el-input>
+												</el-form-item>
+											</el-col>		
+											<el-col :span="7">
+												<el-form-item label="操作符" class="mustWrite" >
+													<el-select   placeholder="请选择" v-model="dataSqlTemp[item.id].signOp" @change="signchange"> 
+														<el-option v-for="(items, index) in signOptions" :key="index" :label="items.value" :value="items.key">
+														</el-option>
+												    </el-select>
+												   <!-- <yu-xform-item-part v-model="dataSqlTemp[item.id].signOp" :ctype="item.section.ctype"  :options="item.section.options" ></yu-xform-item-part>-->
+												</el-form-item>
+											</el-col>	
+											<el-col :span="7">
+												<el-form-item label="属性值" class="mustWrite" >
+												    <!--<el-input placeholder='请填写' v-model="dataSqlTemp[item.id].signVal" ></el-input>-->
+												    <yu-xform-item-part v-model="dataSqlTemp[item.id].signVal" :unit="item.items.unit" :ctype="item.items.ctype" :type="item.items.type" :options="item.items.options" ></yu-xform-item-part>
+												</el-form-item>
+											</el-col>
+											<el-col :span="3">
+												<i class="el-icon-yx-cross" @click="queryCondelTableRow(index,list)"></i>
+											</el-col>
+										</el-row>
+										</div>
+										</div>
+								   </el-form>
+								</div>
+							</div>
+						</el-tab-pane>
+						<el-tab-pane label="显示列" name="second">
+							<div id="shouColumn" v-bind:style="{height: (height-104) + 'px' }" style="background-color:#FAFAFA">
+							<div id="queryCon1" v-bind:style="{height: (height-104) + 'px' }" style="background-color:#FAFAFA" @drop="allowDrop1($event)" @dragover='allowDropover($event)'>
+									<div class="ys-stGroup" v-for="(item,index) in conlist ">
+										<el-form label-width="80px"   ref="item.id" :model="dataTemp[item.id]">
+											<el-row class="formrow">
+												<el-col :span="10">
+													<el-form-item label="属性" class="mustWrite" >
+														<el-input :placeholder="item.name" v-model="dataTemp[item.id].proPer" readonly></el-input>
+													</el-form-item>
+												</el-col>		
+												<el-col :span="11">
+													<el-form-item label="排序方式" class="mustWrite" >
+														<el-select   placeholder="请选择" v-model="dataTemp[item.id].orderType"> 
+															<el-option v-for="items in orderOptions" :key="items.key" :label="items.value" :value="items.key">
+															</el-option>
+														</el-select>
+													</el-form-item>
+												</el-col>
+												<el-col :span="3">
+												    <i class="el-icon-yx-cross" @click="delTableRow(index)"></i>
+											    </el-col>
+											</el-row>
+										</el-form>
+									</div>
+							</div>
+						</el-tab-pane>
+					</el-tabs>
+				</template>
+				<div class="mustWrite" align="right">
+					<el-button type="primary" icon="search"  @click="queryInfoFn">查询结果</el-button>
+					<el-button type="primary" icon="yx-checkmark" :disabled="createFilterbutton" @click="saveSolutionsub">保存</el-button>
+        			</div>
+			</el-col>
+		</el-row>
+		<el-row>
+			<el-col :span="24">
+				<h3>结果列表</h3>
+				<template>
+				<el-table ref="qryresult" border tooltip-effect="dark" :data="data" :max-height="groupHeight" style="margin-bottom: 20px;" >
+			    		<!--<el-table-column type="selection"></el-table-column>-->
+			       	<el-table-column v-for="(item, index) in colunmNamelist" :key="index" :label="item.name" :prop="item.ename">
+		            </el-table-column>
+			    	</el-table>
+			    	</template>
+			</el-col>
+		</el-row>
+	 </form>
+	</el-dialog-x>
+</el-collapse-item>
+		<el-collapse-item title="输出" name="3">
+			<el-table ref="fieldParamDataTable"   :data="fieldParamDatas" @current-change="handleCurrentChange"  height="350" :max-height="height" stripe border fit highlight-current-row element-loading-text="加载中..." >
+	        		<el-table-column label="客户群名称" width="410" prop="custGroupName">
+	        		</el-table-column>
+	        		<el-table-column label="客户群编号" width="410" prop="custGroupId">
+	        		</el-table-column>
+	        		<el-table-column label="客户群类型" width="410" prop="custGroupType">
+	        		</el-table-column>
+			</el-table>
+			<el-table ref="outputtable2" :data="tableData" style="margin-top:20px;">
+				<el-table-column label="客户名称" width="600" prop="custNameBase">
+	        		</el-table-column>
+	        		<el-table-column label="客户编号" width="600" prop="custIdBase">
+	        		</el-table-column>			
+			</el-table>
+			<!-- <el-row>
+				<el-col :span="6">
+					<template>
+						<el-table :data="options5" border style="width: 100%" height="120">
+							<el-table-column prop="output" label="输出集合">
+							</el-table-column>
+						</el-table>
+					</template>
+				</el-col>
+				<el-col :span="17" style="margin-left: 20px;">
+					<template>
+						<el-table :data="options4" border style="width: 100%" height="120">
+							<el-table-column prop="group" label="分组标签" width="200">
+							</el-table-column>
+							<el-table-column prop="where" label="条件">
+							</el-table-column>
+						</el-table>
+					</template>
+				</el-col>
+			</el-row> -->
+		</el-collapse-item>
+	</el-collapse>
+</div>

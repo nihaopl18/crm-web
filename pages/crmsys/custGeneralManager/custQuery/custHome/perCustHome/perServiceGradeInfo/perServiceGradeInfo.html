@@ -1,0 +1,66 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-2-16 11:31:10.
+  @updated by
+  @description 服务等级
+-->
+<div>
+    <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="document" @click="infoFn">详情</yu-button> 
+          <yu-button icon="edit" @click="adjustFn">评级调整</yu-button> 
+        
+        </yu-button-group>
+      </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+      <yu-xtable-column label="评级日期" prop="handEvaluateDate" ></yu-xtable-column>
+      <yu-xtable-column label="价值等级" prop="gradeLevel" data-code="CD0243"></yu-xtable-column>
+      <yu-xtable-column label="服务等级" prop="serviceLevel" data-code="CD0032"></yu-xtable-column>
+      <yu-xtable-column label="评级方式" prop="evaluateType" data-code="CD0421"></yu-xtable-column>
+      <yu-xtable-column label="服务等级有效期" prop="ratVal" ></yu-xtable-column>
+
+  </yu-xtable>
+  <!-- 详情-->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+          <yu-xform-item label="评级日期" name="handEvaluateDate" ctype="input"></yu-xform-item>
+          <yu-xform-item label="价值等级" name="gradeLevel" ctype="select" data-code="CD0243"></yu-xform-item>
+          <yu-xform-item label="服务等级" name="serviceLevel" ctype="select" data-code="CD0032"></yu-xform-item>
+          <yu-xform-item label="评级方式" name="evaluateType" ctype="select" data-code="CD0421"></yu-xform-item>
+          <yu-xform-item label="服务等级有效期" name="ratVal" ctype="input"></yu-xform-item>
+          <yu-xform-item label="手工调整理由" name="appRea" ctype="textarea" :colspan="24"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+       
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+   <!-- 申请调级-->
+  <yu-xdialog :title="adjustviewTitle[adjustviewType]" :visible.sync="adjustdialogVisible" width="750px">
+      <yu-xform ref="adjustrefForm" label-width="170px" v-model="adjustformdata" :disabled="adjustformDisabled">
+        <yu-xform-group>
+            <yu-xform-item label="当期服务等级" name="curSerLevel"  ctype="select" data-code="CD0032" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="申请服务等级" name="appSerLevel" ctype="select" data-code="CD0032"  rules="required"></yu-xform-item>
+            <yu-xform-item label="申请理由" name="appRea" ctype="textarea" :colspan="24"  rules="required"></yu-xform-item>
+            <yu-xform-item label="评级有效期" name="ratVal" ctype="datepicker"  rules="required"></yu-xform-item>
+            <yu-xform-item label="近三个月日均总资产" name="lastThreeMonDayTotalAss" ctype="input" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="近三个月日均总负债" name="lastThreeMonDayTotalLia" ctype="input" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="近1年中间业务贡献值" name="lateYearMidBusDegree" ctype="input" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="近1年结算量" name="lateYearSetVol" ctype="input" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="近1年刷卡消费金额" name="lateYearCreCardConAmo" ctype="input" :disabled="true"></yu-xform-item>
+        </yu-xform-group>
+        <div class="yu-grpButton">
+          <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+          <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        </div>
+      </yu-xform>
+    </yu-xdialog>
+
+</div>

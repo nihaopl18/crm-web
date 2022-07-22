@@ -1,0 +1,63 @@
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2018-12-28 17:06:48.
+  @updated by
+  @description 试算结果查询
+-->
+<div>
+  <!-- 试算结果查询搜索表单 -->
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="试算批次号" name="bno" ctype="input" rules="number" :maxlength="32"></yu-xform-item>
+      <yu-xform-item placeholder="试算待积流水表名称" name="trialWaitTable" ctype="select" data-code="TRIAL_WAIT_TABLE"></yu-xform-item>
+      <yu-xform-item placeholder="试算状态" name="status" ctype="select" data-code="TRIAL_STATUS"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 试算结果查询工具条 -->
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-list" @click="byOrgReportFn">按机构汇总查询</yu-button>
+      <yu-button icon="yx-menu-3" @click="byProductReportFn">按产品汇总查询</yu-button>
+      <yu-button icon="yx-star-empty" @click="byOrgProductReportFn">按机构+产品汇总查询</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="tableDataUrl" selection-type="radio">
+    <yu-xtable-column label="试算批次号" prop="bno"></yu-xtable-column>
+    <yu-xtable-column label="试算待积流水表名称" prop="trialWaitTable" data-code="TRIAL_WAIT_TABLE"></yu-xtable-column>
+    <yu-xtable-column label="试算状态" prop="status" data-code="TRIAL_STATUS"></yu-xtable-column>
+    <yu-xtable-column label="活动名称" prop="activityName"></yu-xtable-column>
+    <yu-xtable-column label="总交易记录数" prop="allDataNum"></yu-xtable-column>
+    <yu-xtable-column label="试算记录数" prop="hitDataNum"></yu-xtable-column>
+    <yu-xtable-column label="满足条件数" prop="custNum"></yu-xtable-column>
+    <yu-xtable-column label="试算总分" prop="score"></yu-xtable-column>
+    <yu-xtable-column label="试算现金价值" prop="scorePrice"></yu-xtable-column>
+    <yu-xtable-column label="最近维护时间" prop="updateTime"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+  <!-- 机构汇总报表弹框 -->
+  <yu-xdialog title="按机构汇总查询报表" :visible.sync="orgReportDialogVisible">
+    <yu-xtable ref="refOrgReportTable" row-number :data-url="orgrepoRtDataUrl" :pageable="false" :height="450">
+      <yu-xtable-column label="机构编号" prop="orgId"></yu-xtable-column>
+      <yu-xtable-column label="机构名称" prop="orgName"></yu-xtable-column>
+      <yu-xtable-column label="积分值" prop="balance"> </yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+  <!-- 产品汇总报表弹框 -->
+  <yu-xdialog title="按产品汇总查询报表" :visible.sync="productReportDialogVisible">
+    <yu-xtable ref="refProductReportTable" row-number :data-url="productReportDataUrl" :pageable="false" :height="450">
+      <yu-xtable-column label="产品编号" prop="prodId"></yu-xtable-column>
+      <yu-xtable-column label="产品名称" prop="prodName"></yu-xtable-column>
+      <yu-xtable-column label="积分值" prop="balance"> </yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+  <!-- 机构+产品汇总报表弹框 -->
+  <yu-xdialog title="按机构+产品汇总查询报表" :visible.sync="orgProductReportDialogVisible">
+    <yu-xtable ref="refOrgProductReportTable" row-number :data-url="orgProductReportDataUrl" :pageable="false" :height="450">
+      <yu-xtable-column label="机构编号" prop="orgId"></yu-xtable-column>
+      <yu-xtable-column label="机构名称" prop="orgName"></yu-xtable-column>
+      <yu-xtable-column label="产品编号" prop="prodId"></yu-xtable-column>
+      <yu-xtable-column label="产品名称" prop="prodName"></yu-xtable-column>
+      <yu-xtable-column label="积分值" prop="balance"> </yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+</div>

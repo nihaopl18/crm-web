@@ -1,0 +1,95 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-18 12:44:56.
+  @updated by
+  @description 客户概览
+-->
+<div>
+  <yu-tabs v-model="activeName" @tab-click="handleClick">
+    <yu-tab-pane label="存款业务概览" name="deal">
+      <yu-xform related-table-name="refDealTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <yu-xtable ref="refDealTable" row-number :data-url="dataUrl2" :highlight-current-row="true" :stripe="true">
+        <yu-xtable-column label="统计日期" prop="dataDate" width="150"></yu-xtable-column>
+        <yu-xtable-column label="客户编号" prop="custId" width="150"></yu-xtable-column>
+        <yu-xtable-column label="存款业务分类" prop="depositType" width="200" data-code="CD0354"></yu-xtable-column>
+        <yu-xtable-column label="币种" prop="ccyCd" width="150" data-code="CD0071"></yu-xtable-column>
+        <yu-xtable-column label="日余额" prop="dayBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="月日均余额" prop="monthAvgBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="季日均余额" prop="quarterAvgBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="半年日均余额" prop="halfYearAvgBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="年日均余额" prop="yearAvgBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期月末日余额" prop="lyDayBal" width="200" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期月日均余额" prop="lyMonthAvgBal" width="200" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期季日均余额" prop="lyQuarterAvgBal" width="200" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期半年日均余额" prop="lyHalfYearAvgBal" width="200" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期年日均余额" prop="lyYearAvgBal" width="200" align="right"></yu-xtable-column>
+      </yu-xtable>
+    </yu-tab-pane>
+    <yu-tab-pane label="贷款业务概览" name="messageTip">
+      <yu-xform related-table-name="refTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+        <yu-xtable-column label="统计日期" prop="dataDate" width="150"></yu-xtable-column>
+        <yu-xtable-column label="客户编号" prop="custId" width="150"></yu-xtable-column>
+        <yu-xtable-column label="贷款类型 " prop="loanType" width="200" data-code="CD0353"></yu-xtable-column>
+        <yu-xtable-column label="币种" prop="ccyCd" width="150" data-code="CD0071"></yu-xtable-column>
+        <yu-xtable-column label="贷款余额" prop="loanBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="正常余额" prop="regularBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="月日均正常余额" prop="monthAvgRegularBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="季日均正常余额" prop="quarAvgRegularBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="半年日均正常余额" prop="halfYearAvgRegularBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="年日均正常余额" prop="yearAvgRegularBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期贷款余额" prop="lyLoanBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期正常余额" prop="lyRegularBal" width="150" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期月日均正常余额" prop="lyMonthAvgRegularBal" width="180" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期季日均正常余额" prop="lyQuarAvgRegularBal" width="180" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期半年日均正常余额" prop="lyHalfYearAvgRegularBal" width="180" align="right"></yu-xtable-column>
+        <yu-xtable-column label="上年同期年日均正常余额" prop="lyYearAvgRegularBal" width="180" align="right"></yu-xtable-column>
+      </yu-xtable>
+    </yu-tab-pane>
+    
+    <yu-tab-pane label="中间业务概览" name="workSche">
+      <yu-xform related-table-name="refWorkScheduleTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <yu-xtable ref="refWorkScheduleTable" row-number :data-url="dataUrl5" :highlight-current-row="true" :stripe="true">
+        <yu-xtable-column label="统计日期" prop="dataDate" width="150"></yu-xtable-column>
+        <yu-xtable-column label="客户编号" prop="custId" width="150"></yu-xtable-column>
+        <yu-xtable-column label="业务种类" prop="type" width="200" data-code="CD0352"></yu-xtable-column>
+        <yu-xtable-column label="业务笔数" prop="count" width="100" align="right"></yu-xtable-column>
+        <yu-xtable-column label="业务发生额" prop="amount" width="120" align="right"></yu-xtable-column>
+        <yu-xtable-column label="手续费收入" prop="income" width="120" align="right"></yu-xtable-column>
+        <yu-xtable-column label="客户类型" prop="custType" width="120" data-code="CD0016"></yu-xtable-column>
+        <yu-xtable-column label="币种" prop="ccyCd" data-code="CD0071"></yu-xtable-column>
+      </yu-xtable>
+    </yu-tab-pane>
+    <yu-tab-pane label="渠道业务概览" name="mySche">
+      <yu-xform related-table-name="refMyScheduleTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <yu-xtable ref="refMyScheduleTable" row-number :data-url="dataUrl4" :highlight-current-row="true" :stripe="true">
+        <yu-xtable-column label="统计日期" prop="dataDate" width="150"></yu-xtable-column>
+        <yu-xtable-column label="客户编号" prop="custId" width="150"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="150"></yu-xtable-column>
+        <yu-xtable-column label="客户类型" prop="custType" width="100" data-code="CD0016"></yu-xtable-column>
+        <!-- <yu-xtable-column label="起始时间" prop="startDt" width="150"></yu-xtable-column>
+        <yu-xtable-column label="终止时间" prop="endDt" width="150"></yu-xtable-column> -->
+        <yu-xtable-column label="渠道" prop="channel" width="100" data-code="CD0450"></yu-xtable-column>
+        <yu-xtable-column label="业务种类" prop="busiType" width="100" data-code="CD0328"></yu-xtable-column>
+        <!-- <yu-xtable-column label="存款笔数" prop="saveCount" width="100"></yu-xtable-column>
+        <yu-xtable-column label="存款金额" prop="saveAmt" width="100"></yu-xtable-column>
+        <yu-xtable-column label="取款笔数" prop="drawCount" width="100"></yu-xtable-column>
+        <yu-xtable-column label="取款金额" prop="drawAmt" width="100"></yu-xtable-column> -->
+        <yu-xtable-column label="交易金额" prop="tranAmt" width="100" align="right"></yu-xtable-column>
+        <yu-xtable-column label="交易笔数" prop="transNum" width="100" align="right"></yu-xtable-column>
+        <yu-xtable-column label="手续费收入" prop="income" width="200" align="right"></yu-xtable-column>
+      </yu-xtable>
+    </yu-tab-pane>
+  </yu-tabs>
+</div>

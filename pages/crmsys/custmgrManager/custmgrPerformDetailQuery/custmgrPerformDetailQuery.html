@@ -1,0 +1,33 @@
+<!-- 
+  @Created by luhy1 luhy1@yusys.com.cn on 2019-1-21 10:15:41.
+  @updated by
+  @description 业绩明细查询
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="统计日期" name="dataDt" ctype="datepicker"></yu-xform-item>
+      <yu-xform-item placeholder="机构" name="brchId" ctype="yufp-org-tree" v-if="userVisiable"></yu-xform-item>
+      <yu-xform-item placeholder="行员" name="empId" ctype="yufp-user-selector" ref="selectCust" v-if="userVisiable"></yu-xform-item>
+      <yu-xform-item placeholder="时段标识" name="sdbs" ctype="select" data-code="CD0329"></yu-xform-item>
+      <yu-xform-item placeholder="币种" name="currCd" ctype="select" data-code="CD0330"></yu-xform-item>
+      <yu-xform-item placeholder="业务类别" name="targetTypeId" ctype="select" data-code="CD0328"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :stripe="true" :default-load="false">
+    <yu-xtable-column label="统计日期" prop="dataDt"></yu-xtable-column>
+    <yu-xtable-column label="机构" prop="brchName"></yu-xtable-column>
+    <yu-xtable-column label="行员工号" prop="empId"></yu-xtable-column>
+    <yu-xtable-column label="行员" prop="empName"></yu-xtable-column>
+    <yu-xtable-column label="指标代码" prop="targetId"></yu-xtable-column>
+    <yu-xtable-column label="指标名称" prop="targetName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="指标值" prop="targetValue"></yu-xtable-column>
+    <yu-xtable-column label="时段标识" prop="sdbs" data-code="CD0329"></yu-xtable-column>
+    <yu-xtable-column label="币种" prop="currCd" data-code="CD0330" width="180"></yu-xtable-column>
+    <yu-xtable-column label="业务类别" prop="targetTypeId" data-code="CD0328"></yu-xtable-column>
+  </yu-xtable>
+</div>

@@ -1,0 +1,257 @@
+<!-- 必须全局拥有唯一的id -->
+<div>
+    <el-tabs v-model="activeName" type="card">
+        <el-tab-pane label="申请信息" name="first">
+            <div :id="logicPageId">
+
+            </div>
+        </el-tab-pane>
+        <el-tab-pane label="流程审批历史" name="second">
+            <div :id="historyPageId">
+
+            </div>
+        </el-tab-pane>
+    </el-tabs>
+
+    <div>
+        <el-card class="box-card" :hidden="cardHidden">
+            <div slot="header" class="clearfix">
+                <span v-text="title"></span>
+            </div>
+            <el-form ref="WfOperationForm" :model="WfOperationForm" :rules="rules" label-position="left" label-width="110px">
+                <el-form-item label="审批结论" required prop="commentSign">
+                    <el-select v-model="WfOperationForm.commentSign" placeholder="请选择审批结论"  @change="commentChange()">
+                        <el-option v-for="item in commentSignOptions" :key="item.key" :label="item.value" :value="item.key">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="审批意见" required prop="commentContent">
+                    <el-input type="textarea" v-model="WfOperationForm.commentContent"></el-input>
+                </el-form-item>
+            </el-form>
+        </el-card>
+        <el-card class="box-card">
+            <el-row>
+                <!-- <el-button type="primary" @click="saveFn()" v-show="!saveHidden">保存</el-button> -->
+                <el-button type="primary" @click="submitFn()" v-show="!submitHidden">提交</el-button>
+                <el-button type="primary" @click="wfSignInFn()" v-show="!wfSignInHidden">签收</el-button>
+                <el-button type="primary" @click="wfSignOffFn()" v-show="!wfSignOffHidden">撤销签收</el-button>
+                <el-button type="primary" @click="wfTaskSignOffFn()" v-show="!wfTaskSignOffHidden">放回项目池</el-button>
+                <el-button type="primary" @click="wfWakeFn()" v-show="!wfWakeHidden">激活</el-button>
+                <el-button type="primary" @click="wfHangFn()" v-show="!wfHangHidden">挂起</el-button>
+                <el-button type="primary" @click="wfTakeBackFn()" v-show="!wfTakeBackHidden">撤回/收回</el-button>
+                <el-button type="primary" @click="wfUrgeFn()" v-show="!wfUrgeHidden">催办</el-button>
+                <el-button type="primary" @click="callSubFlowFn()" v-show="!callSubFlowHidden">{{ callSubFlow }}</el-button>
+                <el-button type="primary" @click="closeFn()">关闭</el-button>
+            </el-row>
+        </el-card>
+
+        <!--打回节点选择页面 -->
+        <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" height="370px" width="700px" @close="wfCallBackClose">
+            <el-form ref="backNodeForm" :model="backNodeForm" label-width="800px" :inline="true">
+                <el-tabs v-model="backNodeFormActiveName" type="card">
+                    <el-tab-pane label="打回节点" name="first">
+                        <el-row style="margin-top: 20px">
+                            <el-col :span="4">
+                                &nbsp;
+                            </el-col>
+                            <el-col :span="20">
+                                <el-radio-group v-model="backNodeModel" @change="radioChange">
+                                    <el-row :gutter="30" v-for="(item,index) in backNodeList" :key="item.nodeId">
+                                        <el-col :span="8">
+                                            <el-radio :label="item.nodeId" :key="item.nodeName">{{item.nodeName}}</el-radio>
+                                        </el-col>
+                                        <el-col :span="16">
+                                            <el-radio-group v-model="userModel" :disabled="!item.selected">
+                                                <el-radio v-for="(item1,index1) in usersList[index]" :label="item1.userId" :key="item1.userName">{{item1.userName}}</el-radio>
+                                            </el-radio-group>
+                                        </el-col>
+                                    </el-row>
+                                </el-radio-group>
+                            </el-col>
+                        </el-row>
+                    </el-tab-pane>
+                    <el-tab-pane label="打回后提交方式" name="second">
+                        <el-row style="margin-top: 20px">
+                            <el-col :span="4">
+                                &nbsp;
+                            </el-col>
+                            <el-col :span="20">
+                                <el-radio v-model="callBackModel" label="1">逐级提交</el-radio>
+                                <el-radio v-model="callBackModel" label="0">提交给退回发起人</el-radio>
+                            </el-col>
+                        </el-row>
+                    </el-tab-pane>
+                </el-tabs>
+            </el-form>
+            <div slot="footer" align="center">
+                <el-button type="primary" @click="wfCallBackClose">关闭</el-button>
+                <el-button type="primary" @click="wfCallBack()">确 定</el-button>
+            </div>
+        </el-dialog-x>
+
+        <!--协办选择人页面-->
+        <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogVisibleAssistUser" height="360px" width="550px">
+            <el-form-q form="query" :field-data="queryFields" search-table="assistUserList" :buttons="assistUserButtons"></el-form-q>
+            <el-table-x ref="assistUserList" :data-url="urls.getAssistUsersUrl" :default-load=false :base-params="assistUserParams" :table-columns="assistUserTableColumns">
+            </el-table-x>
+            <div slot="footer" align="center">
+                <el-button type="primary" @click="returnAssistUser">选取返回</el-button>
+            </div>
+        </el-dialog-x>
+
+        <!--流程转办页面-->
+        <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogVisibleChangeUser" height="360px" width="550px">
+            <el-table-x ref="changeUserList" :checkbox=true :pageable=true :data-url="urls.getChangeUsersUrl" :request-type="nodeUserResquestType"
+                :default-load=false :base-params="commonParams" :table-columns="changeUserTableColumns">
+            </el-table-x>
+            <div slot="footer" align="center">
+                <el-button type="primary" @click="returnChangeUser">选取返回</el-button>
+            </div>
+        </el-dialog-x>
+
+        <!--流程跳转页面-->
+        <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogVisibleJump" height="360px" width="550px" @close="jumpUserClose">
+            <el-form ref="jumpUserForm" :model="jumpUserForm" label-width="110px" :inline="true">
+                <el-row>
+                    <el-col :span="4">
+                        &nbsp;
+                    </el-col>
+                    <el-col :span="20">
+                        <table>
+                            <el-row>
+                                <el-radio-group v-model="jumpUserForm.nextNodeId" @change="jumpUserRadioChange">
+                                    <el-row v-for="(item,index) in jumpOptions" :key="item.key">
+                                        <el-col :span="8">
+                                            <el-radio :label="item.key" :key="item.value">{{item.value}}</el-radio>
+                                        </el-col>
+                                    </el-row>
+                                </el-radio-group>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="18">
+                                    <el-input v-model="jumpUserForm.nextNodeUser" placeholder="用户..." :disabled=true></el-input>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-button :disabled="!jumpUserForm.flag" @click="jumpUserFn()">选择人员</el-button>
+                                </el-col>
+                            </el-row>
+                        </table>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" align="center">
+              <el-button type="primary" @click="jumpUserClose()">取消</el-button>
+                <el-button type="primary" @click="wfJumpFn()">确定</el-button>
+            </div>
+        </el-dialog-x>
+
+        <!--跳转办理人选择页面-->
+        <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogVisibleJumpUser" height="360px" width="550px">
+            <el-form-q form="jumpUserQuery" :field-data="jumpUserQueryFields" search-table="jumpUserList" :buttons="jumpUserButtons"></el-form-q>
+            <el-table-x ref="jumpUserList" :data-url="urls.getJumpUsersUrl" :default-load=false :base-params="jumpUserParams" :table-columns="jumpUserTableColumns">
+            </el-table-x>
+            <div slot="footer" align="center">
+                <el-button type="primary" @click="returnJumpUser">选取返回</el-button>
+            </div>
+        </el-dialog-x>
+
+        <!--下一步骤信息页面（单选） -->
+        <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogFormVisibleRadio" height="370px" width="700px" @close="beforeNextClose">
+            <el-form ref="nextNodeForm" :model="nextNodeForm" label-width="110px" :inline="true">
+                <el-row>
+                    <el-col :span="4">
+                        &nbsp;
+                    </el-col>
+                    <el-col :span="20">
+                        <table>
+                            <tbody>
+                                <tr v-for="(item,index) in nextNodeList">
+                                    <td>
+                                        <el-radio :label="item.nodeId" v-model="radioModel" @change.native="onAgreeRadioNodeSelect">{{item.nodeName}}</el-radio>
+                                    </td>
+                                    <td>
+                                        <el-input v-model="item.userNames" placeholder="" :disabled=true></el-input>
+                                    </td>
+                                    <td>
+                                        <el-button v-if="item.selected=='1' && item.nodeType !='E'" :disabled="item.selected=='0'" @click="openNodeUsersFn(item.nodeId,index)">选择人员</el-button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" align="center">
+                <!-- <el-button type="primary" @click="dialogFormVisibleRadio = false">关闭</el-button> -->
+                <el-button type="primary" @click="saveCreateFn()">确 定</el-button>
+            </div>
+        </el-dialog-x>
+
+        <!--下一步骤信息页面（多选） -->
+        <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogFormVisibleCheck" height="370px" width="700px" @close="beforeNextClose">
+            <el-form ref="nextNodeFormCheck" :model="nextNodeFormCheck" label-width="110px" :inline="true">
+                <el-row>
+                    <el-col :span="4">
+                        &nbsp;
+                    </el-col>
+                    <el-col :span="20">
+                        <table>
+                            <tbody>
+                                <tr v-for="(item,index) in nextNodeList">
+                                    <td>
+                                        <el-checkbox :label="item.nodeId" true-label="1" false-label="0" v-model="item.selected">{{item.nodeName}}</el-checkbox>
+                                    </td>
+                                    <td>
+                                        <el-input v-model="item.userNames" placeholder="" :disabled=true></el-input>
+                                    </td>
+                                    <td>
+                                        <el-button v-if="item.selected=='1' && item.nodeType !='E'" :disabled="item.selected=='0'" @click="openNodeUsersFn(item.nodeId,index)">选择人员</el-button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" align="center">
+                <!-- <el-button type="primary" @click="dialogFormVisibleCheck = false">关闭</el-button> -->
+                <el-button type="primary" @click="saveCreateFn()">确 定</el-button>
+            </div>
+        </el-dialog-x>
+
+        <!--下一处理人选取框(单选)-->
+        <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogVisibleNodeUser" height="360px" width="550px">
+            <el-table-x ref="nodeUserList"  :data-url="urls.nodeUserUrl" :pageable=true :request-type="nodeUserResquestType" :default-load=false
+                :base-params="nodeUserParams" :table-columns="nodeUserTableColumns">
+            </el-table-x>
+            <div slot="footer" align="center">
+                <el-button type="primary" @click="returnNodeUser">选取返回</el-button>
+            </div>
+        </el-dialog-x>
+
+        <!--下一处理人选取框(多选)-->
+        <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogVisibleNodeUserCheck" height="360px" width="550px">
+            <el-table-x ref="nodeUserCheckList" :checkbox=true :pageable=true :data-url="urls.nodeUserUrl" :request-type="nodeUserResquestType"
+                :default-load=false :base-params="nodeUserParams" :table-columns="nodeUserTableColumns">
+            </el-table-x>
+            <div slot="footer" align="center">
+                <el-button type="primary" @click="returnNodeUserCheck">选取返回</el-button>
+            </div>
+        </el-dialog-x>
+
+        <!--委托模式-->
+        <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogVisibleAgent" height="360px" width="550px">
+            <el-radio-group v-model="agent" @change="agentChange">
+                <el-row v-for="(item,index) in agentList" :key="item.key">
+                    <el-col>
+                        <el-radio :label="item.key" :key="item.value">{{item.value}}</el-radio>
+                    </el-col>
+                </el-row>
+            </el-radio-group>
+            <div slot="footer" align="center">
+                <el-button type="primary" @click="saveAgent()">确 定</el-button>
+            </div>
+        </el-dialog-x>
+    </div>
+</div>

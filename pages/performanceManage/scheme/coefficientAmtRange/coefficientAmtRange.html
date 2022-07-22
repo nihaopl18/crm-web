@@ -1,0 +1,40 @@
+<!-- 
+  @Created by xujiawei xujy3@yusys.com.cn on 2020-7-13 13:54:18.
+  @updated by
+  @description 业务量金额区间折算系数管理
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="存贷标识" ctype="select" name="cdflag" data-code="BUS_TYPE"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+    <yu-xtable-column label="存贷标识" prop="cdflag"  data-code="BUS_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="起始金额" prop="startAmt"></yu-xtable-column>
+    <yu-xtable-column label="结束金额" prop="endAmt"></yu-xtable-column>
+    <yu-xtable-column label="现金折算系数" prop="amtCoefficient"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="存贷标识" ctype="select" name="cdflag" :rules="rule[0]" data-code="BUS_TYPE" :disabled="bizDisa"></yu-xform-item>
+        <yu-xform-item label="起始金额" name="startAmt" :rules="rule"></yu-xform-item>
+        <yu-xform-item label="结束金额"  name="endAmt" :rules="rule"></yu-xform-item>
+        <yu-xform-item label="现金折算系数" name="amtCoefficient" :rules="comRules.amtCoefficient"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

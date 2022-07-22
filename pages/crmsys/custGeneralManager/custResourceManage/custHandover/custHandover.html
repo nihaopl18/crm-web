@@ -1,0 +1,210 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-2 16:52:42.
+  @updated by
+  @description 客户移交
+-->
+<div>
+    <yu-xform ref="custforSearchForm" v-model="forqueryFormdata" form-type="search" class="hide-form-search-btn" :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn">
+        <yu-xform-group :column="6">
+          <yu-xform-item placeholder="客户类型" name="custType" ctype="select" rules="required" data-code="CD0016"></yu-xform-item>
+          <!-- <yu-xform-item placeholder="客户状态" name="stutas" ctype="select" data-code="CD0019"></yu-xform-item> -->
+          <yu-xform-item placeholder="客户号" name="custId" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+    <!-- 对公证件类型 -->
+    <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+    <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+    <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != undefined" data-code="CD0011"></yu-xform-item>
+    <yu-xform-item placeholder="证件号" name="certNo" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="机构号" name="oneOrg" ctype="input" hidden = "true"></yu-xform-item>
+        </yu-xform-group>
+        <!-- <div class="yu-grpButton" style="text-align: right;">
+          <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+          <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+        </div> -->
+      </yu-xform>
+      <yu-button icon="yx-price-tags" @click="initiativeHandoverFn">客户移交</yu-button>
+      <yu-xtable ref="forrefTable" row-number class="permitSelect" @contextmenu.prevent.stop.native :data-url="dataUrl" :default-load="false" selection-type="radio">
+        <yu-xtable-column label="客户类型" prop="custType" width="90" data-code="CD0016"></yu-xtable-column>
+        <yu-xtable-column label="客户状态" prop="custStatus" width="90" data-code="CD0019"></yu-xtable-column>
+        <yu-xtable-column label="客户号" prop="custId" width="100"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="200"></yu-xtable-column>
+        <yu-xtable-column label="证件类型" prop="certType" width="100" data-code="CD0011"></yu-xtable-column>
+        <yu-xtable-column label="证件号码" prop="certNo" width="180"></yu-xtable-column>
+        <yu-xtable-column label="主办机构" prop="orgName" width="150"></yu-xtable-column>
+        <yu-xtable-column label="主办客户经理" prop="mgrName" width="160"></yu-xtable-column>
+        <yu-xtable-column label="客户价值等级" prop="valueLev" width="150" data-code="CD0243"></yu-xtable-column>
+        <yu-xtable-column label="客户服务等级" prop="servLev" width="110" data-code="CD0032"></yu-xtable-column>
+      </yu-xtable>
+  <!-- <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="客户编号" name="custId" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-switch-2" @click="passiveHandoverFn">被动移交</yu-button>
+      <yu-button icon="yx-price-tags" @click="initiativeHandoverFn">主动移交</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :default-load = "false" :data-url="dataUrl" :base-params="baseParams">
+    <yu-xtable-column label="客户编号" prop="custId" width="120"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="原归属机构" prop="orgNamePre" width="120"></yu-xtable-column>
+    <yu-xtable-column label="原机构主协办类型" prop="orgTypePre" width="80" data-code="CD0241"></yu-xtable-column>
+    <yu-xtable-column label="原客户经理" prop="mgrNamePre" width="120"></yu-xtable-column>
+    <yu-xtable-column label="原客户经理主协办类型" prop="mgrTypePre" width="120" data-code="CD0241"></yu-xtable-column>
+    <yu-xtable-column label="新归属机构" prop="orgName" width="120" ></yu-xtable-column>
+    <yu-xtable-column label="新机构主协办类型" prop="orgType" data-code="CD0241"></yu-xtable-column>
+    <yu-xtable-column label="新客户经理" prop="mgrName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="新客户经理主协办类型" prop="mgrType" data-code="CD0241"></yu-xtable-column>
+    <yu-xtable-column label="移交日期" prop="workTranDate" width="120"></yu-xtable-column>
+    <yu-xtable-column label="移交人" prop="tOrgName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="移交人机构" prop="tMgrName" width="120"></yu-xtable-column>
+  </yu-xtable> -->
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog title="被动移交" :visible.sync="passiveDialogVisible" width="65%">
+    <yu-xform ref="passrefForm" label-width="100px" v-model="passformdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <!-- <yu-xform-item label="移交主协办类型" label-width="140px" name="manType" ctype="select" rules="required" data-code="CD0241"></yu-xform-item> -->
+        <yu-xform-item label="移交原因" name="handOverReason" ctype="textarea" rules="required" :colspan="24"></yu-xform-item>
+      </yu-xform-group>
+      <yu-tabs v-model="tabactiveName" @tab-click="clickTabFn">
+        <yu-tab-pane label="机构内非管户客户" name="inBank">
+          <div class="yu-toolBar" style="padding-top: 10px">
+            <yu-button-group>
+              <!-- :params="selectCustParams" -->
+              <yufp-select-cust ref="selectInnoJCust" class="select-cust-btn" @select-fn="custInnoJSeletFn" :params="selectInnoJCustParams">
+                <template slot="trigerEl">
+                  <yu-button icon="plus" @click="addInnoJCustFn">新增</yu-button>
+                </template>
+              </yufp-select-cust>
+              <yu-button icon="delete" @click="deleteInnoJCustFn">删除</yu-button>
+            </yu-button-group>
+          </div>
+          <yu-xtable ref="refInnotJurisdictCustTable" row-number :data="custInnoJData" selection-type="checkbox" :pageable="false">
+            <yu-xtable-column label="客户编号" prop="custId" ></yu-xtable-column>
+            <yu-xtable-column label="客户名称" prop="custName" ></yu-xtable-column>
+            <yu-xtable-column label="证件类型" prop="certType"  data-code="CD0011"></yu-xtable-column>
+            <yu-xtable-column label="证件号码" prop="certNo" ></yu-xtable-column>
+            <yu-xtable-column label="客户类型" prop="custType"  data-code="CD0016"></yu-xtable-column>
+            <yu-xtable-column label="客户状态" prop="custStutas"  data-code="CD0019"></yu-xtable-column>
+            <yu-xtable-column label="归属机构" prop="orgName" ></yu-xtable-column>
+            <yu-xtable-column label="客户经理" prop="mgrName" ></yu-xtable-column>
+          </yu-xtable>
+        </yu-tab-pane>
+        <yu-tab-pane label="机构外客户" name="outBank">
+          <div class="yu-toolBar" style="padding-top: 10px">
+            <yu-button-group>
+              <!-- :params="selectCustParams" -->
+              <yufp-select-cust ref="selectOutnoJCust" class="select-cust-btn" @select-fn="custOutnoJSeletFn" :params="selectOutnoJCustParams">
+                <template slot="trigerEl">
+                  <yu-button icon="plus" @click="addOutnoJCustFn">新增</yu-button>
+                </template>
+              </yufp-select-cust>
+              <yu-button icon="delete" @click="deleteOutnoJCustFn">删除</yu-button>
+            </yu-button-group>
+          </div>
+          <yu-xtable ref="refOutnotJurisdictCustTable" row-number :data="custOutnoJData" selection-type="checkbox" :pageable="false">
+            <yu-xtable-column label="客户编号" prop="custId" ></yu-xtable-column>
+            <yu-xtable-column label="客户名称" prop="custName" ></yu-xtable-column>
+            <yu-xtable-column label="证件类型" prop="certType"  data-code="CD0011"></yu-xtable-column>
+            <yu-xtable-column label="证件号码" prop="certNo" ></yu-xtable-column>
+            <yu-xtable-column label="客户类型" prop="custType"  data-code="CD0016"></yu-xtable-column>
+            <yu-xtable-column label="客户状态" prop="custStutas"  data-code="CD0019"></yu-xtable-column>
+            <yu-xtable-column label="归属机构" prop="orgName" ></yu-xtable-column>
+            <yu-xtable-column label="客户经理" prop="mgrName" ></yu-xtable-column>
+          </yu-xtable>
+        </yu-tab-pane>
+      </yu-tabs>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelnoJFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="savenoJFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yu-xdialog title="客户移交" :visible.sync="initiativeDialogVisible" width="50%" >
+  <yu-xdialog  title="客户经理选择" :visible.sync="mgrDialogVisible" width="1000px">
+      <yu-xform ref="mgrSearchForm" v-model="mgrQueryModel" form-type="search" class="hide-form-search-btn">
+          <yu-xform-group :column="4">
+            <yu-xform-item placeholder="客户经理编号" name="mgrId" ctype="input" label="经理编号"></yu-xform-item>
+            <yu-xform-item placeholder="客户经理名称" name="mgrName" ctype="input" label="经理名称"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton" style="text-align: right;">
+            <yu-button icon="search" type="primary" @click="searchMgrFn">查询</yu-button>
+            <yu-button icon="yx-loop2" type="primary" @click="resetMgrMainFn">重置</yu-button>
+          </div>
+        </yu-xform>
+    <yu-xtable ref="mgrTable" row-number :data-url="mgrdataUrl" :default-load="false" selection-type="radio">
+      <yu-xtable-column label="客户经理编号" prop="mgrId" ></yu-xtable-column>
+      <yu-xtable-column label="客户经理姓名" prop="mgrName" ></yu-xtable-column>
+      <yu-xtable-column label="客户经理主协办类型" prop="mgrType" data-code="CD0241"></yu-xtable-column>
+      <yu-xtable-column label="机构编号" prop="orgId" ></yu-xtable-column>
+      <yu-xtable-column label="机构名称" prop="orgName" ></yu-xtable-column>
+      <yu-xtable-column label="机构主协办类型" prop="orgType" data-code="CD0241"></yu-xtable-column>
+    </yu-xtable>
+    <!-- <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveMgrFn">保存</yu-button> -->
+    <div slot="footer" class="dialog-footer"  align="center">
+      <el-button type="primary"  @click="mgrDialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="saveMgrFn">确 定</el-button>
+      </div>
+  </yu-xdialog>
+    <yu-xform ref="initirefForm" label-width="100px" v-model="initiformdata" :disabled="formDisabled">
+      <yu-xform-group>
+          <yu-xform-item label="接收客户经理" label-width="120px"  name="tMgrName" :colspan="12" ctype="input" rules="required" @focus="mgrClickFn" ></yu-xform-item>
+        <!-- <yu-xform-item label="接收客户经理" label-width="120px"  name="tMgrName" :colspan="8" ctype="yufp-mgrall-selector" rules="required" @select-fn="mgrSelectFn"></yu-xform-item> -->
+        <yu-xform-item label="接收机构" name="tOrgName" ctype="input" rules="required" :colspan="12" :readonly="true"></yu-xform-item>
+        <!-- <yu-xform-item label="移交主协办类型" label-width="140px"  name="manType" ctype="select" rules="required" data-code="CD0241"></yu-xform-item> -->
+        <yu-xform-item label="申请移交原因" label-width="120px" name="handOverReason" ctype="textarea" rules="required" :colspan="24"></yu-xform-item>
+      
+      </yu-xform-group>
+      
+      <!-- <div class="yu-toolBar">
+        <yu-button-group>
+          <yufp-select-cust ref="selectJCust" class="select-cust-btn" @select-fn="custJSeletFn" :params="selectJCustParams">
+            <template slot="trigerEl">
+              <yu-button icon="plus" @click="addJCustFn">新增</yu-button>
+            </template>
+          </yufp-select-cust>
+          <yu-button icon="delete" @click="deleteJCustFn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="refJurisdictCustTable" row-number :data="custJData" selection-type="checkbox" :pageable="false">
+        <yu-xtable-column label="客户编号" prop="custId" width="120"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="证件类型" prop="certType" width="120" data-code="CD0011"></yu-xtable-column>
+        <yu-xtable-column label="证件号码" prop="certNo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="客户类型" prop="custType" width="120" data-code="CD0016"></yu-xtable-column>
+        <yu-xtable-column label="客户状态" prop="custStutas" width="120" data-code="CD0019"></yu-xtable-column>
+        <yu-xtable-column label="归属机构" prop="orgNam" width="120"></yu-xtable-column>
+        <yu-xtable-column label="机构主协办类型" prop="orgType" width="120" data-code="CD0241"></yu-xtable-column>
+        <yu-xtable-column label="归属客户经理" prop="mgrName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="客户经理主协办类型" prop="mgrType" width="120" data-code="CD0241"></yu-xtable-column>
+      </yu-xtable> -->
+      <el-collapse value="1">
+        <el-collapse-item title="附件列表" name="1">
+            <yufp-upload-table ref="fileTable" :data-params="initFilesParams" :data ="fileUpLoadBusNo" :multiple="false"
+              :upload-visible="fileBtnVisible" :download-visible="fileBtnVisible" :delete-visible="fileBtnVisible" 
+              :before-upload="beforeFileUpload" :success-fn="uploadSuccessFn" :show-file-list=false></yufp-upload-table>
+        </el-collapse-item>
+      </el-collapse>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelJFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveJFn">提交</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 审批组件 -->
+  <yufp-wf-init ref="approvalRef" @afterinit="onAfterCloseFn" :common-params="wfCommonParams"></yufp-wf-init>
+</div>
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

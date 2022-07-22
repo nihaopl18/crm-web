@@ -1,0 +1,59 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-1-24 11:16:54.
+  @updated by
+  @description 关联关系
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <!--<yu-xform-group :column="4">
+       
+        <yu-xform-item placeholder="关联关系" name="relationship" ctype="select" data-code="CD0284"></yu-xform-item>
+        <!-- <yu-xform-item placeholder="挖掘关系层级" name=""  ctype="select"></yu-xform-item> 
+        <yu-xform-item placeholder="被关联客户名称" name="relaCustName"  :hidden="true"></yu-xform-item>
+        <yu-xform-item placeholder="被关联客户" name="relaCustId"  ctype="yufp-all-cust-selector" :param="selectAllCustParams"></yu-xform-item>
+    </yu-xform-group>-->
+  </yu-xform>
+  <div class="yu-toolBar" style="margin-top: 10px;">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+      <yu-button  @click="openpercustViewFn" v-if="viewBtn">客户视图</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+      <!--<yu-xtable-column label="客户号" prop="custId" width="120"></yu-xtable-column>
+      <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column> -->
+      <yu-xtable-column label="关联客户号" prop="relaCustId" width="120"></yu-xtable-column>
+      <yu-xtable-column label="关联客户名称" prop="relaCustName" width="200"></yu-xtable-column>
+      <yu-xtable-column label="关联关系" prop="relationship" data-code="CD0284" width="120"></yu-xtable-column>
+      <yu-xtable-column label="维护人" prop="lastUserName" width="120" ></yu-xtable-column>
+      <yu-xtable-column label="维护人机构" prop="lastOrgName" width="150"></yu-xtable-column>
+      <yu-xtable-column label="维护时间" prop="lastChgDt"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+          <yu-xform-item label="客户号" name="custId"  ctype="input" :hidden="true"></yu-xform-item>
+          <yu-xform-item label="客户名称" name="custName"  ctype="input" :hidden="true"></yu-xform-item>
+          <yu-xform-item label="关联客户" name="relaCustId" @select-fn="custSelFn"  rules="required" ctype="yufp-governed-cust-selector" :params="selectAllCustParams" :disabled="relcustdisable"></yu-xform-item>
+          <yu-xform-item label="关联客户名称" name="relaCustName"    :hidden="true"></yu-xform-item><!-- ctype="yufp-select-cust" :param="selectAllCustParams" -->
+          <yu-xform-item label="关联关系" name="relationship" rules="required" ctype="select" data-code="CD0284"></yu-xform-item>
+         
+
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

@@ -1,0 +1,88 @@
+<!--
+  @created by chenlin on 2019-3-14 19:50:26
+  @updated by
+  @description 头筹
+-->
+<div class='yu-page pc' style="width: 100%;">
+  <yu-collapse :accordion="false" v-model="collapseName0">
+    <yu-collapse-item title="输入" name="1">
+    </yu-collapse-item>
+    <yu-collapse-item title="操作" name="2">
+      <yu-xform v-model="formData0" :inline="false" label-position="right" label-width="120px" :show-message="true" :disabled="false"
+        :groupColumn="2" ref="form">
+        <yu-xform-group :column="2">
+          <yu-xform-item ctype="input" name="YuInput4" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="不超过50个字"
+            :rows="1" :readonly="false" label="活动标题" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="活动头图" colspan="24" name="YuXFormItem5">
+            <yu-upload action="https://jsonplaceholder.typicode.com/posts/" :multiple="false" :show-file-list="false" :disabled="false"
+              tips="只能上传jpg/png文件，且不超过500kb">
+              <i class="el-icon-plus " style="font-size: 28px;
+                color: #8c939d;
+                border: 1px dashed #d9d9d9;
+                border-radius: 6px;
+                width: 178px;
+                height: 178px;
+                line-height: 178px;
+                text-align: center;"></i>
+            </yu-upload>
+            <yu-dialog v-model="dialogVisible" size="tiny">
+              <img width="100%" :src="dialogImageUrl" alt="">
+            </yu-dialog>
+          </yu-xform-item>
+          <yu-xform-item ctype="timepicker" name="timepicker2" :readonly="false" :disabled="false" :editable="true" :clearable="true"
+            placeholder="选择时间" align="left" label="活动开始"></yu-xform-item>
+          <yu-xform-item ctype="timepicker" name="timepicker3" :readonly="false" :disabled="false" :editable="true" :clearable="true"
+            placeholder="选择时间" align="left" label="活动结束"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="支持门店" name="YuXFormItem8">
+            <yu-tag label="已选择全部一家门店" type="primary" :closable="false" :hit="false" :close-transition="false">已选择全部一家门店</yu-tag>
+          </yu-xform-item>
+          <yu-xform-item ctype="switch" name="switch5" on-color="green" off-color="blue" on-text="ON" off-text="OFF" :width="55" :disabled="false"
+            :allow-focus="false" label="同店活动"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="报名必填" colspan="24" name="YuXFormItem10">
+            <yu-tag label="姓名" type="primary" :closable="false" :hit="false" :close-transition="false">姓名</yu-tag>
+            <yu-tag label="电话" type="primary" :closable="false" :hit="false" :close-transition="false">电话</yu-tag>
+            <yu-button draggable="true" label="添加" icon="yx-plus" size="small" :disabled="false" :loading="false" native-type="undefined"
+              @click="tianJia7">
+              添加
+            </yu-button>
+          </yu-xform-item>
+          <yu-xform-item ctype="input" name="YuInput11" type="textarea" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1"
+            placeholder="insert text here……" :rows="3" :readonly="false" label="活动介绍" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="活动图片" colspan="24" name="YuXFormItem12">
+            <yu-upload action="https://jsonplaceholder.typicode.com/posts/" :multiple="false" :show-file-list="false" :disabled="false"
+              tips="只能上传jpg/png文件，且不超过500kb">
+              <i class="el-icon-plus " style="font-size: 28px;
+                color: #8c939d;
+                border: 1px dashed #d9d9d9;
+                border-radius: 6px;
+                width: 178px;
+                height: 178px;
+                line-height: 178px;
+                text-align: center;"></i>
+            </yu-upload>
+          </yu-xform-item>
+          <yu-xform-item ctype="input" name="YuInput13" type="textarea" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1"
+            :rows="3" :readonly="false" label="活动规则" colspan="24"></yu-xform-item>
+        </yu-xform-group>
+        <div class="button-group">
+            <el-button type="primary" icon="check">保存</el-button>
+            <el-button type="primary" icon="el-icon-yx-undo2" @click="preview">预览</el-button>
+        </div>
+      </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="输出" name="3">
+    </yu-collapse-item>
+  </yu-collapse>
+  <yu-xdialog :visible.sync="dialogVisible" top="5%">
+      <img :src="imageSrc">
+  </yu-xdialog>
+  <yu-xdialog :visible.sync="dialogVisible1" width="480px" top="5%">
+    <img :src="imageSrc1">
+  </yu-xdialog>
+</div>
+<style type="text/css">
+  .el-form-item {
+    padding-right: 10px;
+    margin-bottom: 22px;
+  }
+</style>

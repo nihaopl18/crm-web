@@ -1,0 +1,51 @@
+<!-- 
+  @Created by geyun geyun@yusys.com.cn on 2019-2-20 15:02:42.
+  @updated by
+  @description 产品部门关联管理
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="6">
+      <yu-xform-item placeholder="产品编号" ctype="input" name="productId"></yu-xform-item>
+      <yu-xform-item placeholder="产品名称" ctype="input" name="prodName"></yu-xform-item>
+      <yu-xform-item placeholder="部门编号" ctype="input" name="dptCde"></yu-xform-item>
+      <yu-xform-item placeholder="部门名称" ctype="input" name="dptName"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+    <yu-xtable-column label="产品名称" prop="prodName" width="110"></yu-xtable-column>
+    <yu-xtable-column label="管理部门名称" prop="dptName" width="110"></yu-xtable-column>
+    <yu-xtable-column label="积分账户名称" prop="accountName" width="110"></yu-xtable-column>
+    <yu-xtable-column label="创建人" prop="creatUser" width="100"></yu-xtable-column>
+    <yu-xtable-column label="创建日期" prop="creatDate" width="150" :formatter="dateFormatterSimple"></yu-xtable-column>
+    <yu-xtable-column label="最近维护人" prop="updateUser" width="100"></yu-xtable-column>
+    <yu-xtable-column label="最近维护日期" prop="updateDate" width="150" :formatter="dateFormatterSimple"></yu-xtable-column>
+    <yu-xtable-column label="产品编号" prop="productId" width="110"></yu-xtable-column>
+    <yu-xtable-column label="管理部门编号" prop="dptCde" width="110"></yu-xtable-column>
+    <yu-xtable-column label="积分账户编号" prop="accountId" width="110"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+     <yu-xdialog :title="viewTitle" :visible.sync="dialogVisible" width="800px">
+      <yu-xform ref="refForm" label-width="120px" v-model="formdata">
+      <yu-xform-group>
+        <yu-xform-item label="产品名称" ctype="yufp-prod-selector" name="productId" :disabled="isTrue" rules="required" :params="paramsInfo" @select-fn="selectProdbackFn"></yu-xform-item>
+        <yu-xform-item label="产品编号" ctype="input" name="productId" :disabled="isProd"></yu-xform-item>
+        <yu-xform-item label="管理部门名称" placeholder="请选择" ctype="yufp-dpt-tree" name="dptCde" rules="required" :disabled="isTrue" @select-fn="selectDptbackFn"></yu-xform-item>
+        <yu-xform-item label="管理部门编号" ctype="input" name="dptCde" :disabled="isDpt"></yu-xform-item>
+        <yu-xform-item label="积分账户名称" ctype="select" placeholder="请选择" name="accountId" :data-url="accountNoDataUrl"  @change="selectAccountbackFn"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

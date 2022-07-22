@@ -1,0 +1,20 @@
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2018-1-9
+  @updated by
+  @description 系统管理-系统监控-在线用户管理
+-->
+<div>
+    <yu-xform related-table-name="refTable" form-type="search" style="margin-left: 20px;">
+        <yu-xform-group :column="3">
+            <yu-xform-item placeholder="用户姓名" name="userName" ctype="input"></yu-xform-item>
+            <yu-xform-item placeholder="机构名称" name="orgName" ctype="input"></yu-xform-item>
+        </yu-xform-group>
+    </yu-xform>
+    <yu-xtable ref="refTable" row-number :data-url="dataUrl" :pageable=true style="margin:0 20px;">
+        <yu-xtable-column label="登录名" prop="loginCode"></yu-xtable-column>
+        <yu-xtable-column label="用户姓名" prop="userName"></yu-xtable-column>
+        <yu-xtable-column label="登录IP" prop="offenIp"></yu-xtable-column>
+        <yu-xtable-column label="机构编号" prop="orgId"></yu-xtable-column>
+        <yu-xtable-column label="机构名称" prop="orgName"></yu-xtable-column>
+    </yu-xtable>
+</div>

@@ -1,0 +1,57 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-2-12 19:30:18.
+  @updated by
+  @description 诉讼信息
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+      <yu-xtable-column label="登记日期" prop="regDate" width="120"></yu-xtable-column>
+      <yu-xtable-column label="登记人" prop="userName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="结欠金额(元)" prop="unpdAmt" width="120"></yu-xtable-column>
+      <yu-xtable-column label="诉讼阶段" prop="lawsuitStat" width="120" ></yu-xtable-column>
+      <yu-xtable-column label="原借款金额" prop="loanAmt" width="120"></yu-xtable-column>
+      <yu-xtable-column label="其他被起诉人" prop="otherLawsuiter" width="120"></yu-xtable-column>
+      <yu-xtable-column label="来源系统" prop="srcSysCd" width="120"></yu-xtable-column>
+      <yu-xtable-column label="备注" prop="remark" ></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+    <yu-xform ref="refForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+          <yu-xform-item label="主键" name="id" :hidden="true" ctype="input"></yu-xform-item>
+          <yu-xform-item label="结欠金额(元)" name="unpdAmt" ctype="input" rules="required" :rules="rule.unpdAmt"></yu-xform-item>
+          <yu-xform-item label="诉讼阶段" name="lawsuitStat" ctype="input" rules="required" :rules="rule.lawsuitStat"></yu-xform-item>
+          <yu-xform-item label="原借款金额" name="loanAmt" ctype="input" rules="required" :rules="rule.loanAmt"></yu-xform-item>
+          <yu-xform-item label="其他被起诉人" name="otherLawsuiter" ctype="input" rules="required" :rules="rule.otherLawsuiter"></yu-xform-item>
+          <yu-xform-item label="来源系统" name="srcSysCd" :hidden="true" ctype="input"></yu-xform-item>
+          <yu-xform-item label="登记人" name="inputId" :hidden="true" :disabled="inputIdDisabled"  ctype="input"></yu-xform-item>
+          <yu-xform-item label="登记日期" name="regDate" :hidden="true"  ctype="datepicker"></yu-xform-item>
+          <!-- rules="required" -->
+          <yu-xform-item label="备注" name="remark" ctype="textarea" :rows="3" :colspan="24" :rules="rule.remark"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

@@ -1,0 +1,54 @@
+<!--
+  @created by geyun geyun@yusys.com.cn on 2019-1-28 15:48:59.
+  @updated by 
+  @description 积分统计报表
+-->
+<div>
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="refTable" form-type="search" v-model="formdata">
+    <yu-xform-group :column="8">
+      <yu-xform-item placeholder="时点日期" ctype="datepicker" name="etlDt"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 查询显示表格 -->
+  <yu-xtable ref="refTable" :data-url="dataUrl" :summary-method="getSummaries"
+  show-summary>
+  <yu-table-column label="部门">
+    <yu-table-column prop="dptName" label="名称" width="120">
+    </yu-table-column>
+  </yu-table-column>
+  <yu-table-column label="积分余额">
+    <yu-table-column prop="scoreBal" label="余额" width="120">
+    </yu-table-column>
+    <yu-table-column prop="scoreBalPercent" label="占比(%)" width="120">
+    </yu-table-column>
+  </yu-table-column>
+  <yu-table-column label="累计产生积分">
+    <yu-table-column prop="scoreAccuteSum" label="积分额" width="120">
+    </yu-table-column>
+    <yu-table-column prop="scoreAccuteSumPercent" label="占比(%)" width="120">
+    </yu-table-column>
+  </yu-table-column>
+  <yu-table-column label="累计产生费用">
+    <yu-table-column prop="accuteCost" label="费用" width="120">
+    </yu-table-column>
+    <yu-table-column prop="accuteCostPercent" label="占比(%)" width="120">
+    </yu-table-column>
+  </yu-table-column>
+  <yu-table-column label="累计支付费用">
+    <yu-table-column prop="accutePayCost" label="费用" width="120">
+    </yu-table-column>
+    <yu-table-column prop="accutePayCostPercent" label="占比(%)" width="120">
+    </yu-table-column>
+  </yu-table-column>
+  <yu-table-column label="客户积分累积数">
+    <yu-table-column prop="custAccuteSum" label="积分累积数" width="120">
+    </yu-table-column>
+    <yu-table-column prop="custAccuteSumPercent" label="占比(%)" width="120">
+    </yu-table-column>
+  </yu-table-column>
+
+  </yu-xtable>
+</div>
+<script>
+</script>

@@ -1,0 +1,127 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2018-12-26 15:30:03.
+  @updated by
+  @description 公告管理
+-->
+<div class="announcementManage">
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="阅读标记" ctype="select" name="type" data-code="NATIONALITY"></yu-xform-item>
+      <yu-xform-item placeholder="公告标题" ctype="input" name="title"></yu-xform-item>
+      <yu-xform-item placeholder="发布人" ctype="input" name="createAt"></yu-xform-item>
+      <yu-xform-item placeholder="发布日期区间" ctype="datepicker" type="daterange" name="type"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+      <yu-button icon="upload2" @click="publishFn">发布</yu-button>
+      <yu-button icon="yx-book" @click="exportFn">已阅</yu-button>
+      <yu-button icon="yx-file-excel" @click="exportFn">导出</yu-button>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+    </yu-button-group>
+  </div>
+  <!-- 公告表格 -->
+  <yu-xtable ref="refAnnounceTable" row-number :data-url="announceDataUrl" selection-type="radio">
+    <yu-xtable-column label="发布状态" prop="id" width="110" data-code="PUB_STS">
+    </yu-xtable-column>
+    <yu-xtable-column label="审核状态" prop="title" width="200" data-code="APPROVAL_STATUS">
+    </yu-xtable-column>
+    <yu-xtable-column label="阅读标记" prop="type" width="110" data-code="IS_READ">
+    </yu-xtable-column>
+    <yu-xtable-column label="公告标题" prop="" width="200">
+    </yu-xtable-column>
+    <yu-xtable-column label="重要程度" prop="pageviews" width="100">
+    </yu-xtable-column>
+    <yu-xtable-column label="发布机构" prop="status" width="120">
+    </yu-xtable-column>
+    <yu-xtable-column label="发布人" prop="createAt">
+    </yu-xtable-column>
+    <yu-xtable-column label="发布日期" prop="createAt">
+    </yu-xtable-column>
+    <yu-xtable-column label="有效期" prop="createAt">
+    </yu-xtable-column>
+    <yu-xtable-column label="附件个数" prop="createAt">
+    </yu-xtable-column>
+    <yu-xtable-column label="置顶时间至" prop="createAt">
+    </yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="50%">
+  <yu-xform ref="refForm" label-width="80px" v-model="announcementdata.formdata" :disabled="formDisabled">
+    <yu-xform-group>
+      <yu-xform-item label="公告标题" ctype="input" name="id" rules="required"></yu-xform-item>
+      <yu-xform-item label="重要程度" ctype="select" name="title" data-code=""></yu-xform-item>
+      <yu-xform-item label="有效期" ctype="datepicker" name=""></yu-xform-item>
+      <yu-xform-item label="是否置顶" ctype="select" rules="required" name="status" data-code=""></yu-xform-item>
+      <yu-xform-item label="置顶时间至" ctype="datepicker" name=""></yu-xform-item>
+      <yu-xform-item label="接收机构范围" ctype="select" name=""></yu-xform-item>
+      <yu-xform-item label="接收条线范围" ctype="select" rules="required" name=""></yu-xform-item>
+      <yu-xform-item v-if="isDetail" label="公告内容" ctype="textarea" colspan="24"  name=""></yu-xform-item>
+      <yu-xform-item v-else label="公告内容" ctype="el-tinymce-x" rules="required" colspan="24" name="" v-model="content" :id="id" :height="height"
+        :action="action" :bus-no="busNo"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group v-if="isDetail">
+      <yu-button icon="yx-folder-download" @click="exportFn">下载</yu-button>
+    </yu-button-group>
+    <yu-button-group v-else>
+      <yu-button icon="upload2" @click="attachmentdialogVisible = true">上传</yu-button>
+      <yu-button icon="yx-folder-download" @click="exportFn">下载</yu-button>
+      <yu-button icon="yx-bin" @click="deleteAttachmentFn">删除</yu-button>
+      <yu-button icon="yx-flow-3" @click="refreshFn">刷新</yu-button>
+    </yu-button-group>
+    <!-- 上传附件弹出框 -->
+    <yu-xdialog title="上传附件" :visible.sync="attachmentdialogVisible" width="40%">
+      <yu-form :inline="true">
+        <yu-form-item>
+            <yu-upload
+            ref="upload"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false"
+            :auto-upload="false"
+            :on-change="onchangeFn"
+            :on-success="uploadSuccessFn"
+            :on-error="uploadErrorFn">
+            <yu-input v-model="fileName" readonly slot="trigger">
+                <yu-button slot="append" type="primary" size="small">浏览</yu-button>
+              </yu-input>
+            <yu-button style="margin-left: 10px;" type="success" @click="uploadFn">上传</yu-button>
+            <div slot="tip" style="color: #ff0000">可上传类型：*.rar;*.zip;*.pdf;*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx;*.jpg;*.png;*.txt</div>
+          </yu-upload>
+        </yu-form-item>
+      </yu-form>
+    </yu-xdialog>
+  </div>
+  <!-- 附件表格 -->
+  <yu-xtable ref="refAttachmentTable" :data-url="attachmentDataUrl" selection-type="checkbox">
+    <yu-xtable-column label="附件ID" prop="id" width="110" data-code="PUB_STS">
+    </yu-xtable-column>
+    <yu-xtable-column label="附件名称" prop="title" width="200" data-code="APPROVAL_STATUS">
+    </yu-xtable-column>
+    <yu-xtable-column label="附件大小" prop="type" width="110" data-code="IS_READ">
+    </yu-xtable-column>
+    <yu-xtable-column label="附件格式" prop="" width="200">
+    </yu-xtable-column>
+    <yu-xtable-column label="附件上传时间" prop="pageviews" width="100">
+    </yu-xtable-column>
+    <yu-xtable-column label="附件上传人" prop="status" width="120">
+    </yu-xtable-column>
+    <yu-xtable-column label="下载次数" prop="createAt">
+    </yu-xtable-column>
+    <yu-xtable-column label="最近下载日期" prop="createAt">
+    </yu-xtable-column>
+    <yu-xtable-column label="最近下载人" prop="createAt">
+    </yu-xtable-column>
+  </yu-xtable>
+  <div class="yu-grpButton">
+    <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+  </div>
+</yu-xdialog>
+</div>

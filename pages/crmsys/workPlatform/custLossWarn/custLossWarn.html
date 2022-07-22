@@ -1,0 +1,106 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:37
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2019-1-17 10:17:00.
+  @updated by
+  @description 客户流失预警
+-->
+<div>
+    <yu-xform style="padding: 20px 20px;" v-model="queryFormdata" class="hide-form-search-btn" ref="custSearchForm" form-type="search">
+        <yu-xform-group :column="4">
+            <yu-xform-item placeholder="是否准入" name="isAdmitEnter" rules="required" ctype="select" data-code="YES_NO_ADMIT"></yu-xform-item>
+            <yu-xform-item placeholder="客户类型" ctype="select" name="custType" data-code="CD0016" rules="required"></yu-xform-item>
+            <!-- <yu-xform-item placeholder="评级日期" ctype="datepicker" name="levelDate" :editable="false"></yu-xform-item> -->
+            <yu-xform-item placeholder="客户名称" ctype="yufp-governed-cust-selector" name="custId" :params="selectCustParams"></yu-xform-item>
+            <yu-xform-item placeholder="流失预警等级" ctype="select" name="lossWarnLev" data-code="CD0336"></yu-xform-item>
+            <yu-xform-item placeholder="是否发起挽留" ctype="select" name="ifDetention" data-code="CD0238"></yu-xform-item>
+            <yu-xform-item placeholder="归属机构" name="belongBrch" ctype="yufp-org-tree"></yu-xform-item>
+            <yu-xform-item placeholder="所属客户经理" name="belongMgr" ctype="yufp-mgr-selector"></yu-xform-item>
+            <!--  <yu-xform-item placeholder="挽留结果" ctype="input" name="detentionResult"></yu-xform-item> -->
+            <div slot="custom">
+                <yu-button-group>
+                    <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+                    <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+                </yu-button-group>
+            </div>
+        </yu-xform-group>
+
+    </yu-xform>
+    <div class="yu-toolBar" style="padding-left: 20px;">
+        <yu-button-group>
+            <yu-button icon="edit" @click="modifyFn" v-if="modifyButton">维护挽留结果</yu-button>
+            <yu-button icon="document" @click="infoFn" v-if="viewButton">详情</yu-button>
+        </yu-button-group>
+    </div>
+    <yu-xtable ref="refTable" style="padding: 20px 20px;" :border="false" row-number class="permitSelect" @contextmenu.prevent.stop.native :data-url="dataUrl" selection-type="radio" @cell-dblclick="tableDbClick" :default-load="false">
+        <yu-xtable-column label="评级日期" prop="levelDate" width="100" sortable></yu-xtable-column>
+        <yu-xtable-column label="客户号" prop="custId" width="150"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="180"></yu-xtable-column>
+        <yu-xtable-column label="客户类型" prop="custType" width="100" data-code="CD0016"></yu-xtable-column>
+        <yu-xtable-column label="流失预警等级" prop="lossWarnLev" width="100" data-code="CD0336"></yu-xtable-column>
+        <yu-xtable-column label="是否发起挽留" prop="ifDetention" width="100" data-code="CD0238"></yu-xtable-column>
+        <yu-xtable-column label="挽留结果" prop="detentionResult"></yu-xtable-column>
+    </yu-xtable>
+
+    <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" :width="formDisabled ? '70%' : '50%'">
+        <yu-xform ref="refForm" :label-width="formDisabled ? '50%' : '30%'" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group :column="formDisabled ? 2 : 1">
+                <yu-xform-item label="评级日期" ctype="datepicker" name="levelDate" :hidden="!formDisabled"></yu-xform-item>
+                <yu-xform-item label="客户号" ctype="input" name="custId" :hidden="!formDisabled"></yu-xform-item>
+                <yu-xform-item label="客户名称" ctype="input" name="custName" :hidden="!formDisabled"></yu-xform-item>
+                <yu-xform-item label="流失预警级别" ctype="select" name="lossWarnLev" data-code="CD0336" :hidden="!formDisabled"></yu-xform-item>
+                <yu-xform-item label="存款月均余额-连续三月变化率" ctype="select" name="depMbalSyb" :hidden="!formDisabled || !isCorType" data-code="CD0448"></yu-xform-item>
+                <yu-xform-item label="存款月均余额-期末较期初" ctype="select" name="depMbalMjc" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="存款月均余额-期末较同期" ctype="select" name="depMbalMjt" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="贷款月均余额-连续三月变化率" ctype="select" name="loaMbalSyb" :hidden="!formDisabled || !isCorType" data-code="CD0448"></yu-xform-item>
+                <yu-xform-item label="贷款月均余额-期末较期初" ctype="select" name="loaMbalMjc" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="贷款月均余额-期末较同期" ctype="select" name="loaMbalMjt" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="持有产品数-连续三月变化率" ctype="select" name="holProSyb" :hidden="!formDisabled || !isCorType" data-code="CD0448"></yu-xform-item>
+                <yu-xform-item label="持有产品数-期末较期初" ctype="select" name="holProMjc" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="持有产品数-期末较同期" ctype="select" name="holProMjt" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="月结算量-连续三月变化率" ctype="select" name="monStaSyb" :hidden="!formDisabled || !isCorType" data-code="CD0448"></yu-xform-item>
+                <yu-xform-item label="月结算量-期末较期初" ctype="select" name="monStaMjc" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="月结算量-期末较同期" ctype="select" name="monStaMjt" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="存贷比-连续三月变化率" ctype="select" name="loaToDepSyb" :hidden="!formDisabled || !isCorType" data-code="CD0448"></yu-xform-item>
+                <yu-xform-item label="存贷比-期末较期初" ctype="select" name="loaToDepMjc" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="存贷比-期末较同期" ctype="select" name="loaToDepMjt" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="交易额-连续三月变化率" ctype="select" name="deaSumSyb" :hidden="!formDisabled || !isCorType" data-code="CD0448"></yu-xform-item>
+                <yu-xform-item label="交易额-期末较期初" ctype="select" name="deaSumMjc" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="交易额-期末较同期" ctype="select" name="deaSumMjt" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="国际业务交易额-连续三月变化率" ctype="select" name="intBusSumSyb" :hidden="!formDisabled || !isCorType" data-code="CD0448"></yu-xform-item>
+                <yu-xform-item label="国际业务交易额-期末较期初" ctype="select" name="intBusSumMjc" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="国际业务交易额-期末较同期" ctype="select" name="intBusSumMjt" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="国际业务交易量-连续三月变化率" ctype="select" name="intBusNumSyb" :hidden="!formDisabled || !isCorType" data-code="CD0448"></yu-xform-item>
+                <yu-xform-item label="国际业务交易量-期末较期初" ctype="select" name="intBusNumMjc" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="国际业务交易量-期末较同期" ctype="select" name="intBusNumMjt" :hidden="!formDisabled || !isCorType" data-code="CD0449"></yu-xform-item>
+                <!-- <yu-xform-item label="连续三月中间业务月日均变化率" ctype="input" name="midBusMdSyb" :hidden="!formDisabled"></yu-xform-item>
+        <yu-xform-item label="中间业务月日均期末较同期变化率" ctype="input" name="midBusMdMjc" :hidden="!formDisabled"></yu-xform-item>
+        <yu-xform-item label="中间业务月日均期末较期初变化率" ctype="input" name="midBusMdMjt" :hidden="!formDisabled"></yu-xform-item> -->
+                <yu-xform-item label="AUM月均-连续三月变化率" ctype="select" name="aumMbalSyb" :hidden="!formDisabled || isCorType" data-code="CD0448"></yu-xform-item>
+                <yu-xform-item label="AUM月均-期末较期初" ctype="select" name="aumMbalMjc" :hidden="!formDisabled || isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="AUM月均-期末较同期" ctype="select" name="aumMbalMjt" :hidden="!formDisabled || isCorType" data-code="CD0449"></yu-xform-item>
+                <yu-xform-item label="是否已发起挽留" ctype="select" name="ifDetention" :rules="!formDisabled ? rule.ifDetention : ''" data-code="CD0238"></yu-xform-item>
+                <yu-xform-item label="挽留结果" ctype="input" name="detentionResult" :rules="rule.detentionResult" placeholder="40个字以内"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+</div>
+
+<style type="text/css">
+    .permitSelect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+</style>

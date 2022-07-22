@@ -1,0 +1,12 @@
+<!-- 必须全局拥有唯一的id -->
+<div id="ToDoTaskPoollist">
+    <el-form-q form="query" :field-data="queryFields" search-table="ToDoTaskPoolList" :buttons="MyTaskPoolButtons"></el-form-q>
+    <div class="yu-toolBar">
+        <el-button-group>
+            <el-button icon="add" type="primary" @click="taskSignIn" >认领</el-button>
+            <el-button icon="add" type="primary" @click="returnBack" >返回</el-button>
+        </el-button-group>
+    </div>
+    <el-table-x ref="ToDoTaskPoolList"  :max-height="height" :data-url="urls.dataUrl" :base-params="dataParams" :table-columns="tableColumns" >
+    </el-table-x>
+</div>

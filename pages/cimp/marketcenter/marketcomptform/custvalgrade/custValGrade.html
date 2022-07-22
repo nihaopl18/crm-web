@@ -1,0 +1,132 @@
+<!--
+  @created by zhuly6 on 2018/11/14.
+  @description 营销组件FORM表单-渠道智能分发-客户价值等级
+-->
+
+<div>
+    <link rel="stylesheet" type="text/css" href="./pages/cimp/marketcenter/marketcomptform/custvalgrade/custValGrade.css" />
+  <el-collapse v-model="activeNames">
+   <el-collapse-item title="输入" name="1">
+     <el-table style="width: 100%" :data="custTableData">
+        <el-table-column prop="custId" label="客户号" width="180"></el-table-column>
+        <el-table-column prop="custName" label="客户名称" ></el-table-column>
+        <el-table-column prop="custType" label="客户类型" :formatter="fomatData" width="120" ></el-table-column>
+        <el-table-column prop="custStat" label="客户状态" :formatter="fomatData" width="130"></el-table-column>
+        <el-table-column prop="custLevel" label="客户价值等级" :formatter="fomatData" width="180"></el-table-column>
+     </el-table>
+      
+   </el-collapse-item>
+   <el-collapse-item title="操作" >
+     <div class="divCenter">
+        <div  class="tisds">
+            <h4 class="h4mang">价值等级:</h4>
+            <div  class="tisds2">
+                <template>
+                    <el-checkbox-group v-model="checkedGrade" >
+                      <el-checkbox v-for="city in gradeData" :label="city.key" :key="city.key">{{city.label}}</el-checkbox>
+                    </el-checkbox-group>
+                </template>
+            </div>
+            <div class="buttonM">
+              <div  class="buttonM1">
+                    <!-- <el-button-group> -->
+                        <el-button  icon="yx-circle-right" @click="changeGradeFn1('right')"></el-button>
+                        <el-button type="text">高</el-button>
+                        <el-button icon="yx-circle-left" @click="changeGradeFn1('left')"></el-button>
+                    <!-- </el-button-group> -->
+                </div>
+                <div  class="buttonM2">
+                    <!-- <el-button-group> -->
+                        <el-button  icon="yx-circle-right" @click="changeGradeFn2('right')"></el-button>
+                        <el-button type="text">低</el-button>
+                        <el-button icon="yx-circle-left" @click="changeGradeFn2('left')"></el-button>
+                    <!-- </el-button-group> -->
+                </div>
+            </div>
+            <div  class="tisds3">
+                <div  class="tisds1">
+                    <template>
+                        <el-checkbox-group 
+                          v-model="checkedGrade1">
+                          <el-checkbox v-for="city in gradeHvalue" :label="city.key" :key="city.key">{{city.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </template>
+                </div>
+                <div  class="tisds1">
+                    <template>
+                        <el-checkbox-group 
+                          v-model="checkedGrade2">
+                          <el-checkbox v-for="city in gradeLvalue" :label="city.key" :key="city.key">{{city.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </template>
+                </div>
+            </div>
+        </div>
+        <div  class="tisds">
+            <h4 class="h4mang">渠道价值:</h4>
+            <div  class="tisds2">
+                <template>
+                    <el-checkbox-group 
+                      v-model="checkedchannel">
+                      <el-checkbox v-for="city in channeldata" :label="city.key" :key="city.key">{{city.label}}</el-checkbox>
+                    </el-checkbox-group>
+                  </template>
+            </div>
+            <div class="buttonM">
+                <div  class="buttonM1">
+                    <!-- <el-button-group> -->
+                        <el-button  icon="yx-circle-right" @click="changeChannelFn1('right')"></el-button>
+                        <el-button type="text">高</el-button>
+                        <el-button icon="yx-circle-left" @click="changeChannelFn1('left')"></el-button>
+                    <!-- </el-button-group> -->
+                </div>
+              <div  class="buttonM2">
+                    <!-- <el-button-group> -->
+                        <el-button  icon="yx-circle-right" @click="changeChannelFn2('right')"></el-button>
+                        <el-button type="text">低</el-button>
+                        <el-button icon="yx-circle-left" @click="changeChannelFn2('left')"></el-button>
+                    <!-- </el-button-group> -->
+              </div>
+            </div>
+            <div  class="tisds3">
+                <div  class="tisds1">
+                    <template>
+                        <el-checkbox-group 
+                          v-model="checkedchannel1">
+                          <el-checkbox v-for="city in channelHvalue" :label="city.key" :key="city.key">{{city.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </template>
+                </div>
+                <div  class="tisds1">
+                    <template>
+                        <el-checkbox-group 
+                          v-model="checkedchannel2">
+                          <el-checkbox v-for="city in channelLvalue" :label="city.key" :key="city.key">{{city.label}}</el-checkbox>
+                        </el-checkbox-group>
+                      </template>
+                </div>
+            </div>
+        </div>
+     </div>
+     <div>
+        <el-row>
+            <el-col :span="14" :offset="10">
+                <el-button type="primary" @click="queryCustByInfoFn" :disabled="buttonHiden">确定</el-button>
+                <el-button type="primary" @click="save" :disabled="buttonHiden">保存</el-button>
+            </el-col>
+        </el-row>
+     </div>
+   </el-collapse-item>
+   <el-collapse-item title="输出" name="3">    
+    <el-table style="width: 100%" :data="custTableData1">
+      <el-table-column prop="custId" label="客户号"></el-table-column>
+      <el-table-column prop="custName" label="客户名称"  ></el-table-column>
+      <el-table-column prop="custType" label="客户类型" :formatter="fomatData" width="120"></el-table-column>
+      <el-table-column prop="custStat" label="客户状态" :formatter="fomatData" width="130"></el-table-column>
+      <el-table-column prop="custLevel" label="客户价值等级" :formatter="fomatData" width="150"></el-table-column>
+      <!-- <el-table-column prop="date10" label="客户服务等级"></el-table-column> -->
+      <el-table-column prop="channelValue" label="适合的渠道" ></el-table-column>
+    </el-table>
+   </el-collapse-item>
+  </el-collapse>
+ </div>

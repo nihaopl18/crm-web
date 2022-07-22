@@ -1,0 +1,373 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-21 13:58:21.
+  @updated by
+  @description 客户账户信息
+-->
+<div>
+  <yu-tabs v-model="activeName" @tab-click="handleClick">
+    <yu-tab-pane label="个人存款账户信息" name="save">
+      <yu-xform related-table-name=saveTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="document" @click="saveinfoFn">详情</yu-button>
+          <yu-button icon="yx-checkmark2" @click="transList">交易流水</yu-button>
+          <yu-button icon="yx-checkmark3" @click="realTimeBAL">实时余额</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="saveTable" class="permitSelect" @contextmenu.prevent.stop.native row-number :data-url="saveDataUrl" :highlight-current-row="true" :stripe="true" @row-dblclick="rowDblclick">
+          <yu-xtable-column label="开户日期" prop="openDate" width="90"></yu-xtable-column>
+          <yu-xtable-column label="账号" prop="acctNo" width="140"></yu-xtable-column>
+          <yu-xtable-column label="子账号" prop="acctId" width="150"></yu-xtable-column>
+          <!-- <yu-xtable-column label="账户类型" prop="acctType" width="130" data-code="CD0244"></yu-xtable-column> -->
+          <yu-xtable-column label="账户类型" prop="prodName" width="150" ></yu-xtable-column>
+          <yu-xtable-column label="账户类别" prop="acctLevel" width="80" data-code="CD0443"></yu-xtable-column>
+          <yu-xtable-column label="开户机构" prop="orgName" width="100"></yu-xtable-column>
+          <yu-xtable-column label="币种" prop="currCd" width="80" data-code="CD0071"></yu-xtable-column>
+          <yu-xtable-column label="定期本金" prop="openAmt" width="100"></yu-xtable-column>
+          <yu-xtable-column label="帐户余额" prop="acctBal" width="100" align="right"></yu-xtable-column>
+          <yu-xtable-column label="存期(定期)" prop="term" width="80"></yu-xtable-column>
+          <yu-xtable-column label="起息日" prop="strDt" width="100"></yu-xtable-column>
+          <yu-xtable-column label="到期日" prop="dueDt" width="100"></yu-xtable-column>
+          <yu-xtable-column label="执行利率%" prop="usedRate" width="80" align="right"></yu-xtable-column>
+          <yu-xtable-column label="近三个月日均余额" prop="acctAvgBalThree" width="120" align="right"></yu-xtable-column>
+          <yu-xtable-column label="近六个月日均余额" prop="acctAvgBalSix" width="120" align="right"></yu-xtable-column>
+          <yu-xtable-column label="上年日均余额" prop="lyYearAvgBal" width="100" align="right"></yu-xtable-column>
+          <yu-xtable-column label="本年日均余额" prop="yearAvgBal" width="100" align="right"></yu-xtable-column>
+          <yu-xtable-column label="卡号" prop="cardId" width="160"></yu-xtable-column>
+          <yu-xtable-column label="帐户状态" prop="acctStat" width="80" data-code="CD0435"></yu-xtable-column>
+      </yu-xtable>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="saveDialogVisible" width="1000px">
+          <yu-xform ref="saverefForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+              <yu-xform-item label="账号" name="acctNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="子账号" name="acctId" ctype="input"></yu-xform-item>
+              <yu-xform-item label="客户名称" name="custName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="帐户余额" name="acctBal" ctype="input"></yu-xform-item>
+              <yu-xform-item label="定期本金" name="openAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="开户日期" name="openDate" ctype="input"></yu-xform-item>
+              <yu-xform-item label="开户机构" name="orgName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="存期(定期)" name="term" ctype="input"></yu-xform-item>
+              <yu-xform-item label="利率" name="baseRate" ctype="input"></yu-xform-item>
+              <yu-xform-item label="已转存次数" name="fctdepNum" ctype=""></yu-xform-item>
+              
+              <yu-xform-item label="上期贡献度" name="contriDeposit" ctype="input"></yu-xform-item>
+              <yu-xform-item label="上年贡献度" name="lyContriDeposit" ctype="input"></yu-xform-item>
+              <yu-xform-item label="部提金额" name="drwBefAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="销户日期" name="closeDate" ctype="input"></yu-xform-item>
+              <!-- <yu-xform-item label="存款创利" name="profitDeposit" ctype="input"></yu-xform-item> -->
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="savecancelFn">返回</yu-button>
+            </div>
+          </yu-xform>
+      </yu-xdialog>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="transDialogVisible" width="1000px" Height="570px">
+        <yu-xform related-table-name="transTable" form-type="search" ref="transForm" class="hide-form-search-btn" v-model="queryFormdata1">
+            <yu-xform-group :column="6">
+              <yu-xform-item placeholder="起始日期" ctype="datepicker" name="startTM"></yu-xform-item>
+              <yu-xform-item placeholder="结束日期" ctype="datepicker" name="endTM"></yu-xform-item>
+              <yu-xform-item placeholder="交易开始金额" ctype="input" name="startAmt"></yu-xform-item>
+              <yu-xform-item placeholder="交易结束金额" ctype="input" name="endAmt"></yu-xform-item>
+              <yu-xform-item placeholder="交易渠道" ctype="select" name="channel" data-code="CD0401"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton" style="text-align: right;">
+                <yu-button icon="search" type="primary" @click="searchFn1">查询</yu-button>
+                <!-- <yu-button icon="yx-file-excel" @click="exportFn1">导出</yu-button> -->
+                <yu-button icon="yx-file-excel" @click="exportInfoFn1" v-if="perExportPdf">导出pdf</yu-button>
+               <yu-button icon="yx-loop2" type="primary" @click="resetMainFn1">重置</yu-button>
+              </div>
+        </yu-xform>
+        <yu-xtable  class="resultDiv" ref="transTable" row-number :data-url="transDataUrl" :highlight-current-row="true" :stripe="true" :default-load="false">
+            <yu-xtable-column label="交易日期" prop="transDt" width="90"></yu-xtable-column>
+            <yu-xtable-column label="交易时间" prop="transTm" width="70"></yu-xtable-column>
+            <yu-xtable-column label="交易机构编号" prop="orgNo" width="100"></yu-xtable-column>
+            <yu-xtable-column label="交易机构名称" prop="orgName" width="100"></yu-xtable-column>
+            <yu-xtable-column label="原交易代码" prop="ptxnCodeNo" width="100"></yu-xtable-column>
+            <yu-xtable-column label="现转标志" prop="ctInd" width="80" data-code="CD0064"></yu-xtable-column>
+            <yu-xtable-column label="子账户编号" prop="subacctNo" width="140"></yu-xtable-column>
+            <yu-xtable-column label="账户编号" prop="acctNo" width="140"></yu-xtable-column>
+            <yu-xtable-column label="币种" prop="ccyCd" width="60" data-code="CD0071"></yu-xtable-column>
+            <yu-xtable-column label="交易金额" prop="tranAmt" width="100" align="right"></yu-xtable-column>
+            <yu-xtable-column label="余额" prop="bal" width="100" align="right"></yu-xtable-column>
+            <yu-xtable-column label="借贷标志" prop="cdInd" width="70" data-code="CD0063"></yu-xtable-column>
+            <yu-xtable-column label="对方账户编号" prop="toacctNo" width="160"></yu-xtable-column>
+            <yu-xtable-column label="对方账户名称" prop="ftfAccName" width="160"></yu-xtable-column>
+            <yu-xtable-column label="渠道代码" prop="channelCd" width="100"></yu-xtable-column>
+            <yu-xtable-column label="交易渠道" prop="channel" width="100" data-code="CD0401"></yu-xtable-column>
+            <yu-xtable-column label="交易柜员编号" prop="tlrNo" width="100"></yu-xtable-column>
+            <yu-xtable-column label="交易柜员名称" prop="userName" width="100"></yu-xtable-column>
+            <yu-xtable-column label="交易摘要" prop="tranBrief" width="120"></yu-xtable-column>
+        </yu-xtable>
+    </yu-xdialog>
+    <yufp-wf-init ref="approvalRef" @afterinit="onAfterCloseFn" :common-params="wfCommonParams"></yufp-wf-init>
+    <yu-xdialog :title="viewTitle[viewType]" :visible.sync="balDialogVisible" width="1000px">
+      <yu-xform related-table-name="balTable" form-type="search">
+          <yu-xform-group :column="4">
+          </yu-xform-group>
+      </yu-xform>
+      <yu-xtable ref="balTable" row-number :data-url="balDataUrl" :default-load="false">
+          <yu-xtable-column label="客户号" prop="cstNo" width="120"></yu-xtable-column>
+          <yu-xtable-column label="清算日期" prop="clrDt" width="120"></yu-xtable-column>
+          <yu-xtable-column label="开户机构" prop="openBrc" width="120"></yu-xtable-column>
+          <yu-xtable-column label="户名" prop="accNm" width="100"></yu-xtable-column>
+          <yu-xtable-column label="币种" prop="ccyCd" width="100" data-code="CD0433"></yu-xtable-column>
+          <yu-xtable-column label="存款余额" prop="depBal" width="100" align="right"></yu-xtable-column>
+          <yu-xtable-column label="可用余额" prop="avlBal" width="120" align="right"></yu-xtable-column>
+          <yu-xtable-column label="证件类型" prop="crdtTpCd" width="120" data-code="CD0434"></yu-xtable-column>
+          <yu-xtable-column label="证件号码" prop="crdtNo" width="150"></yu-xtable-column>
+          <yu-xtable-column label="账户状态" prop="accSt"  data-code="CD0435"></yu-xtable-column>
+      </yu-xtable>
+  </yu-xdialog>
+    </yu-tab-pane>
+    <yu-tab-pane label="个人贷款账户信息" name="loan">
+        <yu-xform related-table-name="loanTable" form-type="search">
+          <yu-xform-group :column="4">
+          </yu-xform-group>
+        </yu-xform>
+        <div class="yu-toolBar">
+          <yu-button-group>
+              <yu-button icon="document" @click="loaninfoFn">详情</yu-button>
+              <yu-button icon="yx-checkmark2" @click="loanTransList">交易流水</yu-button>
+          </yu-button-group>
+        </div>
+        <yu-xtable ref="loanTable" class="permitSelect" @contextmenu.prevent.stop.native row-number :data-url="loanDataUrl" :highlight-current-row="true" :stripe="true" @row-dblclick="rowDblclick1">
+          <yu-xtable-column label="合同编号" prop="contrNo" width="120"></yu-xtable-column>
+          <yu-xtable-column label="借据编号" prop="debentureNo" width="150"></yu-xtable-column>
+          <yu-xtable-column label="产品类型" prop="prodTypeCd" width="120" data-code="CD0433"></yu-xtable-column>
+          <yu-xtable-column label="贷款账号" prop="loanAcctId" width="140"></yu-xtable-column>
+          <yu-xtable-column label="还款账号/卡号" prop="repayAcctId" width="140"></yu-xtable-column>
+          <yu-xtable-column label="借据状态" prop="recdStatCd" width="80" data-code="CD0428"></yu-xtable-column>
+          <yu-xtable-column label="开户网点名" prop="openOrgName" width="100"></yu-xtable-column>
+          <yu-xtable-column label="币种" prop="ccyCd" width="80" data-code="CD0071"></yu-xtable-column>
+          <yu-xtable-column label="基准利率(%)" prop="baseRate" width="100" align="right"></yu-xtable-column>
+          <yu-xtable-column label="执行利率(%)" prop="fixedRate" width="100" align="right"></yu-xtable-column>
+          <yu-xtable-column label="合同金额" prop="contrAmt" width="90" align="right"></yu-xtable-column>
+          <yu-xtable-column label="合同金额(折人民币)" prop="contrAmtRmb" width="140" align="right"></yu-xtable-column>
+          <yu-xtable-column label="发放金额" prop="drawAmt" width="90" align="right"></yu-xtable-column>
+          <yu-xtable-column label="发放金额(折人民币)" prop="drawAmtRmb" width="140" align="right"></yu-xtable-column>
+          <yu-xtable-column label="贷款余额" prop="loanBal" width="90" align="right"></yu-xtable-column>
+          <yu-xtable-column label="贷款余额(折人民币)" prop="loanBalRmb" width="140" align="right"></yu-xtable-column>
+          <yu-xtable-column label="年日均" prop="yearAvgRegularBal" width="80" align="right"></yu-xtable-column>
+          <yu-xtable-column label="五级分类" prop="riskCategCd"  data-code="CD0315"></yu-xtable-column>
+        </yu-xtable>
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="loanDialogVisible" width="1000px">
+            <yu-xform ref="loanrefForm" label-width="180px" v-model="formdata2" :disabled="formDisabled">
+              <yu-xform-group>
+                <yu-xform-item label="贷款账号" name="loanAcctId" ctype="input"></yu-xform-item>
+                <yu-xform-item label="借据编号" name="debentureNo" ctype="input"></yu-xform-item>
+                <yu-xform-item label="基准利率(%)" name="baseRate" ctype="input"></yu-xform-item>
+                <yu-xform-item label="执行利率(%)" name="fixedRate" ctype="input"></yu-xform-item>
+                <yu-xform-item label="机构名称" name="openOrgName" ctype="input"></yu-xform-item>
+                <yu-xform-item label="公私标志" name="orgOrPerFlag" ctype="select" data-code="CUST_FLAG"></yu-xform-item>
+                <yu-xform-item label="产品名称" name="prodName" ctype="input"></yu-xform-item>
+                <yu-xform-item label="渠道" name="comesFrom" ctype="select" data-code="CD0426"></yu-xform-item>
+                <yu-xform-item label="币种" name="ccyCd" ctype="select"  data-code="CD0071"></yu-xform-item>
+                <yu-xform-item label="当前本金金额" name="prinAmt" ctype="input"></yu-xform-item>
+                <yu-xform-item label="欠息金额" name="debIntrBal" ctype="input"></yu-xform-item>
+                <yu-xform-item label="保证金" name="marginAmt" ctype="input"></yu-xform-item>
+                <yu-xform-item label="合同编号" name="contrNo" ctype="input"></yu-xform-item>
+                <yu-xform-item label="合同起始日" name="contrStartDt" ctype="input"></yu-xform-item>
+                <yu-xform-item label="合同到期日" name="contrEndDt" ctype="input"></yu-xform-item>
+                <yu-xform-item label="还款账号/卡号" name="repayAcctId" ctype="input"></yu-xform-item>
+                <yu-xform-item label="担保方式" name="mainSuretyModeCd" ctype="select" data-code="CD0357"></yu-xform-item>
+                <yu-xform-item label="押品名称" name="collateralTypeC" ctype="input"></yu-xform-item>
+                <yu-xform-item label="还款方式" name="repayMethCd" ctype="select" data-code="CD0358"></yu-xform-item>
+                <!-- <yu-xform-item label="贷款创利" name="profitLoan" ctype="input"></yu-xform-item> -->
+              </yu-xform-group>
+              <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="loancancelFn">返回</yu-button>
+              </div>
+            </yu-xform>
+          </yu-xdialog>
+          <yu-xdialog :title="viewTitle[viewType]" :visible.sync="loanTransDialogVisible" width="1000px">
+            <yu-xform related-table-name="loanTransTable" form-type="search" ref="loanTransForm" class="hide-form-search-btn" v-model="queryFormdata">
+                <yu-xform-group :column="4">
+                  <yu-xform-item placeholder="起始日期" ctype="datepicker" name="startTM2"></yu-xform-item>
+                  <yu-xform-item placeholder="结束日期" ctype="datepicker" name="endTM2"></yu-xform-item>
+                  <yu-xform-item placeholder="开始金额" ctype="input" name="startAmt2"></yu-xform-item>
+                  <yu-xform-item placeholder="结束金额" ctype="input" name="endAmt2"></yu-xform-item>
+                </yu-xform-group>
+                <div class="yu-grpButton" style="text-align: right;">
+                    <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+                    <!-- <yu-button icon="yx-file-excel" @click="exportFn">导出</yu-button> -->
+                    <yu-button icon="yx-folder-upload" @click="exportInfoFn" v-if="perExportPdf">导出pdf</yu-button>
+                   <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+                  </div>
+            </yu-xform>
+            <yu-xtable  class="resultOfload" ref="loanTransTable" row-number :data-url="loanTransDataUrl" :highlight-current-row="true" :stripe="true" :default-load="false">
+                <yu-xtable-column label="交易日期" prop="transDt" width="100"></yu-xtable-column>
+                <yu-xtable-column label="交易时间" prop="transTm" width="150"></yu-xtable-column>
+                <yu-xtable-column label="账户编号" prop="acctNo" width="120"></yu-xtable-column>
+                <yu-xtable-column label="交易金额" prop="tranAmt" width="100" align="right"></yu-xtable-column>
+                <yu-xtable-column label="余额" prop="bal" width="100" align="right"></yu-xtable-column>
+                <yu-xtable-column label="借贷标志" prop="cdInd" width="120" data-code="CD0063"></yu-xtable-column>
+                <yu-xtable-column label="交易机构编号" prop="orgNo" width="120"></yu-xtable-column>
+                <yu-xtable-column label="原交易流水编号" prop="ptxnSeqNo" width="120"></yu-xtable-column>
+                <yu-xtable-column label="对方账户编号" prop="toacctNo" width="120"></yu-xtable-column>
+                <yu-xtable-column label="交易摘要" prop="tranBrief"  width="120"></yu-xtable-column>
+            </yu-xtable>
+        </yu-xdialog>
+      </yu-tab-pane>
+      <yu-tab-pane label="卡片信息" name="card">
+          <yu-xform related-table-name="cardTable" form-type="search">
+            <yu-xform-group :column="4">
+            </yu-xform-group>
+          </yu-xform>
+          <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="document" @click="cardinfoFn">详情</yu-button>
+            </yu-button-group>
+          </div>
+          <yu-xtable ref="cardTable" class="permitSelect" @contextmenu.prevent.stop.native row-number :data-url="cardDataUrl" :highlight-current-row="true" :stripe="true" @row-dblclick="rowDblclick2">
+            <yu-xtable-column label="卡片编号" prop="cardNo" width="160"></yu-xtable-column>
+            <yu-xtable-column label="卡种类型" prop="cardCategTypeCd" width="80" data-code="CD0415"></yu-xtable-column>
+            <yu-xtable-column label="卡片级别" prop="cardLvlCd" width="80" data-code="CD0416"></yu-xtable-column>
+            <yu-xtable-column label="介质类型" prop="mediumTypeCd" width="80" data-code="CD0360"></yu-xtable-column>
+            <yu-xtable-column label="卡状态类型" prop="cardStatTypeCd" width="100" data-code="CD0361"></yu-xtable-column>
+            <yu-xtable-column label="特殊渠道发卡类型" prop="specChaSueCardTypeCd" width="120" data-code="CD0398"></yu-xtable-column>
+            <yu-xtable-column label="员工卡标志" prop="emplCardInd" width="100" data-code="CD0399"></yu-xtable-column>
+            <yu-xtable-column label="老卡标志" prop="oldcardFlag" width="80" data-code="CD0400"></yu-xtable-column>
+            <yu-xtable-column label="发卡日期" prop="sueCardDt" width="100"></yu-xtable-column>
+            <yu-xtable-column label="发卡机构" prop="orgName" width="100"></yu-xtable-column>
+            <yu-xtable-column label="卡片种类" prop="cardKindCd" data-code="CD0365" width="130"></yu-xtable-column>
+          </yu-xtable>
+          <yu-xdialog :title="viewTitle[viewType]" :visible.sync="cardDialogVisible" width="1000px">
+              <yu-xform ref="cardrefForm" label-width="180px" v-model="formdata3" :disabled="formDisabled">
+                <yu-xform-group>
+                  <yu-xform-item label="卡片编号" name="cardNo" ctype="input"></yu-xform-item>
+                  <yu-xform-item label="卡种类型" name="cardCategTypeCd" ctype="select" data-code="CD0415"></yu-xform-item>
+                  <yu-xform-item label="卡片级别" name="cardLvlCd" ctype="select" data-code="CD0416"></yu-xform-item>
+                  <yu-xform-item label="介质类型" name="mediumTypeCd" ctype="select" data-code="CD0360"></yu-xform-item>
+                  <yu-xform-item label="卡状态类型" name="cardStatTypeCd" ctype="select" data-code="CD0361"></yu-xform-item>
+                  <yu-xform-item label="特殊渠道发卡类型" name="specChaSueCardTypeCd" ctype="select" data-code="CD0398"></yu-xform-item>
+                  <yu-xform-item label="员工卡标志" name="emplCardInd" ctype="select" data-code="CD0399"></yu-xform-item>
+                  <yu-xform-item label="老卡标志" name="oldcardFlag" ctype="select" data-code="CD0400"></yu-xform-item>
+                  <yu-xform-item label="发卡日期" name="sueCardDt" ctype="input"></yu-xform-item>
+                  <yu-xform-item label="发卡机构" name="orgName" ctype="input"></yu-xform-item>
+                  <yu-xform-item label="卡片种类" name="cardKindCd" ctype="select" data-code="CD0365"></yu-xform-item>
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="cardcancelFn">返回</yu-button>
+                </div>
+              </yu-xform>
+            </yu-xdialog>
+        </yu-tab-pane>
+        <yu-tab-pane label="信用卡信息" name="ccd">
+            <yu-xform related-table-name="ccdTable" form-type="search">
+              <yu-xform-group :column="4">
+              </yu-xform-group>
+            </yu-xform>
+            <div class="yu-toolBar">
+              <yu-button-group>
+                <yu-button icon="document" @click="ccdinfoFn">详情</yu-button>
+                <yu-button icon="yx-checkmark2" @click="ccdTransList">交易流水</yu-button>
+              </yu-button-group>
+            </div>
+            <yu-xtable ref="ccdTable" row-number class="permitSelect" @contextmenu.prevent.stop.native :data-url="ccdDataUrl" :highlight-current-row="true" :stripe="true" @row-dblclick="rowdblclick3">
+              <yu-xtable-column label="账户编号" prop="acctNo" width="120"></yu-xtable-column>
+              <yu-xtable-column label="币种" prop="ccyCd" width="80" data-code="CD0071"></yu-xtable-column>
+              <yu-xtable-column label="信用额度" prop="creditLmt" width="100" align="right"></yu-xtable-column>
+              <yu-xtable-column label="临时额度" prop="tempLmt" width="100" align="right"></yu-xtable-column>
+              <yu-xtable-column label="当前余额" prop="bal" width="100" align="right"></yu-xtable-column>
+              <yu-xtable-column label="取现余额" prop="withdrawCashBal" width="100" align="right"></yu-xtable-column>
+              <yu-xtable-column label="本金余额" prop="prinBal" width="100" align="right"></yu-xtable-column>
+              <yu-xtable-column label="额度内分期余额" prop="lmtInstalBal" width="130" align="right"></yu-xtable-column>
+              <yu-xtable-column label="全部应还款额" prop="allApLmt" width="100" align="right"></yu-xtable-column>
+              <yu-xtable-column label="最小还款额" prop="minRepayLmt" width="100" align="right"></yu-xtable-column>
+              <yu-xtable-column label="当年消费金额" prop="consumeToyear" width="100" align="right"></yu-xtable-column>
+              <yu-xtable-column label="积分余额" prop="pointsBal" align="right"></yu-xtable-column>
+              <!-- <yu-xtable-column label="约定还款类型" prop="stpltRepayType" width="120" ></yu-xtable-column> -->
+              <!-- <yu-xtable-column label="约定还款银行名称" prop="stpltRepayBankNm" width="130" ></yu-xtable-column>
+              <yu-xtable-column label="约定还款开户行号" prop="stpltRepayOpenbankNo" width="130" ></yu-xtable-column> -->
+              <yu-xtable-column label="约定还款扣款账号" prop="stpltRepayAcctNo" width="150"></yu-xtable-column>
+              <yu-xtable-column label="约定还款扣款账户姓名" prop="stpltRepayAcctNm" width="160"></yu-xtable-column>
+            </yu-xtable>
+            <yu-xdialog :title="viewTitle[viewType]" :visible.sync="ccdDialogVisible" width="1000px">
+              <yu-xform ref="ccdrefForm" label-width="180px" v-model="formdata4" :disabled="formDisabled">
+                <yu-xform-group>
+                    <yu-xform-item label="数据日期" name="dataDt" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="账户编号" name="acctNo" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="币种" name="ccyCd" ctype="select" data-code="CD0071"></yu-xform-item>
+                    <yu-xform-item label="信用额度" name="creditLmt" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="当前余额" name="bal" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="临时额度" name="tempLmt" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="临时额度开始日期" name="tempLmtSDate" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="临时额度结束日期" name="tempLmtEDate" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="取现额度比例" name="withdrawCashLmt" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="额度内分期额度比例" name="lmtInstalPercent" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="授权超限比例" name="authUpPercent" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="取现余额" name="withdrawCashBal" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="本金余额" name="prinBal" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="积分余额" name="pointsBal" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="额度内分期余额" name="lmtInstalBal" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="全部应还款额" name="allApLmt" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="创建日期" name="createDate" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="账单周期" name="billPeriod" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="锁定码" name="lockCd" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="账龄" name="billAge" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="预销户日期" name="planEndDate" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="最终销户日期" name="lastEndDate" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="上期还款金额" name="lastRepayAmt" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="最小还款额" name="minRepayLmt" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="客户最后交易日期" name="custLastTransDate" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="本月实际还款金额" name="actualRepayAmt" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="核销金额" name="cancelAmt" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="核销日期" name="cancelDate" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="未出账单余额" name="unbillBal" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="当年消费金额" name="consumeToyear" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="约定还款扣款账户姓名" name="stpltRepayAcctNm" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="约定还款银行名称" name="stpltRepayBankNm" ctype="input"></yu-xform-item>
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="ccdcancelFn">返回</yu-button>
+                </div>
+              </yu-xform>
+            </yu-xdialog>
+            <yu-xdialog :title="viewTitle[viewType]" :visible.sync="ccdTransDialogVisible" width="1000px">
+              <yu-xform related-table-name="ccdTransTable" form-type="search"  ref="ccdTransForm" class="hide-form-search-btn" v-model="queryFormdata2">
+                  <yu-xform-group :column="4" >
+                    <yu-xform-item placeholder="起始日期" ctype="datepicker" name="startTM3"></yu-xform-item>
+                    <yu-xform-item placeholder="结束日期" ctype="datepicker" name="endTM3"></yu-xform-item>
+                    <yu-xform-item placeholder="交易开始金额" ctype="input" name="startAmt3"></yu-xform-item>
+                    <yu-xform-item placeholder="交易结束金额" ctype="input" name="endAmt3"></yu-xform-item>
+                  </yu-xform-group>
+                  <div class="yu-grpButton" style="text-align: right;">
+                      <yu-button icon="search" type="primary" @click="searchFn2">查询</yu-button>
+                      <!-- <yu-button icon="yx-file-excel" @click="exportFn2">导出</yu-button> -->
+                      <yu-button icon="yx-folder-upload" @click="exportInfoFn2" v-if="perExportPdf">导出pdf</yu-button>
+                     <yu-button icon="yx-loop2" type="primary" @click="resetMainFn2">重置</yu-button>
+                  </div>
+              </yu-xform>
+              <yu-xtable class="loadOfccd"  ref="ccdTransTable" row-number :data-url="ccdTransDataUrl" :highlight-current-row="true" :stripe="true" :default-load="false">
+                <yu-xtable-column label="交易日期" prop="tranDate" width="100"></yu-xtable-column>
+                <yu-xtable-column label="交易时间" prop="tranTime" width="120"></yu-xtable-column>
+                <yu-xtable-column label="交易流水号" prop="tranNo" width="120"></yu-xtable-column>
+                <yu-xtable-column label="卡号" prop="cardNo" width="120"></yu-xtable-column>
+                <yu-xtable-column label="币种" prop="ccyCd" width="120" data-code="CD0071"></yu-xtable-column>
+                <yu-xtable-column label="交易金额" prop="amt" width="100" align="right"></yu-xtable-column>
+                <yu-xtable-column label="借贷标志" prop="cdFlag" width="120" data-code="CD0063"></yu-xtable-column>
+                <yu-xtable-column label="交易码" prop="tranCd" width="120"></yu-xtable-column>
+                <yu-xtable-column label="账单交易描述" prop="billDesc" width="120"></yu-xtable-column>
+                <yu-xtable-column label="授权码" prop="authCd" width="120"></yu-xtable-column>
+                <yu-xtable-column label="积分数值" prop="pointsValue" width="100" align="right"></yu-xtable-column>
+                <yu-xtable-column label="受理机构名称地址" prop="orgAddr" width="120"></yu-xtable-column>
+                <yu-xtable-column label="商户类别" prop="merchantType" width="120" data-code="CD0054"></yu-xtable-column>
+                <yu-xtable-column label="交易渠道" prop="chenlCd"  data-code="CD0401" width="120"></yu-xtable-column>
+              </yu-xtable>
+          </yu-xdialog>
+          </yu-tab-pane>
+  </yu-tabs>
+</div>
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

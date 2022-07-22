@@ -1,0 +1,239 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-09-13 19:00:05
+ * @update by: 
+ * @description: 
+-->
+<!--
+  @created by yangding on 2021/09/03.
+  @description 客户查询
+-->
+<div class="layoutContainer">
+    <link href="./pages/dy/customerSearch/customerSearch.css" rel="stylesheet" type="text/css">
+    <div>
+        <div class="mt20 bgWhite pd20">
+            <p class="bigTitle">单一查询入口</p>
+            <yu-row :gutter="20">
+                <yu-col :span="23" :offset="1">
+                    <yu-xform size="small" v-model="singleQueryParams" label-width="140px" ref="singleQueryForm"
+                        related-table-name="yutable1" responsive>
+                        <yu-xform-group>
+                            <yu-xform-item label="快速查询" placeholder="请输入ECIF号、NDS号、客户中文名、客户英文名、手机号" clearable
+                                colspan="24" name="figureCode">
+                                <div class="el-input-comb" style="margin-top: 15px;">
+                                    <yu-input v-model="fastSearchValue">
+                                        <yu-button slot="append" icon="search"></yu-button>
+                                    </yu-input>
+                                </div>
+                            </yu-xform-item>
+                            <yu-xform-item label="证件类型" ctype="select" placeholder="请选择" data-code="CD0348"
+                                name="custType" :rules="IDTypeRule" clearable></yu-xform-item>
+                            <yu-xform-item label="证件号码" ctype="input" placeholder="请输入" name="certNo"
+                                :rules="certNoRule" clearable></yu-xform-item>
+                            <yu-xform-item label="账号/卡号" ctype="input" placeholder="请输入" name="cardNo" clearable>
+                            </yu-xform-item>
+                            <yu-xform-item ctype="custom" style="text-align: right;">
+                                <yu-button @click="resetForm('singleQueryForm')">重置</yu-button>
+                                <yu-button type="primary" @click="singleQueryFn('singleQueryParams')">查询</yu-button>
+                            </yu-xform-item>
+                    </yu-xform>
+                </yu-col>
+            </yu-row>
+        </div>
+
+        <div class="mt20 bgWhite pd20">
+            <p class="bigTitle">组合查询入口</p>
+            <yu-row :gutter="20">
+                <yu-col :span="23" :offset="1">
+                    <yu-xform size="small" v-model="composeQueryParams" ref="composeQuery" label-width="140px"
+                        related-table-name="yutable1" responsive>
+                        <yu-xform-group>
+                            <yu-xform-item label="AUM余额(万元)" ctype="custom">
+                                <yu-col :sm="11" :xs="24">
+                                    <yu-input v-model="composeQueryParams.aumBalanceStart" placeholder="请输入"
+                                        maxlength="10" clearable></yu-input>
+                                </yu-col>
+                                <yu-col class="line" :span="2" style="text-align: center">→</yu-col>
+                                <yu-col :sm="11" :xs="24">
+                                    <yu-input v-model="composeQueryParams.aumBalanceEnd" placeholder="请输入"
+                                        maxlength="10" clearable></yu-input>
+                                </yu-col>
+                            </yu-xform-item>
+                            <yu-xform-item label="年龄区间" ctype="select" placeholder="请选择" data-code="YEAR_SECTION_LIST"
+                                name="ageGroup"></yu-xform-item>
+                            <yu-xform-item label="产品类别" ref="custTyped" :quar-params="custTypeRole" @select-fn="custParamFn" @select-fn-data="getCustTypeRole" colspan="8"
+                                ctype="yufp-cust-tree">
+                            </yu-xform-item>
+                            <yu-xform-item label="持有产品" colspan="8" :disabled="custdisabled" ctype="input" placeholder="请输入客户持有产品名称或产品编号"
+                                v-model="prodNameValue" id="prodnameid" clearable
+                                @change="custTpChangeFn()">
+                            </yu-xform-item>
+                            <yu-xform-item label="近一个月到期" colspan="8" ctype="select" placeholder="请选择"
+                                data-code="EXPIRE_LIST" name="expireNo"></yu-xform-item>
+
+                            <yu-xform-item label="客户等级" colspan="24" ctype="checkbox" data-code="CUST_GRADE"
+                                name="custGrade"></yu-xform-item>
+                            <yu-xform-item ref="tagNo" label="客户标签" colspan="24" ctype="yufp-tag-list"
+                                data-code="CUSTOMER_TAG_LIST" name="tagNo" @tag-change="handleTagChange">
+                            </yu-xform-item>
+                            <yu-xform-item label="地区" colspan="24" ctype="custom" name="countAreaCd">
+                                <el-radio-group v-model="composeQueryParams.countAreaCd">
+                                    <el-radio v-for="item in ORIGION_LIST" :key="item.key" :label="item.key"
+                                        @click.native.prevent="handleReginClick(item.key)">{{item.value}}</el-radio>
+                                </el-radio-group>
+                            </yu-xform-item>
+                            <yu-xform-item :label="hasChooseQuery?'高级查询':''" colspan="24" ctype="custom">
+                                <div class="tag" style="float: left;" v-if="hasChooseQuery">
+                                    <yu-tag type="gray">证件属性 等于 护照</yu-tag>
+                                    <yu-tag type="primary">并且</yu-tag>
+                                    <yu-tag type="gray">信贷风险等级 等于 中等</yu-tag>
+                                    <yu-tag color="#F5ECFE" style="color: #5D4DBF;border: 1px solid  #CAB4FF">或者
+                                    </yu-tag>
+                                    <yu-tag type="gray">年龄 大于 30</yu-tag>
+                                </div>
+                                <div style="float: right;">
+                                    <!-- <el-link :underline="false" style="color: #B96D06;margin-right: 16px;" @click="advancedQueryDialogVisible = true">高级查询</el-link> -->
+                                    <el-link :underline="false" style="color: #B96D06;margin-right: 16px;"
+                                        @click="highSearch">高级查询</el-link>
+                                    <yu-button @click="resetForm('composeQuery')">重置</yu-button>
+                                    <yu-button type="primary" @click="composeSearchFn('composeQueryParams')">查询
+                                    </yu-button>
+                                </div>
+                            </yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                </yu-col>
+            </yu-row>
+        </div>
+        <div class="mt20 bgWhite pd20">
+            <div style="text-align:right;">
+                <el-button icon="el-icon-document" type="primary" @click="saveFn" :disabled="userSelectRole"
+                    v-if="baseParams.custQueryType === '02'">保存客群</el-button>
+            </div>
+            <yu-xtable :borde="false" :select-on-indeterminate="false" ref="multipleTable" :data-url="urlMap[hashCode]"
+                :base-params="baseParams" class="mt20" :default-load="false" @selection-change="selectChange"
+                clearSelection style="width: 100%">
+                <yu-xtable-column type="selection" width="55"></yu-xtable-column>
+                <yu-xtable-column type="index" label="序号"></yu-xtable-column>
+                <yu-xtable-column label="客户姓名" width="160px">
+                    <template slot-scope="scope">
+                        <a style="color:#2877FF ;cursor:pointer" @click="onTableRowMerchantNameClickFtn(scope.row)">
+                            {{ scope.row.custName }}
+                        </a>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="custId" label="ECIF号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="ndsCustNo" label="NDS号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="mgrNameOne" label="理财客户经理" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="mgrNameTwo" label="个贷客户经理" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="aumBalanceAvgRmb" label="AUM余额月日均" width="160px" sortable>
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.aumBalanceAvgRmb || 0) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="aumBalance" label="AUM余额" width="160px" sortable>
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.aumBalance || 0) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="exchangeFinBalance" label="汇率">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.exchangeFinBalance || 0) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="nonExchangeFinBalance" label="非汇">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.nonExchangeFinBalance || 0) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="trustBalanceRmb" label="信托">
+                       <template slot-scope="scope">
+                           {{ yufp.util.moneyFormatter(scope.row.trustBalanceRmb || 0) }} 
+                       </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="rmbFundBalance" label="基金" width="160px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.rmbFundBalance || 0) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="assestManageBalance" label="资管" width="160px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.assestManageBalance || 0) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="qdiiBalanceRmb" label="QDII净值余额" width="160px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.qdiiBalanceRmb || 0) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="insurranceBalance" label="保险" width="160px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.insurranceBalance || 0) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="depositBalanceRmb" label="存款" width="160px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.depositBalanceRmb || 0) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="belongBranch" label="主办分行" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="belongBrch" label="主办机构" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="nationality" label="地区" data-code="ORIGION_LIST"></yu-xtable-column>
+                <yu-xtable-column prop="updateDate" label="最近接触时间" sortable width="120"></yu-xtable-column>
+                <yu-xtable-column label="操作" v-if="isShowEdit">
+                    <template slot-scope="scope">
+                        <yu-button @click.native.prevent="editRow(scope.row)" type="text" style="color: #B96D06;"
+                            size="small" :disabled="isEdit">
+                            编辑
+                        </yu-button>
+                    </template>
+                </yu-xtable-column>
+            </yu-xtable>
+            <template>
+                <div class="table-pagination">
+                    <div class="demonstration">
+                        表头多选框为当前页全选，已选择 <span class="selectRows">{{selectRows.length}}</span> 项
+                        <yu-button @click.native.prevent="btnClearDataFn" type="text" size="middle">
+                            清空
+                        </yu-button>
+                        <div style="color: red;" v-if="isShowEdit">注：不选择客户时默认为全选</div>
+                    </div>
+                </div>
+            </template>
+            <yu-dialog title="信息编辑" :visible.sync="applyDialogVisible">
+                <customer-edit ref="customerEdite" :org-id-auth="orgIdAuth" @handleediteclose="closeeditebox" />
+            </yu-dialog>
+            <yu-dialog title="保存至客群" :visible.sync="saveCustomerDialogVisible">
+                <save-customer-group :filter-data="filterData" :org-id-auth="orgIdAuth" @close-add="closeAdd" />
+            </yu-dialog>
+            <yu-dialog title="高级查询" :visible.sync="advancedQueryDialogVisible" class="bigger-dialog-width"
+                :before-close="handleHighLevlCreateClose">
+                <yufp-cust-flexy-query ref="flexyQuery" :btndisabled.sync="btnDisabled" :show-btn="true"
+                    :query-btn="true" :save-as-cust-btn="true" :save-btn="true" :reset-btn="true" :new-func="true"
+                    @createcloseflexy="createcloseserarch">
+                </yufp-cust-flexy-query>
+            </yu-dialog>
+        </div>
+        <!-- <ul v-if="showor" style="background-color: white;width:480px;height: 300px;transform-origin: center top;z-index: 2006;position: absolute;left: 210px;top: 440px;">
+            <li v-for="item in custResults" :key="item.custId" @click="handleCustomerSelect(item)" style="height: 30px;padding-left: 20px;">
+                {{ item.custName }} - {{item.custId}}
+            </li>
+        </ul> -->
+        <ul id="ulid" v-show="showor"
+            style="background-color: white;width:490px;height: 300px;transform-origin: center top;z-index: 2006;position: absolute;left: 40%;top: 440px">
+            <li v-for="item in custResults" :key="item.prodId" @click="handleCustomerSelect(item)"
+                style="height: 30px;padding-left: 20px;">
+                {{ item.prodName }} -- {{item.prodId}}
+            </li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .addBtn {
+        position: absolute;
+        right: 8px;
+        top: 11px;
+        font-size: 12px;
+    }
+</style>

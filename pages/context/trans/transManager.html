@@ -1,0 +1,124 @@
+<div id="trans_grid">
+    <!--搜索栏-->
+    <el-form-q :field-data="queryFields" :buttons="queryButtons" :columns="3"></el-form-q>
+    <div class="yu-toolBar">
+        <el-button-group>
+            <el-button icon="plus" @click="addTrans">新增</el-button>
+            <el-button icon="edit" @click="modiTrans">修改</el-button>
+            <el-button icon="delete" @click="deleteTrans">删除</el-button>
+            <el-button icon="view" @click="viewTrans">查看</el-button>
+            <el-button icon="setting" @click="settingTrans">配置</el-button>
+            <el-button icon="plus" @click="createTab">创建表</el-button>
+        </el-button-group>
+    </div>
+    <!--展示列表-->
+    <el-table-x ref="filterTable" :checkbox="true" :height="420" :data-url="serviceUrl" :table-columns="tableColumns">
+    </el-table-x>
+    <!--配置交易弹窗-->
+    <el-dialog-x :title="titleMap[oprType]" :visible.sync="transSettingDialogVisible" style="margin-bottom:20px;">
+        <el-form-x ref="transSettingDataFilterForm" label-width="98px" :group-fields="transSettingsOprFields">
+        </el-form-x>
+        <!--<el-tag>交易字段信息</el-tag>-->
+        <div class="yu-toolBar">
+            <el-button-group>
+                <el-button icon="plus" @click="addsettingsTrans">新增</el-button>
+            </el-button-group>
+        </div>
+        <el-table ref="transParamDataTable" :data="transParamDatas" :max-height="dialogHeight" stripe border fit
+            highlight-current-row element-loading-text="加载中...">
+            <el-table-column label="编号" width="60" type="index">
+            </el-table-column>
+
+            <el-table-column label="字段名" width="100" prop="paramCode">
+            </el-table-column>
+            <el-table-column label="字段中文名" width="120" prop="paramDesc">
+                <template scope="scope">
+                    <el-input v-show=true size="small" v-model="scope.row.paramDesc"></el-input>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="表字段名" width="100">
+                <template scope="scope">
+                    <el-input v-show=true size="small" v-model="scope.row.fieldName"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column label="规则化" width="75" prop="ruleVisible">
+                <template scope="scope">
+                    <!--   <el-select v-show=true v-model="scope.row.ruleVisible" clearable size="small">
+                       <el-option v-for="item in typeOptions" :key="item.key" :value="item.key" :label="item.value+'('+item.key+')'"></el-option>
+                   </el-select>-->
+                    <el-checkbox-group v-model="scope.row.ruleVisible">
+                        <el-checkbox v-for="obj in typeOptions" :label="obj.key" :key="obj.key">
+                            {{scope.row.visibaleval}}</el-checkbox>
+                    </el-checkbox-group>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="字段类型" width="120" clearable prop="fieldType">
+                <template scope="scope">
+                    <el-select v-model="scope.row.fieldType" clearable size="small">
+                        <el-option v-for="item in fieldType" :key="item.key" :value="item.key" :label="item.value">
+                        </el-option>
+                    </el-select>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="字段长度" width="80" clearable prop="fieldLen">
+                <template scope="scope">
+                    <el-input v-show=true size="small" v-model="scope.row.fieldLen"></el-input>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="字段标识" width="120" clearable prop="fieldFlag">
+                <template scope="scope">
+                    <el-select v-model="scope.row.fieldFlag" clearable size="small">
+                        <el-option v-for="item in fieldFlag" :key="item.key" :value="item.key" :label="item.value">
+                        </el-option>
+                    </el-select>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="偏移量" width="75" clearable prop="fieldOffset">
+                <template scope="scope">
+                    <el-input v-show=true size="small" v-model="scope.row.fieldOffset"></el-input>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="上下行标识" width="100" clearable prop="updownFlag">
+                <template scope="scope">
+                    <el-select v-model="scope.row.updownFlag" clearable size="small">
+                        <el-option v-for="item in updownFlag" :key="item.key" :value="item.key" :label="item.value">
+                        </el-option>
+                    </el-select>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="操作" width="80" align="center">
+                <template scope="scope">
+                    <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div slot="footer" align="center">
+            <el-button type="primary" icon="close" @click="closeTransParamSettings">关闭</el-button>
+            <el-button type="primary" icon="check" @click="saveTransParamSettings">确认</el-button>
+        </div>
+    </el-dialog-x>
+
+    <el-dialog-x :title="titleMap[oprType]" :visible.sync="transDialogVisible" :width="dialogWidth">
+        <el-form-x ref="transDataFilterForm" :group-fields="transOprFields" :buttons="updateButtons"
+            :disabled="formDisabled" label-width="120px" />
+    </el-dialog-x>
+    <!--配置交易字段中新增弹窗-->
+    <el-dialog-x title="基础字段池" :visible.sync="parmPopDialogVisible" width="800px">
+        <el-form-q ref="refQueryParamFields" :field-data="queryParamFields" :buttons="queryParamButtons" :columns="3">
+        </el-form-q>
+        <el-table-x ref="filterParamTable" :checkbox="true" :data-url="paramServiceUrl"
+            :table-columns="tableParamColumns">
+        </el-table-x>
+        <div slot="footer" align="center">
+            <el-button type="primary" icon="close" @click="closeParamListSettings">关闭</el-button>
+            <el-button type="primary" icon="check" @click="addParamListSettings">确认</el-button>
+        </div>
+    </el-dialog-x>
+</div>

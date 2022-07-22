@@ -1,0 +1,138 @@
+<!--
+* @create by: ranxun@yusys.com.cn
+* @Date: 2021-08-05 18:12:24
+* @update by: 
+* @description: 
+-->
+<div class="customerView-container">
+    <link href="./pages/dy/customer360View/customer360View.css" rel="stylesheet" type="text/css">
+    <link href="./pages/dy/customer360View/components/tabs/tabCommon.css" rel="stylesheet" type="text/css">
+    <!-- 消息滚动播放 -->
+    <!-- <div class="noticeProgation">
+    <div class="content">
+      <div class="content-box">
+        <span><i class="el-icon-warning"></i>事件提醒({{eventNotices.length}}条内容滚动播放)：</span>
+        <div id="viewBox">
+          <el-carousel height="200px" direction="vertical" :autoplay="true" indicator-position="none">
+              <el-carousel-item v-for="item in eventNotices" :key="item">
+                <span>{{item.eventType}}{{ item.eventName }} {{item.eventDesc}}</span>
+              </el-carousel-item>
+            </el-carousel>
+        </div>
+      </div>
+    </div>
+    <div class="optionBtn">
+      <span>查看
+        <i class="el-icon-arrow-right"></i>
+      </span>
+    </div>
+  </div> -->
+
+    <div class="pdlr-20">
+        <!-- 客户信息  -->
+        <div>
+            <customer-card :per-info="perInfo" :per-label-info="perLabelInfo" :cust-id="custId" />
+        </div>
+
+        <!-- 特征标签  -->
+        <div>
+            <feature-tags :per-label-info="perLabelInfo" :cust-id="custId" @update-tag="getHeaderData" @but-log="addButLog"/>
+        </div>
+        <el-scrollbar>
+
+            <!-- 数据表格  -->
+            <data-charts :aum-info="aumInfo" :deposit-info="depositInfo" :property-info="propertyInfo" />
+        </el-scrollbar>
+    </div>
+
+    <!-- 底部tab选项卡 -->
+    <div class="tabBox dy-tabs">
+        <yu-tabs v-model="activeName" type="card" @tab-click="handleClick">
+            <yu-tab-pane label="基础信息" name="baseInfo">
+                <base-info v-if="baseInfo"></base-info>
+            </yu-tab-pane>
+            
+            <yu-tab-pane label="资产信息" name="productInfo">
+                <product-info v-if="productInfo" @but-log="addButLog"></product-info>
+            </yu-tab-pane>
+            <yu-tab-pane label="负债信息" name="productInfo1">
+                <product-info-loan v-if="productInfo1" @but-log="addButLog"></product-info-loan>
+            </yu-tab-pane>
+
+            <!-- <yu-tab-pane label="产品信息" name="productInfo">
+                <product-info v-if="productInfo" @but-log="addButLog"></product-info>
+            </yu-tab-pane> -->
+            <yu-tab-pane label="风险信息" name="riskInfo">
+                <risk-info v-if="riskInfo"></risk-info>
+            </yu-tab-pane>
+            <yu-tab-pane label="接触历史" name="touchHistory">
+                <touch-history v-if="touchHistory" @detail-touch="detailTouch" @but-log="addButLog"></touch-history>
+            </yu-tab-pane>
+            <!-- <yu-tab-pane label="事件信息" name="eventInfo">
+        <event-info v-if="eventInfo" />
+      </yu-tab-pane> -->
+            <yu-tab-pane label="行为追踪" name="behaviorTrack">
+                <behavior-track v-if="behaviorTrack"></behavior-track>
+            </yu-tab-pane>
+            <!-- <yu-tab-pane label="生命周期" name="lifeCircle">
+        <life-circle v-if="lifeCircle" />
+      </yu-tab-pane> -->
+        </yu-tabs>
+    </div>
+
+    <yu-xdialog title="关联工作报告详情" :visible.sync="dialogVisible" width="60%" top="5vh" @close="cancelFn">
+        <yu-xform ref="refForm" label-width="170px" v-model="workReport" disabled="true">
+            <yu-xform-group :column="2">
+                <yu-xform-item label="类型" ctype="select" name="workReportBusiType" data-code="DY0004"></yu-xform-item>
+                <yu-xform-item label="工作日期" ctype="datepicker" name="startDate" type="date" format="yyyy-MM-dd">
+                </yu-xform-item>
+            </yu-xform-group>
+
+            <yu-xform-group :column="2">
+                <yu-xform-item label="工作内容" :colspan="24" ctype="select" data-code="DY0003" name="workSummary" multiple>
+                </yu-xform-item>
+            </yu-xform-group>
+            <yu-xform-group :column="1">
+                <yu-xform-item label="培训/会议" ctype="textarea" name="workContent2" :rows="2" :colspan="24"
+                    placeholder="无数据" :hidden="!workSummary.second"></yu-xform-item>
+                <yu-xform-item label="外访" ctype="textarea" name="workContent3" :rows="2" :colspan="24" placeholder="无数据"
+                    :hidden="!workSummary.three"></yu-xform-item>
+                <yu-xform-item label="商机" ctype="textarea" name="workContent4" :rows="2" :colspan="24" placeholder="无数据"
+                    :hidden="!workSummary.fouth"></yu-xform-item>
+                <yu-xform-item label="材料整理" ctype="textarea" name="workContent5" :rows="2" :colspan="24"
+                    placeholder="无数据" :hidden="!workSummary.five"></yu-xform-item>
+            </yu-xform-group>
+            <!-- 详情 客户接触 -->
+            <yu-xtable ref="detailCustomerContactTable" :data="detailCustomerContactData" style="width: 100%">
+                <yu-xtable-column label="客户" width="190" prop="contactCustName"></yu-xtable-column>
+                <yu-xtable-column label="跟进类型" prop="contactType" data-code="DY0006"></yu-xtable-column>
+                <yu-xtable-column label="跟进目的" prop="contactGoal" data-code="DY0005"></yu-xtable-column>
+                <yu-xtable-column label="产品" prop="product" width="190"></yu-xtable-column>
+                <yu-xtable-column label="跟进反馈" prop="contactBack" width="190"></yu-xtable-column>
+                <yu-xtable-column label="下次跟进时间" prop="nextContactDate" width="100" :formatter="formJE" :picker-options="pickerOptions">
+                </yu-xtable-column>
+            </yu-xtable>
+
+            <yu-xform-group :column="1">
+                <yu-xform-item label="补充内容" ctype="textarea" name="annex" :rows="2" :colspan="24" placeholder="无数据">
+                </yu-xform-item>
+                <yu-xform-item label="总结及后续工作计划" ctype="textarea" name="laterPlan" :rows="2" :colspan="24"
+                    placeholder="无数据"></yu-xform-item>
+            </yu-xform-group>
+
+            <yufp-upload-table ref="filesTable" :data-params="initFilesParams" :data="reportUpLoadBusNo"
+                :upload-visible="uploadVisible" :download-visible="downloadVisible" :delete-visible="deleteVisible">
+            </yufp-upload-table>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">返回</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+</div>
+
+<style>
+    .divider {
+        height: 16px;
+        background: #F4F5F9;
+    }
+</style>

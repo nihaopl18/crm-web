@@ -1,0 +1,398 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-27 16:58:15
+ * @update by: 
+ * @description: 客群详情
+-->
+<div class="cust-group-detail">
+    <yu-card class="box-card" shadow="never">
+        <div slot="header" class="clearfix">
+            <div style="float: left;">
+                <span class="title">{{detailForm.custGroupName}}</span>
+                <yu-tag type="warning">静态客群</yu-tag>
+            </div>
+            <div style="float: right;">
+                <span>数据更新时间：{{detailForm.updateDate}}</span>
+                <yu-button icon="el-icon-edit-outline" @click="editCustGroup">编辑客群</yu-button>
+                <yu-button icon="el-icon-pie-chart" type="primary" @click="toAnalysis">分析</yu-button>
+            </div>
+        </div>
+        <div class="content">
+            <p class="rule">客群规则</p>
+            <div class="tag" v-if="custGroupType=='02'" style="float: left;">
+                <!-- <yu-tag type="gray" v-if="tagObj.aum[0]">AUM余额 等于 {{tagObj.aum[0]}}<span v-if="tagObj.aum[1]">-</span>{{tagObj.aum[1]}}</yu-tag> -->
+                <yu-tag type="gray" v-if="showAUM1">AUM余额 等于 {{ tagObj.aum[0] }} - {{ tagObj.aum[1] }} 万元</yu-tag>
+                <yu-tag type="gray" v-if="showAUM2">AUM余额 大于 {{ tagObj.aum[0] }} 万元</yu-tag>
+                <yu-tag type="gray" v-if="showAUM3">AUM余额 小于 {{ tagObj.aum[1] }} 万元</yu-tag>
+                <yu-tag v-if="tagObj.agegroup && (showAUM1 || showAUM2 || showAUM3)" color="#F5ECFE"
+                    style="color: #5D4DBF;border: 1px solid  #CAB4FF">并且</yu-tag>
+                <yu-tag type="gray" v-if="tagObj.agegroup">年龄区间 等于 {{ageGroup[tagObj.agegroup]}}</yu-tag>
+                <yu-tag
+                    v-if="tagObj.agegroup && (tagObj.prodname || tagObj.custgrade.length || tagObj.tagname.length || tagObj.countareacd)"
+                    color="#F5ECFE" style="color: #5D4DBF;border: 1px solid  #CAB4FF">并且</yu-tag>
+                <yu-tag type="gray" v-if="tagObj.prodname">持有产品 等于 {{tagObj.prodname}}</yu-tag>
+                <yu-tag
+                    v-if="tagObj.prodname && (tagObj.custgrade.length || tagObj.tagname.length || tagObj.countareacd)"
+                    color="#F5ECFE" style="color: #5D4DBF;border: 1px solid  #CAB4FF">并且</yu-tag>
+                <yu-tag type="gray" v-if="tagObj.custgrade.length">
+                    客户等级 等于
+                    <template v-for="(item, index) in tagObj.custgrade">
+                        <span type="gray" v-if="item"> {{grades[item]}} <i
+                                v-if="item && index != tagObj.custgrade.length - 1"> 或者&nbsp;</i></span>
+                    </template>
+                </yu-tag>
+                <yu-tag v-if="tagObj.custgrade.length && (tagObj.tagname.length || tagObj.countareacd)" color="#F5ECFE"
+                    style="color: #5D4DBF;border: 1px solid  #CAB4FF">并且</yu-tag>
+                <yu-tag type="gray" v-if="tagObj.tagname.length">
+                    客户标签 等于
+                    <template v-for="(item, index) in tagObj.tagname">
+                        <span type="gray" v-if="item">{{item}} <i v-if="item && index != tagObj.tagname.length - 1"> 并且
+                                &nbsp;</i></span>
+                    </template>
+                </yu-tag>
+                <yu-tag v-if="tagObj.tagname[0] && tagObj.countareacd" color="#F5ECFE"
+                    style="color: #5D4DBF;border: 1px solid  #CAB4FF">并且</yu-tag>
+                <yu-tag type="gray" v-if="tagObj.countareacd">地区 等于 {{origins[tagObj.countareacd]}}</yu-tag>
+            </div>
+            <div class="tag" v-if="custGroupType=='01'">
+                <div>
+                    {{custGroupRule}}
+                </div>
+            </div>
+            <div class="detail">
+                <yu-row>
+                    <yu-col :span="8">
+                        <p>
+                            <label>创建时间：</label>
+                            <span>{{detailForm.createDate}}</span>
+                        </p>
+                        <p>
+                            <label>创建人：</label>
+                            <span>{{detailForm.createUser}}</span>
+                        </p>
+                    </yu-col>
+                    <yu-col :span="8">
+                        <label>客户数</label>
+                        <p>
+                            <span class="count">{{detailForm.initialCout}}</span>
+                            <span :class="returnClassName(detailForm.floatCustomer)">
+                                <i></i>
+                                {{detailForm.floatCustomer}}
+                            </span>
+                        </p>
+                    </yu-col>
+                    <yu-col :span="8">
+                        <p>
+                            <label>关注</label>
+                        </p>
+                        <yu-switch on-color="#ff4949" off-color="#C0C4CC" on-value="01" off-value="02"
+                            v-model="detailForm.isFocus" @change="handleFocusChange"></yu-switch>
+                    </yu-col>
+                    <yu-col :span="24">
+                        <p>
+                            <label>客群描述：</label>
+                            <span>{{detailForm.custGroupDescribe}}</span>
+                        </p>
+                    </yu-col>
+                </yu-row>
+            </div>
+        </div>
+    </yu-card>
+
+    <div class="group-table">
+        <yu-row>
+            <yu-col :span="10">
+                <yu-input placeholder="请输入搜索关键词" style="width: 216px" v-model="custKeyword">
+                    <yu-button slot="append" icon="search" @click="searchListCust"></yu-button>
+                </yu-input>
+            </yu-col>
+            <yu-col :span="14" style="text-align: right">
+                <yu-button icon="el-icon-yx-loop2" @click="historyDetail">变动历史</yu-button>
+                <yu-button icon="el-icon-yx-file-excel" @click="exportList">导出Excel</yu-button>
+                <yu-button icon="el-icon-chat-dot-square">群发短信</yu-button>
+                <yu-button icon="el-icon-delete" @click="deleteFn">移除</yu-button>
+                <yu-button icon="el-icon-plus" type="primary" @click="addCustMember">添加成员</yu-button>
+            </yu-col>
+        </yu-row>
+        <yu-xtable selection-type="checkbox" ref="listTable" reserve-selection row-key="custId" :data-url="dataUrl"
+            :base-params="baseParam" style="width: 100%">
+            <yu-xtable-column type="index" label="序号"></yu-xtable-column>
+            <yu-xtable-column prop="custName" label="客户姓名" width="160px">
+                <template slot-scope="scope">
+                    <el-link type="primary" @click="toCust360View(scope.row)">{{scope.row.custName}}</el-link>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="custId" label="ECIF号" width="160px"></yu-xtable-column>
+            <yu-xtable-column prop="ndsCustNo" label="NDS号" width="160px"></yu-xtable-column>
+            <yu-xtable-column prop="mgrNameOne" label="理财客户经理" width="160px"></yu-xtable-column>
+            <yu-xtable-column prop="mgrNameTwo" label="个贷客户经理" width="160px"></yu-xtable-column>
+            <yu-xtable-column prop="aumBalanceAvgRmb" label="AUM余额月日均" width="160px" sortable>
+                <template slot-scope="scope">
+                    <span>{{ yufp.util.moneyFormatter(scope.row.aumBalanceAvgRmb || 0, 2) }}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="aumBalance" label="AUM余额" width="160px" sortable>
+                <template slot-scope="scope">
+                    <span>{{ yufp.util.moneyFormatter(scope.row.aumBalance || 0, 2) }}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="exchangeFinBalance" label="汇率" width="160px">
+                <template slot-scope="scope">
+                    <span>{{ yufp.util.moneyFormatter(scope.row.exchangeFinBalance || 0, 2) }}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="nonExchangeFinBalance" label="非汇" width="160px">
+                <template slot-scope="scope">
+                    <span>{{ yufp.util.moneyFormatter(scope.row.nonExchangeFinBalance || 0, 2) }}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="trustBalanceRmb" label="信托" width="160px">
+                <template slot-scope="scope">
+                    <span>{{ yufp.util.moneyFormatter(scope.row.trustBalanceRmb || 0, 2) }}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="rmbFundBalance" label="基金" width="160px">
+                <template slot-scope="scope">
+                    <span>{{ yufp.util.moneyFormatter(scope.row.rmbFundBalance || 0, 2) }}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="assestManageBalance" label="资管" width="160px">
+                <template slot-scope="scope">
+                    <span>{{ yufp.util.moneyFormatter(scope.row.assestManageBalance || 0, 2) }}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="qdiiBalanceRmb" label="QDII净值余额" width="160px">
+                <template slot-scope="scope">
+                    <span>{{ yufp.util.moneyFormatter(scope.row.qdiiBalanceRmb || 0, 2) }}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="insurranceBalance" label="保险" width="160px">
+                <template slot-scope="scope">
+                    <span>{{ yufp.util.moneyFormatter(scope.row.insurranceBalance || 0, 2) }}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="depositBalanceRmb" label="存款" width="160px">
+                <template slot-scope="scope">
+                    <span>{{ yufp.util.moneyFormatter(scope.row.depositBalanceRmb || 0, 2) }}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="belongBranch" label="主办分行" width="200px"></yu-xtable-column>
+            <yu-xtable-column prop="belongBrch" label="主办机构" width="200px"></yu-xtable-column>
+            <yu-xtable-column prop="nationality" label="地区" data-code="ORIGION_LIST"></yu-xtable-column>
+            <yu-xtable-column label="操作">
+                <template slot-scope="scope">
+                    <yu-button @click.native.prevent="deleteOne(scope.row)" type="text" size="small">
+                        移除
+                    </yu-button>
+                </template>
+            </yu-xtable-column>
+        </yu-xtable>
+    </div>
+    <!-- 编辑客群 -->
+    <yu-dialog title="编辑客群" :visible.sync="editeVisible" min-width="920" class="createBox"
+        :before-close="handleEditeClose">
+        <div style="height: 600px;padding: 87px 30px 0">
+            <yu-xform ref="refForm" label-width="100px" label-position="top" v-model="custGroupForm" :rules="custRules">
+                <yu-xform-group :column="1">
+                    <yu-xform-item label="客群名称" :colspan="8" name="custGroupName" ctype="input" placeholder="请输入">
+                    </yu-xform-item>
+                    <yu-xform-item label="客群描述" colspan="24" ctype="textarea" name="custGroupDescribe"
+                        placeholder="请输入"></yu-xform-item>
+                    <yu-xform-item label="添加到我关注的客群" :colspan="8" ctype="custom" name="isFocus">
+                        <yu-switch on-color="#ff4949" off-color="#C0C4CC" on-value="01" off-value="02"
+                            v-model="custGroupForm.isFocus"></yu-switch>
+                    </yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+            <p><i class="el-icon-warning"></i>可以稍后在群组详情中添加成员</p>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <yu-button @click="handleEditeClose">取 消</yu-button>
+            <yu-button type="primary" @click="saveEditFn">提 交</yu-button>
+        </span>
+    </yu-dialog>
+    <!-- 添加客户 -->
+    <yu-dialog title="添加客户" :visible.sync="createVisible" min-width="920" class="createBox"
+        :before-close="handleCreateClose">
+        <div class="step-box">
+            <ul>
+                <li v-for="step in steps" :key="step.id"
+                    :class="[step.id == stepIndex ? 'active' : '', step.id < stepIndex ? 'finish' : '']">
+                    {{ step.title }}</li>
+            </ul>
+        </div>
+        <div class="cust-form">
+            <div v-show="stepIndex === 1">
+                <div style="height: 600px;">
+                    <p class="filterBtn">
+                        <!-- <span @click="toTopLevelFilter"><i class="el-icon-s-operation"></i>高级筛选</span> -->
+                        <span @click="highSearch"><i class="el-icon-s-operation"></i>高级筛选</span>
+                    </p>
+                    <yu-row :gutter="20">
+                        <yu-col :span="23" :offset="1">
+                            <yu-xform ref="filterForm" size="small" v-model="filterModel" label-width="140px"
+                                :rules="rules">
+                                <yu-xform-group>
+                                    <yu-xform-item label="AUM余额(万元)" ctype="custom">
+                                        <yu-col :sm="11" :xs="24">
+                                            <yu-xform-item name="aumBalanceStart" ctype="input" placeholder="请输入"
+                                                maxlength="10"></yu-xform-item>
+                                        </yu-col>
+                                        <yu-col class="line" :span="2" style="text-align: center">→</yu-col>
+                                        <yu-col :sm="11" :xs="24">
+                                            <yu-xform-item name="aumBalanceEnd" ctype="input" placeholder="请输入"
+                                                maxlength="10"></yu-xform-item>
+                                        </yu-col>
+                                    </yu-xform-item>
+                                    <yu-xform-item label="年龄区间" ctype="select" placeholder="请选择"
+                                        data-code="YEAR_SECTION_LIST" name="ageGroup"></yu-xform-item>
+                                        <yu-xform-item label="产品类别" ref="custTyped" :quar-params="custTypeRole"
+                                        @select-fn="custParamFn" @select-fn-data="getCustTypeRole" colspan="8"
+                                        ctype="yufp-cust-tree">
+                                    </yu-xform-item>
+                                    <yu-xform-item label="持有产品" colspan="8" :disabled="custdisabled" ctype="input"
+                                        placeholder="请输入客户持有产品名称或产品编号" v-model="prodNameValue" id="prodnameid" clearable
+                                        @change="custTpChangeFn()">
+                                    </yu-xform-item>
+                                    <yu-xform-item label="近一个月到期" colspan="8" ctype="select" placeholder="请选择"
+                                        data-code="EXPIRE_LIST" name="expireNo"></yu-xform-item>
+                                    <yu-xform-item label="客户等级" colspan="24" ctype="checkbox" data-code="CUST_GRADE"
+                                        name="custGrade"></yu-xform-item>
+                                    <yu-xform-item label="客户标签" colspan="24" ctype="yufp-tag-list" ref="tagNo"
+                                        name="tagNo" @tag-change="handleTagChange"></yu-xform-item>
+                                    <yu-xform-item label="地区" colspan="24" ctype="custom" name="countAreaCd">
+                                        <el-radio-group v-model="filterModel.countAreaCd">
+                                            <el-radio v-for="item in ORIGION_LIST" :key="item.key" :label="item.key"
+                                                @click.native.prevent="handleReginClick(item.key)">{{item.value}}
+                                            </el-radio>
+                                        </el-radio-group>
+                                    </yu-xform-item>
+                                </yu-xform-group>
+                            </yu-xform>
+                        </yu-col>
+                    </yu-row>
+                </div>
+            </div>
+            <div v-show="stepIndex === 2">
+                <div style="height: 600px">
+                    <yu-row>
+                        <yu-col :span="18">
+                            <!-- <yu-input placeholder="请输入搜索关键词" style="width: 216px" v-model="keyword">
+                <yu-button slot="append" icon="search" @click="searchCusts"></yu-button>
+              </yu-input> -->
+                        </yu-col>
+                        <!-- <yu-col :span="6" style="text-align: right"> -->
+                        <yu-col :span="6">
+                            <p>
+                                <span>已选择</span>
+                                <span>{{ chooseCount }}</span>
+                            </p>
+                        </yu-col>
+                    </yu-row>
+                    <yu-xtable selection-type="checkbox" ref="yutable" reserve-selection row-key="custId"
+                        :data-url="custUrl" :default-load="false" :base-params="custBaseParam" max-height="550"
+                        style="width: 100%;margin-top: 16px" @selection-change="handleCustSelect">
+                        <yu-xtable-column type="index" label="序号"></yu-xtable-column>
+                        <yu-xtable-column prop="custName" label="客户姓名" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="custId" label="ECIF号" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="ndsCustNo" label="NDS号" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="mgrNameOne" label="理财客户经理" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="mgrNameTwo" label="个贷客户经理" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="aumBalanceAvgRmb" label="AUM余额月日均" width="160px" sortable>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumBalance" label="AUM余额" width="160px" sortable></yu-xtable-column>
+                        <yu-xtable-column prop="exchangeFinBalance" label="汇率" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="nonExchangeFinBalance" label="非汇" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="trustBalanceRmb" label="信托" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="rmbFundBalance" label="基金" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="assestManageBalance" label="资管" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="qdiiBalanceRmb" label="QDII净值余额" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="insurranceBalance" label="保险" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="depositBalanceRmb" label="存款" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="belongBranch" label="主办分行" width="200px"></yu-xtable-column>
+                        <yu-xtable-column prop="belongBrch" label="主办机构" width="200px"></yu-xtable-column>
+                        <yu-xtable-column prop="nationality" label="地区" data-code="ORIGION_LIST"></yu-xtable-column>
+                    </yu-xtable>
+                </div>
+            </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <div v-if="stepIndex === 1">
+                <yu-button @click="handleCreateClose">取 消</yu-button>
+                <yu-button type="primary" @click="nextStep(2)">下一步</yu-button>
+            </div>
+            <div v-if="stepIndex === 2">
+                <yu-button @click="prevStep(1)">上一步</yu-button>
+                <yu-button @click="handleCreateClose">取 消</yu-button>
+                <yu-button type="primary" @click="saveCusts">提交</yu-button>
+            </div>
+        </span>
+        <ul id="ulid" v-show="showor"
+            style="background-color: white;width:490px;height: 300px;transform-origin: center top;z-index: 2006;position: absolute;left: 190px;top: 300px">
+            <li v-for="item in custResults" :key="item.prodId" @click="handleCustomerSelect(item)"
+                style="height: 30px;padding-left: 20px;">
+                {{ item.prodName }} -- {{item.prodId}}
+            </li>
+        </ul>
+    </yu-dialog>
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" title="创建客群" :visible.sync="highLevelCreateVisible"
+        min-width="920" class="createBox" :before-close="handleHighLevlCreateClose">
+        <yufp-cust-flexy-query ref="flexyQuery" :btndisabled.sync="btnDisabled" :show-btn="true" :query-btn="true"
+            :save-as-cust-btn="true" :save-btn="true" :reset-btn="true" :group-id="custGroupId" :is-only-join="true">
+        </yufp-cust-flexy-query>
+    </yu-dialog>
+    <!-- 历史变动 -->
+    <yu-dialog title="变动历史" :visible.sync="historyVisible" class="createBox" min-width="920"
+        :before-close="handleHistoryClose">
+        <div style="height: 600px;padding: 87px 30px 0">
+            <yu-xtable ref="historyTable" :data-url="historyUrl" :default-load="false" :base-params="historyBaseParam"
+                style="width: 100%" max-height="550">
+                <yu-xtable-column prop="changeType" label="变动类型" data-code="CHANGE_TYPES"></yu-xtable-column>
+                <yu-xtable-column prop="createDate" label="变动时间"></yu-xtable-column>
+                <yu-xtable-column label="变动内容">
+                    <template slot-scope="scope">
+                        {{returnChangeContent(scope.row)}}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="操作">
+                    <template slot-scope="scope">
+                        <yu-button @click.native.prevent="detailMore(scope.row)" type="text" size="small">
+                            查看明细
+                        </yu-button>
+                    </template>
+                </yu-xtable-column>
+            </yu-xtable>
+        </div>
+        <yu-dialog append-to-body :title="showName" :visible.sync="historyInnerVisible" class="createBox"
+            min-width="920" :before-close="handleHistoryInnerClose">
+            <p style="text-align: right">{{optionName}}：<span style="color: #EE434C">{{changeCount}}</span></p>
+            <yu-xtable ref="innerTable" :data-url="custDetailUrl" :default-load="false"
+                style="width: 100%;margin-top: 16px" max-height="550">
+                <yu-xtable-column type="index" label="序号"></yu-xtable-column>
+                <yu-xtable-column prop="custName" label="客户姓名" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="custId" label="ECIF号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="ndsCustNo" label="NDS号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="mgrNameOne" label="理财客户经理" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="mgrNameTwo" label="个贷客户经理" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="aumBalanceAvgRmb" label="AUM余额月日均" width="160px" sortable></yu-xtable-column>
+                <yu-xtable-column prop="aumBalance" label="AUM余额" width="160px" sortable></yu-xtable-column>
+                <yu-xtable-column prop="exchangeFinBalance" label="汇率" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="nonExchangeFinBalance" label="非汇" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="trustBalanceRmb" label="信托" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="rmbFundBalance" label="基金" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="assestManageBalance" label="资管" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="qdiiBalanceRmb" label="QDII净值余额" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="insurranceBalance" label="保险" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="depositBalanceRmb" label="存款" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="belongBranch" label="主办分行" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="belongBrch" label="主办机构" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="nationality" label="地区" data-code="ORIGION_LIST"></yu-xtable-column>
+            </yu-xtable>
+            <span slote="footer">
+                <yu-button @click="back">返回</yu-button>
+            </span>
+        </yu-dialog>
+
+    </yu-dialog>
+</div>
+<link rel="stylesheet" href="pages/dy/custGroupManage/groupDetail/groupDetail.css">

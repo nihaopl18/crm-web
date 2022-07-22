@@ -1,0 +1,63 @@
+<!--
+  @created by 张成龙 on 2019-2-16 18:18:12
+  @updated by
+  @description 楼宇按揭计算器
+-->
+<div>
+    <yu-row>
+        <yu-col :span="23">
+         <div class="yu-gridRightPanel" >
+  <yu-xform ref="searchFrom" v-model="searchformdata" label-width="160px" :height="grpFormHeight" >
+      <h1 style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;font-size:16px;margin-bottom: 20px;" borderStyle="border:0;">楼宇按揭计算器(仅供参考)</h1>
+      <yu-xform-group :column="2">
+          <yu-xform-item label="公积金贷款金额(元)" placeholder="公积金贷款金额(元)" ctype="input"  name="param1"  :rules="rules.all" ></yu-xform-item> 
+          <yu-xform-item label="商住房贷款金额(元)" placeholder="商住房贷款金额(元)" ctype="input"  name="param2"  :rules="rules.all" ></yu-xform-item> 
+          <yu-xform-item label="贷款期限(年)" placeholder="贷款期限(年)" ctype="input"  name="param3"  :rules="rules.all" ></yu-xform-item> 
+          <yu-xform-item label="还款周期" placeholder="还款周期"   ctype="select" name="param4" :rules="rules.allowBlank" :options="options" ></yu-xform-item>                  
+          <yu-xform-item label="首次还贷日" placeholder="首次还贷日"   ctype="datepicker" :editable="false" name="param5":rules="rules.allowBlank"  ></yu-xform-item>                  
+          <yu-xform-item label="还款方式" placeholder="还款方式"   ctype="select" name="param6" :rules="rules.allowBlank" :options="options1" ></yu-xform-item>                  
+          <yu-xform-item label="公积金贷款年利率(%)" placeholder="公积金贷款年利率(%)" ctype="num"  name="param7" :rules="rules.all"></yu-xform-item>                            
+          <yu-xform-item label="商住房贷款年利率(%)" placeholder="商住房贷款年利率(%)" ctype="num"  name="param8" :rules="rules.all"></yu-xform-item>                            
+        </yu-xform-group>
+    <div class="yu-grpButton">                                                                                      
+      <yu-button-group>                                                                                                
+        <yu-button icon="check" type="primary" @click="calculate">计算</yu-button>                                                        
+        <yu-button icon="yx-undo2" type="" @click="restSeacher">重置</yu-button>                                                  
+      </yu-button-group>                                                                                               
+    </div>               
+  </yu-xform>
+  </div>
+  </yu-col>
+    <yu-col :span="23">
+      <div class="yu-gridRightPanel" :style="{ 'height': (height -  200-416) + 'px' }">
+        <h1>计算结果</h1>
+        <yu-xform ref="refForm" label-width="140px" :height="grpFormHeight" v-model="formdata" :disabled="formDisabled">
+          <yu-xform-group :column="3">
+              <yu-xform-item label="贷款总额" ctype="num" name="resultMoney1" :readonly="readFlag"></yu-xform-item> 
+              <yu-xform-item label="支付息额" ctype="num" name="resultMoney2" :readonly="readFlag"></yu-xform-item> 
+              <yu-xform-item label="累计还款总额" ctype="num" name="resultMoney3" :readonly="readFlag"></yu-xform-item> 
+            </yu-xform-group>
+        </yu-xform>
+        </div>
+        <div class="yu-gridRightPanel" :style="{ 'height': (tableHeight + 25 ) + 'px' }">
+        <yu-xtable ref="refTable"  :data="tableData" selection-type="radio" :pageable="false" :height="tableHeight">
+            <yu-xtable-column label="还款期次" prop="table1" width="100"></yu-xtable-column>
+            <yu-xtable-column label="还款日期" prop="table2"  ></yu-xtable-column>
+            <yu-xtable-column label="应还本金" prop="table3"  ></yu-xtable-column>
+            <yu-xtable-column label="应付利息" prop="table4"  ></yu-xtable-column>
+            <yu-xtable-column label="本息合计" prop="table5"  ></yu-xtable-column>
+            <yu-xtable-column label="剩余本金" prop="table6"></yu-xtable-column>
+        </yu-xtable>
+      </div>
+     
+        <div property="footer"style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;" borderStyle="border:0;">
+            <br/>
+            <p style="font-size: 14px;color: #D83C3B">1.一次还本付息：借款人需在贷款到期日还清贷款本息，利随本清;</p>                          
+            <p style="font-size: 14px;color: #D83C3B">2.等额本息：借款人每期以相等的金额(分期还款额)偿还贷款，其中每期归还的金额包括每期应还利息、本金，按还款周期逐期归还，在贷款截止日期前全部还清本息; </p>                         
+            <p style="font-size: 14px;color: #D83C3B">3.等额本金：借款人每期须偿还等额本金，同时付清本期应付的贷款利息，而每期归还的本金等于贷款总额除以贷款期数。</p>                  
+            <br/>
+            <p style="font-size: 14px;color: #D83C3B">本计算器结果仅供参考!</p>
+        </div>
+    </yu-col>
+  </yu-row>
+  </div>

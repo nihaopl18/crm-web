@@ -1,0 +1,113 @@
+/**
+ * @created by chenlin on 2019-3-12 17:57:21
+ * @updated by
+ * @description 集卡组件
+ */
+/* .blank_template h1 {
+  text-align: center;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #20a0ff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 148px;
+  height: 148px;
+  line-height: 148px;
+  text-align: center;
+}
+.avatar {
+  width: 148px;
+  height: 148px;
+  display: block;
+} */
+.sign-up {
+  padding: 30px
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #20a0ff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+.pre-view {
+  height: 667px;
+  width: 375px;
+  margin: 60px auto;
+  padding-bottom: 10px;
+  /* box-sizing: border-box; */
+}
+.pre-view .title {
+    height: 46px;
+    line-height: 46px;
+    background-color: #000;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+}
+.pre-view .body-content {
+    background-color: #efeff4;
+    display: flex;
+    flex-direction: column;
+    height: calc(667px - 46px);
+    overflow-y: auto;
+    background-size: cover;
+}
+.pre-view .input-box {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+.pre-view .rule-box {
+  /* min-height: 317px; */
+  margin: 0 24px;
+  margin-top: 20px;
+  padding: 16px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.pre-view .rule-box .rule-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+.pre-view .rule-box .rule-sub-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+.pre-view .bannerImg {
+    height: 180px;
+    width: 100%;
+}

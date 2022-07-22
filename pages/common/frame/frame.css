@@ -1,0 +1,27 @@
+
+/**
+ * @created by taoting1 2019-03-17
+ * @updated by
+ * @description 首页框架
+ */
+#framePage .cust-type-select {
+ display: inline-block;
+ margin-right: 4px;
+ border-right: 1px solid rgba(255,255,255,.5);
+}
+#framePage .cust-type-select .el-icon-caret-top{
+  color: #fff;
+}
+#framePage .cust-type-select .el-input__inner{
+  height: 24px!important;
+}
+#framePage .yu-idxBody.yu-box-top .yu-content-oper-bank .cust-type-select {
+ border-right: 1px solid #D3DCE6;
+}
+#framePage .cust-type-select input{
+ width: 74px;
+ height: 24px;
+}
+#framePage .cust-type-select .el-icon-caret-top:before {
+ content: "\e603";
+}

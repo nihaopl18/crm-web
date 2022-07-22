@@ -1,0 +1,106 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-4 14:13:55.
+  @updated by
+  @description 潜在客户管理
+-->
+<div class="potentialCustManage">
+  <yu-xform ref="searchrefForm" v-model="queryFormdata" related-table-name="refTable" form-type="search" class="hide-form-search-btn" :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn">
+    <yu-xform-group :column="8">
+        <yu-xform-item placeholder="客户类型" name="custType" ctype="select" rules="required" data-code="CD0016"></yu-xform-item>
+      <yu-xform-item placeholder="客户号" name="custId"  ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="custName"  ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != undefined" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item placeholder="证件号码" name="certNo"  ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="归属机构" name="belongBrch" ctype="yufp-org-tree"></yu-xform-item>
+      <yu-xform-item placeholder="所属客户经理" name="belongMgr" ctype="yufp-mgr-selector"></yu-xform-item>
+    </yu-xform-group>
+    <!-- <div class="yu-grpButton" style="text-align: right;">
+        <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+        <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+      </div> -->
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-menu-1" @click="openViewFn" v-if="custviewButton">客户视图</yu-button> 
+      <yu-button icon="yx-star-empty" @click="setMyAttentionFn" v-if="setButton">设为我的关注客户</yu-button> 
+      <yu-button icon="plus" @click="addFn" v-if="addButton">新建</yu-button>
+      <yu-button icon="edit" @click="modifyFn" v-if="updButton">修改</yu-button>
+      <yu-button icon="delete" @click="deleteFn">删除</yu-button>
+      <yu-button icon="yx-download" @click="downloadTemplateFn" v-if="downloadButton">模板下载</yu-button>
+      <yu-upload class="select-cust-btn"
+            ref="upload"
+            :action="action"
+            :headers="headers"
+            :before-upload="beforeAvatarUpload"
+            :show-file-list="false"
+            :on-success="importBatchSuccessFn"
+            :on-error="uploadErrorFn">
+            <yu-button icon="yx-upload" v-if="uploadButton">批量导入</yu-button>
+          </yu-upload>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" class="permitSelect" @contextmenu.prevent.stop.native row-number :data-url="dataUrl" @row-dblclick="rowDblclickFn" selection-type="checkbox" :default-load="false">
+    <yu-xtable-column label="客户类型" prop="custType"  data-code="CD0016" width="100"></yu-xtable-column>
+    <yu-xtable-column label="客户号" prop="custId" width="100"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+    <yu-xtable-column label="证件类型" prop="certType"  data-code="CD0011" width="100"></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="certNo" ></yu-xtable-column>
+    <yu-xtable-column label="归属机构" prop="orgName" width="180"></yu-xtable-column>
+    <yu-xtable-column label="所属客户经理" prop="userName" width="150"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 关注类型选择 -->
+  <yu-xdialog title="关注类型选择" :visible.sync="attentTypevisible" width="540px">
+      <yu-xform ref="attentFormRef" v-model="attentFormdata">
+        <yu-xform-group :column="1">
+          <yu-xform-item label="选择关注类型" name="attentType" ctype="select" data-code="ATTENT_TYP_TST"></yu-xform-item>
+        </yu-xform-group>
+        <div class="yu-grpButton">
+          <yu-button type="primary" @click="saveMyAttentionCustFn">确定</yu-button>
+        </div>
+      </yu-xform>
+    </yu-xdialog>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="130px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="客户类型" name="custType" ctype="select" :disabled="viewType == 'EDIT'" data-code="CD0016" rules="required" @change="custTpChangeFn"></yu-xform-item>
+        <yu-xform-item label="客户名称" name="custName" rules="required" :disabled="false" ctype="input"></yu-xform-item>
+        <yu-xform-item label="证件类型" name="certType"  :hidden="toCorporate" ctype="select" data-code="CD0348"></yu-xform-item>
+        <yu-xform-item label="证件类型" name="certType"  :hidden="!toCorporate" ctype="select" data-code="CD0349"></yu-xform-item>
+        <yu-xform-item label="证件类型" name="certType"  :hidden="formdata.custType != ''" ctype="select" data-code="CD0011"></yu-xform-item>
+        <yu-xform-item label="证件号码" name="certNo"   ctype="input"></yu-xform-item>
+        <yu-xform-item label="联系人名称" name="contMan" ctype="input" :disabled="viewType == 'EDIT'" :hidden="!toCorporate" rules="justifyExitRule"></yu-xform-item>
+        <yu-xform-item label="联系人证件类型" name="contCertType" :disabled="viewType == 'EDIT'" :hidden="!toCorporate" ctype="select" data-code="CD0348"></yu-xform-item>
+        <yu-xform-item label="联系人证件号码" name="contCertNo" :disabled="viewType == 'EDIT'" :hidden="!toCorporate" ctype="input"></yu-xform-item>
+        <yu-xform-item label="联系人手机" name="contTelNo" :hidden="!toCorporate" rules="mobile" ctype="input"></yu-xform-item>
+        <yu-xform-item label="联系手机" name="phoneNo" :hidden="toCorporate" rules="mobile" ctype="input"></yu-xform-item>
+        <yu-xform-item label="联系地址" name="contAddr" ctype="textarea" :rows="1"></yu-xform-item>
+        <yu-xform-item label="行业" name="indusCd" ctype="select" :hidden="!toCorporate" data-code="CD0070"></yu-xform-item>
+        <yu-xform-item label="职业" name="indivOcc" :hidden="toCorporate" ctype="select" data-code="CD0010"></yu-xform-item>
+        <yu-xform-item label="工作单位" name="workUnit" :hidden="toCorporate" ctype="input"></yu-xform-item>
+        <yu-xform-item label="客户来源渠道" name="sourceChannel" ctype="select" data-code="CST_S_CHANEL"></yu-xform-item>
+        <yu-xform-item label="推荐给机构" name="belongBrch" ctype="yufp-org-tree"  :hidden="isMgrHidden" :disabled="viewType == 'EDIT'" :raw-value="comProp.orgName" @select-fn="selectOrgFn"></yu-xform-item>
+        <yu-xform-item label="推荐给客户经理" name="belongMgr" ctype="yufp-mgr-selector" :hidden="isMgrHidden" :disabled="viewType == 'EDIT'" :raw-value="comProp.mgrName" @select-fn="selectMgrFn" :params="mgrParam"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>
+
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

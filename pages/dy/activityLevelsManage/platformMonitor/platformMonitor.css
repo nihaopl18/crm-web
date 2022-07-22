@@ -1,0 +1,107 @@
+/**
+ * @created by zhangkun6 on 2021-9-13 10:12:23
+ * @updated by
+ * @description 活动量
+ */
+
+.activity-levels {
+    background: #fff;
+}
+
+.activity-levels .option-btn {
+    padding: 16px 20px;
+    background: #fff;
+    text-align: right;
+}
+
+.activity-levels .one-month-data {
+    height: 202px;
+    background: #FFFFFF;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 24px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.activity-levels .one-month-data>p {
+    font-size: 16px;
+    color: #303133;
+    line-height: 24px;
+    font-weight: bold
+}
+
+.activity-levels .one-month-data .el-col {
+    text-align: center;
+    margin-top: 44px;
+}
+
+.activity-levels .one-month-data .el-col>p:first-child {
+    font-size: 14px;
+    color: #909399;
+}
+
+.activity-levels .one-month-data .el-col>p:nth-child(2) {
+    font-size: 24px;
+    color: #303133;
+    font-weight: bold;
+    line-height: 32px;
+}
+
+.activity-levels .one-month-data .el-col>p:nth-child(2) i {
+    font-size: 14px;
+}
+
+.activity-levels .one-month-data .el-col>p:nth-child(3) i {
+    font-size: 12px;
+    /* color: #606266; */
+    line-height: 20px
+}
+
+.activity-levels .data-chart .el-col>div {
+    background: #fff;
+    height: 555px;
+    ;
+}
+
+.activity-levels .data-chart .el-col p {
+    padding: 24px;
+    font-size: 16px;
+    color: #303133;
+    line-height: 24px;
+}
+
+.activity-levels .functional-model {
+    margin-top: 16px;
+    background: #fff;
+    padding: 24px;
+}
+
+.activity-levels .functional-model .time-selection {
+    display: flex;
+    align-items: center;
+    margin-bottom: 42px;
+}
+
+.activity-levels .functional-model .time-selection>span {
+    font-size: 16px;
+    color: #303133;
+    line-height: 24px;
+    font-weight: bold;
+}
+
+.activity-levels .functional-model .time-selection .date {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #303133;
+    line-height: 22px;
+}
+
+.activity-levels .red {
+    color: #E30A2A
+}
+
+.activity-levels .green {
+    color: #13BF4F;
+}

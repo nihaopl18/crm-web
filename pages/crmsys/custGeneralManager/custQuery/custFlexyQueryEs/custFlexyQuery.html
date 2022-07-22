@@ -1,0 +1,22 @@
+<!--
+  @created by lixt1 on 2020-12-24 15:39:06
+  @updated by
+  @description 灵活查询
+-->
+<div id="custFlexyQuery">
+  <link rel="stylesheet" type="text/css" href="pages/crmsys/custGeneralManager/custQuery/custFlexyQueryEs/custFlexyQuery.css"/>
+  <yufp-cust-flexy-query :cust-hashcode="custFlexyCode" :btndisabled.sync="btnDisabled" :show-btn="true" :query-btn="true"
+	 :save-as-cust-btn="true" :save-btn="true" :reset-btn="true" :new-func="true">
+  </yufp-cust-flexy-query>
+</div>
+
+<style>
+  /* 以下设置input type=number标签，不展示上调下调按钮 */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+</style>

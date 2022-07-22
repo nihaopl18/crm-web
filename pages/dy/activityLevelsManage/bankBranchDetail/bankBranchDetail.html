@@ -1,0 +1,43 @@
+<!--
+  @created by zhangkun6 on 2021-9-17 17:10:38
+  @updated by
+  @description 银行分支详情
+-->
+<div class="bank-branch-detail">
+  <yu-xtable :data-url="dataUrl" :base-params="baseParam" :border="false" style="width: 100%">
+    <yu-xtable-column prop="rank" label="名次"></yu-xtable-column>
+    <yu-xtable-column prop="name" label="机构名称"></yu-xtable-column>
+    <yu-xtable-column prop="count" label="待办数"></yu-xtable-column>
+    <yu-xtable-column label="操作">
+      <template slot-scope="scope">
+        <yu-buttoon type="text" @click="detailFn(scope.row)">查看</yu-buttoon>
+      </template>
+    </yu-xtable-column>
+  </yu-xtable>
+  <yu-dialog title="待办明细" append-to-body :visible.sync="detailVisible" class="detailBox" min-width="920" :before-close="handleClose">
+    <yu-xtable ref="detailTable" :data-url="dataUrl" :default-load="false" base-params="" style="width: 100%" max-height="550">
+      <yu-xtable-column prop="todoWorkId" label="编号"></yu-xtable-column>
+      <yu-xtable-column prop="todoWorkType" label="待办类型" data-code="DY0009"></yu-xtable-column>
+      <yu-xtable-column prop="createDate" label="创建日期"></yu-xtable-column>
+      <yu-xtable-column prop="startDate" label="截止日期"></yu-xtable-column>
+      <yu-xtable-column label="状态">
+        <template slot-scope="scope">
+        </template>
+      </yu-xtable-column>
+      <yu-xtable-column prop="todoWorkContent" label="详情"></yu-xtable-column>
+      <yu-xtable-column prop="creatorName" label="客户经理"></yu-xtable-column>
+    </yu-xtable>
+  </yu-dialog>
+</div>
+<style>
+  .bank-branch-detail {
+    padding: 24px;
+  }
+
+  .bank-branch-detail .title {
+    font-size: 16px;
+    color: #303133;
+    line-height: 24px;
+    font-weight: bold;
+  }
+</style>

@@ -1,0 +1,26 @@
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2018-12-27 14:30:15.
+  @updated by
+  @description 加分明细信息
+-->
+
+<div>
+  <yu-xform related-table-name="refTable" form-type="search" class="yu-customer-query" label-width="80px">
+    <yu-xform-group :column="3">
+      <yu-xform-item placeholder="账户编号" name="accountNo" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="账户名称" name="accountName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户号" name="custId" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="交易日期开始" name="jyDateStart" ctype="datepicker"></yu-xform-item>
+      <yu-xform-item placeholder="交易日期结束" name="jyDateEnd" ctype="datepicker"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+    <yu-xtable-column prop="accountNo" label="账户编号"></yu-xtable-column>
+    <yu-xtable-column prop="accountName" label="账户名称"></yu-xtable-column>
+    <yu-xtable-column prop="balance" label="增加积分数"></yu-xtable-column>
+    <yu-xtable-column prop="ex_serial" label="加分类型"></yu-xtable-column>
+    <yu-xtable-column prop="jydate" label="交易日期"></yu-xtable-column>
+    <yu-xtable-column prop="vallid" label="有效期"></yu-xtable-column>
+    <yu-xtable-column prop="transState" label="入账状态"></yu-xtable-column>
+  </yu-xtable>
+</div>

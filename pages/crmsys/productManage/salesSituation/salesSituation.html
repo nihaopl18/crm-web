@@ -1,0 +1,43 @@
+<!-- 
+  @Created by 闫天一 yanty1@yusys.com.cn on 2019-2-12 18:05:57.
+  @updated by
+  @description 产品视图-产品销售情况
+-->
+<div>
+    <yu-row>
+        <yu-xform related-table-name="refTable" form-type="search">
+          <yu-xform-group :column="2">
+            <yu-xform-item placeholder="统计日期" name="dataDate" ctype="datepicker" format="yyyyMM"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+  
+        <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+          <yu-xtable-column label="统计日期" prop="dataDate" width="250"></yu-xtable-column>
+          <yu-xtable-column label="持有产品客户数" prop="prodNum" width="200"></yu-xtable-column>
+          <yu-xtable-column label="销售规模" prop="saleScale" ></yu-xtable-column>
+          <!-- <yu-xtable-column label="过去连续12月总规模" prop="saleScaleSum" width="200"></yu-xtable-column> -->
+        
+        </yu-xtable>
+    </yu-row>
+
+    <yu-row>
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          持有产品客户数量趋势
+        </div>
+        <div>
+          <yu-echarts :option="option1" width="1000px" height="400px"></yu-echarts>
+        </div>
+      </div>
+    </yu-row>
+    <yu-row>
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            产品销售规模趋势
+        </div>
+        <div>
+          <yu-echarts :option="option2" width="1000px" height="400px"></yu-echarts>
+        </div>
+      </div>
+    </yu-row>
+  </div>

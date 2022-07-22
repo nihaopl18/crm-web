@@ -1,0 +1,29 @@
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2018-12-27 09:48:55.
+  @updated by
+  @description 客户基本信息
+-->
+<div >
+  <h2>客户基本信息</h2>
+  <yu-xform label-width="120px" ref="refForm" v-model="formdata" disabled class="yu-form-gap">
+    <yu-xform-group>
+      <yu-xform-item label="客户状态" ctype="select" name="customType" data-code="CERT_TYPE"></yu-xform-item>
+      <yu-xform-item label="客户号" ctype="input" name="customId"></yu-xform-item>
+      <yu-xform-item label="客户姓名" ctype="input" name="customName"></yu-xform-item>
+      <yu-xform-item label="证件类型" ctype="select" name="certType" data-code="CERT_TYPE"></yu-xform-item>
+      <yu-xform-item label="证件号码" ctype="input" name="certNo"></yu-xform-item>
+      <yu-xform-item label="出生日期" ctype="timepicker" name="time"></yu-xform-item>
+      <yu-xform-item label="性别" ctype="input" name="sex"></yu-xform-item>
+      <yu-xform-item label="职业类型" ctype="select" name="careerType" data-code="CERT_TYPE"></yu-xform-item>
+      <yu-xform-item label="职务" ctype="input" name="job"></yu-xform-item>
+      <yu-xform-item label="工作单位" ctype="input" name="company"></yu-xform-item>
+      <yu-xform-item label="手机" name="telephone"></yu-xform-item>
+      <yu-xform-item label="邮箱" name="userEmail"></yu-xform-item>
+      <yu-xform-item label="联系人名称" ctype="input" name="contactName"></yu-xform-item>
+      <yu-xform-item label="联系人称谓" ctype="input" name="appellation"></yu-xform-item>
+      <yu-xform-item label="邮政编码" ctype="input" name="postcode"></yu-xform-item>
+      <yu-xform-item label="传真" ctype="input" name="fax"></yu-xform-item>
+      <yu-xform-item label="联系电话" ctype="input" name="phone"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+</div>

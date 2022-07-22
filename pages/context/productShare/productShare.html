@@ -1,0 +1,56 @@
+<!-- 
+  @Created by zhanghan zhanghan3@yusys.com.cn on 2019-5-17 15:13:45.
+  @updated by
+  @description 产品成本分摊
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="产品名称" name="productName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="数据日期" name="dataDate" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group> 
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+      <yu-button icon="yx-file-excel" @click="exportFn">导出</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+    <yu-xtable-column label="id" prop="id" width="120"></yu-xtable-column>
+    <yu-xtable-column label="产品名称" prop="productName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="成本汇总" prop="totalCost" width="100"></yu-xtable-column>
+    <yu-xtable-column label="费用汇总" prop="totalSpend" width="100"></yu-xtable-column>
+    <yu-xtable-column label="积分汇总" prop="totalIntegral" width="100"></yu-xtable-column>
+    <yu-xtable-column label="积分费用汇总" prop="totalIntegralCost" width="100"></yu-xtable-column>
+    <yu-xtable-column label="卡券数量汇总" prop="totalCardNum" width="100"></yu-xtable-column>
+    <yu-xtable-column label="卡券费用汇总" prop="totalCardCost" width="100"></yu-xtable-column>
+    <yu-xtable-column label="礼品数量汇总" prop="totalGiftNum" width="100"></yu-xtable-column>
+    <yu-xtable-column label="礼品费用汇总" prop="totalGiftCost" width="100"></yu-xtable-column>
+    <yu-xtable-column label="数据日期" prop="dataDate"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="id" name="id" ctype="input"></yu-xform-item>
+        <yu-xform-item label="产品名称" name="productName" ctype="input"></yu-xform-item>
+        <yu-xform-item label="成本汇总" name="totalCost" ctype="number"></yu-xform-item>
+        <yu-xform-item label="费用汇总" name="totalSpend" ctype="number"></yu-xform-item>
+        <yu-xform-item label="积分汇总" name="totalIntegral" ctype="number"></yu-xform-item>
+        <yu-xform-item label="积分费用汇总" name="totalIntegralCost" ctype="number"></yu-xform-item>
+        <yu-xform-item label="卡券数量汇总" name="totalCardNum" ctype="num"></yu-xform-item>
+        <yu-xform-item label="卡券费用汇总" name="totalCardCost" ctype="number"></yu-xform-item>
+        <yu-xform-item label="礼品数量汇总" name="totalGiftNum" ctype="num"></yu-xform-item>
+        <yu-xform-item label="礼品费用汇总" name="totalGiftCost" ctype="number"></yu-xform-item>
+        <yu-xform-item label="数据日期" name="dataDate" ctype="input"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

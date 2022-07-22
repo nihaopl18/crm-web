@@ -1,0 +1,23 @@
+<!-- 
+  @Created by raop
+  @updated by
+  @description 贷款业绩分配审批
+-->
+<div>
+  <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+
+    <yu-xtable ref="yutable2" row-number :base-params="params" :data-url="dataUrl2" :default-load="false">
+      <yu-xtable-column label="借据号" prop="billNo"></yu-xtable-column>
+      <yu-xtable-column label="客户号" prop="custId"></yu-xtable-column>
+      <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+      <yu-xtable-column label="客户经理号" prop="managerId"></yu-xtable-column>
+      <yu-xtable-column label="客户经理名称" prop="managerName"></yu-xtable-column>
+      <yu-xtable-column label="生效日期" prop="effectDate"></yu-xtable-column>
+      <yu-xtable-column label="失效日期" prop="expirateDate"></yu-xtable-column>
+      <yu-xtable-column label="业绩分配比例" prop="distrRate"></yu-xtable-column>
+      <yu-xtable-column label="分配人" prop="operUserName"></yu-xtable-column>
+      <yu-xtable-column label="分配时间" prop="operTime"></yu-xtable-column>
+    </yu-xtable>
+
+
+</div>

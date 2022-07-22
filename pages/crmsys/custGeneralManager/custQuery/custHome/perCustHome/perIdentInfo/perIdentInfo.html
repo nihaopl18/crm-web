@@ -1,0 +1,81 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-1-21 15:39:35.
+  @updated by
+  @description 证件信息
+-->
+<div id="perIdentInfo">
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+      <!-- <yu-button icon="yx-file-excel" @click="updateHisFn" v-if="hisBtn">修改历史</yu-button> -->
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true" @row-dblclick="rowDblclick">
+     
+   
+      <yu-xtable-column label="主证件标志" prop="mainIdentFlg" width="120" data-code="CD0238"></yu-xtable-column>
+      <yu-xtable-column label="证件类型" prop="certType" width="120" data-code="CD0348"></yu-xtable-column>
+      <yu-xtable-column label="证件号码" prop="certNo" width="150"></yu-xtable-column>
+      <yu-xtable-column label="签发日期" prop="effectDate" width="120"></yu-xtable-column>
+      <yu-xtable-column label="失效日期" prop="expiredDate" width="120"></yu-xtable-column>
+      <yu-xtable-column label="有效标志" prop="effectFlg" width="120" data-code="CD0256"></yu-xtable-column>
+      <yu-xtable-column label="发证机关" prop="organName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="创建人名称" prop="userName" width="120" data-code="CERT_TYPE"></yu-xtable-column>
+      <yu-xtable-column label="创建时间" prop="cratDt" width="100"></yu-xtable-column>
+      <yu-xtable-column label="来源系统" prop="lastChgSys" width="100"></yu-xtable-column>
+
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+          <yu-xform-item label="客户标识" name="custId" ctype="input" hidden=true></yu-xform-item>
+          <yu-xform-item label="主证件标志" name="mainIdentFlg" :rules="rule.mainIdentFlg"  ctype="select" data-code="CD0238"></yu-xform-item>
+          <yu-xform-item label="证件类型" name="certType" :rules="rule.certType"  ctype="select" data-code="CD0348"></yu-xform-item>
+          <yu-xform-item label="证件号码" name="certNo" :rules="rule.certNo"  ctype="input"></yu-xform-item>
+          <yu-xform-item label="签发日期" name="effectDate" ctype="datepicker" :rules="rule.effectDate"  ></yu-xform-item>
+          <yu-xform-item label="失效日期" name="expiredDate" ctype="datepicker" :rules="rule.expiredDate"></yu-xform-item>
+          <yu-xform-item label="有效标志" name="effectFlg" ctype="select" data-code="CD0256"></yu-xform-item>
+          <yu-xform-item label="发证机关" name="organName" ctype="textarea":colspan="24" :rules="rule.organName" ></yu-xform-item>
+          <yu-xform-item label="证件登记地址" name="identRegAddr" ctype="textarea":colspan="24" :rules="rule.identRegAddr" ></yu-xform-item>
+        <!--  <yu-xform-item label="创建人编号" name="cratUsrId" rules="required" ctype="select" data-code="CERT_TYPE" hidden=true></yu-xform-item>
+          <yu-xform-item label="创建人名称" name="cratUsr" rules="required" ctype="select" data-code="CERT_TYPE" hidden=true></yu-xform-item>
+          <yu-xform-item label="创建时间" name="cratDt" rules="required" ctype="datepicker" hidden=true></yu-xform-item>
+          <yu-xform-item label="创建人机构编号" name="cratOrgId" rules="required" ctype="input" hidden=true></yu-xform-item>
+          <yu-xform-item label="创建人机构名称" name="cratOrgName" rules="required" ctype="input" hidden=true></yu-xform-item>
+        -->
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应     修改历史
+      width="650px" height="380px" -->
+      <yu-xdialog :title="hisviewTitle[hisviewType]" :visible.sync="hisdialogVisible" width="750px">
+         
+          <yu-xtable ref="hisrefTable" row-number :data-url="hisdataUrl"  :base-params="hisParams">
+           <!-- <yu-xtable-column label="修改项目" prop="" width="120"></yu-xtable-column>-->
+            <yu-xtable-column label="修改前内容" prop="chgBefValueValue" ></yu-xtable-column>
+            <yu-xtable-column label="修改后内容" prop="chgAftValueValue" ></yu-xtable-column>
+            <yu-xtable-column label="修改人" prop="userName" ></yu-xtable-column>
+            <yu-xtable-column label="修改人机构" prop="orgName" ></yu-xtable-column>
+            <yu-xtable-column label="修改时间" prop="chgDt" ></yu-xtable-column>  
+          </yu-xtable>
+        </yu-xdialog>
+</div>

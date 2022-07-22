@@ -1,0 +1,71 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-28 14:56:41.
+  @updated by
+  @description 客户接触信息
+-->
+<div>
+  <yu-tabs v-model="activeName" @tab-click="handleClick">
+      <yu-tab-pane label="接触信息" name="touch">
+        <yu-xform related-table-name="refTable" form-type="search">
+          <yu-xform-group :column="4">
+          </yu-xform-group>
+        </yu-xform>
+        <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="document" @click="infoFn">详情</yu-button>
+          </yu-button-group>
+        </div>
+        <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+          <yu-xtable-column label="客户编号" prop="custId" width="120"></yu-xtable-column>
+          <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+          <yu-xtable-column label="客户类型" prop="custType" width="120" data-code="CD0016"></yu-xtable-column>
+          <yu-xtable-column label="任务安排人" prop="arangeName" width="120"></yu-xtable-column>
+          <yu-xtable-column label="接触状态" prop="visitStat" width="120" data-code="CD0331"></yu-xtable-column>
+          <yu-xtable-column label="接触方式" prop="visitType" width="120" data-code="CD0332"></yu-xtable-column>
+          <yu-xtable-column label="本次接触成效" prop="visitEffect" width="120"></yu-xtable-column>
+          <yu-xtable-column label="接触开始时间" prop="visitStartDate" width="100"></yu-xtable-column>
+          <yu-xtable-column label="接触结束时间" prop="visitEndDate" width="120"></yu-xtable-column>
+          <yu-xtable-column label="计划下次接触时间" prop="nextVisitDate" width="120"></yu-xtable-column>
+          <yu-xtable-column label="计划下次接触方式" prop="nextVisitType" width="120" data-code="CD0332"></yu-xtable-column>
+          <yu-xtable-column label="联系电话" prop="phone" width="120"></yu-xtable-column>
+          <yu-xtable-column label="客户联系和拜访情况" prop="visitNote" width="150"></yu-xtable-column>
+          <yu-xtable-column label="本次接触目的" prop="visitAims" width="120"></yu-xtable-column>
+          <yu-xtable-column label="接触人" prop="visitorName" width="130"></yu-xtable-column>
+        </yu-xtable>
+<!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+    width="650px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+          <yu-xform ref="refForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+              <yu-xform-item label="visitId" :hidden="true"  name="visitId" ctype="input"></yu-xform-item>
+              <yu-xform-item label="客户编号" :hidden="true" name="custId" ctype="input"></yu-xform-item>
+              <yu-xform-item label="客户名称" name="custName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="客户类型" name="custType" ctype="select" data-code="CD0016"></yu-xform-item>
+              <yu-xform-item label="接触状态" name="visitStat" ctype="select" data-code="CD0331"></yu-xform-item>
+              <yu-xform-item label="接触方式" name="visitType" ctype="select" data-code="CD0332"></yu-xform-item>
+              <yu-xform-item label="接触开始时间" name="visitStartDate" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="接触结束时间" name="visitEndDate" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="计划下次接触时间" name="nextVisitDate" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="计划下次接触方式" name="nextVisitType" ctype="select" data-code="CD0332"></yu-xform-item>
+              <yu-xform-item label="任务安排人" name="arangeName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="接触人" name="visitorName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="联系电话" name="phone" ctype="input"></yu-xform-item>
+              <yu-xform-item label="本次接触目的" name="visitAims" ctype="textarea" :rows="3" :colspan="24"></yu-xform-item>
+              <yu-xform-item label="本次接触成效" name="visitEffect" ctype="textarea" :rows="3" :colspan="24"></yu-xform-item>
+              <yu-xform-item label="客户联系和拜访情况" name="visitNote" ctype="textarea" :rows="3" :colspan="24"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+              <yu-button v-show="visitBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+            </div>
+          </yu-xform>
+        </yu-xdialog>
+    </yu-tab-pane>
+  </yu-tabs>
+</div>

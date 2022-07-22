@@ -1,0 +1,71 @@
+<!--
+  @created by 冉珣 on 2021-10-18 13:59:05
+  @updated by
+  @description 客户分层
+-->
+<div class="cust_stratification">
+    <yu-row>
+        <yu-col :span="20">
+            <yu-xform ref="refSearchForm" label-width="120px" v-model="searchForm">
+                <yu-xform-group>
+                    <yu-xform-item label="" ctype="custom" colspan="10">
+                        <yu-input placeholder="请输入客户名称/客户ECIF号" v-model="searchForm.searchKeywords">
+                            <yu-button slot="append" icon="search" @click="searchListCust"></yu-button>
+                        </yu-input>
+                    </yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+        </yu-col>
+        <!-- <yu-col :span="4" style="text-align: right">
+      <yu-button icon="el-icon-yx-equalizer" type="primary" @click="optionFn">批量编辑</yu-button>
+    </yu-col> -->
+    </yu-row>
+    <yu-xtable ref="listTable" :border="false" reserve-selection row-key="custId" :data-url="dataUrl" :default-load="false" style="margin-top: 24px">
+        <yu-xtable-column prop="custId" label="ECIF号"></yu-xtable-column>
+        <yu-xtable-column prop="custName" label="客户姓名">
+            <template slot-scope="scope">
+        <el-link type="primary" @click="toCust360View(scope.row)">{{scope.row.custName}}</el-link>
+      </template>
+        </yu-xtable-column>
+        <yu-xtable-column prop="aumGrade" label="客户等级" data-code="CUST_GRADE"></yu-xtable-column>
+        <yu-xtable-column prop="orgName" label="归属机构"></yu-xtable-column>
+        <yu-xtable-column prop="status" label="分层状态" data-code="ASSIGN">
+            <template slot-scope="scope">
+                <!-- <span>{{ scope.row.trustStat ? scope.row.trustStat == '01' ? '草稿' : scope.row.trustStat == '02' ? '审批中' : scope.row.trustStat == '03' ? '退回' : scope.row.trustStat == '04' ? '生效' ：'已分配' ：'已分配' }}</span> -->
+                <span v-if="!scope.row.status">已分配</span>
+                <span v-if="scope.row.status == '01' ">草稿</span>
+                <span v-if="scope.row.status == '02' ">审批中</span>
+                <span v-if="scope.row.status == '03' ">驳回</span>
+                <span v-if="scope.row.status == '04' ">生效</span>
+                <span v-if="scope.row.status == '05' ">撤回</span>
+            </template>
+        </yu-xtable-column>
+        <yu-xtable-column label="操作">
+            <template slot-scope="scope">
+        <yu-link v-if="scope.row.status != '02'" type="danger" :underline="false" @click="optionFn(scope.row)">编辑</yu-link>
+        <yu-link v-if="scope.row.status == '02'" type="danger" :underline="false" @click="withdrawfn(scope.row.gradeinstanceid)">撤回</yu-link>
+
+      </template>
+        </yu-xtable-column>
+    </yu-xtable>
+    <!-- 变更操作：客户分层-->
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" title="客户等级编辑" :visible.sync="optionDialogVisible" size="tiny" :before-close="handleOptionClose">
+        <yu-xform ref="refDialogForm" label-width="120px" v-model="optionForm" :inline="false" label-position="top">
+            <yu-xform-group>
+                <yu-xform-item label="客户等级" ctype="select" data-code="CUST_GRADE" name="aftModGrade" colspan="24" rules="required"></yu-xform-item>
+            </yu-xform-group>
+        </yu-xform>
+        <span slot="footer" class="dialog-footer">
+      <yu-button @click="optionDialogVisible = false">取 消</yu-button>
+      <yu-button type="primary" id="savebc" @click="saveFn">保 存</yu-button>
+      <yu-button type="primary" id="confirmqd" @click="confirmFn">确 定</yu-button>
+    </span>
+    </yu-dialog>
+    <!-- 工作报告审批流程提交组件-->
+    <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" @endrefresh="refreshfn" :common-params="wfCommonParams">
+</div>
+<style>
+    .cust_stratification {
+        padding: 30px 20px;
+    }
+</style>

@@ -1,0 +1,220 @@
+<!--
+  @created by chenlin on 2019-3-14 10:07:13
+  @updated by
+  @description 抽奖
+-->
+<div class='yu-page pc' style="width: 100%;">
+  <yu-collapse :accordion="false" v-model="collapseName0">
+    <yu-collapse-item title="输入" name="1">
+    </yu-collapse-item>
+    <yu-collapse-item title="操作" name="2">
+      <yu-xform v-model="formData" :inline="false" label-position="right" label-width="120px" :show-message="true" :disabled="false"
+        :groupColumn="2" ref="luckForm">
+        <yu-xform-group :column="2">
+          <yu-xform-item ctype="input" name="avtivityTitle" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="不超过50个字"
+          :rows="1" :readonly="false" label="活动标题" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="select" name="displayType" placeholder="请选择" :multiple="false" :disabled="false" :multiple-limit="0" :filterable="false"
+             label="素材类型" data-code="DISPLAY_TYPE"  rules="required"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="标题素材" colspan="24" name="activityStartPic"  v-if="formData.displayType=='1' || formData.displayType=='2'">
+            <yu-upload class="avatar-uploader"
+              :action="uploadAction"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </yu-upload>
+          </yu-xform-item>
+          <yu-xform-item ctype="select" name="activityStartPic" :options="displayList" type="textarea" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1"
+          :rows="3" :readonly="false" label="文章" colspan="24" v-if="formData.displayType=='3'"></yu-xform-item>
+          <yu-xform-item ctype="datepicker" name="startTime" type="datetime" :readonly="false" :disabled="false" :editable="true" :clearable="true"
+            placeholder="选择时间" align="left" label="活动开始" :picker-options="startTime"></yu-xform-item>
+          <yu-xform-item ctype="datepicker" name="endTime" type="datetime" :readonly="false" :disabled="false" :editable="true" :clearable="true"
+            placeholder="选择时间" align="left" label="活动结束" :picker-options="endTime"></yu-xform-item>
+          <yu-xform-item ctype="yufp-org-tree" label="支持机构" name="activityOrg" :params="paramsOrg"></yu-xform-item>
+          <yu-xform-item ctype="switch" name="ifIdentOrg" on-color="green" off-color="blue" on-text="ON" off-text="OFF" :width="55" :disabled="false" 
+            on-value="true" off-value="false" :allow-focus="false" label="同机构活动" ></yu-xform-item>
+          <yu-xform-item ctype="input" name="routeUrl" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="不超过200个字"
+            :rows="1" :readonly="false" label="路由地址" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="报名必填" colspan="24" name="mastItems">
+            <yu-tag :label="item.label" type="primary"  v-for="item in mustItems" :key="item.key" :closable="false" :hit="false" :close-transition="false">{{item.label}}</yu-tag>
+            <yu-button draggable="true" label="添加" icon="yx-plus" size="small" :disabled="false" :loading="false" native-type="undefined"
+              @click="custInfoAddFn">
+              添加
+            </yu-button>
+          </yu-xform-item>
+          <yu-xform-item ctype="select" name="luckType" placeholder="请选择" :multiple="false" :disabled="false" :multiple-limit="0" :filterable="false"
+             label="抽奖形式" data-code="LUCK_TYPE"></yu-xform-item>
+          <yu-xform-item ctype="input" name="luckNumByDay" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" :rows="1"
+            :readonly="false" label="每天抽奖次数"  placeholder="每天最高抽奖次数" ></yu-xform-item>
+          <yu-xform-item ctype="input" name="luckNumByAct" type="number" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1"
+            placeholder="单人一次活动中最多中奖几次" :rows="1" :readonly="false" label="最多中奖"></yu-xform-item>
+          <yu-xform-item ctype="input" name="luckRate" type="number" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1"
+            placeholder="综合中奖概率，如3%则填0.03" :rows="1" :readonly="false" label="中奖概率"></yu-xform-item>
+          <yu-xform-item ctype="switch" name="firstReWard" on-color="green" off-color="blue" on-text="ON" off-text="OFF" :width="55" :disabled="false"
+            on-value="true" off-value="false" :allow-focus="false" label="奖项一" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="input" name="firstName" type="text" :maxlength="20" :minlength="0" :max="0" :min="0" :step="1" placeholder=""
+            :rows="1" :readonly="false" label="奖项名称" v-if="formData.firstReWard=='true'"></yu-xform-item>
+          <yu-xform-item ctype="radio" name="prodType1"   placeholder="请选择商品类型" :rows="1" 
+            :readonly="false" label="奖品类型" colspan="24" data-code="RELATE_PROD_TYPE" v-if="formData.firstReWard=='true'"></yu-xform-item>
+          <yu-xform-item ctype="yufp-prod-selector" name="firstRewardName" v-if="formData.prodType1=='prod'" placeholder="请选择金融产品"
+              :rows="1" :readonly="false" label="金融产品" colspan="12" ></yu-xform-item>
+          <yu-xform-item ctype="yufp-goods-selector" name="firstRewardName" v-if="formData.prodType1=='goods'"  placeholder="请选择实物商品"
+              :rows="1" :readonly="false" label="实物商品" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="yufp-vituer-selector" name="firstRewardName"  v-if="formData.prodType1=='coupon'" placeholder="请选择虚拟票券"
+              :rows="1" :readonly="false" label="虚拟票券" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="input" name="integralNum" v-if="formData.prodType1=='integral'"  placeholder="请输入奖励分数"
+              :rows="1" :readonly="false" label="分数" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="奖品图片" colspan="24" name="fistPic" v-if="formData.firstReWard=='true'">
+            <yu-upload class="avatar-uploader"
+              :action="uploadAction"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess0"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl1" :src="imageUrl1" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </yu-upload>
+          </yu-xform-item>
+          <yu-xform-item ctype="input" name="firstRewardNum" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="奖项分数，数量多中奖概率大"
+            :rows="1" :readonly="false" label="奖品数量" v-if="formData.firstReWard=='true'"></yu-xform-item>
+          <yu-xform-item ctype="input" name="firstLimit" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="每天可中出的奖品上限"
+            :rows="1" :readonly="false" label="每日上限" v-if="formData.firstReWard=='true'"></yu-xform-item>
+          <yu-xform-item ctype="switch" name="secondReward" on-color="green" off-color="blue" on-text="ON" off-text="OFF" :width="55" :disabled="false"
+            on-value="true" off-value="false" :allow-focus="false" label="奖项二" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="input" name="secondName" type="text" :maxlength="20" :minlength="0" :max="0" :min="0" :step="1" placeholder=""
+            :rows="1" :readonly="false" label="奖项名称" v-if="formData.secondReward=='true'"></yu-xform-item>
+          <yu-xform-item ctype="radio" name="prodType2"   placeholder="请选择商品类型" :rows="1" 
+            :readonly="false" label="奖品类型" colspan="24" data-code="RELATE_PROD_TYPE" v-if="formData.secondReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="yufp-prod-selector" name="secondRewardName" v-if="formData.prodType2=='prod'" placeholder="请选择金融产品"
+              :rows="1" :readonly="false" label="金融产品" colspan="12" ></yu-xform-item>
+          <yu-xform-item ctype="yufp-goods-selector" name="secondRewardName" v-if="formData.prodType2=='goods'"  placeholder="请选择实物商品"
+              :rows="1" :readonly="false" label="实物商品" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="yufp-vituer-selector" name="secondRewardName"  v-if="formData.prodType2=='coupon'" placeholder="请选择虚拟票券"
+              :rows="1" :readonly="false" label="虚拟票券" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="奖品图片" colspan="24" name="secondPic" v-if="formData.secondReward==='true'">
+            <yu-upload class="avatar-uploader"
+              :action="uploadAction"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess1"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl2" :src="imageUrl2" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </yu-upload>
+          </yu-xform-item>
+          <yu-xform-item ctype="input" name="secondRewardNum" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="奖项分数，数量多中奖概率大"
+            :rows="1" :readonly="false" label="奖品数量" v-if="formData.secondReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="input" name="secondLimit" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="每天可中出的奖品上限"
+            :rows="1" :readonly="false" label="每日上限" v-if="formData.secondReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="switch" name="threeReward" on-color="green" off-color="blue" on-text="ON" off-text="OFF" :width="55" :disabled="false"
+            on-value="true" off-value="false" :allow-focus="false" label="奖项三" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="input" name="threeName" type="text" :maxlength="20" :minlength="0" :max="0" :min="0" :step="1" placeholder=""
+            :rows="1" :readonly="false" label="奖项名称" v-if="formData.threeReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="radio" name="prodType3"   placeholder="请选择商品类型" :rows="1" 
+            :readonly="false" label="奖品类型" colspan="24" data-code="RELATE_PROD_TYPE" v-if="formData.threeReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="yufp-prod-selector" name="threeRewardName" v-if="formData.prodType3=='prod'" placeholder="请选择金融产品"
+              :rows="1" :readonly="false" label="金融产品" colspan="12" ></yu-xform-item>
+          <yu-xform-item ctype="yufp-goods-selector" name="threeRewardName" v-if="formData.prodType3=='goods'"  placeholder="请选择实物商品"
+              :rows="1" :readonly="false" label="实物商品" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="yufp-vituer-selector" name="threeRewardName"  v-if="formData.prodType3=='coupon'" placeholder="请选择虚拟票券"
+              :rows="1" :readonly="false" label="虚拟票券" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="奖品图片" colspan="24" name="threePic" v-if="formData.threeReward==='true'">
+            <yu-upload class="avatar-uploader"
+              :action="uploadAction"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess3"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl3" :src="imageUrl3" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </yu-upload>
+          </yu-xform-item>
+          <yu-xform-item ctype="input" name="threeRewardNum" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="奖项分数，数量多中奖概率大"
+            :rows="1" :readonly="false" label="奖品数量" v-if="formData.threeReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="input" name="threeLimit" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="每天可中出的奖品上限"
+            :rows="1" :readonly="false" label="每日上限" v-if="formData.threeReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="switch" name="fourReward" on-color="green" off-color="blue" on-text="ON" off-text="OFF" :width="55" :disabled="false"
+            on-value="true" off-value="false" :allow-focus="false" label="奖项四" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="input" name="fourName" type="text" :maxlength="20" :minlength="0" :max="0" :min="0" :step="1" placeholder=""
+            :rows="1" :readonly="false" label="奖项名称" v-if="formData.fourReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="radio" name="prodType4"   placeholder="请选择商品类型" :rows="1" 
+            :readonly="false" label="奖品类型" colspan="24" data-code="RELATE_PROD_TYPE" v-if="formData.fourReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="yufp-prod-selector" name="fourRewardName" v-if="formData.prodType4=='prod'" placeholder="请选择金融产品"
+              :rows="1" :readonly="false" label="金融产品" colspan="12" ></yu-xform-item>
+          <yu-xform-item ctype="yufp-goods-selector" name="fourRewardName" v-if="formData.prodType4=='goods'"  placeholder="请选择实物商品"
+              :rows="1" :readonly="false" label="实物商品" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="yufp-vituer-selector" name="fourRewardName"  v-if="formData.prodType4=='coupon'" placeholder="请选择虚拟票券"
+              :rows="1" :readonly="false" label="虚拟票券" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="奖品图片" colspan="24" name="fourPic" v-if="formData.fourReward==='true'">
+            <yu-upload class="avatar-uploader"
+              :action="uploadAction"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess4"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl4" :src="imageUrl4" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </yu-upload>
+          </yu-xform-item>
+          <yu-xform-item ctype="input" name="fourRewardNum" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="奖项分数，数量多中奖概率大"
+            :rows="1" :readonly="false" label="奖品数量" v-if="formData.fourReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="input" name="fourLimit" type="text" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1" placeholder="每天可中出的奖品上限"
+            :rows="1" :readonly="false" label="每日上限" v-if="formData.fourReward==='true'"></yu-xform-item>
+          <yu-xform-item ctype="input" name="remark" type="textarea" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1"
+            placeholder="insert text here……" :rows="3" :readonly="false" label="活动介绍" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="custom" label="活动图片" colspan="24" name="markPic">
+            <yu-upload :action="uploadAction" :multiple="false"  :disabled="false" list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            :on-success="handleAvatarSuccess2"
+            :before-upload="beforeAvatarUpload"
+            :file-list="fileList"
+            :on-remove="handleRemove" tips="只能上传jpg/png文件，且不超过500kb">
+              <i class="el-icon-plus"></i>
+            </yu-upload>
+          </yu-xform-item>
+          <yu-xform-item ctype="input" name="activityRule" type="textarea" :maxlength="2000" :minlength="0" :max="0" :min="0" :step="1"
+            :rows="3" :readonly="false" label="活动规则" colspan="24"></yu-xform-item>
+          <yu-xform-item ctype="input" name="fissionNum" type="text" :maxlength="200" :minlength="0" :max="0" :min="0" :step="1" :rows="1"
+            :readonly="false" label="裂变成功达标次数"></yu-xform-item>
+          <yu-xform-item ctype="radio" name="giftType"   placeholder="请选择商品类型" :rows="1" 
+            :readonly="false" label="裂变奖品类型" colspan="24" data-code="RELATE_PROD_TYPE"></yu-xform-item>
+          <yu-xform-item ctype="radio" name="ifrepeat"   placeholder="请选择商品类型" :rows="1" 
+            :readonly="false" label="能否重复领取" colspan="24" data-code="IF_REPEAT"></yu-xform-item>
+          <yu-xform-item ctype="yufp-prod-selector" name="fissionGiftName" v-if="formData.giftType=='prod'" placeholder="请选择金融产品"
+              :rows="1" :readonly="false" label="金融产品" colspan="12" ></yu-xform-item>
+          <yu-xform-item ctype="yufp-goods-selector" name="fissionGiftName" v-if="formData.giftType=='goods'"  placeholder="请选择实物商品"
+              :rows="1" :readonly="false" label="实物商品" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="yufp-vituer-selector" name="fissionGiftName"  v-if="formData.giftType=='coupon'" placeholder="请选择虚拟票券"
+              :rows="1" :readonly="false" label="虚拟票券" colspan="12"></yu-xform-item>
+          <yu-xform-item ctype="input" name="integralNum" v-if="formData.giftType=='integral'"  placeholder="请输入奖励分数"
+              :rows="1" :readonly="false" label="分数" colspan="12"></yu-xform-item>
+        </yu-xform-group>
+        <div class="button-group">
+            <el-button type="primary" icon="check" @click="saveFn" v-show="ifShowButton">保存</el-button>
+            <el-button type="primary" icon="el-icon-yx-undo2" @click="preview">预览</el-button>
+        </div>
+      </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="面板" name="33">
+    </yu-collapse-item>
+  </yu-collapse>
+  <yu-xdialog :visible.sync="dialogVisible">
+    <img width="100%" :src="dialogImageUrl">
+  </yu-xdialog>
+  <yu-xdialog :visible.sync="dialogVisible1" width="330px" top="5%">
+    <img :src="dialogImageUrl1">
+</yu-xdialog>
+  <yu-xdialog :visible.sync="fieldsVisible" width="800px">
+    <yu-xform ref="selectFieldForm" label-width="100px" label-suffix="：" v-model="selectFormData">
+      <yu-xform-group>
+        <yu-xform-item label="必输选项" ctype="checkbox"  name="mustSelect" data-code="MUST_FIELDS" ></yu-xform-item>
+      </yu-xform-group>
+      <div class="button-group">
+          <el-button type="primary" @click="selectFieldFn">确定</el-button>
+        </div>
+    </yu-xform>
+</yu-xdialog>
+</div>
+<style type="text/css">
+  .el-form-item {
+    padding-right: 10px;
+    margin-bottom: 22px;
+  }
+</style>

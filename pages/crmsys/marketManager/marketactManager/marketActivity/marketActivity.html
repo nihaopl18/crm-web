@@ -1,0 +1,448 @@
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2018-12-27 09:36:37.
+  @updated by
+  @description 营销活动管理
+-->
+<yu-row>
+  <yu-xform related-table-name="OCRM_F_MK_ACTIVITY" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="活动名称" name="actiName" ctype="input" :colspan="4"></yu-xform-item>
+      <yu-xform-item placeholder="活动状态" name="actiStat" ctype="select" data-code="OCRM_MKT_ACTI_STAT" :colspan="4"></yu-xform-item>
+      <yu-xform-item placeholder="审批状态" name="mktAppState" ctype="select" data-code="ACT_APP_STATS" :colspan="4"></yu-xform-item>
+      <yu-xform-item placeholder="关联产品" name="productId" ctype="yufp-prod-selector" :colspan="4"></yu-xform-item>
+      <yu-xform-item placeholder="创建人" name="createUser" ctype="yufp-governed-cust-selector" :colspan="4"></yu-xform-item>
+      <yu-xform-item placeholder="创建机构" name="createOrg" ctype="yufp-org-tree" :colspan="4"></yu-xform-item>
+      <yu-xform-item placeholder="计划开始时间" name="pstartDate" ctype="datepicker" type="daterange" :colspan="4"></yu-xform-item>
+      <yu-xform-item placeholder="计划结束时间" name="pstartDate" ctype="datepicker" type="daterange" :colspan="4"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+      <yu-button icon="yx-file-excel" @click="actSbmitFn">活动提交</yu-button>
+      <yu-button icon="yx-file-excel" @click="actExeFn">活动执行</yu-button>
+      <yu-button icon="yx-file-excel" @click="taskAllokEditFn">活动分配</yu-button>
+      <yu-button icon="yx-file-excel" @click="taskDecomEditFn">指标分解</yu-button>
+      <yu-button icon="yx-file-excel" @click="turnActFn">活动移交</yu-button>
+      <yu-button icon="yx-file-excel" @click="successedActFn">结束活动</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="OCRM_F_MK_ACTIVITY" row-number :data-url="actDataUrl" @row-dblclick="infoFn" :data="ocrmFMkActivityData"
+    selection-type="checkbox" :default-load=false>
+    <!-- <yu-xtable-column label="活动来源" prop=""></yu-xtable-column> -->
+    <yu-xtable-column label="活动名称" prop="actiName"></yu-xtable-column>
+    <yu-xtable-column label="活动状态" prop="actiStat" data-code="OCRM_MKT_ACTI_STAT"></yu-xtable-column>
+    <yu-xtable-column label="审批状态" prop="mktAppState" data-code="WF_APP_STATUS"></yu-xtable-column>
+    <!-- <yu-xtable-column label="活动下达状态" prop="actiStat"></yu-xtable-column> -->
+    <yu-xtable-column label="客户数" prop="custNum" width="80"></yu-xtable-column>
+    <yu-xtable-column label="产品数" prop="prodNum" width="80"></yu-xtable-column>
+    <yu-xtable-column label="费用预算" prop="actiCost"></yu-xtable-column>
+    <yu-xtable-column label="活动负责人" prop="mktRespName"></yu-xtable-column>
+    <yu-xtable-column label="计划开始时间" prop="pstartDate"></yu-xtable-column>
+    <yu-xtable-column label="计划结束时间" prop="pendDate" ></yu-xtable-column>
+    <yu-xtable-column label="创建人" prop="createName"></yu-xtable-column>
+    <yu-xtable-column label="创建人机构" prop="createOrgName" width="140"></yu-xtable-column>
+    <yu-xtable-column label="创建日期" prop="createDate" ></yu-xtable-column>
+  </yu-xtable>
+  <!-- 新增，修改  -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+    <yu-tabs v-model="activeName" @tab-click="" >
+      <yu-tab-pane label="营销活动基本信息" name="first" :disabled="true">
+        <!-- 新增营销活动 -->
+        <yu-xform ref="activeAddForm" label-width="120px" :disabled="infoDisabled" v-model="activeAddFormdata">
+          <yu-xform-group :column="3">
+            <yu-xform-item label="营销活动名称" name="actiName" rules="required" ctype="input" :disabled="editDisabled"></yu-xform-item>
+            <yu-xform-item label="是否指定客户" name="contactCust" ctype="select" data-code="CD0238" rules="required"></yu-xform-item>
+            <yu-xform-item label="营销活动方式" name="actiMode" rules="required" ctype="yu-xselect" multiple :options="actiModeOptions"></yu-xform-item>
+            <yu-xform-item label="营销活动类型" name="actiType" rules="required" ctype="select" data-code="MAR_ACT_TYPE" :disabled="editDisabled"></yu-xform-item>
+            <yu-xform-item label="计划开始日期" name="pstartDate" ctype="datepicker" rules="required" :disabled="editDisabled" format="yyyy-MM-dd" :picker-options="pstartDate"></yu-xform-item>
+            <yu-xform-item label="计划结束日期" name="pendDate" ctype="datepicker" rules="required" format="yyyy-MM-dd" :picker-options="pendDate"></yu-xform-item>
+            <yu-xform-item label="营销渠道" name="mktChanel" rules="required" ctype="select" data-code="MAR_CHANEL"></yu-xform-item>
+            <yu-xform-item label="费用预算" name="actiCost" ctype="input" :rules="numberType"></yu-xform-item>
+            <yu-xform-item label="具体费用分配" name="specificCostDistr" ctype="input"></yu-xform-item>
+            <yu-xform-item label="合作第三方" name="cprtThreePart" ctype="input"></yu-xform-item>
+            <yu-xform-item label="活动负责人" name="mktRespPerson" ctype="yufp-user-selector" rules="required" :params="params"></yu-xform-item>
+            <yu-xform-item label="营销活动目的" name="actiAim" ctype="textarea" rules="required" :colspan="24" :rows="2"></yu-xform-item>
+            <yu-xform-item label="营销活动内容" name="actiCont" ctype="textarea" rules="required" :colspan="24" :rows="2"></yu-xform-item>
+            <yu-xform-item label="活动地点" name="actiAddr" ctype="textarea" :colspan="24"></yu-xform-item>
+            <yu-xform-item label="涉及客户群描述" name="actiCustDesc" ctype="textarea" :colspan="24" :rows="2"></yu-xform-item>
+            <yu-xform-item label="涉及执行人描述" name="actiOperDesc" ctype="textarea" :colspan="24" :rows="2"></yu-xform-item>
+            <yu-xform-item label="涉及产品描述" name="actiProdDesc" ctype="textarea" :colspan="24" :rows="2"></yu-xform-item>
+            <yu-xform-item label="备注" name="actiRemark" ctype="textarea" :colspan="24"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn('activeAddForm')">取消</yu-button>
+            <yu-button icon="check" type="primary" @click="nextStepFn('activeAddForm')">下一步</yu-button>
+          </div>
+        </yu-xform>
+      </yu-tab-pane>
+      <yu-tab-pane label="关联产品信息" name="second" :disabled="true">
+        <yu-row>
+          <yu-col :span="4">
+            <yufp-prod-selector @select-fn="addProdFn"  v-model="selectProdInfo" :params="prodParam"></yufp-prod-selector>
+          </yu-col>
+          <yu-col :span="4">
+            <yu-button icon="yx-undo2" type="" @click="deleteProdFn">删除</yu-button>
+          </yu-col>
+        </yu-row>
+        <yu-xtable ref="ocrmFMkActiProduct" row-number :data-url="prodDataUrl" :base-params="fprodParams" @loaded="getTableDataFn"
+          selection-type="checkbox">
+          <yu-xtable-column label="产品名称" prop="productName" rules="required" :disabled="infoDisabled"></yu-xtable-column>
+          <yu-xtable-column label="关联产品人" prop="createName" ctype="yufp-user-selector" rules="required" :disabled="infoDisabled" :params="params" @select-fn="selectCustbackFn"></yu-xtable-column>
+          <yu-xtable-column label="关联产品日期" prop="createDate" ctype="datepicker" rules="required" :disabled="infoDisabled" :formatter="dateFormatterSimple"></yu-xtable-column>
+        </yu-xtable>
+        <div class="yu-grpButton">
+          <yu-button icon="yx-undo2" @click="backStepFn('isProductAdd')" type="primary">上一步</yu-button>
+          <yu-button icon="check" type="primary" @click="nextStepFn('isProductAdd')">下一步</yu-button>
+        </div>
+      </yu-tab-pane>
+      <yu-tab-pane label="目标客户信息" name="third" :disabled="true">
+        <!--  新增关联客户 -->
+        <yu-row>
+          <yu-col :span="4">
+            <yufp-governed-cust-selector @select-fn="addCustFn" v-model="selectCustInfo"></yufp-governed-cust-selector>
+          </yu-col>
+          <yu-col :span="4">
+            <yufp-cust-group @select-fn="addCustGroupFn" v-model="selectCustGroup"></yufp-cust-group>
+          </yu-col>
+          <!-- <yu-col :span="4">
+           <yufp-mgr-selector></yufp-mgr-selector>
+          </yu-col> -->
+          <yu-col :span="4">
+            <yu-button @click="deleteCustFn">删除</yu-button>
+          </yu-col>
+        </yu-row>
+        <yu-xtable ref="OCRM_F_MK_ACTI_CUST" row-number :data-url="custDataUrl" :base-params="custParams" @loaded="getCustTableDataFn"
+          selection-type="checkbox">
+          <yu-xtable-column label="客户号" prop="custId"></yu-xtable-column>
+          <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+          <yu-xtable-column label="主办客户经理" prop="custManagerName"></yu-xtable-column>
+          <yu-xtable-column label="主办机构" prop="custManagerOrgName"></yu-xtable-column>
+          <yu-xtable-column label="目标客户来源" prop="aimCustSource" data-code="AIM_CUST_SOURCE"></yu-xtable-column>
+          <yu-xtable-column label="进展阶段" prop="progressStep" data-code="PROGERSS_STEP"></yu-xtable-column>
+          <yu-xtable-column label="关联客户人" prop="relationUserName"></yu-xtable-column>
+          <yu-xtable-column label="关联客户日期" prop="relationDate" :formatter="dateFormatterSimple"></yu-xtable-column>
+        </yu-xtable>
+        <div class="yu-grpButton">
+          <yu-button icon="yx-undo2" @click="backStepFn('isCustomAdd')" type="primary">上一步</yu-button>
+          <yu-button icon="check" @click="nextStepFn('isCustomAdd')" type="primary">下一步</yu-button>
+        </div>
+      </yu-tab-pane>
+      <yu-tab-pane label="指标信息" name="fourth" :disabled="true">
+        <!--  已选指标信息显示 -->
+        <yu-row :gutter="20">
+            <yu-col :span="10">
+                <yu-xform ref="taskAllotForm" label-width="130px" v-model="taskAllotFormdata" class="hide-form-search-btn" form-type="search">
+                    <yu-xform-group :column="1">
+                      <yu-xform-item label="下达对象类型" name="exeObjType" rules="required" ctype="select" data-code="EXE_OBJ_TYPE"  :disabled="infoDisabled"
+                        @change="changeExetypeFn"></yu-xform-item>
+                    </yu-xform-group>
+                  </yu-xform>
+            </yu-col>
+            <yu-col :span="4">
+                <div style="margin-bottom: 10px;padding-top:10px;">
+                    <yu-button icon="check" @click="addTask">添加指标</yu-button>
+                    <!-- <yu-button icon="yx-undo2" @click="deleteTaskFn">删除</yu-button> -->
+                </div>
+            </yu-col>
+        </yu-row>
+        <div  class=" ys-stChooseTags" style="overflow: auto; width: calc(100%-140px);;">
+            <div ><h1 class="ys-stctTitle">您已选择：</h1></div>
+            <div v-for="(item,index) in taskInfo " :key="'t_'+index">
+                <a class="ys-stcTag" href="javascript:void(0)" title="item.targetName">{{item.targetName}}<i  class="el-icon-yx-cross" @click="deleteSeTagFn(item)"></i></a>
+              </div>
+        </div>
+        <!--  分配下达任务指标 -->
+        <yu-row :gutter="20">
+          <yu-col :span="24">
+            <div class="grid-content bg-purple">
+              <yu-xtable ref="OCRM_F_MK_ACTI_TARGET" row-number  :pageable="true" v-show="showTask == 'taskOrg'" :data="taskOrgTabledata" :base-params="orgtargetParams"
+                selection-type="checkbox" :key='tableKey'>
+                <yu-xtable-column label="下达对象编号" prop="exeObjCode"></yu-xtable-column>
+                <yu-xtable-column label="下达对象名称" prop="exeObjName"></yu-xtable-column>
+                <yu-xtable-column :label="item.targetName" align="center" v-for="(item,index) in taskInfo" :key="index">
+                    <yu-xtable-column label="指标初期值" :prop="item.orignalVal" width="110" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110" v-if="item.valueCondition=='1'" ctype="input" width="110" :rules="numberType">
+                    </yu-xtable-column>
+                    <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110" v-if="item.valueCondition=='2'" width="110" ></yu-xtable-column>
+                </yu-xtable-column>
+              </yu-xtable>
+              <yu-xtable ref="OCRM_F_MK_ACTI_TARGET1" row-number  :pageable="true" v-show="showTask == 'taskManerger'" :data="taskUserTabledat" :base-params="usertargetParams"
+              selection-type="checkbox" :key='tableKey'>
+              <yu-xtable-column label="下达对象编号" prop="exeObjCode"></yu-xtable-column>
+              <yu-xtable-column label="下达对象名称" prop="exeObjName"></yu-xtable-column>
+              <yu-xtable-column :label="item.targetName" align="center" v-for="(item,index) in taskInfo" :key="'k_'+index">
+                  <yu-xtable-column label="指标初期值" :prop="item.orignalVal" width="110" width="110"></yu-xtable-column>
+                  <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110" v-if="item.valueCondition=='1'" ctype="input" width="110" :rules="numberType">
+                  </yu-xtable-column>
+                  <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110" v-if="item.valueCondition=='2'" width="110" ></yu-xtable-column>
+              </yu-xtable-column>
+            </yu-xtable>
+            </div>
+          </yu-col>
+        </yu-row>
+        <div class="yu-grpButton">
+          <yu-button icon="yx-undo2" @click="backStepFn('taskAllotDiv')" type="primary">上一步</yu-button>
+            <yu-button icon="check" @click="nextStepFn('taskAllotDiv')" type="primary">下一步</yu-button>
+        </div>
+      </yu-tab-pane>
+      <yu-tab-pane label="附件信息" name="fifth" :disabled="true">
+        <!--  关联附件上传 -->
+        <div>
+          <yufp-act-file-upload @success-fn="fileUpSuccessFn" :upload-visible="ifFile" :delete-visible="ifFile" :download-visible="ifFile" :data-params="fileParams" :data="fileDataParams"></yufp-act-file-upload>
+        </div>
+        <div class="yu-grpButton">
+          <yu-button icon="yx-undo2" @click="backStepFn('attachmentTable')" type="primary" v-show="!ifSave">上一步</yu-button>
+          <yu-button icon="yx-undo2" @click="cancelFn('actInfoDialog')" type="primary" v-show="ifSave">关闭</yu-button>
+          <yu-button icon="check" @click="temSaveFn" type="primary" v-show="!ifSave">保存</yu-button>
+        </div>
+
+      </yu-tab-pane>
+    </yu-tabs>
+  </yu-xdialog>
+    <!-- 详情弹框 -->
+    <yu-xdialog :title="viewTitle[viewType]" :visible.sync="infoDialogVisible" width="1000px">
+      <yu-tabs v-model="activeName" @tab-click="">
+        <yu-tab-pane label="营销活动基本信息" name="first">
+          <!-- 新增营销活动 -->
+          <yu-xform ref="activeAddForm" label-width="120px" :disabled="infoDisabled" v-model="activeAddFormdata">
+            <yu-xform-group :column="2">
+              <yu-xform-item label="营销活动名称" name="actiName" rules="required" ctype="input" :disabled="editDisabled"></yu-xform-item>
+              <yu-xform-item label="是否指定客户" name="contactCust" ctype="select" data-code="CD0238" rules="required"></yu-xform-item>
+              <yu-xform-item label="营销活动方式" name="actiMode" rules="required" ctype="yu-xselect" multiple :options="actiModeOptions"></yu-xform-item>
+              <yu-xform-item label="营销活动类型" name="actiType" rules="required" ctype="select" data-code="MAR_ACT_TYPE" :disabled="editDisabled"></yu-xform-item>
+              <yu-xform-item label="计划开始日期" name="pstartDate" ctype="datepicker" rules="required" :disabled="editDisabled" format="yyyy-MM-dd-hh-mm-ss"></yu-xform-item>
+              <yu-xform-item label="计划结束日期" name="pendDate" ctype="datepicker" rules="required"></yu-xform-item>
+              <yu-xform-item label="营销渠道" name="mktChanel" rules="required" ctype="select" data-code="MAR_CHANEL"></yu-xform-item>
+              <yu-xform-item label="费用预算" name="actiCost" ctype="input" rules="required"></yu-xform-item>
+              <yu-xform-item label="具体费用分配" name="specificCostDistr" ctype="input"></yu-xform-item>
+              <yu-xform-item label="合作第三方" name="cprtThreePart" ctype="input"></yu-xform-item>
+              <yu-xform-item label="活动负责人" name="mktRespPerson" ctype="" rules="required"></yu-xform-item>
+              <yu-xform-item label="营销活动目的" name="actiAim" ctype="textarea" rules="required" :colspan="24" :rows="2"></yu-xform-item>
+              <yu-xform-item label="营销活动类容" name="actiCont" ctype="textarea" rules="required" :colspan="24" :rows="2"></yu-xform-item>
+              <yu-xform-item label="活动地点" name="actiAddr" ctype="textarea" :colspan="24"></yu-xform-item>
+              <yu-xform-item label="涉及客户群描述" name="actiCustDesc" ctype="textarea" :colspan="24" :rows="2"></yu-xform-item>
+              <yu-xform-item label="涉及执行人描述" name="actiOperDesc" ctype="textarea" :colspan="24" :rows="2"></yu-xform-item>
+              <yu-xform-item label="涉及产品描述" name="actiProdDesc" ctype="textarea" :colspan="24" :rows="2"></yu-xform-item>
+              <yu-xform-item label="备注" name="actiRemark" ctype="textarea" :colspan="24"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="cancelFn('activeAddForm')">取消</yu-button>
+              <yu-button icon="check" type="primary" @click="nextStepFn('activeAddForm')">下一步</yu-button>
+            </div>
+          </yu-xform>
+        </yu-tab-pane>
+        <yu-tab-pane label="关联产品信息" name="second">
+          <yu-xtable ref="ocrmFMkActiProduct" row-number :data-url="prodDataUrl" :base-params="fprodParams" @loaded="getTableDataFn"
+            selection-type="checkbox">
+            <yu-xtable-column label="产品编号" prop="productId" ></yu-xtable-column>
+            <yu-xtable-column label="产品名称" prop="productName" ></yu-xtable-column>
+            <yu-xtable-column label="关联产品人" prop="createName" ></yu-xtable-column>
+            <yu-xtable-column label="关联产品日期" prop="createDate"  :formatter="dateFormatterSimple"></yu-xtable-column>
+          </yu-xtable>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" @click="backStepFn('isProductAdd')" type="primary">上一步</yu-button>
+            <yu-button icon="check" type="primary" @click="nextStepFn('isProductAdd')">下一步</yu-button>
+          </div>
+        </yu-tab-pane>
+        <yu-tab-pane label="目标客户信息" name="third">
+          <!--  新增关联客户 -->
+          <yu-xtable ref="OCRM_F_MK_ACTI_CUST" row-number :data-url="custDataUrl" :base-params="custParams" @loaded="getCustTableDataFn"
+            selection-type="checkbox">
+            <yu-xtable-column label="客户号" prop="custId"></yu-xtable-column>
+            <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+            <yu-xtable-column label="主办客户经理" prop="custManagerName"></yu-xtable-column>
+            <yu-xtable-column label="主办机构" prop="custManagerOrgName"></yu-xtable-column>
+            <yu-xtable-column label="目标客户来源" prop="aimCustSource" data-code="AIM_CUST_SOURCE"></yu-xtable-column>
+            <yu-xtable-column label="进展阶段" prop="progressStep"  data-code="PROGERSS_STEP"></yu-xtable-column>
+            <yu-xtable-column label="关联客户人" prop="relationUserName"></yu-xtable-column>
+            <yu-xtable-column label="关联客户日期" prop="relationDate" :formatter="dateFormatterSimple"></yu-xtable-column>
+          </yu-xtable>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" @click="backStepFn('isCustomAdd')" type="primary">上一步</yu-button>
+            <yu-button icon="check" @click="nextStepFn('isCustomAdd')" type="primary">下一步</yu-button>
+          </div>
+        </yu-tab-pane>
+        <yu-tab-pane label="指标信息" name="fourth">
+             <!--  已选指标信息显示 -->
+             <yu-row :gutter="20">
+              <yu-col :span="10">
+                  <yu-xform ref="taskAllotForm" label-width="130px" v-model="taskAllotFormdata" class="hide-form-search-btn" form-type="search">
+                      <yu-xform-group :column="1">
+                        <yu-xform-item label="下达对象类型" name="exeObjType" rules="required" ctype="select" data-code="EXE_OBJ_TYPE"
+                          @change="changeExetypeFn"></yu-xform-item>
+                      </yu-xform-group>
+                    </yu-xform>
+              </yu-col>
+          </yu-row>
+          <div  class=" ys-stChooseTags" style="overflow: auto; width: calc(100%-140px);;">
+              <div ><h1 class="ys-stctTitle">您已选择：</h1></div>
+              <div v-for="(item,index) in taskInfo " :key="'t_'+index">
+                  <a class="ys-stcTag" href="javascript:void(0)" title="item.targetName">{{item.targetName}}</a>
+                </div>
+          </div>
+          <!--  分配下达任务指标 -->
+          <yu-row :gutter="20">
+            <yu-col :span="24">
+              <div class="grid-content bg-purple">
+                <yu-xtable ref="OCRM_F_MK_ACTI_TARGET" row-number  :pageable="true" v-show="showTask == 'taskOrg'" :data="taskOrgTabledata" :base-params="orgtargetParams"
+                  selection-type="checkbox" :key='tableKey'>
+                  <yu-xtable-column label="下达对象编号" prop="exeObjCode"></yu-xtable-column>
+                  <yu-xtable-column label="下达对象名称" prop="exeObjName"></yu-xtable-column>
+                  <yu-xtable-column :label="item.targetName" align="center" v-for="(item,index) in taskInfo" :key="index">
+                      <yu-xtable-column label="指标初期值" :prop="item.orignalVal" width="110" width="110"></yu-xtable-column>
+                      <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110" width="110" ></yu-xtable-column>
+                  </yu-xtable-column>
+                </yu-xtable>
+                <yu-xtable ref="OCRM_F_MK_ACTI_TARGET1" row-number  :pageable="true" v-show="showTask == 'taskManerger'" :data="taskUserTabledat" :base-params="usertargetParams"
+                selection-type="checkbox" :key='tableKey'>
+                <yu-xtable-column label="下达对象编号" prop="exeObjCode"></yu-xtable-column>
+                <yu-xtable-column label="下达对象名称" prop="exeObjName"></yu-xtable-column>
+                <yu-xtable-column :label="item.targetName" align="center" v-for="(item,index) in taskInfo" :key="'k_'+index">
+                    <yu-xtable-column label="指标初期值" :prop="item.orignalVal" width="110" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110"  width="110" ></yu-xtable-column>
+                </yu-xtable-column>
+              </yu-xtable>
+              </div>
+            </yu-col>
+          </yu-row>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" @click="backStepFn('taskAllotDiv')" type="primary">上一步</yu-button>
+              <yu-button icon="check" @click="nextStepFn('taskAllotDiv')" type="primary">下一步</yu-button>
+          </div>
+        </yu-tab-pane>
+        <yu-tab-pane label="附件信息" name="fifth">
+          <!--  关联附件上传 -->
+          <div>
+            <yufp-act-file-upload @success-fn="fileUpSuccessFn" :upload-visible="false" :delete-visible="false" :download-visible="true" :data-params="fileParams" :data="fileDataParams"></yufp-act-file-upload>
+          </div>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" @click="backStepFn('attachmentTable')" type="primary">上一步</yu-button>
+          </div> 
+        </yu-tab-pane>
+      </yu-tabs>
+    </yu-xdialog>
+  <!-- 活动移交弹框 -->
+  <yu-xdialog :title="actTurnTitle" :visible.sync="turnVisible" width="1000px">
+    <yu-xform ref="actTransForm" v-model="actTransFormdata">
+      <yu-xform-group :column="3">
+        <yu-xform-item label="活动名称" name="actiName" ctype="input" :disabled="true"></yu-xform-item>
+        <yu-xform-item label="接收人" name="mktRespPerson" ctype="yufp-user-selector" @select-fn="addRecevieFn" rules="required"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn('turnActivetyForm')">取消</yu-button>
+        <yu-button icon="check" type="primary" @click="confirmTurnFn">确定移交活动</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+    <!-- 指标分解弹框 -->
+    <yu-xdialog title="指标分解" :visible.sync="targetDecomVisible" width="1000px">
+      <yu-xtable ref="orgTragetInfo" row-number :data-url="taskDataUrl" :pageable="true" :base-params="orgtargetParams" :key='tableKey'>
+        <yu-xtable-column label="下达对象编号" prop="exeObjCode"></yu-xtable-column>
+        <yu-xtable-column label="下达对象名称" prop="exeObjName"></yu-xtable-column>
+        <yu-xtable-column :label="item.targetName" align="center" v-for="(item,index) in taskInfo" :key="'k3_'+index">
+            <yu-xtable-column label="指标初期值" :prop="item.orignalVal" width="110" width="110"></yu-xtable-column>
+            <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110" width="110" ></yu-xtable-column>
+        </yu-xtable-column>
+      </yu-xtable>
+      <yu-row>
+          <yu-col :span="4">
+            <yu-button icon="yx-undo2" type="" @click="userDistrFn">分配</yu-button>
+          </yu-col>
+      </yu-row>
+      <yu-xtable ref="userTragetInfo" row-number :data-url="taskDataUrl" :pageable="true" :data="taskAllotTable2Data" :base-params="usertargetParams" :key='tableKey'>
+        <yu-xtable-column label="下达对象编号" prop="exeObjCode"></yu-xtable-column>
+        <yu-xtable-column label="下达对象名称" prop="exeObjName"></yu-xtable-column>
+        <yu-xtable-column :label="item.targetName" align="center" v-for="(item,index) in taskInfo" :key="'k4_'+index">
+            <yu-xtable-column label="指标初期值" :prop="item.orignalVal" width="110" width="110"></yu-xtable-column>
+            <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110" v-if="item.valueCondition=='1'" ctype="input" width="110" :rules="numberType">
+            </yu-xtable-column>
+            <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110" v-if="item.valueCondition=='2'" width="110" ></yu-xtable-column>
+        </yu-xtable-column>
+      </yu-xtable>
+    <div class="yu-grpButton">
+      <yu-button icon="yx-undo2" type="primary" @click="canceltargetDcomFn">取消</yu-button>
+      <yu-button icon="check" type="primary" @click="saveTargetDcomFn">保存</yu-button>
+    </div>
+    </yu-xdialog>
+        <!-- 活动分配弹框 -->
+    <yu-xdialog title="活动分配" :visible.sync="targetDistrVisible" width="1000px">
+          <!-- <yu-row>
+                <yu-col :span="4">
+                  <yu-button icon="yx-undo2" type="" @click="orgDistrFn">分配</yu-button>
+                </yu-col>
+          </yu-row> -->
+          <yu-xtable ref="taskDistrTable" row-number  :pageable="true" :data-url="taskDataUrl" :data="taskOrgTabledata" :base-params="orgtargetParams"
+          selection-type="checkbox" :key='tableKey'>
+          <yu-xtable-column label="下达对象编号" prop="exeObjCode"></yu-xtable-column>
+          <yu-xtable-column label="下达对象名称" prop="exeObjName"></yu-xtable-column>
+          <yu-xtable-column :label="item.targetName" align="center" v-for="(item,index) in taskInfo" :key="'k4_'+index">
+            <yu-xtable-column label="指标初期值" :prop="item.orignalVal" width="110" width="110"></yu-xtable-column>
+            <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110" v-if="item.valueCondition=='1'" ctype="input" width="110" :rules="numberType">
+            </yu-xtable-column>
+            <yu-xtable-column label="指标目标值" :prop="item.targetValue" width="110" v-if="item.valueCondition=='2'" width="110" ></yu-xtable-column>
+        </yu-xtable-column>
+        </yu-xtable>
+        <div class="yu-grpButton">
+          <yu-button icon="yx-undo2" type="primary" @click="canceltargetDistrFn">取消</yu-button>
+          <yu-button icon="check" type="primary" @click="saveTargetDistrFn">保存</yu-button>
+        </div>
+    </yu-xdialog>
+    <!-- 指标选择弹框 -->
+    <yu-xdialog title="指标选择" :visible.sync="taskInfoVisible" width="1000px">
+        <yu-xtable ref="taskinfoTable"  row-number :data-url="prodTaskInfoUrl" :pageable="true" :base-params="prodIndexParams"
+        selection-type="checkbox">
+        <yu-xtable-column label="指标编号" prop="targetId" ></yu-xtable-column>
+        <yu-xtable-column label="指标名称" prop="targetName"  ></yu-xtable-column>
+        <yu-xtable-column label="取值方式" prop="valueCondition" data-code="VALUE_CONDITION"></yu-xtable-column>
+        <yu-xtable-column label="产品编号" prop="productId"  ></yu-xtable-column>
+        <yu-xtable-column label="产品名称" prop="prodName" ></yu-xtable-column>
+      </yu-xtable>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelSelectIndexFn">取消</yu-button>
+          <yu-button icon="check" type="primary" @click="selectIndexFn">确定</yu-button>
+        </div>
+    </yu-xdialog>
+    <!-- 活动分配子页面弹框 -->
+    <yu-xdialog title="机构选择" :visible.sync="taskOrgVisible" width="1000px">
+        <yu-xform ref="taskTransOrgForm" v-model="taskTransFormdata1">
+          <yu-xform-group :column="2">
+            <yu-xform-item label="接收人" name="orgName" ctype="yufp-org-tree" @select-fn="addRecevie1Fn" rules="required"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn('taskTransOrgForm')">取消</yu-button>
+            <yu-button icon="check" type="primary" @click="taskSaveOrgFn">确定</yu-button>
+          </div>
+        </yu-xform>
+    </yu-xdialog>
+    <!-- 活动分配子页面弹框 -->
+    <yu-xdialog title="客户经理选择" :visible.sync="taskUserVisible" width="1000px">
+        <yu-xform ref="taskTransUserForm" v-model="taskTransFormdata2">
+          <yu-xform-group :column="2">
+            <yu-xform-item label="接收人" name="userName" ctype="yufp-user-selector" @select-fn="addRecevie2Fn" rules="required"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn('taskTransUserForm')">取消</yu-button>
+            <yu-button icon="check" type="primary" @click="taskSaveUserFn">确定</yu-button>
+          </div>
+        </yu-xform>
+    </yu-xdialog>
+    <!-- 重新设置活动的结束日期 -->
+    <yu-xdialog title="设置活动的结束日期" :visible.sync="setActEndDtVisible" width="1000px">
+        <yu-xform ref="setActEndDtForm">
+          <yu-xform-group :column="2">
+            <yu-xform-item label="计划结束日期" name="pendDate" ctype="datepicker" rules="required" format="yyyy-MM-dd" :picker-options="pendDate1"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn('setActEndDtForm')">取消</yu-button>
+            <yu-button icon="check" type="primary" @click="setActEndDtFn">确定</yu-button>
+          </div>
+        </yu-xform>
+    </yu-xdialog>
+  <!-- 审批流组件 -->
+  <yufp-wf-init ref="yufpWfInit" :common-params="wfCommonParams"></yufp-wf-init>
+
+</div>

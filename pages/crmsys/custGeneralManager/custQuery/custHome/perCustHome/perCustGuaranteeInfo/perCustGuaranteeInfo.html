@@ -1,0 +1,202 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-21 16:07:04.
+  @updated by
+  @description 担保信息
+-->
+<div>
+  <yu-tabs v-model="activeName" @tab-click="handleClick">
+    <yu-tab-pane label="抵押物信息" name="pawn">
+      <yu-xform related-table-name="pawnTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="document" @click="pawninfoFn">详情</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="pawnTable" row-number :data-url="pawnDataUrl" :highlight-current-row="true" :stripe="true" @row-dblclick="rowDblClick">
+        <yu-xtable-column label="抵押物类型" prop="pawnTypeCd" width="120" data-code="CD0294"></yu-xtable-column>
+        <yu-xtable-column label="抵押物名称" prop="pawnNm" width="150"></yu-xtable-column>
+        <yu-xtable-column label="权属证件类型" prop="rightCertTypeCd" width="120"  data-code="CD0427"></yu-xtable-column>
+        <yu-xtable-column label="权属证件号" prop="rightCertNo" width="150"></yu-xtable-column>
+        <yu-xtable-column label="评估价值" prop="evalAmt" width="120"></yu-xtable-column>
+        <yu-xtable-column label="评估日期" prop="evalDt" width="120"></yu-xtable-column>
+        <yu-xtable-column label="我行确认价值" prop="bookAmt" width="120"></yu-xtable-column>
+        <yu-xtable-column label="抵押物状态" prop="statusCd" width="120" data-code="CD0302"></yu-xtable-column>
+        <yu-xtable-column label="最新评估日期" prop="dataDt" width="120"></yu-xtable-column>
+        <yu-xtable-column label="评估到期日期" prop="evalEndDt"  width="120"></yu-xtable-column>
+      </yu-xtable>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="pawnDialogVisible" width="1000px">
+          <yu-xform ref="pawnrefForm" label-width="260px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+              <yu-xform-item label="担保品id" :hidden="true" name="pawnId" ctype="input"></yu-xform-item>
+              <yu-xform-item label="担保品编号" name="guarNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="担保合同编号" name="guarContNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="担保人客户编号" name="guarCustNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="担保人客户类型" name="cusTypCd" ctype="select" data-code="CD0303"></yu-xform-item>
+              <yu-xform-item label="担保人贷款卡号" name="comLoanCardNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="抵押物名称" name="pawnNm" ctype="input"></yu-xform-item>
+              <yu-xform-item label="抵押物类型" name="pawnTypeCd" ctype="select" data-code="CD0294"></yu-xform-item>
+              <yu-xform-item label="抵押物类型细分" name="pawnTypeSubCd" ctype="select" data-code="CD0442"></yu-xform-item>
+              <yu-xform-item label="抵押物状态" name="statusCd" ctype="select" data-code="CD0302"></yu-xform-item>
+              <yu-xform-item label="币种" name="ccyCd" ctype="select" data-code="CD0071"></yu-xform-item>
+              <yu-xform-item label="评估方式" name="evalTypeCd" ctype="select" data-code="CD0304"></yu-xform-item>
+              <yu-xform-item label="评估人" name="evalPerson" ctype="input"></yu-xform-item>
+              <yu-xform-item label="评估机构名称" name="evalOrg" ctype="input"></yu-xform-item>
+              <yu-xform-item label="评估价值" name="evalAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="我行确认价值" name="bookAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="评估日期" name="evalDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="评估到期日期" name="evalEndDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="我行已设定担保额" name="ourSetGuarantyAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="权属证件类型" name="rightCertTypeCd" ctype="select" data-code="CD0427"></yu-xform-item>
+              <yu-xform-item label="权属证件号" name="rightCertNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="权属登记机关" name="rightOrg" ctype="input"></yu-xform-item>
+              <yu-xform-item label="入库时间" name="inDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="出库时间" name="outDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="出入库状态" name="depotStatusCd" ctype="select" data-code="CD0305"></yu-xform-item>
+              <yu-xform-item label="登记编号" name="bookNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="登记机构ID" name="bookOrg" ctype="input" :hidden="true"></yu-xform-item>
+              <yu-xform-item label="登记机构" name="orgName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="登记日期" name="bookDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="登记到期日" name="bookEndDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="共有人名称" name="commonOwnerNm" ctype="input"></yu-xform-item>
+              <yu-xform-item label="承租人名称" name="renterNm" ctype="input"></yu-xform-item>
+              <yu-xform-item label="是否将全部财产抵押我行标志" name="wholeMortagageOurInd" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否所有权有争议标志" name="propertyDisputedInd" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否租赁或已许可他人使用标志" name="rentalInd" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否登记标志" name="ifBook" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否共有人标志" name="commonAssetsInd" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="抵押物备注" name="remarks" ctype="input"></yu-xform-item>
+              <yu-xform-item label="担保人客户名称" name="guarCustNm" ctype="input"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="pawncancelFn">返回</yu-button>
+            </div>
+          </yu-xform>
+      </yu-xdialog>
+    </yu-tab-pane>
+    <yu-tab-pane label="质押物信息" name="gage">
+      <yu-xform related-table-name="gageTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+            <yu-button icon="document" @click="gageinfoFn">详情</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="gageTable" row-number :data-url="gageDataUrl" @row-dblclick="rowDblClick2">
+          <yu-xtable-column label="质押物类型" prop="gageTypeCd" width="150" data-code="CD0408"></yu-xtable-column>
+          <yu-xtable-column label="质押物名称" prop="gageNm" width="150"></yu-xtable-column>
+          <yu-xtable-column label="评估方式" prop="evalCd" width="150" data-code="CD0304"></yu-xtable-column>
+          <yu-xtable-column label="评估机构" prop="orgName" width="150"></yu-xtable-column>
+          <yu-xtable-column label="评估价值" prop="evalAmt" width="150"></yu-xtable-column>
+          <yu-xtable-column label="评估日期" prop="evalDt" width="150"></yu-xtable-column>
+          <yu-xtable-column label="我行确认价值" prop="bookEvalAmt" width="150"></yu-xtable-column>
+          <yu-xtable-column label="最新评估日期" prop="dataDt" width="150"></yu-xtable-column>
+          <yu-xtable-column label="评估到期日期" prop="evalEndDt" ></yu-xtable-column>
+      </yu-xtable>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="gageDialogVisible" width="1000px">
+          <yu-xform ref="gagerefForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+              <yu-xform-item label="担保品id" :hidden="true" name="pawnId" ctype="input"></yu-xform-item>
+              <yu-xform-item label="担保品编号" name="guarNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="担保合同编号" name="guarContNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="担保人客户编号" name="cusNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="担保人客户类型" name="cusTypCd" ctype="select" data-code="CD0303"></yu-xform-item>
+              <yu-xform-item label="担保人贷款卡号" name="comLoanCardNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="质押物名称" name="gageNm" ctype="input"></yu-xform-item>
+              <yu-xform-item label="质押物类型" name="gageTypeCd" ctype="select" data-code="CD0408"></yu-xform-item>
+              <yu-xform-item label="质押物类型细分" name="gageTypeSubCd"  ctype="select" data-code="CD0442"></yu-xform-item>
+              <yu-xform-item label="质押物状态" name="statusCd" ctype="select" data-code="CD0409"></yu-xform-item>
+              <yu-xform-item label="币种" name="ccyCd" ctype="select" data-code="CD0071"></yu-xform-item>
+              <yu-xform-item label="评估方式" name="evalCd" ctype="select" data-code="CD0304"></yu-xform-item>
+              <yu-xform-item label="评估人" name="evalPerson" ctype="input"></yu-xform-item>
+              <yu-xform-item label="评估机构" name="orgName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="评估价值" name="evalAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="我行确认价值" name="bookEvalAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="评估日期" name="evalDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="评估到期日期" name="evalEndDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="我行已设定担保额" name="ourSetGuarantyAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="权属证件类型" name="rightCertTypeCd" ctype="select" data-code="CD0427"></yu-xform-item>
+              <yu-xform-item label="权属证件号" name="rightCertNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="权属登记机关" name="rightOrg" ctype="input"></yu-xform-item>
+              <yu-xform-item label="入库时间" name="inDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="出库时间" name="outDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="出入库状态" name="depotStatusCd" ctype="select" data-code="CD0305"></yu-xform-item>
+              <yu-xform-item label="登记编号" name="bookNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="登记机构" name="bookOrg" ctype="input"></yu-xform-item>
+              <yu-xform-item label="登记日期" name="bookDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="登记到期日" name="bookEndDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="创建用户编号" name="createUserNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="创建机构编号" name="createOrg" ctype="input"></yu-xform-item>
+              <yu-xform-item label="创建日期" name="createDt" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="登记期限" name="bookTerm" ctype="input"></yu-xform-item>
+              <yu-xform-item label="共有人名称" name="refNm" ctype="input"></yu-xform-item>
+              <yu-xform-item label="共同财产标志" name="flag1Ind" ctype="select" data-code="CD0441"></yu-xform-item>
+              <!-- <yu-xform-item label="保全资产标志" name="flag2Ind" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="公证标志" name="flag3Ind" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="监管标志" name="flag4Ind" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="登记标志" name="flag5Ind" ctype="select" data-code="CD0238"></yu-xform-item> -->
+              <yu-xform-item label="质押物备注" name="remarks" ctype="input"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="gagecancelFn">返回</yu-button>
+            </div>
+          </yu-xform>
+      </yu-xdialog>
+    </yu-tab-pane>
+    <yu-tab-pane label="担保人信息" name="guarantee">
+      <yu-xform related-table-name="guaranteeTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+            <yu-button icon="document" @click="guaranteeinfoFn">详情</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="guaranteeTable" row-number :data-url="guaranteeDataUrl" @row-dblclick="rowDblClick3">
+        <yu-xtable-column label="担保品编号" prop="guarNo" width="150"></yu-xtable-column>
+        <yu-xtable-column label="担保合同编号" prop="guarContNo" width="150"></yu-xtable-column>
+        <yu-xtable-column label="保证人客户编号" prop="custNo" width="150"></yu-xtable-column>
+        <yu-xtable-column label="保证人名称" prop="custNm" width="150"></yu-xtable-column>
+        <yu-xtable-column label="保证人类型" prop="custTypeCd" width="150" data-code="CD0411"></yu-xtable-column>
+        <yu-xtable-column label="证件类型" prop="certTypeCd" width="150" data-code="CD0011"></yu-xtable-column>
+        <yu-xtable-column label="证件号码" prop="certNo" width="150"></yu-xtable-column>
+        <yu-xtable-column label="币种" prop="ccyCd" width="150" data-code="CD0071"></yu-xtable-column>
+        <yu-xtable-column label="担保金额" prop="guaranteeAmt" width="150"></yu-xtable-column>
+        <yu-xtable-column label="有效标志" prop="validInd" data-code="CD0238"></yu-xtable-column>
+      </yu-xtable>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="guaranteeDialogVisible" width="1000px">
+          <yu-xform ref="guaranteeForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+              <yu-xform-item label="担保品编号" :hidden="true" name="guarNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="担保合同编号" name="guarContNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="保证人客户编号" name="custNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="保证人名称" name="custNm" ctype="input"></yu-xform-item>
+              <yu-xform-item label="保证人类型" name="custTypeCd" ctype="select" data-code="CD0411"></yu-xform-item>
+              <yu-xform-item label="证件类型" name="certTypeCd" ctype="select" data-code="CD0011"></yu-xform-item>
+              <yu-xform-item label="证件号码" name="certNo" ctype="input"></yu-xform-item>
+              <yu-xform-item label="币种" name="ccyCd" ctype="select" data-code="CD0071"></yu-xform-item>
+              <yu-xform-item label="担保金额" name="guaranteeAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="保证人贷款证号" name="comLoanCard" ctype="input"></yu-xform-item>
+              <yu-xform-item label="保证担保形式" name="guaranteeFormCd" ctype="input"></yu-xform-item>
+              <yu-xform-item label="保证方式" name="guaranteeTypeCd" ctype="select" data-code="CD0386"></yu-xform-item>
+              <yu-xform-item label="最高担保金额" name="guaranteeMaxAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="已用保证限额" name="riskingLimitAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="对本行负债金额" name="bccDebtAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="有效期起始日" name="startDt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="有效期终止日" name="endDt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="互保标志" name="guaranteeMutualCd" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="有效标志" name="validInd" ctype="select" data-code="CD0238"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="guaranteecancelFn">返回</yu-button>
+            </div>
+          </yu-xform>
+      </yu-xdialog>
+    </yu-tab-pane>
+  </yu-tabs>
+</div>

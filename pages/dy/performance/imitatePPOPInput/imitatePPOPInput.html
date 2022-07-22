@@ -1,0 +1,46 @@
+<!--
+  @created by 冉珣 on 2021-11-1 10:01:54
+  @updated by
+  @description 模拟PPOP录入
+-->
+<div class="ppop_input">
+    <div class="option_title">
+        <p>上传记录</p>
+        <yu-upload ref="upload" :action="actionUrl" :headers="headers" :data="uploadData" :show-file-list="false" :on-change="onChange" :on-success="onSuccess" :before-upload="beforeAvatarUpload">
+            <yu-button type="primary" icon="el-icon-yx-cloud-upload">上传Excel</yu-button>
+        </yu-upload>
+    </div>
+    <yu-xtable ref="fileListTable" :data-url="dataUrl" :base-params="baseParams" :border="false">
+        <yu-xtable-column prop="fileName" label="文件名称" width="600px"></yu-xtable-column>
+        <yu-xtable-column prop="ppopMonth" label="统计月份"></yu-xtable-column>
+        <yu-xtable-column prop="uploadTime" label="提交时间"></yu-xtable-column>
+        <yu-xtable-column label="操作" width="100px">
+            <template slot-scope="scope">
+        <yu-link :underline="false" type="warning" @click="downloadFn(scope.row.filePath)">下载</yu-link>
+        <yu-devider></yu-devider>
+        <yu-link :underline="false" type="warning" @click="deleteFn(scope.row.filePath)">删除</yu-link>
+      </template>
+        </yu-xtable-column>
+    </yu-xtable>
+</div>
+<style>
+    .ppop_input {
+        padding: 24px;
+    }
+    
+    .option_title {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 24px
+    }
+    
+    .option_title p {
+        font-size: 16px;
+        color: #303133;
+        font-weight: bold;
+    }
+    
+    .ppop_input .el-dialog__body div {
+        text-align: center
+    }
+</style>

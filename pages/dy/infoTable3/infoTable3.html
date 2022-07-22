@@ -1,0 +1,77 @@
+<!-- 
+  @Created by mabintao on 2022-02-19
+  @updated by
+  @description 存款收入报表
+-->
+<div id="infoTable3">
+    <!-- test  allCustomerSearch -->
+    <link href="./pages/dy/infoTable3/infoTable3.css" rel="stylesheet" type="text/css">
+    <div>
+        <div class="mt20 bgWhite" style="padding: 0px 20px;">
+            <yu-row :gutter="20">
+                <yu-col :span="23" :offset="1">
+                    <yu-xform size="small" v-model="queryParams" label-width="140px" ref="queryParams"
+                        related-table-name="yutable1" responsive>
+                        <yu-xform-group :column="2">
+                            <yu-quarter ref="quarterRef" :quar-params="fourOrOne"></yu-quarter>
+                            <yu-xform-item label="AUM月日均" ctype="custom">
+                                <yu-col :sm="11" :xs="24">
+                                    <yu-input v-model="queryParams.aumAvgBalanceStart" placeholder="请输入" maxlength="10">
+                                    </yu-input>
+                                </yu-col>
+                                <yu-col class="line" :span="2" style="text-align: center">→</yu-col>
+                                <yu-col :sm="11" :xs="24">
+                                    <yu-input v-model="queryParams.aumAvgBalanceEnd" placeholder="请输入" maxlength="10">
+                                    </yu-input>
+                                </yu-col>
+                            </yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-group :column="2">
+                            <yu-xform-item placeholder="请选择" label="客户经理/机构" name="mktRespPerson" 
+                                ctype="per-mgr-selector" :params="selectCustParams"></yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-item ctype="custom" style="text-align: right;">
+                            <yu-button @click="resetFormFn('queryParams')">重置</yu-button>
+                            <yu-button type="primary" @click="searchFn('queryParams')">查询</yu-button>
+                            <yu-button type="primary" @click="exportFn()">导出</yu-button>
+                        </yu-xform-item>
+                    </yu-xform>
+                </yu-col>
+            </yu-row>
+        </div>
+
+        <div class="bgWhite" style="padding: 0px 20px;">
+            <yu-xtable :pageable="false" border  v-loading="loading3" :select-on-indeterminate="false" ref="multipleTable" :data="tableData"
+                :base-params="baseParams" class="mt20" :default-load="false" 
+                style="width: 100%" height="55vh">
+                <yu-xtable-column prop="branch" label="分行"></yu-xtable-column>
+                <yu-xtable-column prop="orgName" label="网点" width=""></yu-xtable-column>
+                <yu-xtable-column prop="customerMgrId" label="客户经理编号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="customerMgrName" label="客户经理姓名" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="customerMgrType" label="客户经理类型" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="customerId" label="客户号" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="customerName" label="客户名称" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="depositProfit" label="当年个人一般存款模拟利润" width="200px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.depositProfit || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="aumAvgBalance" label="AUM月日均" width="200px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.aumAvgBalance || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+            </yu-xtable>
+            <yu-pagination :total="pageData.total" :current-page.sync="pageData.page" :page-size="pageData.size"
+                @size-change="mgrsizeChangeFn" @current-change="mgrpageChangeFn" small :layout="pageData.layout">
+            </yu-pagination>
+            <!-- <template>
+                <div class="table-pagination">
+                <div class="demonstration">
+                    如果不勾选涉及民生，则在优慧客户数和显卓客户数的页面显示减掉民生数
+                </div>
+                </div>
+            </template> -->
+        </div>
+    </div>
+</div>

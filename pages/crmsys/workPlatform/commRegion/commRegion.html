@@ -1,0 +1,153 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2019-2-23 08:33:38.
+  @updated by
+  @description 交流区
+-->
+<div>
+    <link href="./pages/crmsys/workPlatform/commRegion/commRegion.css" rel="stylesheet" type="text/css" />
+    <yu-xform related-table-name="refTable" form-type="search" style="padding: 20px 20px;">
+        <yu-xform-group :column="4">
+            <yu-xform-item placeholder="创建时间" ctype="datepicker" name="createTime" :editable="false"></yu-xform-item>
+            <yu-xform-item placeholder="主题名称" ctype="input" name="shareName" clearable></yu-xform-item>
+            <yu-xform-item placeholder="创建人" ctype="yufp-user-selector" name="createUserId" :params="custManagerParams"></yu-xform-item>
+        </yu-xform-group>
+    </yu-xform>
+    <yu-xtable ref="refTable" style="padding: 20px 20px;" :border="false" row-number :data-url="dataUrl" :max-height="height">
+        <yu-xtable-column label="主题编号" prop="shareId" v-if="false"></yu-xtable-column>
+        <yu-xtable-column label="主题名称" prop="shareName" width="200"></yu-xtable-column>
+        <yu-xtable-column label="创建人" prop="createUserName" width="150"></yu-xtable-column>
+        <yu-xtable-column label="创建时间" prop="createTime" width="160"></yu-xtable-column>
+        <yu-xtable-column label="最近回复时间" prop="updateTime" width="160"></yu-xtable-column>
+        <yu-xtable-column label="操作" prop="createAt">
+            <template slot-scope="scope">
+        <yu-button type="text" size="small" @click="showInfo(scope.row)">查看</yu-button>
+        <yu-button type="text" size="small" v-show="scope.row.createUserId == curLoginCode" @click="modifyInfo(scope.row)">修改</yu-button>
+        <yu-button type="text" size="small" v-show="scope.row.createUserId == curLoginCode" @click="deleteInfo(scope.row)">删除</yu-button>
+      </template>
+        </yu-xtable-column>
+    </yu-xtable>
+    <div class="" :style="{ 'height': (height / 2) + 'px' }">
+        <div style="background-color: #dfe6ec;">
+            <div style="padding: 10px;color: #000000;font-size: initial;">主题创建区域</div>
+        </div>
+        <div style="padding: 20px 0px 0px 0px;border: 1px solid #dfe6ec;">
+            <yu-xform style="width: 80%;margin: auto;" ref="refForm" label-width="80px" v-model="formdata" :disabled="formDisabled">
+                <yu-xform-group :column="1">
+                    <yu-xform-item label="主题名称" ctype="input" name="shareName" :rules="rule.shareName" placeholder="50个字符以内" id="themeName"></yu-xform-item>
+                    <!-- <yu-xform-item label="主题内容" ctype="input" name="shareContent"></yu-xform-item> -->
+                    <yu-xform-item ref="tinymce" label="主题内容" v-model="infoShareContent" ctype="el-tinymce-x" name="shareContent" :id="tinymceIdjl" :rules="rule.infoShareContent" :height="height / 3" :action="action" :bus-no="busNo"></yu-xform-item>
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                    <yu-button icon="check" type="primary" @click="saveFn" v-if="buttontj">提交</yu-button>
+                    <yu-button icon="el-icon-yx-cloud-upload" type="primary" v-else>图片上传中</yu-button>
+
+                    <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+                </div>
+            </yu-xform>
+        </div>
+    </div>
+    <yu-xdialog :visible.sync="dialogVisible" width="70%" :show-close="true" :close-on-click-modal="true">
+        <div class="article-detail">
+            <div class="body">
+                <div class="article">
+                    <div class="article-title">
+                        <h1 class="title"> {{ curInfoData.shareName }} </h1>
+                        <div class="desc">
+                            发布于&nbsp;{{ curInfoData.createTime }}&nbsp;作者：&nbsp;{{ curInfoData.createUserName }}
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="markdown-text">
+                            <!-- <p> {{ curInfoData.shareContent }} </p> -->
+                            <span v-html="curInfoData.shareContent"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="reply">
+                    <div v-if="replyList.length > 0" class="other">
+                        <div style="color: #000000;font-size: initial;">评论列表</div>
+                    </div>
+                    <div v-for="(item,index) in replyList" v-if="item" class="reply-item">
+                        <div class="reply-author">
+                            <div class="reply-avatar">
+                                <div class="reply-desc">
+                                    <span style="color: #7e8c8d;">{{ item.createUserName }}:</span>
+                                    <!-- <a href="#" style="color: #7e8c8d;text-decoration: none;">{{ item.createUserName }}:</a> -->
+                                    {{ item.createTime }}
+                                    <div class="reply-opt-box">
+                                        <span class="reply-opt-btn show-reply-btn" v-if="item.replyCount > 0" v-show="!showReplyBtnHide" @click="showReplyBtn(index)">查看回复({{ item.replyCount }})</span>
+                                        <span class="reply-opt-btn show-reply-btn" v-if="item.replyCount > 0" v-show="showReplyBtnHide" @click="hideReplyBtn">收起回复</span>
+                                        <span class="reply-opt-btn reply-btn" v-show="item.createUserId == curLoginCode ? false : true" @click="replyBtn(index)">回复</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reply-content">
+                            <div class="markdown-text">
+                                <p>{{ item.replyContent }}</p>
+                            </div>
+                        </div>
+                        <!-- 回复面板 -->
+                        <transition name="slide-top">
+                            <div class="reply-form" v-show="index != null && curReplyIndex == index">
+                                <textarea class="reply-form-text" :rules="rule.replyContent" v-model="curReplyContent"></textarea>
+                                <div class="reply-form-btns">
+                                    <yu-button icon="yx-undo2" size="small" type="primary" @click="cancelReplyFn">取消</yu-button>
+                                    <yu-button icon="check" size="small" type="primary" @click="replySaveFn(index)">回复</yu-button>
+                                </div>
+                            </div>
+                        </transition>
+                        <!-- 回复列表 -->
+                        <div v-for="(subItem,subIndex) in subReplyList" v-show="curSubIndex == index" class="sub-reply-item">
+                            <div class="reply-author">
+                                <div class="reply-avatar">
+                                    <div class="reply-desc">
+                                        <span style="color: #000000;">{{ subItem.createUserName }}</span>
+                                        <span style="color: #7e8c8d;">回复 {{ subItem.upCreateUserName }}:</span> {{ subItem.createTime }}
+                                        <div class="reply-opt-box">
+                                            <span class="reply-opt-btn sub-reply-btn" v-show="subItem.createUserId == curLoginCode ? false : true" @click="subReplyBtn(subIndex)">回复</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="reply-content">
+                                <div class="markdown-text">
+                                    <p>{{ subItem.replyContent }}</p>
+                                </div>
+                            </div>
+                            <transition name="slide-top">
+                                <div class="reply-form" v-show="subIndex != null && curSubReplyIndex == subIndex">
+                                    <textarea class="reply-form-text" :rules="rule.replyContent" v-model="curSubReplyContent"></textarea>
+                                    <div class="reply-form-btns">
+                                        <yu-button icon="yx-undo2" size="small" type="primary" @click="cancelSubReplyFn">取消</yu-button>
+                                        <yu-button icon="check" size="small" type="primary" @click="subReplySaveFn(subIndex)">回复</yu-button>
+                                    </div>
+                                </div>
+                            </transition>
+                        </div>
+                    </div>
+                    <!-- 分页组件 -->
+                    <yu-pagination v-if="replyList.length > 0" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pageTotalSize">
+                    </yu-pagination>
+
+                    <div class="other">
+                        <div style="color: #000000;font-size: initial;">评论区域</div>
+                    </div>
+                    <div style="padding: 20px 0px 0px 0px;border: 1px solid #dfe6ec;">
+                        <yu-xform style="width: 80%;margin: auto;" ref="replyForm" label-width="130px" v-model="replyFormdata">
+                            <yu-xform-group :column="1">
+                                <yu-xform-item label="评论内容" ctype="textarea" name="replyContent" :rules="rule.replyContent" :rows="5" placeholder="100个字符以内"></yu-xform-item>
+                                <!-- TODO dialog显示 富文本组件 加载不稳定 待处理 -->
+                                <!-- <yu-xform-item ref="replyTinymce" label="回复内容" v-model="replyShareContent" ctype="el-tinymce-x" name="replyContent"
+                  id="tinymceEditor" :height="height / 3" :action="action" :bus-no="busNo"></yu-xform-item> -->
+                            </yu-xform-group>
+                            <div class="yu-grpButton">
+                                <yu-button icon="check" type="primary" @click="replySaveFn(-1)">提交</yu-button>
+                            </div>
+                        </yu-xform>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </yu-xdialog>
+</div>

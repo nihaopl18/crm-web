@@ -1,0 +1,55 @@
+<!--
+  @created by 刘杰 on 2018/11/19.
+  @description 营销组件FORM表单-触发组件-审批触发
+-->
+<div>
+  <el-collapse v-model="activeNames">
+    <el-collapse-item title="输入" name="1">
+      <yu-xform label-width="150px" label-suffix="：" v-model="formdata2">
+        <yu-xform-group>
+          <yu-xform-item label="客户资产等级" ctype="select" :options="selectValue" name="number"></yu-xform-item>
+          <yu-xform-item label="总资产月日均余额" ctype="input" name="title1"></yu-xform-item>
+          <yu-xform-item label="综合金融资产近六月月日均余额" ctype="input" name="title2"></yu-xform-item>
+          <yu-xform-item label="近六月借记卡消费金额" ctype="input" name="title3"></yu-xform-item>
+          <yu-xform-item label="活期存款月日均余额" ctype="input" name="title4"></yu-xform-item>
+          <yu-xform-item label="近六月代发养老金金额" ctype="input" name="title5"></yu-xform-item>
+          <yu-xform-item label="国债月日均余额" ctype="input" name="title6"></yu-xform-item>
+          <yu-xform-item label="近六月借记卡交易次数" ctype="input" name="title7"></yu-xform-item>
+          <yu-xform-item label="生命周期" ctype="select" :options="selectValue1" name="number1"></yu-xform-item>
+          <yu-xform-item label="渠道开通个数" ctype="input" name="title8"></yu-xform-item>
+          <yu-xform-item label="其它理财近六月月日均占比" ctype="input" name="title9"></yu-xform-item>
+          <yu-xform-item label="贷记卡等级" ctype="select" name="title10" :options="selectValue2"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+    </el-collapse-item>
+    <el-collapse-item title="操作" name="2">
+      <el-tabs :active-name="activeName2">
+        <el-tab-pane label="选取审批流程" name="product1">
+          <template>
+            <el-table border style="width: 100%" height="120">
+              <el-table-column type="index" label="序号" width="120"></el-table-column>
+              <el-table-column prop="isCall" label="审批人" width="120"></el-table-column>
+              <el-table-column prop="custId" label="审批时间" width="120"></el-table-column>
+              <el-table-column prop="personalName" label="审批结果" width="120"></el-table-column>
+              <el-table-column prop="orgCustType" label="审批意见" width="120"></el-table-column>
+            </el-table>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane label="配置审批流程" name="product2">
+          <template>
+
+          </template>
+        </el-tab-pane>
+      </el-tabs>
+      <div class="yu-toolBar" style="margin-top: 10px;">
+        <el-button-group>
+          <el-button icon="edit" @click="">保存</el-button>
+          <el-button icon="yx-switch" @click="close">关闭</el-button>
+        </el-button-group>
+      </div>
+    </el-collapse-item>
+    <el-collapse-item title="输出" name="3">
+
+    </el-collapse-item>
+  </el-collapse>
+</div>

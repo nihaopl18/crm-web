@@ -1,0 +1,32 @@
+<!-- 
+  @Created by 张成龙 zhangcl3@yusys.com.cn on 2019-2-28 16:27:06.
+  @updated by
+  @description 手工调整申请页面
+-->
+<div>
+    <!-- TODO 表格字段，需求和接口不一致，以哪个为准 -->
+    <!-- <div class="yu-toolBar">
+      <yu-button-group>
+        <yu-button icon="document" @click="deleteFn1">删除申请</yu-button>
+      </yu-button-group>
+    </div> -->
+    <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="checkbox" :base-params="baseParams">
+        <yu-xtable-column label="客户编号" prop="custId" width="120"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="申请时间" prop="appHours" width="120" :formatter="formData"></yu-xtable-column>
+        <!-- <yu-xtable-column label="申请人" prop="applicant" width="120"></yu-xtable-column> -->
+        <yu-xtable-column label="申请人" prop="userName" width="120"></yu-xtable-column>
+        <!-- <yu-xtable-column label="申请人机构" prop="applIns" width="120"></yu-xtable-column> -->
+        <yu-xtable-column label="申请人机构" prop="orgName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="当期服务等级" prop="curSerLevel" width="120" data-code="CD0032"></yu-xtable-column>
+        <yu-xtable-column label="申请服务等级" prop="appSerLevel" width="120" data-code="CD0032"></yu-xtable-column>
+        <yu-xtable-column label="评级有效期" prop="ratVal" width="120" :formatter="formData"></yu-xtable-column>
+        <yu-xtable-column label="申请理由" prop="appRea" width="120"></yu-xtable-column>
+        <yu-xtable-column label="近三个月日均总资产" prop="lastThreeMonDayTotalAss" width="120"></yu-xtable-column>
+        <yu-xtable-column label="近三个月日均总负债" prop="lastThreeMonDayTotalLia" width="120"></yu-xtable-column>
+        <yu-xtable-column label="近1年中间业务贡献值" prop="lateYearMidBusDegree" width="120"></yu-xtable-column>
+        <yu-xtable-column label="近1年结算量" prop="lateYearSetVol" width="120"></yu-xtable-column>
+        <yu-xtable-column label="近1年刷卡消费金额" prop="lateYearCreCardConAmo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="审批状态" prop="approveStat" width="120" :formatter="formStat"></yu-xtable-column>
+    </yu-xtable>
+  </div>

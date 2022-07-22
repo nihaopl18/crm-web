@@ -1,0 +1,99 @@
+<!--
+  @created by zhangxs4 on 2018/07/18.
+  @description 标签组合查询组件
+-->
+<div>
+<link rel="stylesheet" type="text/css" href="pages/context/cmpView/customCmp/tagCmp.css"/>
+<el-collapse v-model="activeNames">
+<el-collapse-item title="输入项" name="1">
+	  <el-row>
+	    <el-col :span="5">
+	      <el-tree-x ref="mytree" :height="height-44" @node-click="nodeClickFn"
+	        :data-url="treeqryUrl" data-id="groupNo" data-label="groupName"
+	        :default-expanded-keys="[0]" node-key="groupNo"
+	        data-pid="parentNo" :data-async="async" :data-params="param" data-root="0" style="margin-right:10px;">
+				</el-tree-x>
+	    </el-col>
+	    <el-col :span="19">
+			<div class="x-panel-body x-panel-body-noheader x-panel-body-noborder"  
+	      	 style="overflow-y: auto;height: 161px; width: 100%;">
+		      <div  class=" ys-stChooseTags" style="overflow: auto; width: calc(100%-140px);;">
+						<div ><h1 class="ys-stctTitle">您已选择：</h1></div>
+						<div v-for="(item,index) in selectList ">
+							<a class="ys-stcTag" href="javascript:void(0)" title="item.name">{{item.name}}<i  class="el-icon-yx-cross" @click="deleteSeTagFn(item)"></i></a>
+						</div>
+			  </div>
+					
+		      <div id="ext-comp-1016" class=" x-panel" style="width: 100%;">
+			      <div class="x-panel-bwrap">
+				      <div class="x-panel-body x-panel-body-noheader"  style="width: 100%;">
+									<div  class=" ys-stGroup" style="width: calc(100%-140px);" v-for="(item,index) in list ">
+										<h1 class="ys-stgTitle" style="overflow:hidden; white-space:nowrap; text-overflow:ellipsis;" 
+											><input hidden="false" type="checkbox" checked="true" id="ext-gen152">
+											<label title="item.name">{{item.name}}：</label>
+										</h1>
+										<div v-for="(stu,stuindex) in item.stu "><a class="ys-stgTag" href="javascript:void(0)" @click="addTabQuryFn(stu,stuindex,index)"
+												title="stu.name" id="ext-gen153">{{stu.name}}<i :class="[{'el-icon-yx-checkmark':stu.state},{'el-icon-yx-cross':!stu.state}]"></i></a>
+									   </div>
+									   <i class="el-icon-yx-cross" @click="delstGroup(index)"></i>
+				                    </div>
+			          </div>
+		         </div>
+		     </div>
+	     </div>
+	    </el-col>
+  </el-row>
+  </el-collapse-item>
+  <el-collapse-item title="操作" name="2">
+  	<el-form  label-width="100px" ref="itemTemp" :model="itemTemp">
+			<el-row>
+				 <el-col :span="6">
+					<el-form-item label="执行频率" class="mustWrite">
+					    <el-select v-model="itemTemp.value"  size="small"  v-show=true >
+					    		<el-option v-for="item in selectOptions" :key="item.key" :label="item.value" :value="item.value">
+					    		</el-option>
+					    		<el-input v-show=false v-model="itemTemp.groupvalue"></el-input>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			 	 <el-col :span="8">
+			 		<el-form-item label="加入客户群" class="mustWrite">
+			 			 <el-form-q ref="custform" :field-data="queryFieldss" :buttons="queryButtonss" :columns="1" class="tagCmpSingle"></el-form-q>
+			 	    </el-form-item>
+			 	 </el-col>
+			 	 <el-col :span="10" >
+			 	 	<el-form-item class="mustWrite">
+			 	 	<el-form-x  :field-data="queryFields" :buttons="queryButtons" label-position='right' :columns='1'></el-form-x>
+			 	 	</el-form-item>
+			 	 </el-col>
+			 </el-row>
+	</el-form>
+  </el-collapse-item>
+  <el-collapse-item title="输出" name="3">
+		<!--<el-row>
+			<el-col :span="12">
+				<template>
+					<el-form  label-width="100px" ref="custTemp" :model="custTemp">
+				   <el-col :span="12">
+			 		<el-form-item label="客户群" class="mustWrite">
+			 			<el-input placeholder='客户群'  v-model="custTemp.custgroup"></el-input>
+			 	    </el-form-item>
+			 	    </el-col>
+			 	    <el-col :span="12">
+			 	   </el-col>
+					</el-form>
+				</template>
+			</el-col>
+		</el-row>-->
+		<el-row>
+			<el-col :span="24">
+				<template>
+					<el-table-x ref="reftable" :checkbox="true" :height ="tabHeight-30" :data="setDatas"
+				    	:table-columns="tableColumns" :data-url="qryUrl" :default-load="qryflag" @loaded="loaddata">
+				    </el-table-x>
+				</template>
+			</el-col>
+		</el-row>
+</el-collapse-item>
+</el-collapse>
+</div>

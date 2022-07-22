@@ -1,0 +1,27 @@
+  .header {
+    display: flex;
+    align-items: center;
+  }
+  .front-box {
+    width: 4px;
+    height: 14px;
+    background: #e30a2a;
+  }
+  .title {
+    margin: 20px 12px 20px 8px;
+    white-space: nowrap;
+    font-size: 16px;
+    color: #303133;
+    font-weight: 700;
+  }
+  .line {
+    width: 100%;
+    border: 1px dashed #e5e7ed;
+  }
+  .el-col-8 {
+      padding: 5px;
+  }
+  .dialog-footer {
+      text-align: center;
+  }
+  

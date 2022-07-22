@@ -1,0 +1,68 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by zjy zhangjy14@yuys.com.cn on 2019-6-25 16:35:59.
+  @updated by
+  @description 准入变动查询
+-->
+<div>
+  <yu-xform v-model="queryFormdata"  ref="custSearchForm" form-type="search"  class="hide-form-search-btn" :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn">
+    <yu-xform-group :column="6">
+        <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016" rules="required" @change="custTpChangeFn"></yu-xform-item>
+        <yu-xform-item placeholder="客户编号" name="custId" ctype="input"></yu-xform-item>
+        <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+        <yu-xform-item placeholder="归属机构" name="belongBrch" ctype="yufp-org-tree"></yu-xform-item>
+        <yu-xform-item placeholder="所属客户经理" name="belongMgr" ctype="yufp-mgr-selector"></yu-xform-item>
+    </yu-xform-group>
+    <!-- <div  style="text-align: right;">
+      <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+    </div> -->
+  </yu-xform>
+  <!-- <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+      <yu-button icon="yx-file-excel" @click="exportFn">导出</yu-button>
+    </yu-button-group>
+  </div> -->
+  <div class="div1">
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="checkbox" :default-load="false" >
+    <yu-xtable-column label="客户编号" prop="custId"  :resizable="true"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName"  :resizable="true"></yu-xtable-column>
+    <yu-xtable-column label="变动情况" prop="admitType":resizable="true" ></yu-xtable-column>
+    <yu-xtable-column label="本期AUM季日均" prop="aumQAvgBal" :resizable="true"></yu-xtable-column>
+    <yu-xtable-column label="上期AUM季日均" prop="oldAumQAvgBal" :resizable="true"></yu-xtable-column>
+    <yu-xtable-column label="所属机构" prop="orgName" :resizable="true" ></yu-xtable-column>
+    <yu-xtable-column label="所属客户经理" prop="userName"  :resizable="true"></yu-xtable-column>
+  </yu-xtable>
+</div>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+  <!-- <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="80px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="编码" ctype="num" name="id" rules="required" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="名称" ctype="input" name="title" :rules="rule[0]"></yu-xform-item>
+        <yu-xform-item label="时间" ctype="datepicker" name="createAt"></yu-xform-item>
+        <yu-xform-item label="作者" ctype="input" name="author"></yu-xform-item>
+        <yu-xform-item label="审核人" ctype="input" name="auditor"></yu-xform-item>
+        <yu-xform-item label="类型" ctype="select" name="type" data-code="NATIONALITY"></yu-xform-item>
+        <yu-xform-item label="状态" ctype="select" name="status" data-code="PUBLISH_STATUS"></yu-xform-item>
+        <yu-xform-item label="阅读数" ctype="input" name="pageviews" :rules="rule[1]"></yu-xform-item>
+        <yu-xform-item label="自定义" ctype="yufp-demo-selector" name="yourField"></yu-xform-item>
+        <yu-xform-item label="点评" ctype="textarea" name="remark" :rows="3" :colspan="24" placeholder="2000个字符以内"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog> -->
+</div>

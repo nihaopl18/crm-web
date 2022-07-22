@@ -1,0 +1,36 @@
+<!--
+  @Created by houyx3 houyx3@yusys.com.cn on 2022-5-10 14:59:05.
+  @updated by
+  @description 机构业绩结果
+-->
+<div>
+  <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+  <yu-xform ref="refForm" v-model="formdata">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="考核周期" name="schemeCycle" ctype="datepicker" type="month"></yu-xform-item>
+      <yu-xform-item placeholder="考核方案" name="schemeId" ctype="yufp-scheme-selector" :params="quoteSchemeSelParams">
+      </yu-xform-item>
+      <yu-xform-item placeholder="机构名称" name="orgId" ctype="yufp-org-tree"></yu-xform-item>
+    </yu-xform-group>
+    <div class="button-group" style="float: right;">
+      <el-button type="primary" @click="queryFn">查询</el-button>
+      <el-button type="primary" @click="resetFn">重置</el-button>
+
+    </div>
+  </yu-xform>
+  <div class="yu-toolBar" style="margin-top: 20px;">
+    <yu-button-group>
+      <yu-button icon="plus" @click="exportExcel">导出</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" :default-load = "false" :data-url="dataUrl" v-show="hasDataFlag">
+    <yu-xtable-column :label="item.value" :prop="item.key" v-for="item in titleData" :width="item.widthSize"></yu-xtable-column>
+  </yu-xtable>
+  <div style="font-size: 16px;margin-top: 30px;color: red;text-align: center;" v-if="!hasDataFlag">暂无数据，请选择考核方案查询</div>
+</div>
+<style>
+  .el-form-item {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+</style>

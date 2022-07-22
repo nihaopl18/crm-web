@@ -1,0 +1,90 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2019-1-17 16:45:15.
+  @updated by
+  @description 工作报告
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="6">
+      <yu-xform-item placeholder="报告业务类型" ctype="select" name="workReportBusiType" data-code="CD0335" @change="chgSelBusiType"></yu-xform-item>
+      <yu-xform-item placeholder="选择日期" format="yyyy-MM-dd" 
+        ctype="datepicker" name="reporterDate" type="date" :editable="false" :hidden="isMonthType"></yu-xform-item> 
+      <yu-xform-item placeholder="选择月" format="yyyy-MM" 
+        ctype="datepicker" name="reporterDate" type="month" :editable="false" :hidden="!isMonthType"></yu-xform-item>
+      <yu-xform-item placeholder="所属机构" ctype="yufp-org-tree" name="reporterOrg"></yu-xform-item>
+      <yu-xform-item placeholder="客户经理" ctype="yufp-mgr-selector" name="reporterId"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar" style="margin-top:10px">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addButton">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn" v-if="updButton">修改</yu-button>
+      <yu-button icon="document" @click="infoFn" v-if="viewButton">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="delButton">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :data="listdata" selection-type="checkbox" @row-dblclick="rowDblClick">
+    <yu-xtable-column label="报告业务类型" prop="workReportBusiType" width="110" data-code="CD0335"></yu-xtable-column>
+    <yu-xtable-column label="报告人名称" prop="reporterName" width="110"></yu-xtable-column>
+    <yu-xtable-column label="报告人机构名称" prop="reporterOrgName" width="130"></yu-xtable-column>
+    <yu-xtable-column label="报告周期" prop="reporterCycle" width="190"></yu-xtable-column>
+    <yu-xtable-column label="报告生成日期" prop="reportDate" width="110" :formatter="formJE"></yu-xtable-column>
+    <!--<yu-xtable-column label="维护客户数" prop="maintenCustNum" width="110"></yu-xtable-column>-->
+    <yu-xtable-column label="新增管户客户数" prop="reportSub2" width="110"></yu-xtable-column>
+    <yu-xtable-column label="新增潜在客户数" prop="reportSub3" width="110"></yu-xtable-column>
+    <!--<yu-xtable-column label="提升客户数" prop="prortCustNum" width="110"></yu-xtable-column>
+    <yu-xtable-column label="新增销售理财产品金额" prop="addSaleFinBal" width="180"></yu-xtable-column>
+    <yu-xtable-column label="新增销售贵金属金额" prop="addSaleMetalBal" width="180"></yu-xtable-column>-->
+    <yu-xtable-column label="AUM新增" prop="reportSub13" width="100"></yu-xtable-column>
+    <yu-xtable-column label="新增存款余额" prop="reportSub17" width="110"></yu-xtable-column>
+    <yu-xtable-column label="新增贷款余额" prop="reportSub16" width="150"></yu-xtable-column>
+  <!--  <yu-xtable-column label="主观汇报内容" prop="subReportCont" width="110"></yu-xtable-column>-->
+  </yu-xtable-column>
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="60%" top="5vh">
+    <yu-xform ref="refForm" label-width="170px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group :column="2">
+        <yu-xform-item label="报告编号" ctype="input" name="workReportId" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="报告业务类型" ctype="select" name="workReportBusiType" data-code="CD0335" 
+          :rules="rule.workReportBusiType" @change="chgBusiType" :disabled="!isAddDialog"></yu-xform-item>
+        <yu-xform-item label="报告生成日期" ctype="datepicker" name="reportDate" type="date" format="yyyy-MM-dd" 
+          :rules="isAddDialog ? rule.reportDate : ''" @change="chgRptDate" :editable="false" :hidden="!isAddDialog" :disabled="dateDisabled"></yu-xform-item>
+      </yu-xform-group>
+      <yu-xform-group :column="2">
+        <yu-xform-item label="报告开始日期" ctype="datepicker" name="startDate" type="date" format="yyyy-MM-dd" :editable="false" disabled></yu-xform-item>
+        <yu-xform-item label="报告结束日期" ctype="datepicker" name="endDate" type="date" format="yyyy-MM-dd" :editable="false" disabled></yu-xform-item>
+        <!-- 详情 公共展示项 start -->
+      <!--  <yu-xform-item label="维护客户数" ctype="input" name="reportSub1" :hidden="!isInfoDialog"></yu-xform-item> -->
+        <yu-xform-item label="新增管户客户数" ctype="input" name="reportSub2" :hidden="!isInfoDialog"></yu-xform-item>
+        <yu-xform-item label="新增潜在客户数" ctype="input" name="reportSub3" :hidden="!isInfoDialog"></yu-xform-item>
+        <yu-xform-item label="接触客户次数" ctype="input" name="reportSub4" :hidden="!isInfoDialog"></yu-xform-item>
+    <!--    <yu-xform-item label="联系活动接触次数" ctype="input" name="reportSub5" :hidden="!isInfoDialog"></yu-xform-item>
+        <yu-xform-item label="拜访客户次数" ctype="input" name="reportSub6" :hidden="!isInfoDialog"></yu-xform-item>
+        <yu-xform-item label="接待客户次数" ctype="input" name="reportSub7" :hidden="!isInfoDialog"></yu-xform-item>
+        <yu-xform-item label="接触客户电话次数" ctype="input" name="reportSub8" :hidden="!isInfoDialog"></yu-xform-item>
+        <yu-xform-item label="接触发送短信次数" ctype="input" name="reportSub9" :hidden="!isInfoDialog"></yu-xform-item> -->
+        <yu-xform-item label="AUM新增" ctype="input" name="reportSub13" :hidden="!isInfoDialog"></yu-xform-item>
+     <!--   <yu-xform-item label="销售理财产品金额" ctype="input" name="reportSub14" :hidden="!isInfoDialog"></yu-xform-item>
+        <yu-xform-item label="新增销售保险额度" ctype="input" name="reportSub15" :hidden="!isInfoDialog"></yu-xform-item> -->
+        <yu-xform-item label="新增贷款余额" ctype="input" name="reportSub16" :hidden="!isInfoDialog"></yu-xform-item>
+        <yu-xform-item label="新增存款余额" ctype="input" name="reportSub17" :hidden="!isInfoDialog"></yu-xform-item>
+      <!--  <yu-xform-item label="新增其他中间业务产品" ctype="input" name="reportSub18" :hidden="!isInfoDialog"></yu-xform-item> -->
+        <!-- 详情 公共展示项 end -->
+        <yu-xform-item label="工作内容" ctype="textarea" name="workContent" :rows="3" :colspan="24" placeholder="300个字符以内" :rules="rule.max300Len" :hidden="!isDayType"></yu-xform-item>
+        <yu-xform-item label="工作困难" ctype="textarea" name="workDifficulty" :rows="3" :colspan="24" placeholder="300个字符以内" :rules="rule.max300Len" ></yu-xform-item>
+        <yu-xform-item label="工作小结" ctype="textarea" name="workSummary" :rows="3" :colspan="24" placeholder="300个字符以内" :rules="rule.max300Len" ></yu-xform-item>
+        <!-- 周报 单独展示项 -->
+        <yu-xform-item label="周一工作内容" ctype="textarea" name="monContent" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.max50Len" :hidden="!isWeekType"></yu-xform-item>
+        <yu-xform-item label="周二工作内容" ctype="textarea" name="tuesContent" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.max50Len" :hidden="!isWeekType"></yu-xform-item>
+        <yu-xform-item label="周三工作内容" ctype="textarea" name="wedContent" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.max50Len" :hidden="!isWeekType"></yu-xform-item>
+        <yu-xform-item label="周四工作内容" ctype="textarea" name="thurContent" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.max50Len" :hidden="!isWeekType"></yu-xform-item>
+        <yu-xform-item label="周五工作内容" ctype="textarea" name="friContent" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.max50Len" :hidden="!isWeekType"></yu-xform-item>
+        <yu-xform-item label="周六工作内容" ctype="textarea" name="satContent" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.max50Len" :hidden="!isWeekType"></yu-xform-item>
+        <yu-xform-item label="周日工作内容" ctype="textarea" name="sunContent" :rows="2" :colspan="24" placeholder="200个字符以内" :rules="rule.max50Len" :hidden="!isWeekType"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

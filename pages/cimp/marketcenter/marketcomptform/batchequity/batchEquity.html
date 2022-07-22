@@ -1,0 +1,29 @@
+<!--
+  @created by zhuly6 on 2018/11/16.
+  @description 营销组件FORM表单-营销组件-批量权益活动
+-->
+<div>
+  <yufp-node-cmp ref="ncmpRef" :design-body="flowNode.designBody"></yufp-node-cmp>
+  <el-collapse v-model="activeNames">
+    <el-collapse-item title="活动维护输入项" name="1">
+        <el-form-x ref="eventform"
+            :group-fields="eventUpdateFields" :buttons="eventUpdateButtons"
+            :disabled="eventFormDisabled" label-width="100px">
+        </el-form-x>
+    </el-collapse-item>
+    <el-collapse-item title="活动规则维护输入" name="2">
+        <div id='operateId1'></div>
+    </el-collapse-item>
+    <!-- <el-collapse-item title="对外营销位" name="3">
+      <el-form >
+        <el-form-item label="展现表单">
+          <el-input placeholder="" v-model="value1" type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item align="center">
+            <el-button type="primary" icon="el-icon-yx-undo2" @click="preview">预览</el-button>
+            <el-button type="primary" icon="check">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </el-collapse-item> -->
+    </el-collapse>
+ </div>

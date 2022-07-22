@@ -1,0 +1,55 @@
+.tisds
+{
+  height: 160px;
+  width: 49%;
+  float: left;
+  margin: 2px;
+}
+.tisds1
+{
+ height: 48%;
+ margin: 2px;
+ border:1px dashed  rgb(171, 173, 173);
+ border-radius: 10px;
+}
+.tisds2
+{
+  height: 130px;
+  width: 32%;
+  float: left;
+  margin: 2px;
+ border:1px dashed  rgb(171, 173, 173);
+ border-radius: 10px;
+}
+.tisds3
+{
+  height: 130px;
+  width: 32%;
+  float: left;
+  margin: 2px;
+}
+
+.divCenter{margin:0 auto;overflow: hidden;}
+.h4mang{
+ margin-top: 1px;
+ margin-bottom: 1px;
+}
+.buttonM{
+ height: 130px;
+ width: 145px;
+ float: left;
+ margin: 1px;
+}
+.buttonM1
+{
+ height: 48%;
+ margin-top: 20px;
+
+ /* margin-bottom: 7px; */
+}
+.buttonM2
+{
+ height: 48%;
+ /* margin-top: 7px;
+ margin-bottom: 27px; */
+}

@@ -1,0 +1,24 @@
+<div>
+  <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="true" style="margin-top:20px">
+    <!-- 虚拟票券审批页面 -->
+    <yu-xform-group>
+      <yu-xform-item label="记录编号" name="ticketId"  ctype="input" :hidden="true"></yu-xform-item>
+      <yu-xform-item label="票券编号" name="ticketNo"  ctype="input" rules="required"></yu-xform-item>
+      <yu-xform-item label="票券名称" name="ticketName" ctype="input" rules="required"></yu-xform-item>
+      <yu-xform-item label="票券类别" name="ticketType" ctype="select" data-code="TICKET_TYPE"></yu-xform-item>
+      <yu-xform-item label="商户名称" name="merchantName" ctype="input" rules="required"></yu-xform-item>
+      <yu-xform-item label="领取方式" name="receiveType" ctype="select" data-code="RECEIVE_TYPE" rules="required"></yu-xform-item>
+      <yu-xform-item label="适用机构" name="suitOrg" ctype="yufp-org-tree" rules="required"></yu-xform-item>
+      <yu-xform-item label="使用条件" name="useCondition" ctype="textarea" :rows="2" :colspan="24" rules="required"></yu-xform-item>
+      <yu-xform-item label="使用说明" name="useRemark" ctype="textarea" :rows="4" :colspan="24" rules="required"></yu-xform-item>
+      <!-- <yu-xform-item label="状态" name="ticketStatus" ctype="input" :hidden="true"></yu-xform-item>
+      <yu-xform-item label="审批状态" name="wfApprSts" ctype="input" :hidden="true"></yu-xform-item> -->
+      <yu-xform-item label="创建人" name="createUserName" ctype="input" ></yu-xform-item>
+      <yu-xform-item label="创建日期" name="createDate" ctype="datepicker" :formatter="dateFormatter"></yu-xform-item>
+      <yu-xform-item label="创建机构" name="createOrgName" ctype="input" ></yu-xform-item>
+      <yu-xform-item label="最近修改人" name="updateUserName" ctype="input" ></yu-xform-item>
+      <yu-xform-item label="最近修改日期" name="updateDate" ctype="datepicker" :formatter="dateFormatter"></yu-xform-item>
+      <yu-xform-item label="最近修改机构" name="updateOrgName" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+</div>

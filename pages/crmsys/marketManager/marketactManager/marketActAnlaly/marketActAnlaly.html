@@ -1,0 +1,196 @@
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2019-1-3 
+  @updated by
+  @description 营销活动管理-营销成效分析
+-->
+<div>
+  <yu-row>
+      <yu-col :span="18">
+          <yu-xform ref="form" form-type="edit" v-model="formdata" style="margin:10px 10px 0 0;">
+              <yu-xform-group :column="4">
+                <yu-xform-item placeholder="活动名称" name="actiName" ctype="input" ></yu-xform-item>
+                <yu-xform-item placeholder="活动状态" name="actiStat" ctype="select" data-code="OCRM_MKT_ACTI_STAT" ></yu-xform-item>
+                <yu-xform-item placeholder="活动开始时间" name="pstartDate" ctype="datepicker" ></yu-xform-item>
+                <yu-xform-item placeholder="活动结束时间" name="pendDate" ctype="datepicker" ></yu-xform-item>
+              </yu-xform-group>
+            </yu-xform>
+      </yu-col>
+      <yu-col :span="5">
+          <yu-button-group class="btn-group" style="margin:10px 10px 0 0;">
+              <yu-button type="primary" @click="searchFn">搜索</yu-button>
+              <yu-button @click="resetFn">重置</yu-button>
+            </yu-button-group>
+      </yu-col>
+  </yu-row>
+  <yu-row>
+    <yu-col :span="4" style="margin: 10px 10px 0 0">
+      <yu-xtree ref="refTree" :root-visible=false data-root="0" :data-url="treeDataUrl" data-id="actiId" data-label="actiName"
+        data-pid="parentActiId" style="margin:10px 10px 0 0;" @node-click="getTabledataFn" :data-params="mktOffParams">
+      </yu-xtree>
+    </yu-col>
+    <yu-col :span="19">
+      <yu-tabs v-model="groupView" @tab-click="targetClick">
+        <yu-tab-pane label="营销活动基本信息" name="1">
+          <!-- 营销活动基本信息-->
+          <yu-xform ref="activeAddForm" label-width="160px" :disabled="infoDisabled" v-model="activeAddFormdata" disabled style="margin:10px 10px 0 0">
+            <yu-xform-group :column="2">
+              <yu-xform-item label="营销活动编号" name="actiId" ctype="input"></yu-xform-item>
+              <yu-xform-item label="营销活动名称" name="actiName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="上级营销活动编号" name="parentActiId" ctype="input"></yu-xform-item>
+              <yu-xform-item label="上级营销活动名称" name="parentActiName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="营销活动下达机构" name="mktRespPersonOrg" ctype="input"></yu-xform-item>
+              <yu-xform-item label="营销活动下达人名称" name="mktRespPerson" ctype="input"></yu-xform-item>
+              <yu-xform-item label="营销活动下达时间" name="lastUpdateTm" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="营销活动状态" name="actiStat" ctype="select" data-code="OCRM_MKT_ACTI_STAT"></yu-xform-item>
+              <yu-xform-item label="营销活动开始日期" name="astartDate" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="营销活动结束日期" name="aendDate" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="营销活动关闭日期" name="offDate" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="营销活动关闭人" name="offUser" ctype="input"></yu-xform-item>
+              <yu-xform-item label="营销活动关闭机构" name="offOrg" ctype="input"></yu-xform-item>
+              <yu-xform-item label="创建日期" name="createDate" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="创建人" name="createUser" ctype="input"></yu-xform-item>
+              <yu-xform-item label="创建机构" name="createOrg" ctype="input"></yu-xform-item>
+              <yu-xform-item label="最近维护人" name="lastUpdateUser" ctype="input"></yu-xform-item>
+              <yu-xform-item label="最近维护时间" name="lastUpdateTm" ctype="datepicker"></yu-xform-item>
+            </yu-xform-group>
+            <yu-xform-group :column="1">
+              <yu-xform-item label="备注" name="actiRemark" ctype="textarea" :colspan="24"></yu-xform-item>
+            </yu-xform-group>
+          </yu-xform>
+        </yu-tab-pane>
+        <!-- 关联产品信息 -->
+        <!-- <yu-tab-pane label="关联产品信息" name="2">
+          <div>
+            <yu-xtable ref="ocrmFMkActiProduct" row-number :data-url="prodDataUrl" :base-params="fprodParams" :default-load="load">
+              <yu-xtable-column label="产品编号" prop="productId" rules="required" :disabled="infoDisabled"></yu-xtable-column>
+              <yu-xtable-column label="产品名称" prop="productName" rules="required" :disabled="infoDisabled"></yu-xtable-column>
+              <yu-xtable-column label="关联产品人" prop="createUser" rules="required"></yu-xtable-column>
+              <yu-xtable-column label="关联产品日期" prop="createDate" ctype="datepicker" rules="required" :disabled="infoDisabled"></yu-xtable-column>
+            </yu-xtable>
+          </div>
+        </yu-tab-pane> -->
+        <!--  关联客户信息 -->
+        <!-- <yu-tab-pane label="目标客户信息" name="3">
+          <div>
+            <yu-xtable ref="OCRM_F_MK_ACTI_CUST" row-number :data-url="custDataUrl" :base-params="custParams" :default-load="load">
+              <yu-xtable-column label="客户号" prop="custId"></yu-xtable-column>
+              <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+              <yu-xtable-column label="主办客户经理" prop="custManager"></yu-xtable-column>
+              <yu-xtable-column label="主办机构" prop="custManagerOrg"></yu-xtable-column>
+              <yu-xtable-column label="目标客户来源" prop="aimCustSource"></yu-xtable-column>
+              <yu-xtable-column label="进展阶段" prop="progressStep"></yu-xtable-column>
+              <yu-xtable-column label="关联客户人" prop="relationUser"></yu-xtable-column>
+              <yu-xtable-column label="关联客户日期" prop="relationDate"></yu-xtable-column>
+            </yu-xtable>
+          </div>
+        </yu-tab-pane> -->
+        <yu-tab-pane label="指标信息" name="4">
+          <!--  任务指标信息 -->
+          <yu-xtable ref="orgTargetTable" v-show="orgShow" row-number :data-url="taskDataUrl" :pageable="true" :data="taskAllotTable2Data" :base-params="prodParams"
+            :default-load="load">
+            <yu-xtable-column label="机构编号" prop="exeObjCode" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="机构名称" prop="exeObjName" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标编号" prop="targetCode" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标名称" prop="targetName" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标初期值" prop="orignalVal" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标目标值" prop="targetValue" :disabled="infoDisabled" ctype="input"></yu-xtable-column>
+            <yu-xtable-column label="指标完成值" prop="achieveValue" :disabled="infoDisabled" ctype="input"></yu-xtable-column>
+            <yu-xtable-column label="指标完成率" prop="achievePercent" :disabled="infoDisabled" ctype="input"></yu-xtable-column>
+          </yu-xtable>
+          <yu-xtable ref="mgrTargetTable" v-show="mgrShow" row-number :data-url="taskDataUrl" :pageable="true" :data="taskAllotTable2Data" :base-params="prodParams"
+            :default-load="load">
+            <yu-xtable-column label="客户经理编号" prop="exeObjCode" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="客户经理名称" prop="exeObjName" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标编号" prop="targetCode" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标名称" prop="targetName" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标初期值" prop="orignalVal" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标目标值" prop="targetValue" :disabled="infoDisabled" ctype="input"></yu-xtable-column>
+            <yu-xtable-column label="指标完成值" prop="achieveValue" :disabled="infoDisabled" ctype="input"></yu-xtable-column>
+            <yu-xtable-column label="指标完成率" prop="achievePercent" :disabled="infoDisabled" ctype="input"></yu-xtable-column>
+          </yu-xtable>
+        </yu-tab-pane>
+        <yu-tab-pane label="指标图表" name="5">
+          <yu-tabs v-model="orgView" @tab-click="orgClick" v-show="orgShow">
+            <yu-tab-pane label="目标机构占比图" name="5">
+              <!--  营销成效指标目标机构占比图 -->
+              <div>
+                <div class="yu-Con">
+                  <div class="yu-box">
+                    <div class="yu-content" style="height:400px;text-align: center;width: 100%">
+                      <yu-echarts :option="chart2Option" width="550px" height="400px" style="margin: 0 auto"></yu-echarts>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </yu-tab-pane>
+            <yu-tab-pane label="目标机构完成情况对比图" name="6">
+              <!--  营销成效指标目标机构完成情况对比图 -->
+              <div>
+                <div class="yu-Con">
+                  <div class="yu-box">
+                    <div class="yu-content" style="height:400px;text-align: center; width: 100%">
+                      <yu-echarts :option="chart1Option" width="550px" height="400px" style="margin:0 auto"></yu-echarts>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </yu-tab-pane>
+          </yu-tabs>
+          <yu-tabs v-model="mgrView" @tab-click="mgrClick" v-show="mgrShow">
+            <yu-tab-pane label="目标客户经理进展图" name="7">
+              <!--  营销成效指标目标客户经理进展图 -->
+              <div>
+                <div class="yu-Con">
+                  <div class="yu-box">
+                    <div class="yu-content" style="height:400px;text-align: center; width: 100%">
+                      <yu-echarts :option="chart3Option" width="550px" height="400px" style="margin: 0 auto"></yu-echarts>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </yu-tab-pane>
+            <yu-tab-pane label="目标客户经理占比图" name="8">
+              <!--  营销成效指标目标客户经理占比图 -->
+              <div>
+                <div class="yu-Con">
+                  <div class="yu-box">
+                    <div class="yu-content" style="height:400px; width: 100%">
+                      <yu-echarts :option="chart4Option" width="550px" height="400px" style="margin:0 auto"></yu-echarts>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </yu-tab-pane>
+          </yu-tabs>
+        </yu-tab-pane>
+        <!-- 关联附件信息 -->
+        <!-- <yu-tab-pane label="附件信息" name="6">
+          <div>
+            <yu-xtable ref="OCRM_F_MK_ACTI_ATTACH_REL" row-number :data-url="atcDataUrl" :base-params="prodParams" :default-load="load">
+              <yu-xtable-column label="附件编号" prop=""></yu-xtable-column>
+              <yu-xtable-column label="附件名称" prop="id"></yu-xtable-column>
+              <yu-xtable-column label="附件大小" prop="gender"></yu-xtable-column>
+              <yu-xtable-column label="上传格式" prop=""></yu-xtable-column>
+              <yu-xtable-column label="下载次数" prop=""></yu-xtable-column>
+              <yu-xtable-column label="上传日期" prop="create_at"></yu-xtable-column>
+              <yu-xtable-column label="最近下载日期" prop=""></yu-xtable-column>
+              <yu-xtable-column label="最近" prop=""></yu-xtable-column>
+            </yu-xtable>
+          </div>
+        </yu-tab-pane> -->
+        <yu-tab-pane label="反馈信息" name="7">
+          <!--  反馈信息 -->
+          <div>
+            <yu-xtable ref="attachMentTable" row-number :data-url="actBackdataUrl" :base-params="prodParams" :default-load="load">
+              <yu-xtable-column label="活动受众人数" prop="acceHumanNum"></yu-xtable-column>
+              <yu-xtable-column label="派发宣传单数量" prop="advPaperNum"></yu-xtable-column>
+              <yu-xtable-column label="实际费用支出" prop="costInAction"></yu-xtable-column>
+              <yu-xtable-column label="活动经验总结" prop="outcomeInAction"></yu-xtable-column>
+              <yu-xtable-column label="客户评价" prop="reviewInCoustomer"></yu-xtable-column>
+            </yu-xtable>
+          </div>
+        </yu-tab-pane>
+      </yu-tabs>
+    </yu-col>
+  </yu-row>
+</div>

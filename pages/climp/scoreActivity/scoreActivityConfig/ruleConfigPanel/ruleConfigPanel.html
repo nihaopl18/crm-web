@@ -1,0 +1,98 @@
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2018-12-28 10:07:32.
+  @updated by
+  @description 积分活动冲突详情
+-->
+<div class="yu-activity">
+		<h3 style="font-weight: normal">积分活动冲突详情</h3>
+		<yu-collapse v-model="expandCollapseName" v-bind:style="{height:(height-105) + 'px'}" style="overflow: auto;">
+			<yu-collapse-item title="规则信息" name="ruleInfo">
+				<!-- 规则信息表单 -->
+				<yu-xform ref="refRuleInfoForm" label-width="120px" v-model="ruleInfoFormdata" disabled>
+					<yu-xform-group :column=2>
+						<yu-xform-item label="主键ID" ctype="num" name="id" hidden>
+						</yu-xform-item>
+						<yu-xform-item label="规则名称" ctype="input" name="ruleName" rules="required" :maxlength="200">
+						</yu-xform-item>
+						<yu-xform-item label="成本归属类型" ctype="select" name="costOrgType" rules="required"  data-code="COST_ORG_TYPE">
+						</yu-xform-item>
+						<yu-xform-item label="规则描述" ctype="input" name="ruleDesc" rules="required" :maxlength="256">
+						</yu-xform-item>
+						<yu-xform-item label="处理顺序" ctype="num" name="processOrder" :maxlength="4">
+						</yu-xform-item>
+					</yu-xform-group>
+				</yu-xform>
+			</yu-collapse-item>
+			<yu-xdynamic-form ref="conditionForm" :template-data="conditionTemplateData">
+			</yu-xdynamic-form>
+			<yu-xdynamic-form ref="referenceParamForm" :template-data="referenceParamTemplateData">
+			</yu-xdynamic-form>
+			<yu-collapse-item title="计算方式" name="formulaWay">
+				<!-- 计算方式表单 -->
+				<yu-xform ref="refFormulaWayForm" label-width="120px" v-model="formulaWayFormdata" disabled>
+					<yu-xform-group>
+						<yu-xform-item label="计算方式" :colspan="24" ctype="radio" name="formulaWay" data-code="FORMULA_WAY" @change="formulaWayChangeFn">
+						</yu-xform-item>
+						<yu-xform-item label="固定分值" :colspan="14" ctype="input" name="fixedValue" :rules="fixedRule" :hidden="isHiddenByFixedScore">
+						</yu-xform-item>
+						<yu-xform-item label="属性" :colspan="12" ctype="select" placeholder="请选择" name="perField" :options="fieldOptions"
+						 :rules="accountRule" :hidden="isHiddenByAccount">
+						</yu-xform-item>
+						<yu-xform-item label-width="12px" :colspan="6" ctype="input" name="perValue" unit="分/" :rules="accountRule" :hidden="isHiddenByAccount">
+						</yu-xform-item>
+						<yu-xform-item label-width="12px" :colspan="6" ctype="input" name="denoValue" unit="元" :rules="accountRule" :hidden="isHiddenByAccount">
+						</yu-xform-item>
+						<yu-xform-item label="区间属性" :colspan="8" ctype="select"  placeholder="请选择" name="betweenField" :options="fieldOptions"
+						 :rules="sectionRule" :hidden="isHiddenBySection">
+						</yu-xform-item>
+						<yu-xform-item label-width="12px" :colspan="8" ctype="select" placeholder="请选择" name="scoreType" data-code="SCORE_TYPE" :rules="sectionRule"
+						 :hidden="isHiddenBySection">
+						</yu-xform-item>
+						<yu-xform-item label-width="12px" :colspan="8" ctype="custom" name="" :hidden="isHiddenBySection">
+							<!-- 增加区间按钮 -->
+							<yu-button type="primary" @click="addSectionFn" disabled>增加区间</yu-button>
+						</yu-xform-item>
+						<yu-xform-item label="封顶值类型" :colspan="12" ctype="select" placeholder="请选择" name="maxScoreType" data-code="MAXSCORE_TYPE"></yu-xform-item>
+						<yu-xform-item label="封顶值" :colspan="12" ctype="input" name="maxScore"></yu-xform-item>
+						<yu-xform-item label="公式解释" :colspan="16" ctype="textarea" name="formulaEditorValMean" :rows="2" :colspan="24" :rules="formulaWayRule"
+						 readonly :hidden="isHiddenByFormula">
+						</yu-xform-item>
+						<yu-xform-item label="公式" :colspan="16" ctype="textarea" name="formulaEditorVal" :rows="2" :colspan="24" :rules="formulaWayRule"
+						 readonly :hidden="isHiddenByFormula">
+						</yu-xform-item>
+					</yu-xform-group>
+					<!-- 计算器按钮 -->
+					<div class="yu-btn-group" v-for="(items,index) in buttonList" :key="index" :hidden="isHiddenByFormula">
+						<yu-button type="primary" v-for="item in items" :key="item" @click="onClick(item)" disabled>{{item}}</yu-button>
+					</div>
+					<!-- 增加区间表格 -->
+					<yu-xtable ref="refSectionTable" row-number :data="sectionTableData" selection-type="checkbox" :pageable="false" :hidden="isHiddenBySection"
+					 max-height="200">
+						<yu-xtable-column label="区间下限" prop="scoreLow" ctype="input" :rules="sectionTableRule"></yu-xtable-column>
+						<yu-xtable-column label="分值" prop="scoreValue" ctype="input" :rules="sectionTableRule"></yu-xtable-column>
+						<yu-xtable-column label="操作">
+							<template slot-scope="scope">
+								<yu-button @click.native.prevent="deleteRow(scope.$index, sectionTableData)" type="text" size="small" disabled>
+									取消
+								</yu-button>
+							</template>
+						</yu-xtable-column>
+					</yu-xtable>
+				</yu-xform>
+			</yu-collapse-item>
+			<yu-collapse-item title="动作配置" name="actionConfig">
+				<!-- 动作配置表单 -->
+				<yu-xform ref="refActionConfigForm" label-width="140px" v-model="actionConfigFormdata" disabled>
+					<yu-xform-group :column=2>
+						<yu-xform-item label="送入积分账户" ctype="select" placeholder="请选择" name="accountNo" rules="required" :options="accountNoOptions">
+						</yu-xform-item>
+						<yu-xform-item label="有效期限（月）" ctype="input" name="validDate">
+						</yu-xform-item>
+					</yu-xform-group>
+				</yu-xform>
+			</yu-collapse-item>
+		</yu-collapse>
+		<div style="width: 90px; margin: 0 auto;">
+			<yu-button type="primary" @click="backFn" style="margin-top: 15px;">返回</yu-button>
+		</div>
+</div>

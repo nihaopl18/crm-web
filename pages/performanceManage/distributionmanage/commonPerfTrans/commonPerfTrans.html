@@ -1,0 +1,74 @@
+<!-- 
+  @Created by 万爽 wanshuang@yusys.com.cn on 2020-1-7 10:00:26.
+  @updated by
+  @description 业绩转移
+-->
+<div>
+    <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+    <div style="margin: 10px 0px;">
+    <yu-xform related-table-name="refTable" ref="refQuery">
+      <yu-xform-group :column="4">
+        <yu-xform-item placeholder="业绩转移类型" ctype="yu-xselect" name="funCode" :options="optionsA" rules="required" @change="changeFn"></yu-xform-item>
+        <yu-xform-item placeholder="客户经理名称" ctype="yufp-user-selector" :params="orgUserTreeParams" name="managerId" rules="required"></yu-xform-item>
+        <yu-xform-item placeholder="业绩机构" name="orgId" ctype="yufp-org-tree" ></yu-xform-item>
+        <yu-xform-item placeholder="开户日期开始" ctype="datepicker" name="openDateStart"></yu-xform-item>
+        <yu-xform-item placeholder="开户日期结束" ctype="datepicker" name="openDateEnd"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <div style="float:right;">
+      <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+    </div>
+  </div>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="document" @click="infoFn">业绩明细</yu-button>
+      <yu-button icon="edit" @click="modifyFn">业绩转移</yu-button>
+      <yu-button icon="yx-download" @click="downloadFn">导出</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :base-params="params" selection-type="radio"  :data-url="dataUrl" :default-load="false" @loaded="loadedHandler">
+    <yu-xtable-column label="客户经理编号" prop="managerId" ></yu-xtable-column>
+    <yu-xtable-column label="客户经理名称" prop="managerName"  ></yu-xtable-column>
+  </yu-xtable>
+
+  <yu-xdialog title="业绩转移" :visible.sync="dialogVisible" width="500px">
+    <yu-xform ref="refForm" label-width="150px" v-model="formdata" >
+      <yu-xform-group :column ='1'>
+        <yu-xform-item label="客户经理名称" ref="refUserRelateObjIds" ctype="yufp-user-selector" :params="orgUserTreeParamsTwo" name="managerId" rules="required"></yu-xform-item>
+        <yu-xform-item label="生效日期" ctype="datepicker" name="openDate" rules="required"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveFn">确认转移</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+
+  <yu-xdialog title="业绩明细" :visible.sync="dialogVisibleTwo" width="95%" top="2%">
+      <yu-xform ref="refFormTwo" v-model="formDataTwo" label-width="120px" >
+          <yu-xform-group>
+            <yu-xform-item label="客户经理名称" :colspan="10"  ctype="yufp-user-selector" :params="orgUserTreeParams" name="mgrId" rules="required"></yu-xform-item>
+            <yu-xform-item label="生效日期" :colspan="10" ctype="datepicker" name="effectDate" rules="required"></yu-xform-item>
+          </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="document" @click="tranFn">转移</yu-button>
+          </yu-button-group>
+      </div>
+      <!-- <yu-xform related-table-name="refTableTwo"  ref="queryFormRef"  form-type="search">
+          <yu-xform-group :column="4">
+            <yu-xform-item placeholder="申请时间从" ctype="datepicker" name="applyTimeStart"></yu-xform-item>
+            <yu-xform-item placeholder="申请时间到" ctype="datepicker" name="applyTimeEnd"></yu-xform-item>
+            <yu-xform-item v-for="(item, index) in queryList" :key="index" :placeholder="item.name" 
+              :name="item.ename" :ctype="item.type"  :data-code="item.dataCode" :rules="item.rule" :dataRoot="item.dataRoot">
+          </yu-xform-group>
+        </yu-xform> -->
+      <yu-xtable v-loading="dialogtwo_loading" element-loading-text="加载中" height="500"
+        ref="refTableTwo" row-number :data="transData" :pageable="false" selection-type="checkbox">
+          <yu-xtable-column v-for="(item, index) in colunmNamelist" :key="index" :label="item.name" :prop="item.ename" :sortable="item.sortable" :data-code="item.dataCode">
+          </yu-xtable-column>
+      </yu-xtable>
+  </yu-xdialog>
+</div>

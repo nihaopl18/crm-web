@@ -1,0 +1,37 @@
+<!-- 
+  @Created by xujiawei xujy3@yusys.com.cn on 2020-9-2 10:38:37.
+  @updated by
+  @description 业绩认领可配置
+-->
+<div>
+  <div style="margin: 10px 0px;">
+    <yu-xdynamic-form ref="searchForm" mode="normal" :template-data="templateData" v-if="isInitData"></yu-xdynamic-form>
+    <div style="float:right;">
+      <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+    </div>
+  </div>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="claimFn">认领</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" :default-load="false" v-show="xtableShow" @loaded="loadedHandler">
+    <yu-xtable-column v-for="(item, index) in tableColList" 
+      :key="index" :label="item.label" :prop="item.ename" :width="item.width" :data-code="item.dataCode"></yu-xtable-column>
+  </yu-xtable>
+    <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+     <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+      <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+        <yu-xform-group>
+          <yu-xform-item label="生效日期" ctype="datepicker" name="effectDate" rules="required" :picker-options="pickerOptions"></yu-xform-item>
+          <yu-xform-item label="认领比例" ctype="num" name="distrRate" rules="required"></yu-xform-item>
+        </yu-xform-group>
+        <div class="yu-grpButton">
+          <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveClaimFn">保存</yu-button>
+          <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        </div>
+      </yu-xform>
+    </yu-xdialog>
+</div>

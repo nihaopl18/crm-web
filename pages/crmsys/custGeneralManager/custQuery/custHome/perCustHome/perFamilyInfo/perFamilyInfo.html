@@ -1,0 +1,108 @@
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-1-22 09:34:22.
+  @updated by
+  @description 家庭信息
+-->
+<div id="perFamilyInfo">
+  <yu-collapse v-model="expandCollapseName">
+    <yu-collapse-item title="基本信息" name="base">
+      <yu-xform  ref="baseForm" label-width="100px"  v-model="baseFormdata" >
+        <yu-xform-group>
+           
+        
+            <yu-xform-item label="户主姓名" name="householderName"  ctype="input" :rules="rule.householderName"></yu-xform-item>
+            <yu-xform-item label="家庭人数" name="popuNum"  ctype="input" :rules="rule.popuNum"></yu-xform-item>
+            <yu-xform-item label="家庭地址" name="famAddr" ctype="input" :rules="rule.famAddr"></yu-xform-item>
+            <yu-xform-item label="国家地区区号" name="countAreaCd" ctype="input" :rules="rule.countAreaCd"></yu-xform-item>
+            <yu-xform-item label="劳动力人数" name="laborNum"  ctype="input" :rules="rule.laborNum"></yu-xform-item>
+            <yu-xform-item label="经营项目及规模" name="itemAndScal" ctype="input" :rules="rule.itemAndScal"></yu-xform-item>
+            <yu-xform-item label="固定电话" name="homeTelNo"  ctype="input" :rules="rule.homeTelNo"></yu-xform-item>
+
+        </yu-xform-group>
+      </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="更多信息" name="moreinfo">
+      <yu-xform  ref="infoForm" label-width="120px"  v-model="infoFormdata"  >
+        <yu-xform-group>
+          
+            <yu-xform-item label="不良记录" name="famBadRec" ctype="textarea" :rows="1" :rules="rule.famBadRec"></yu-xform-item>
+            <yu-xform-item label="授信金额" name="creditAmt" ctype="input" :rules="rule.creditAmt"></yu-xform-item>
+            
+            <yu-xform-item label="住宅情况" name="houseStat"  ctype="select" data-code="CD0015"></yu-xform-item>
+            <yu-xform-item label="是否有私家车" name="carFlg"  ctype="select" data-code="CD0238"></yu-xform-item>
+            <yu-xform-item label="私家车牌号1" name="plateNo1" ctype="input" :rules="rule.plateNo1"></yu-xform-item>
+            <yu-xform-item label="私家车牌号2" name="plateNo2" ctype="input" :rules="rule.plateNo2"></yu-xform-item>
+            <yu-xform-item label="私家车牌号3" name="plateNo3" ctype="input" :rules="rule.plateNo3"></yu-xform-item>
+            <yu-xform-item label="车险到期日1" name="carInsurDt1" ctype="datepicker"></yu-xform-item>
+            <yu-xform-item label="车险到期日2" name="carInsurDt2" ctype="datepicker"></yu-xform-item>
+            <yu-xform-item label="车险到期日3" name="carInsurDt3" ctype="datepicker"></yu-xform-item>
+            <yu-xform-item label="家庭和睦" name="harmonyDesc" ctype="select" data-code="CD0238" :rules="rule.harmonyDesc"></yu-xform-item>
+            <yu-xform-item label="负债情况" name="famDebtRec" ctype="input" :rules="rule.famDebtRec"></yu-xform-item>
+            <yu-xform-item label="信用情况" name="creditRec" ctype="input" :rules="rule.creditRec"></yu-xform-item>
+            <yu-xform-item label="其他" name="others" ctype="input" :rules="rule.others"></yu-xform-item>
+            <yu-xform-item label="是否授信" name="famCreditFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+            <yu-xform-item label="家庭经济实力" name="famEconStat" ctype="input" :rules="rule.famEconStat"></yu-xform-item>
+            <yu-xform-item label="村组评价" name="villageEval" ctype="input" :rules="rule.villageEval"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="家庭成员信息" name="meminfo">
+        <div class="yu-toolBar">
+            <yu-button-group>
+              <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+              <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+              <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+            </yu-button-group>
+          </div>
+          <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+
+            <!--  <yu-xtable-column label="客户号" prop="famCustId" width="120"></yu-xtable-column>
+              <yu-xtable-column label="客户状态" prop="famCustStatus" width="120" data-code="CD0019"></yu-xtable-column>-->
+              <yu-xtable-column label="成员名称" prop="memName" width="120"></yu-xtable-column>
+              <yu-xtable-column label="家庭成员关系" prop="famMemRel" width="120" data-code="CD0261"></yu-xtable-column>
+              <yu-xtable-column label="成员证件类型" prop="memCertType" width="120" data-code="CD0348"></yu-xtable-column>
+              <yu-xtable-column label="成员证件号码" prop="memCertNo" width="120"></yu-xtable-column>
+              <yu-xtable-column label="电话" prop="telNo" width="120"></yu-xtable-column>
+              <yu-xtable-column label="手机号码" prop="mobiNo" width="120"></yu-xtable-column>
+              <yu-xtable-column label="成员职业" prop="memOcc" width="120"  data-code="CD0010"></yu-xtable-column>
+              <yu-xtable-column label="成员工作单位或学校" prop="memComSch" width="150"></yu-xtable-column>
+              <yu-xtable-column label="最高学位" prop="higEduDgr" width="120" data-code="CD0049"></yu-xtable-column>
+              <yu-xtable-column label="是否家庭经济支柱" prop="famPropFlg" width="120" data-code="CD0238"></yu-xtable-column>
+              <yu-xtable-column label="备注" prop="remark"></yu-xtable-column>
+           
+          </yu-xtable>
+          <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+              width="650px" height="380px" -->
+          <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="750px">
+            <yu-xform ref="memrefForm" label-width="150px" v-model="formdata" :disabled="formDisabled">
+              <yu-xform-group>
+                  <yu-xform-item label="成员名称" name="memName"  ctype="input"  :rules="rule.memName"></yu-xform-item>
+                  <yu-xform-item label="客户状态" name="famCustStatus"    :hidden="true"></yu-xform-item>
+                  <yu-xform-item label="成员名称" name="memName"    :hidden="true"></yu-xform-item>
+                  <yu-xform-item label="家庭成员关系" name="famMemRel"  ctype="select" data-code="CD0261"></yu-xform-item>
+                  <yu-xform-item label="成员证件类型" name="memCertType"  ctype="select" data-code="CD0348"></yu-xform-item>
+                  <yu-xform-item label="成员证件号码" name="memCertNo"  ctype="input" :rules="rule.memCertNo"></yu-xform-item>
+                  <yu-xform-item label="电话" name="telNo" ctype="input" :rules="rule.telNo"></yu-xform-item>
+                  <yu-xform-item label="手机号码" name="mobiNo" ctype="input" :rules="rule.mobiNo"></yu-xform-item>
+                  <yu-xform-item label="成员职业" name="memOcc" ctype="select" data-code="CD0010"></yu-xform-item>
+                  <yu-xform-item label="成员工作单位或学校" name="memComSch" ctype="input" :rules="rule.memComSch"></yu-xform-item>
+                  <yu-xform-item label="最高学位" name="higEduDgr" ctype="select" :rules="rule.higEduDgr" data-code="CD0049"></yu-xform-item>
+                  <yu-xform-item label="是否家庭经济支柱" name="famPropFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+                  <yu-xform-item label="备注" name="remark"  ctype="textarea":colspan="24" :rules="rule.remark"></yu-xform-item>
+
+              
+              </yu-xform-group>
+              <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="membersaveFn">保存</yu-button>
+              </div>
+            </yu-xform>
+          </yu-xdialog>
+
+    </yu-collapse-item>
+  </yu-collapse>
+  <div class="yu-grpButton">
+    <yu-button icon="check" type="primary" @click="saveFn" v-if="saveBtn">保存</yu-button>
+   
+  </div>
+</div>

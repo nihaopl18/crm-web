@@ -1,0 +1,6 @@
+<!-- 必须全局拥有唯一的id -->
+<div id="MyTaskPool">
+    <el-form-q form="query" :field-data="queryFields" search-table="MyTaskPoolList" :buttons="MyTaskPoolButtons"></el-form-q>
+    <el-table-x ref="MyTaskPoolList"  :max-height="height" :data-url="urls.dataUrl" :base-params="dataParams" @custom-click="rowDblclick" :table-columns="tableColumns" >
+    </el-table-x>
+</div>

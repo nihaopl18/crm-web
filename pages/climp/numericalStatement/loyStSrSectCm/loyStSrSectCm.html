@@ -1,0 +1,73 @@
+<!--
+  @created by geyun geyun@yusys.com.cn on 2019-1-28 15:48:59.
+  @updated by 
+  @description 积分统计报表
+-->
+<div>
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="yutable" v-model="formdata" style="margin-top:10px">
+    <yu-xform-group :column="8">
+      <yu-xform-item placeholder="查询日期" ctype="datepicker" @change="changeDt" name="etlDt" style="margin-right:10px"></yu-xform-item>
+      <yu-xform-item placeholder="机构名称" ctype="yufp-org-tree1" name="orgNo"></yu-xform-item>
+      <yu-xform-item placeholder="积分分层点1" ctype="input" name="pointArea1" @change="change1" style="margin-right:10px" rule="required"></yu-xform-item>
+      <yu-xform-item placeholder="积分分层点2" ctype="input" name="pointArea2" @change="change2" style="margin-right:10px" rule="required"></yu-xform-item>
+      <yu-xform-item placeholder="积分分层点3" ctype="input" name="pointArea3" @change="change3" style="margin-right:10px"></yu-xform-item>
+      <yu-xform-item placeholder="积分分层点4" ctype="input" name="pointArea4" @change="change4" style="margin-right:10px"></yu-xform-item>
+      <yu-xform-item placeholder="积分分层点5" ctype="input" name="pointArea5" @change="change5" style="margin-right:10px"></yu-xform-item>
+      <div slot="custom">
+        <el-button-group>
+          <el-button type="primary" icon="search" @click="search" style="margin-right:10px">搜索</el-button>
+          <el-button type="reset" icon="yx-loop2" @click="reset" style="margin-right:10px">重置</el-button>
+        </el-button-group>
+      </div>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 工具按钮 -->
+  <div class="yu-toolBar">
+  </div>
+  <!-- 查询显示表格 -->
+  <yu-xtable ref="refTable" :data-url="dataUrl">
+    <yu-xtable-column label="机构">
+      <yu-xtable-column prop="orgName" label="名称" width="120">
+      </yu-xtable-column>
+    </yu-xtable-column>
+    <yu-xtable-column label="客户数合计" prop="custNumSum" width="120">
+    </yu-xtable-column>
+    <yu-xtable-column :label="areaLabel1" v-show="area1IsShow" name="area1">
+      <yu-xtable-column prop="firCustNum" label="客户数" width="120">
+      </yu-xtable-column>
+      <yu-xtable-column prop="firCustNumPercent" label="客户数占比(%)" width="120">
+      </yu-xtable-column>
+    </yu-xtable-column>
+    <yu-xtable-column :label="areaLabel2" v-show="area2IsShow" name="area2">
+      <yu-xtable-column prop="secCustNum" label="客户数" width="120">
+      </yu-xtable-column>
+      <yu-xtable-column prop="secCustNumPercent" label="客户数占比(%)" width="120">
+      </yu-xtable-column>
+    </yu-xtable-column>
+    <yu-xtable-column :label="areaLabel3" v-show="area3IsShow" id="area3">
+      <yu-xtable-column prop="thrCustNum" label="客户数" width="120">
+      </yu-xtable-column>
+      <yu-xtable-column prop="thrCustNumPercent" label="客户数占比(%)" width="120">
+      </yu-xtable-column>
+    </yu-xtable-column>
+    <yu-xtable-column :label="areaLabel4" v-show="area4IsShow" name="area4">
+      <yu-xtable-column prop="forCustNum" label="客户数" width="120">
+      </yu-xtable-column>
+      <yu-xtable-column prop="forCustNumPercent" label="客户数占比(%)" width="120">
+      </yu-xtable-column>
+    </yu-xtable-column>
+    <yu-xtable-column :label="areaLabel5" v-show="area5IsShow" name="area5">
+      <yu-xtable-column prop="fifCustNum" label="客户数" width="120">
+      </yu-xtable-column>
+      <yu-xtable-column prop="fifCustNumPercent" label="客户数占比(%)" width="120">
+      </yu-xtable-column>
+    </yu-xtable-column>
+    <yu-xtable-column :label="areaLabel6" v-show="area6IsShow" name="area6">
+      <yu-xtable-column prop="sixCustNum" label="客户数" width="120">
+      </yu-xtable-column>
+      <yu-xtable-column prop="sixCustNumPercent" label="客户数占比(%)" width="120">
+      </yu-xtable-column>
+    </yu-xtable-column>
+  </yu-xtable>
+</div>

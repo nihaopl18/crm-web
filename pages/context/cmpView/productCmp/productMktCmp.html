@@ -1,0 +1,72 @@
+<!--
+  @created by yangxiao2 on 2018/11/19.
+  @description 产品选择
+-->
+<div>
+	<el-collapse v-model="activeNames">
+		<!-- <el-collapse-item title="输入" name="1"> -->
+		<el-row>
+			<el-col :span="12">
+				<el-form-x ref="refform" :group-fields="Fields" label-width="80px" inline>
+				</el-form-x>
+			</el-col>
+			<!-- <el-col :span="16">
+				<template>
+					<yu-xtable selection-type="checkbox" ref="prodTable" :data="options3" :pageable="false" height="200"
+						style="width: 100%">
+						<yu-xtable-column prop="field2" label="产品编号">
+						</yu-xtable-column>
+						<yu-xtable-column prop="field3" label="产品名称">
+						</yu-xtable-column>
+					</yu-xtable>
+				</template>
+			</el-col> -->
+		</el-row>
+		<!-- </el-collapse-item> -->
+		<!-- <el-collapse-item title="操作" name="2">
+			<template>
+				<el-table :data="options4" border style="width: 100%" height="150">
+					<el-table-column type="selection" width="55">
+					</el-table-column>
+					<el-table-column prop="field" width="200" label="客户编号">
+					</el-table-column>
+					<el-table-column prop="field1" label="客户名称">
+					</el-table-column>
+					<el-table-column prop="field2" label="产品名称">
+					</el-table-column>
+					<el-table-column prop="field3" label="购买率">
+					</el-table-column>
+					<el-table-column prop="field4" label="推荐渠道">
+					</el-table-column>
+				</el-table>
+			</template>
+			
+			<div class="yu-toolBar" style="margin-top: 10px;">
+				<el-button-group>
+					<el-button icon="edit" @click="">编辑</el-button>
+					<el-button icon="yx-bin" @click="">删除</el-button>
+					<el-button icon="yx-switch" @click="close">关闭</el-button>
+				</el-button-group>
+			</div>
+		</el-collapse-item> -->
+		<!-- <el-collapse-item title="输出" name="3"> -->
+			<div class="yu-toolBar">
+				<el-button-group>
+				  <el-button icon="plus" @click="delFn">产品移除</el-button>
+				<!-- <el-button icon="document" @click="upTable">上传模板</el-button> -->
+				
+				</el-button-group>
+			  </div>
+		<el-row>
+			<el-col :span="24">
+				<template>
+					<el-table-x ref="reftable" :checkbox="true" data-url="/api/cmfrcproductmanager/listoutput"
+						:table-columns="tableColumns" :default-load="load">
+					</el-table-x>
+				</template>
+			</el-col>
+		</el-row>
+		<!-- </el-collapse-item> -->
+	</el-collapse>
+	<yu-button type="primary" style="margin-top: 10px;margin-left: 48%;" @click="confirm">保存</yu-button>
+</div>

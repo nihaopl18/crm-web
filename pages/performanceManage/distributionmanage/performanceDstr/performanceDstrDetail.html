@@ -1,0 +1,30 @@
+<!-- 
+  @Created by raop
+  @updated by
+  @description 存款业绩分配审批
+-->
+<div>
+  <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+
+  <yu-xtable ref="yutable1"  row-number :base-params="params" :data-url="dataUrl" :default-load="false" >
+    <yu-xtable-column label="客户号" prop="custNumber" ></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName"  ></yu-xtable-column>
+    <yu-xtable-column label="主账号" prop="acctNo"  ></yu-xtable-column>
+    <yu-xtable-column label="子账号" prop="subAcctNo"  ></yu-xtable-column>
+    <yu-xtable-column label="账户类型" prop="accountType"  data-code="DS0003" ></yu-xtable-column>
+    <yu-xtable-column label="开户机构号" prop="orgId"  ></yu-xtable-column>
+    <yu-xtable-column label="开户机构名称" prop="orgName"  ></yu-xtable-column>
+    <yu-xtable-column label="开户日期" prop="openDate"  ></yu-xtable-column>
+    <yu-xtable-column label="客户经理编号" prop="managerId"  ></yu-xtable-column>
+    <yu-xtable-column label="客户经理名称" prop="managerName"  ></yu-xtable-column>
+    <yu-xtable-column label="生效日期" prop="effectDate"  ></yu-xtable-column>
+    <yu-xtable-column label="失效日期" prop="expirateDate"  ></yu-xtable-column>
+    <yu-xtable-column label="起始金额" prop="startAmt"  ></yu-xtable-column>
+    <yu-xtable-column label="结束金额" prop="endAmt"  ></yu-xtable-column>
+    <yu-xtable-column label="业绩分配比例" prop="distrRate"  ></yu-xtable-column>
+    <yu-xtable-column label="分配人" prop="operUserName"  ></yu-xtable-column>
+    <yu-xtable-column label="分配时间" prop="operTime"  ></yu-xtable-column>
+  </yu-xtable>
+
+
+</div>

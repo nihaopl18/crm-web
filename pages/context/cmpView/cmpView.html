@@ -1,0 +1,13 @@
+<!--
+  @created by helin3 2018-07-18
+  @updated by
+  @description 流程表单组件预览示例
+-->
+<div>
+  <div style="text-align: center;">
+    <h1>演示流程（流程表单组件预览）</h1><br>
+    <yufp-node-cmp ref="ncmpRef" :title="flowNode.title" :design-body="flowNode.designBody"></yufp-node-cmp>
+    <el-button @click="showQuery">灵活查询组件</el-button>
+    <el-button @click="showSubmit">录入组件</el-button>
+  </div>
+</div>

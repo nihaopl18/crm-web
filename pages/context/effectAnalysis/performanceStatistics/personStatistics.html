@@ -1,0 +1,188 @@
+<!--
+  @created by houyx3 on 2019/05/13.
+  @description 实时数据
+-->
+<div id="realTimeData" class="contentbox">
+	<yu-xform ref="validatorForm" label-width="100px" label-suffix="：" v-model="formdata" form-type="search" class="hide-form-search-btn">
+		<yu-xform-group :column="4">
+			<yu-xform-item placeholder="员工工号" ctype="input" name="id"></yu-xform-item>
+			<yu-xform-item placeholder="姓名" ctype="input" name="name"></yu-xform-item>
+			<yu-xform-item placeholder="人员类型" ctype="select" name="recType"></yu-xform-item>
+			<yu-xform-item placeholder="所属机构" ctype="select" name="org"></yu-xform-item>
+			<yu-xform-item placeholder="来源" ctype="select" name="org"></yu-xform-item>
+
+		</yu-xform-group>
+	</yu-xform>
+	<yu-button class="exportbtn" type='primary' @click="">导出CSV</yu-button>
+	<!--<div class="yu-toolBar">
+                <yu-button-group>
+                  <yu-button icon="document" @click="personPerforInfoFn">个人绩效详情</yu-button>
+                  <yu-button icon="document" @click="subordinateInfoFn">下属人员详情</yu-button>
+                </yu-button-group>
+              </div>-->
+	<yu-xtable :height="210" row-number ref="refTable" :data="tableData" style="width: 100%">
+		<yu-xtable-column prop="recId" label="推荐人ID"> </yu-xtable-column>
+		<yu-xtable-column prop="name" label="姓名"> </yu-xtable-column>
+		<yu-xtable-column prop="alias" label="昵称"> </yu-xtable-column>
+		<yu-xtable-column prop="recType" label="推荐人类型"> </yu-xtable-column>
+		<yu-xtable-column prop="staffType" label="员工类型"> </yu-xtable-column>
+		<yu-xtable-column prop="staffId" label="员工号"> </yu-xtable-column>
+		<yu-xtable-column prop="org" label="所属机构"> </yu-xtable-column>
+		<yu-xtable-column prop="org" label="所属机构"> </yu-xtable-column>
+		<yu-xtable-column prop="operation" label="操作" width="320px">
+			<template slot-scope="scope">
+				<div class="operation">
+					<span @click="personPerforInfoFn">个人绩效明细</span>
+					<span @click="subordinateInfoFn">个人营销记录</span>
+					<span>个人传播记录</span>
+				</div>
+			</template>
+		</yu-xtable-column>
+	</yu-xtable>
+	<yu-dialog :visible.sync="personPerforVis" title="个人绩效详情" size="large" class="dialogbox">
+		<yu-button class="dialog-exportbtn" type="primary">活动效果详情导出</yu-button>
+		<div class="list-datail">
+			<div>
+				<span>姓名：xxx</span>
+				<span>参与活动数量：3</span>
+				<span>已兑换积分：90</span>
+			</div>
+			<div>
+				<span>推荐人类型：员工</span>
+				<span>营销客户总数：300</span>
+				<span>未兑换积分：129</span>
+			</div>
+			<div>
+				<span>员工类型：普通员工</span>
+				<span>传播客户总数：300</span>
+				<span>积分总量：929</span>
+			</div>
+		</div>
+		<!--<yu-xform ref="custInfoRef" label-width="120px" v-model="custInfoData" :disabled="true">
+			<yu-xform-group :column="4">
+				<yu-xform-item label="姓名" ctype="input" name="name"></yu-xform-item>
+				<yu-xform-item label="参与活动总数" ctype="input" name="allNum"></yu-xform-item>
+				<yu-xform-item label="已兑换积分" ctype="input" name="convertibleIntegral"></yu-xform-item>
+				<yu-xform-item label="推荐人类型" ctype="input" name="recType"></yu-xform-item>
+				<yu-xform-item label="营销客户总数" ctype="input" name="markCustNum"></yu-xform-item>
+				<yu-xform-item label="未兑换积分" ctype="input" name="unconvertiblePoints"></yu-xform-item>
+				<yu-xform-item label="员工类型" ctype="input" name="staffType"></yu-xform-item>
+				<yu-xform-item label="传播客户总数" ctype="input" name="spreadCustNum"></yu-xform-item>
+				<yu-xform-item label="积分总量" ctype="input" name="integralNum"></yu-xform-item>
+			</yu-xform-group>
+		</yu-xform>-->
+		<!--<yu-xform ref="validatorForm" label-width="100px" label-suffix="：" v-model="formdata" form-type="search" class="hide-form-search-btn">
+			<yu-xform-group :column="4">
+				<yu-xform-item label="活动计划ID" ctype="input" name="activityId"></yu-xform-item>
+			</yu-xform-group>
+		</yu-xform>-->
+		<yu-tabs>
+			<yu-tab-pane label="个人效绩明细">
+				<yu-xform ref="validatorForm" label-width="100px" label-suffix="：" v-model="formdata" form-type="search" class="hide-form-search-btn">
+					<yu-xform-group :column="4">
+						<yu-xform-item label="活动计划ID" ctype="input" name="activityId"></yu-xform-item>
+					</yu-xform-group>
+				</yu-xform>
+				<yu-button class="exportbtn" type='primary' @click="">导出CSV</yu-button>
+				<yu-xtable :height="210" ref="yutable4" :data="tableData" style="width: 100%">
+					<yu-xtable-column prop="recId" label="活动计划ID"> </yu-xtable-column>
+					<yu-xtable-column prop="name" label="活动计划名称"> </yu-xtable-column>
+					<yu-xtable-column prop="alias" label="活动ID"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="活动名称"> </yu-xtable-column>
+					<yu-xtable-column prop="staffType" label="用户转发量"> </yu-xtable-column>
+					<yu-xtable-column prop="staffId" label="潜在客户量"> </yu-xtable-column>
+					<yu-xtable-column prop="org" label="收徒量"> </yu-xtable-column>
+				</yu-xtable>
+			</yu-tab-pane>
+			<yu-tab-pane label="个人营销记录">
+				<yu-xform ref="validatorForm" label-width="100px" label-suffix="：" v-model="formdata" form-type="search" class="hide-form-search-btn">
+					<yu-xform-group :column="4">
+						<yu-xform-item label="活动计划ID" ctype="input" name="activityId"></yu-xform-item>
+					</yu-xform-group>
+				</yu-xform>
+				<yu-button class="exportbtn" type='primary' @click="">导出CSV</yu-button>
+				<yu-xtable :height="210" ref="yutable4" :data="tableData"  style="width: 100%">
+					<yu-xtable-column prop="recId" label="客户ID"> </yu-xtable-column>
+					<yu-xtable-column prop="name" label="客户手机号"> </yu-xtable-column>
+					<yu-xtable-column prop="alias" label="活动计划ID"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="活动计划名称"> </yu-xtable-column>
+					<yu-xtable-column prop="alias" label="活动ID"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="活动名称"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="营销次数"> </yu-xtable-column>
+					<yu-xtable-column prop="alias" label="最后一次营销时间"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="备注"> </yu-xtable-column>
+				</yu-xtable>
+			</yu-tab-pane>
+			<yu-tab-pane label="个人传播记录">
+				<yu-xform ref="validatorForm" label-width="100px" label-suffix="：" v-model="formdata" form-type="search" class="hide-form-search-btn">
+					<yu-xform-group :column="4">
+						<yu-xform-item label="活动计划ID" ctype="input" name="activityId"></yu-xform-item>
+					</yu-xform-group>
+				</yu-xform>
+				<yu-button class="exportbtn" type='primary' @click="">导出CSV</yu-button>
+				<yu-xtable :height="210"  ref="yutable4" :data="tableData" style="width: 100%">
+					<yu-xtable-column prop="recId" label="客户ID"> </yu-xtable-column>
+					<yu-xtable-column prop="name" label="客户手机号"> </yu-xtable-column>
+					<yu-xtable-column prop="alias" label="活动计划ID"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="活动计划名称"> </yu-xtable-column>
+					<yu-xtable-column prop="alias" label="活动ID"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="活动名称"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="营销次数"> </yu-xtable-column>
+					<yu-xtable-column prop="alias" label="最后一次营销时间"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="备注"> </yu-xtable-column>
+				</yu-xtable>
+			</yu-tab-pane>
+			<yu-tab-pane label="下属人员详情">
+				<yu-xform ref="validatorForm" label-width="100px" label-suffix="：" v-model="formdata" form-type="search" class="hide-form-search-btn">
+					<yu-xform-group :column="4">
+						<yu-xform-item label="活动计划ID" ctype="input" name="activityId"></yu-xform-item>
+					</yu-xform-group>
+				</yu-xform>
+				<yu-button class="exportbtn" type='primary' @click="">导出CSV</yu-button>
+				<yu-xtable :height="210" ref="yutable4" :data="tableData" style="width: 100%">
+					<yu-xtable-column prop="recId" label="客户ID"> </yu-xtable-column>
+					<yu-xtable-column prop="name" label="客户手机号"> </yu-xtable-column>
+					<yu-xtable-column prop="alias" label="活动计划ID"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="活动计划名称"> </yu-xtable-column>
+					<yu-xtable-column prop="alias" label="活动ID"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="活动名称"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="营销次数"> </yu-xtable-column>
+					<yu-xtable-column prop="alias" label="最后一次营销时间"> </yu-xtable-column>
+					<yu-xtable-column prop="recType" label="备注"> </yu-xtable-column>
+				</yu-xtable>
+			</yu-tab-pane>
+		</yu-tabs>
+	</yu-dialog>
+	<yu-dialog :visible.sync="subordinateVis" title="下属人员详情">
+		<yu-xform ref="custInfoRef" label-width="120px" v-model="custInfoData" :disabled="true">
+			<yu-xform-group :column="4">
+				<yu-xform-item label="姓名" ctype="input" name="name"></yu-xform-item>
+				<yu-xform-item label="参与活动总数" ctype="input" name="allNum"></yu-xform-item>
+				<yu-xform-item label="已兑换积分" ctype="input" name="convertibleIntegral"></yu-xform-item>
+				<yu-xform-item label="推荐人类型" ctype="input" name="recType"></yu-xform-item>
+				<yu-xform-item label="营销客户总数" ctype="input" name="markCustNum"></yu-xform-item>
+				<yu-xform-item label="未兑换积分" ctype="input" name="unconvertiblePoints"></yu-xform-item>
+				<yu-xform-item label="员工类型" ctype="input" name="staffType"></yu-xform-item>
+				<yu-xform-item label="传播客户总数" ctype="input" name="spreadCustNum"></yu-xform-item>
+				<yu-xform-item label="积分总量" ctype="input" name="integralNum"></yu-xform-item>
+			</yu-xform-group>
+		</yu-xform>
+		<yu-xform ref="validatorForm" label-width="100px" label-suffix="：" v-model="formdata" form-type="search" class="hide-form-search-btn">
+			<yu-xform-group :column="4">
+				<yu-xform-item label="活动计划ID" ctype="input" name="activityId"></yu-xform-item>
+			</yu-xform-group>
+		</yu-xform>
+		<div class="yu-toolBar">
+			<yu-button-group>
+				<yu-button icon="document">推荐人详情</yu-button>
+				<yu-button icon="document">个人绩效详情</yu-button>
+			</yu-button-group>
+		</div>
+		<yu-xtable :height="210" row-number selection-type="radio" ref="yutable4" :data="tableData" :pageable="false" style="width: 100%">
+			<yu-xtable-column prop="recId" label="推荐人ID"> </yu-xtable-column>
+			<yu-xtable-column prop="name" label="姓名"> </yu-xtable-column>
+			<yu-xtable-column prop="alias" label="推荐人类型"> </yu-xtable-column>
+			<yu-xtable-column prop="recType" label="所属机构"> </yu-xtable-column>
+		</yu-xtable>
+	</yu-dialog>
+</div>

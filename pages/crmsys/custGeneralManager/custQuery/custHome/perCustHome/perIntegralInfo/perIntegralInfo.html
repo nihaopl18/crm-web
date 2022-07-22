@@ -1,0 +1,28 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-2-16 11:48:16.
+  @updated by
+  @description 客户积分
+-->
+<div>
+ 
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+      <yu-xtable-column label="账单日期" prop="billDate" width="120"></yu-xtable-column>
+      <yu-xtable-column label="卡号" prop="cardNo" width="120" data-code="CARD_NO"></yu-xtable-column>
+      <yu-xtable-column label="期初积分余额" prop="fristPointsBal" width="120" align="right"></yu-xtable-column>
+      <yu-xtable-column label="当期新增积分" prop="presAddPoints" width="120" align="right"></yu-xtable-column>
+      <yu-xtable-column label="当期调整积分" prop="presAdjPoints" width="120" align="right"></yu-xtable-column>
+      <yu-xtable-column label="当期兑换积分" prop="presExchgPoints" width="120" align="right"></yu-xtable-column>
+      <yu-xtable-column label="积分余额" prop="pointsBal" width="100" align="right"></yu-xtable-column>
+      <yu-xtable-column label="本期账单金额" prop="presBillAmt" width="120" align="right"></yu-xtable-column>
+      <yu-xtable-column label="本期调整金额" prop="presAdjAmt" width="120" align="right"></yu-xtable-column>
+      <yu-xtable-column label="本期奖励积分" prop="presAwardPoints" width="120" align="right"></yu-xtable-column>
+
+   </yu-xtable>
+
+</div>

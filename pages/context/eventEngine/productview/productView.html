@@ -1,0 +1,51 @@
+<div id="productView" class="customerportrait">
+    <el-tabs v-model="activeName" @tab-click="viewClick" class="">
+        <!--基本信息-->
+        <yu-tab-pane label="基本信息" name="1">
+            <el-form-x ref="reform" :group-fields="updateFields" :disabled="formDisabled" label-width="110px">
+            </el-form-x>
+        </yu-tab-pane>
+        <!--组合产品信息-->
+        <yu-tab-pane label="组合产品信息" name="2" v-if="showCombin">
+            <div class="yu-toolBar">
+                <el-button-group>
+                    <el-button icon="plus" @click="addCombinFn">新增产品</el-button>
+                    <el-button icon="edit" @click="modifyCombinFn">维护产品</el-button>
+                    <el-button icon="yx-bin" @click="deleteCombinFn">移除产品</el-button>
+                </el-button-group>
+            </div>
+            <el-table-x ref="reftableCombin" :checkbox="true" data-url="/api/cmfrcprodcombin/list" :table-columns="tableColumnsCombin"
+                :default-load="loadCombin">
+            </el-table-x>
+            <!--产品组合维护界面-->
+            <el-dialog-x :title="titleCombinSet" :visible.sync="dialogVisibleCombinSet" width="750px">
+                <el-form-x ref="reformCombin" :group-fields="updateFieldsCombin" :buttons="buttonsCombin" label-width="110px">
+                </el-form-x>
+            </el-dialog-x>
+        </yu-tab-pane>
+        <!--产品营销模板信息-->
+        <yu-tab-pane label="产品营销模板信息" name="3">
+            <el-table-x ref="reftable" :checkbox="false" data-url="/api/cmfrcsystype/listprod" :table-columns="tableColumns" :default-load="loadCombin">
+            </el-table-x>
+        </yu-tab-pane>
+        <!--营销成效指标维护-->
+        <yu-tab-pane label="营销成效指标维护" name="4">
+            <div class="yu-toolBar">
+                <el-button-group>
+                    <el-button icon="plus" @click="addTargetFn">新增指标</el-button>
+                    <el-button icon="edit" @click="modifyTargetFn">维护指标</el-button>
+                    <el-button icon="yx-bin" @click="deleteTargetFn">删除指标</el-button>
+                    <el-button icon="caret-top" @click="upTargetFn">启用</el-button>
+                    <el-button icon="caret-bottom" @click="downTargetFn">停用</el-button>
+                </el-button-group>
+            </div>
+            <el-table-x ref="reftableTarget" :checkbox="true" data-url="/api/cmfrcprodmarkettarget/list" :table-columns="tableColumnsTarget" :default-load="loadCombin">
+            </el-table-x>
+            <!--营销渠道指标维护页面-->
+            <el-dialog-x :title="titleTarget" :visible.sync="dialogVisibleTarget" width="750px">
+                <el-form-x ref="reformTarget" :group-fields="updateFieldsTarget" :buttons="buttonsTarget" label-width="110px">
+                </el-form-x>
+            </el-dialog-x>
+        </yu-tab-pane>
+    </el-tabs>
+</div>

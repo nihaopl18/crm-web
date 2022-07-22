@@ -1,0 +1,17 @@
+<div>
+  <yu-xform ref="refForm" label-width="130px" v-model="formdata" :disabled="true" style="margin-top:20px">
+    <!-- 积分调加和调减 -->
+    <yu-xform-group>
+      <yu-xform-item label="积分有效期编号" ctype="input" name="validityDateId"></yu-xform-item>
+      <yu-xform-item label="积分有效期" ctype="num" :maxlength="32" name="validityDate"></yu-xform-item>
+      <yu-xform-item label="过期方式" ctype="select" :maxlength="100" name="overdueType" data-code="OVERDUE_TYPE"></yu-xform-item>
+      <yu-xform-item label="是否需要延期" ctype="select" :maxlength="4" name="isneedDelay" data-code="ISNEED_DELAY"></yu-xform-item>
+      <yu-xform-item label="延期期限" ctype="num" :maxlength="100" name="delayTime"></yu-xform-item>
+      <yu-xform-item label="延期账户类型" ctype="select" :maxlength="20" name="delayType" data-code="DELAY_TYPE"></yu-xform-item>
+      <yu-xform-item label="创建人" ctype="input" name="createUser"></yu-xform-item>
+      <yu-xform-item label="创建日期" ctype="input" name="createDate"></yu-xform-item>
+      <yu-xform-item label="最近维护人" ctype="input" name="updateUser"></yu-xform-item>
+      <yu-xform-item label="最近维护日期" ctype="input" name="updateDate"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+</div>

@@ -1,0 +1,138 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-09-13 10:12:23
+ * @update by: 
+ * @description: 活动量
+-->
+<div class="activity-levels">
+    <div class="option-btn">
+        <span>数据更新时间: {{dataUpDate}}</span>
+        <yu-dropdown @command="handleExportCommand">
+            <yu-button>
+                导出<i class="el-icon-arrow-down el-icon--right"></i>
+            </yu-button>
+            <yu-dropdown-menu slot="dropdown">
+                <yu-dropdown-item command="1">PDF报告</yu-dropdown-item>
+                <yu-dropdown-item command="2">EXCEL报告</yu-dropdown-item>
+                <yu-dropdown-item command="3">未登录用户报告</yu-dropdown-item>
+            </yu-dropdown-menu>
+        </yu-dropdown>
+    </div>
+    <div class="export-containerpt">
+        <div class="one-month-data" style="margin-bottom: 0px;">
+            <p>本月系统使用情况概览</p>
+            <yu-row>
+                <yu-col :span="8">
+                    <p>系统月活用户占比
+                        <yu-tooltip effect="light" content="月活用户占比=本月登录系统人数/系统用户数" placement="bottom">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                    </p>
+                    <p>{{yufp.util.moneyFormatter(oneMonthObj.proportion || 0)}}<i>%</i></p>
+                    <p>
+                        <span>环比</span>
+                        <span :class="oneMonthObj.hb1 >= 0? 'red': 'green'">{{Math.round(Math.abs(oneMonthObj.hb1 ||
+              0) || 0)}}%
+              <i :class="oneMonthObj.hb1 >= 0? 'el-icon-caret-top': 'el-icon-caret-bottom'"></i>
+            </span>
+                    </p>
+                </yu-col>
+                <yu-col :span="8">
+                    <p>访问人数
+                        <yu-tooltip effect="light" content="展示本月数据，系统登陆人数" placement="bottom">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                    </p>
+                    <p>{{oneMonthObj.mau || 0}}</p>
+                    <p>
+                        <span>环比</span>
+                        <span :class="oneMonthObj.hb2 >= 0? 'red':'green'">{{Math.round(Math.abs(oneMonthObj.hb2 ||
+                            0) || 0)}}%
+              <i :class="oneMonthObj.hb2 >= 0? 'el-icon-caret-top':'el-icon-caret-bottom'"></i>
+            </span>
+                    </p>
+                </yu-col>
+                <yu-col :span="8">
+                    <p>访问次数
+                        <yu-tooltip effect="light" content="展示本月数据，系统登录次数" placement="bottom">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                    </p>
+                    <p>{{oneMonthObj.logins || 0}}</p>
+                    <p>
+                        <span>环比</span>
+                        <span :class="oneMonthObj.hb3 >= 0? 'red': 'green'">{{Math.round(Math.abs(oneMonthObj.hb3 ||
+                            0) || 0)}}%
+              <i :class="oneMonthObj.hb3 >= 0? 'el-icon-caret-top': 'el-icon-caret-bottom'"></i>
+            </span>
+                    </p>
+                </yu-col>
+            </yu-row>
+        </div>
+        <div class="data-chart" style="background-color: white;">
+            <yu-row :gutter="22">
+                <yu-col :span="7" style="padding-left:0px;padding-right: 0;">
+                    <div>
+                        <p style="padding-left: 25px;">机构月活用户占比
+                            <yu-tooltip effect="light" content="对应机构本月月度活跃用户占比，月活用户占比=本月登录系统人数/系统用户数" placement="bottom">
+                                <i class="el-icon-warning-outline"></i>
+                            </yu-tooltip>
+                        </p>
+                        <div id="chinaChart" style="height: 440px;width: 100%"></div>
+                    </div>
+                </yu-col>
+                <yu-col :span="6" style="padding-left:0px;padding-right: 0;">
+                    <div>
+                        <div style="padding-top: 80%;">
+                        </div>
+                        <p style="padding-left: 0;font-size: 14px;">机构月活用户占比排名
+                            <yu-tooltip effect="light" content="对应机构本月月度活跃用户占比" placement="bottom">
+                                <i class="el-icon-warning-outline"></i>
+                            </yu-tooltip>
+                        </p>
+                        <div v-for="(item,key,index) in chinaArr" :key="item.name" style="width: 200px;width: 56px;height: 30px;font-family: PingFangSC-Regular;font-size: 12px;color: #606266;line-height: 30px;font-weight: 400;">
+                            <span style="display: inline-block;width: 20px;">{{key+1}}</span><span style="width:80px;display: inline-block;">{{item.orgName}}</span><span style="width:70px;display:inline-block">{{item.proportion.toFixed(2)}}%</span>
+                        </div>
+                    </div>
+                </yu-col>
+                <yu-col :span="10" style="padding-left:0px;padding-right: 0;">
+                    <div>
+                        <p>近一年全行MAU波动
+                            <yu-tooltip effect="light" content="近12个月每月访问用户数" placement="bottom">
+                                <i class="el-icon-warning-outline"></i>
+                            </yu-tooltip>
+                        </p>
+                        <yu-echarts ref="MAUEchart" :option="MAUOption" width="100%" height="440px"></yu-echarts>
+                    </div>
+                </yu-col>
+            </yu-row>
+        </div>
+        <div class="functional-model" style="margin-top: 0px;">
+            <div class="time-selection">
+                <span>功能模块统计</span>
+                <el-divider direction="vertical"></el-divider>
+                <div class="date">
+                    <span>统计范围：</span>
+                    <yu-date-picker v-model="dateRange" type="daterange" start-placeholder="选择开始日期" end-placeholder="选择结束日期" @change="handleDateRangeChange" value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '23:59:59']"></yu-date-picker>
+                </div>
+            </div>
+            <yu-row>
+                <yu-col :span="12">
+                    <yu-echarts ref="functionchart" :option="functionCoverOption" width="100%" height="372px"></yu-echarts>
+                </yu-col>
+                <yu-col :span="12">
+                    <yu-xtable :pageable="false" :data="tableData" :border="false" style="width: 100%">
+                        <yu-xtable-column prop="rank" label="排名"></yu-xtable-column>
+                        <yu-xtable-column prop="module" label="功能模块"></yu-xtable-column>
+                        <!-- <yu-xtable-column prop="coverageRate" label="覆盖率" :render-header="renderHeader"></yu-xtable-column> -->
+                        <yu-xtable-column prop="coverageRate" label="覆盖率(%)" :render-header="renderHeader1"></yu-xtable-column>
+                        <yu-xtable-column prop="visitCount" label="访问人数" sortable></yu-xtable-column>
+                        <yu-xtable-column prop="visitTime" label="访问次数" sortable></yu-xtable-column>
+                        <tr slot="append" style="text-align:center; line-height:50px; width: 100%; position: relative;" @click="loadMoreDataFn"><a href="javascript:;" style="min-width: 84px; position: absolute; left: 50%; margin-left: -42px;">点击加载更多</a></tr>
+                    </yu-xtable>
+                </yu-col>
+            </yu-row>
+        </div>
+    </div>
+</div>
+<link href="./pages/dy/activityLevelsManage/platformMonitor/platformMonitor.css" rel="stylesheet" type="text/css">

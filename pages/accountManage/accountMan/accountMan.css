@@ -1,0 +1,14 @@
+/**
+ * @created by 冉珣 on 2021-10-11 11:38:38
+ * @updated by
+ * @description 理财管户
+ */
+
+.account-manage {
+    padding: 30px 20px;
+}
+
+.historyDialog .content .content-head {
+    display: flex;
+    align-items: center;
+}

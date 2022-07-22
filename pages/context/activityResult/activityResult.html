@@ -1,0 +1,130 @@
+<div class="activity-result">
+    <yu-row :gutter="22">
+        <yu-col :span="6">
+            <div class="result-left">
+                <yu-input placeholder="请输入关键字" icon="search" v-model="keyword" :triger-click="false"
+                    :on-icon-click="fuzzyQuery">
+                </yu-input>
+                <ul class="result-left-menu">
+                    <li :class="{'active': activeId == menu.id}" v-for="menu in activityList" :key="menu.id"
+                        @click="handleMenuClick(menu)">{{ menu.name }}</li>
+                </ul>
+            </div>
+        </yu-col>
+        <yu-col :span="18">
+            <div class="result-right" v-if="activeType">
+                <div class="result-right-top">
+                    <p class="panel-title">活动数据</p>
+                    <yu-xform ref="refFormDemo" label-width="120px" v-model="activityInfo" form-type="details">
+                        <yu-xform-group>
+                            <yu-xform-item label="活动名称" ctype="input" name="activityName"></yu-xform-item>
+                            <!-- <yu-xform-item label="活动执行对象" ctype="select" data-code="NATIONALITY" name="objectNames"></yu-xform-item> -->
+                            <!-- <yu-xform-item label="营销产品" ctype="select" data-code="" name="productNames"></yu-xform-item> -->
+                            <yu-xform-item label="活动类型" ctype="input" :options="optionsType" name="activityType">
+                            </yu-xform-item>
+                            <!-- <yu-xform-item label="客户群名称" ctype="input" name="customerGroupNames"></yu-xform-item> -->
+                            <yu-xform-item label="活动开始时间" ctype="datepicker" name="startTime"></yu-xform-item>
+                            <!-- <yu-xform-item label="渠道" ctype="select" name="channelNames"></yu-xform-item> -->
+                            <yu-xform-item label="活动结束时间" ctype="datepicker" name="endTime"></yu-xform-item>
+                            <!-- <yu-xform-item label="营销方式" ctype="select" name="actionNames"></yu-xform-item> -->
+                            <yu-xform-item label="当前活动状态" ctype="textarea" :options="optionsSts" name="activitySts">
+                            </yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <p class="panel-title">结果汇总</p>
+                    <yu-xform ref="refFormDemo" label-width="120px" v-model="activityInfo2" form-type="details">
+                        <yu-xform-group>
+                            <yu-xform-item :hidden="activeType == 2 || activeType == 3" label="客户数量" ctype="input"
+                                name="customerNumber"></yu-xform-item>
+                            <yu-xform-item :hidden="activeType == 2 || activeType == 3" label="成功率" ctype="select"
+                                name="successRate"></yu-xform-item>
+                            <yu-xform-item :hidden="activeType == 1 || activeType == 2" label="访问量" ctype="select"
+                                data-code="" name="verbCount"></yu-xform-item>
+                            <yu-xform-item :hidden="activeType == 1 || activeType == 2" label="活动参与量" ctype="input"
+                                name="joinCount"></yu-xform-item>
+                            <yu-xform-item :hidden="activeType == 1 || activeType == 3" label="栏位信息&活动类型" ctype="select"
+                                data-code="" name="verbCount"></yu-xform-item>
+                            <!-- <yu-xform-item :hidden="activeType == 1 || activeType == 3"  label="" ctype="input" name="joinCount"></yu-xform-item> -->
+                        </yu-xform-group>
+                    </yu-xform>
+                </div>
+                <div class="result-right-bottom">
+                    <yu-xform v-model="rightSearchForm" related-table-name="pubtable" form-type="search"
+                        :remove-empty="true" :force-fllow="false">
+                        <yu-xform-group :column="3">
+                            <yu-xform-item label="客户Id" placeholder="请输入" ctype="input" name="customerId">
+                            </yu-xform-item>
+                            <yu-xform-item label="客户名称" placeholder="请输入" ctype="input" name="customerName">
+                            </yu-xform-item>
+                            <!-- <yu-xform-item :hidden="activeType == 2" label="发送渠道" placeholder="请选择" ctype="select"
+                                :options="channelResult" name="channelId"></yu-xform-item> -->
+                            <!-- <yu-xform-item :hidden="activeType == 2" label="发送时间" placeholder="请选择" ctype="datepicker" name="sendTime"></yu-xform-item> -->
+                            <yu-xform-item :hidden="activeType == 2" label="发送结果" placeholder="请选择" ctype="select"
+                                data-code="ACTIVITY_RESULT" name="resultType"></yu-xform-item>
+                            <!-- <yu-xform-item :hidden="activeType == 1" label="客户类型" placeholder="请选择" ctype="select" name="customerType"></yu-xform-item>
+                          <yu-xform-item :hidden="activeType == 1" label="触发时间" placeholder="请选择" ctype="datepicker" name="startTime"></yu-xform-item>
+                          <yu-xform-item :hidden="activeType == 1" label="触发结果" placeholder="请选择" ctype="select" name="resultType"></yu-xform-item> -->
+                        </yu-xform-group>
+                    </yu-xform>
+                    <el-table-x ref="pubtable" :checkbox="false" :default-load="false" :table-columns="tableColumns"
+                        :data-url="tableUrl" :base-params="initTableParams" request-type="post">
+                    </el-table-x>
+                </div>
+            </div>
+        </yu-col>
+    </yu-row>
+</div>
+<style>
+    .activity-result {
+        padding: 24px 0;
+    }
+
+    .result-left,
+    .result-right {
+        padding: 12px;
+    }
+
+    .result-left {
+        border: 1px solid #d1dbe5;
+        min-height: 500px;
+    }
+
+    .result-left-menu {
+        padding-top: 24px;
+    }
+
+    .result-left-menu li {
+        line-height: 36px;
+        height: 36px;
+        font-size: 12px;
+        color: #444;
+        padding-left: 15px;
+        cursor: pointer;
+    }
+
+    .result-left-menu li.active {
+        color: #20a0ff;
+    }
+
+    .result-left-menu li:not(:last-child) {
+        border-bottom: 1px solid #d1dbe5;
+    }
+
+    .result-right-top,
+    .result-right-bottom {
+        border: 1px solid #d1dbe5;
+    }
+
+    .result-right-bottom {
+        margin-top: 10px;
+        padding: 0 10px;
+    }
+
+    .panel-title {
+        padding: 16px;
+        font-size: 16px;
+        color: #666;
+        font-weight: bold;
+        border-bottom: 1px solid #d1dbe5;
+    }
+</style>

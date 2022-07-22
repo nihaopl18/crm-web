@@ -1,0 +1,47 @@
+<!--
+  @created by 罗顺 on 2018/11/16.
+  @description 营销组件FORM表单-渠道组件-CRM组件
+-->
+<div>
+  <!-- <el-collapse v-model="activeNames"> -->
+  <!-- <el-collapse-item title="输入" name="1">
+      <el-tabs :active-name="activeName1">
+        <el-tab-pane label="客户集合" name="person">
+          <template>
+            <el-table border style="width: 100%" height="120" :data="custGroupTableData">
+              <el-table-column prop="custGroupId" label="客户群编号" width="180"></el-table-column>
+              <el-table-column prop="custGroupName" label="客户群名称" width="180"></el-table-column>
+              <el-table-column prop="custNum" label="客户数"></el-table-column>
+            </el-table>
+          </template>
+        </el-tab-pane>
+      </el-tabs>
+    </el-collapse-item> -->
+  <!-- <el-collapse-item title="操作" name="2"> -->
+  <yu-xform ref="refForm" label-width="120px" v-model="formdata" style="margin-top:20px">
+    <!-- 虚拟票券批次审批页面 -->
+    <yu-xform-group>
+      <!-- <yu-xform-item label="动作模板" name="modelInfos" ctype="yufp-model-selector" :checkbox="true"
+            @select-fn="selectBackFn" rules="required"></yu-xform-item> -->
+      <yu-xform-item label="动作模板" name="modelInfos" ctype="yufp-model-selector" :checkbox="true"
+        @select-fn="selectBackFn"></yu-xform-item>
+    </yu-xform-group>
+    <div class="yu-grpButton">
+      <yu-button v-show="!buttonHiden" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      <yu-button v-show="!buttonHiden" icon="yx-undo2" type="primary" @click="deleteSelecedFn">删除</yu-button>
+    </div>
+  </yu-xform>
+  <template>
+    <el-table border style="width: 100%" height="200" :data="modelInfoTableData" ref="modelInfosTable"
+      @selection-change="selectionChangeFn">
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column prop="modelName" label="模板名称" width="180"></el-table-column>
+      <el-table-column prop="applyType" label="模板类型" width="120" :formatter="fomatData"></el-table-column>
+      <el-table-column prop="isEnable" label="是否启用" width="120" :formatter="fomatData"></el-table-column>
+      <el-table-column prop="applyChannelName" label="适用渠道" width="150"></el-table-column>
+      <el-table-column prop="modelInfo" label="营销话术"></el-table-column>
+    </el-table>
+  </template>
+  <!-- </el-collapse-item>
+  </el-collapse> -->
+</div>

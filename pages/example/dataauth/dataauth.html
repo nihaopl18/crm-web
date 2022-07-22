@@ -1,0 +1,13 @@
+<!-- 数据权限示例页面 -->
+<!-- 必须全局拥有唯一的id -->
+<div id="dataAuthDemo">
+    <br/>
+    <div style="color:red">
+        <h2> 数据权限示例：过滤出用户码为当前登录用户的记录</h2>
+    </div>
+	<!-- 表格 -->
+    <el-table-x ref="demoTable"  :max-height="height"
+                :data-url="urls.authDemoUrl" :base-params="dataParams" :table-columns="tableColumns" >
+    </el-table-x>
+    
+</div>

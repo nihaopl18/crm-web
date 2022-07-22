@@ -1,0 +1,28 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-2-12 19:30:18.
+  @updated by
+  @description 反馈信息
+-->
+<div>
+    <!-- <el-form-q :field-data="queryFields" :buttons='queryButtons'></el-form-q>
+    <el-button-group>
+        <el-button icon="document" @click="infoFn">客户反馈清单</el-button>
+    </el-button-group>
+    <el-table-x ref="reftable" :radiobox="true" :data-url="serviceUrl" :table-columns="tableColumns" @row-click="rowClickFn"></el-table-x> -->
+    
+    <!-- <el-dialog-x :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px" id="backContent"> -->
+      <el-form-q :field-data="queryFields2" :buttons='queryButtons2'></el-form-q>
+      <div class="yu-toolBar">
+            <yu-button-group>
+              <yu-button icon="plus" @click="addFn" v-if="addBtn">反馈登记</yu-button> 
+              <yu-button icon="edit" @click="editFn" v-if="editBtn">反馈修改</yu-button> 
+              <yu-button icon="document" @click="detailFn" v-if="detailBtn">详情</yu-button>
+              <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">反馈删除</yu-button>
+            </yu-button-group>
+      </div>
+      <el-table-x ref="reform" :data-url="serviceUrl2" :table-columns="tableColumns2"  :base-params="baseParams" @row-dblclick="rowDblClick"></el-table-x>
+      <el-dialog-x :title="viewTitle[viewType2]" :visible.sync="dialogVisible2" width="700px" append-to-body>
+          <el-form-x ref="reform2" :group-fields="updateFields" :buttons="updateButtons" :disabled="formDisabled" label-width="120px"></el-form-x>
+      </el-dialog-x>
+      <!-- </el-dialog-x>  -->
+  </div>

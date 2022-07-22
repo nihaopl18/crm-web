@@ -1,0 +1,78 @@
+<!-- 
+  @Created by 刘佳 liujia14@yusys.com.cn on 2020-4-7 16:46:11.
+  @updated by
+  @description 业绩测算
+-->
+<div class="calc-page">
+  <link rel="stylesheet" href="pages/content/bussiness/distributionmanage/performanceCalc/performanceCalc.css">
+  <div class="calc-panel">
+    <div class="calc-head" style="margin-top: 0;">
+      <div class="calc-title">FTP收益计算器</div>
+    </div>
+    <div class="calc-body">
+      <div class="calc-form-box">
+        <yu-xform ref="refForm" label-width="100px" v-model="formdata" :rules="rules1">
+          <yu-xform-group>
+            <yu-xform-item label="存款规模" ctype="input" name="depositScale"></yu-xform-item>
+            <yu-xform-item label="FTP利率" ctype="input" name="ftpRate"></yu-xform-item>
+            <yu-xform-item label="存款利率" ctype="input" name="depositRate"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="check" type="primary" @click="saveFn">计算</yu-button>
+            <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+          </div>
+        </yu-xform>
+      </div>
+
+    </div>
+  </div>
+  <div class="calc-panel">
+    <div class="calc-head">
+      <div class="calc-title">FTP收益计算结果（仅供参考，结果保留两位小数）</div>
+    </div>
+    <div class="calc-body">
+      <div class="calc-form-box">
+        <yu-xform ref="refForm2" label-width="100px" v-model="formdata2" :rules="rules1">
+          <yu-xform-group>
+            <yu-xform-item label="FTP收益" ctype="input" name="ftpIncome" disabled></yu-xform-item>
+            <yu-xform-item label="奖金系数" ctype="input" name="bonusRate"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="check" type="primary" @click="saveFn2">计算</yu-button>
+            <!-- <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button> -->
+          </div>
+        </yu-xform>
+      </div>
+
+    </div>
+  </div>
+  <div class="calc-panel">
+    <div class="calc-head">
+      <div class="calc-title">预收奖金计算结果（仅供参考，结果保留两位小数）</div>
+    </div>
+    <div class="calc-body">
+      <div class="calc-form-box">
+        <yu-xform ref="refForm3" label-width="100px" v-model="formdata3">
+          <yu-xform-group>
+            <yu-xform-item label="预收奖金" ctype="input" name="advanceBonus"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+      </div>
+
+    </div>
+  </div>
+  <div class="calc-panel">
+    <div class="calc-head">
+      <div class="calc-title">工具说明</div>
+    </div>
+    <div class="calc-body">
+      <div class="calc-form-box">
+        <p class="calc-tip">FTP收益=存款规模*(FTP利率-存款利率)</p>
+        <p class="calc-tip">预收奖金=FTP收益*奖金系数</p>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>

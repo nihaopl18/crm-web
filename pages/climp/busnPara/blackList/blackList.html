@@ -1,0 +1,93 @@
+<!--
+  @created by luoshun 2019-1-4
+  @updated by 
+  @description 黑名单商户
+-->
+<div>
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="商户编号" ctype="input" name="merchantId" :maxlength="32"></yu-xform-item>
+      <yu-xform-item placeholder="商户名称" ctype="input" name="merchantName" :maxlength="100"></yu-xform-item>
+      <yu-xform-item placeholder="有效标志" ctype="select" name="enableSign" :maxlength="20" :options="options"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 工具按钮 -->
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="minus" @click="approveFn">提交</yu-button>
+      <yu-button icon="plus" @click="addMoreFn">导入</yu-button>
+      <yu-button icon="plus" @click="batchAddMoreFn">批量提交</yu-button>
+      <!-- <el-button icon="document" @click="upTable">上传模板</el-button> -->
+    </yu-button-group>
+  </div>
+  <!-- 查询显示表格 -->
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+    <yu-xtable-column label="商户编号" prop="merchantId" width="110" sortable>
+    </yu-xtable-column>
+    <yu-xtable-column label="商户名称" prop="merchantName" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="有效标志" prop="enableSign"  width="110" :options="options">
+    </yu-xtable-column>
+    <yu-xtable-column label="审批状态" prop="wfApprSts" width="110" data-code="WF_APP_STATUS" >
+    </yu-xtable-column>
+    <yu-xtable-column label="批次号" prop="batchId" width="110" >
+    </yu-xtable-column>
+    <yu-xtable-column label="列入黑名单原因" prop="reason">
+    </yu-xtable-column>
+    <yu-xtable-column label="最近维护人" prop="updateUser">
+    </yu-xtable-column>
+    <yu-xtable-column label="最近维护时间" prop="updateDate" :formatter="dateFormatterSimple">
+    </yu-xtable-column>
+  </yu-xtable>
+  <!-- 按钮响应弹窗 -->
+  <yu-xdialog :title="viewTitle" :visible.sync="dialogVisible" width="800px">
+    <yu-xform ref="refForm" label-width="120px" v-model="formdata">
+      <yu-xform-group>
+        <yu-xform-item label="商户编号" ctype="input" :maxlength="15" name="merchantId" :rules="rules" placeholder="请输入长度在15个字符的数字"></yu-xform-item>
+        <yu-xform-item label="商户名称" ctype="input" :maxlength="100" name="merchantName" rules="required"></yu-xform-item>
+        <yu-xform-item label="有效标志" ctype="select" :maxlength="20" name="enableSign" :options="options" rules="required"></yu-xform-item>
+        <yu-xform-item label="列入黑名单原因" ctype="textarea" :maxlength="1024" :colspan="24" name="reason"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+
+  <el-dialog-x :title="uploadTitle" :visible.sync="uploadDialog" width="570px" height="240px">
+      <div id="template_tinymce">
+        <textarea ref="dataSqlTemp" cols="70" rows="8">
+            导入注意事项：
+            
+        一. Excel文件的需严格安照模板格式(可以先下载模板)。
+        二. 批次编号、商户编号、商户名称、有效标志字段不能为空。 
+        三. 有效标志只能输入0或者1，其中0代表是，1代表否。
+        </textarea>
+      </div>
+        <el-upload style="display: inline-block;" :show-file-list="true" 
+          :multiple="false" :file-list="fileList"
+          :action="action"  ref="verUpload" :auto-upload="false" :headers="headers" :data="uploaddata"
+          :on-success="onSuccess" :on-error="onError" :before-upload="beforeAvatarUpload" :on-change="onChange" :on-remove="onRemove">
+          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" 
+              @click="submitUpload" :disabled="uploadDisabled">上传到服务器</el-button>
+              <el-button style="margin-left: 10px;" size="large" type="warning" 
+              @click="downTable">下载模板</el-button>
+        </el-upload>
+        
+      </el-dialog-x>
+      <!-- 上传文件 -->
+      <!-- <el-dialog-x title="上传附件信息" :visible.sync="uploadInfoVisible" width="800px" height="600px">
+        <el-row :gutter="20">
+          <yufp-upload-table ref="filesTable" :data-params="initFilesParams" :data="noticeUpLoadBusNo" 
+           :upload-visible="uploadVisible" :success-fn="successFn" :download-visible="downloadVisible"
+           ></yufp-upload-table>
+        </el-row>
+      </el-dialog-x> -->
+      
+  <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" :common-params="wfCommonParams" />
+</div>

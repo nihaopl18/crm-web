@@ -1,0 +1,16 @@
+<!--
+  @created by zhanghan on 2018-11-15 16:11:30
+  @updated by
+  @description 修改营销活动
+-->
+<div>
+  <el-tabs v-model="tabName" @tab-click="handleClick">
+      <el-tab-pane label="基本信息" name="base">
+          <el-form-x ref="updatereform" :group-fields="updateFields" :buttons="updateButtons" :disabled="formDisabled" label-width="100px">
+          </el-form-x>
+    </el-tab-pane>
+    <el-tab-pane label="流程设计" name="asset" >
+        <yufp-flow-design :temp-key="tempId" :editable="editableornot" v-if="showornot" :flow-id="flowId" :panel-type="panelType" @delete-node-fn="deleteNodeFn"></yufp-flow-design>
+      </el-tab-pane>
+  </el-tabs>
+</div>

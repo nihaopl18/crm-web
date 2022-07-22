@@ -1,0 +1,645 @@
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2019-1-15
+  @updated by
+  @description 统计分析-灵活报表查询
+-->
+<div id="TabFlexyQuery">
+	<link rel="stylesheet" type="text/css" href="./pages/crmsys/staAnalysis/flexTabSearch/TabFlexQuery.css"
+	/>
+	<el-row :gutter="10">
+		<el-col :span="3">
+			<h3>报表方案</h3>
+			<div class="yu-toolBar">
+				<!-- <el-button-group>
+					<el-button icon="delete" @click="datasetaddFn">新增</el-button>
+					<el-button icon="delete" @click="datasetDeleteFn">删除</el-button>
+				</el-button-group> -->
+			</div>
+			<el-table-x ref="filterTable" :checkbox="true" :max-height="height" @row-dblclick="dblclick" @select="rowClickFn" :data-url="ssolutionUrl"
+			 :table-columns="ssolutiontableColumns" :pageable=false>
+			</el-table-x>
+		</el-col>
+		 <el-col v-show=false>
+			<template>
+				<el-select v-model="value" placeholder="请选择" class="searchselect">
+					<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+					</el-option>
+				</el-select>
+			</template>
+			<yufp-ext-tree ref="flexytree" :height="height - 20" v-bind:style="{height: (height-114) + 'px' }" draggable :allow-drop="allowDroprow"
+			 @node-drag-start="handleDragStart" data-url="/api/ocrmfcifqdbcol/prepare" data-id="nodeid" data-label="name" data-pid="parentId"
+			 node-key="nodeid" :root-visible="false" data-root="0" style="margin:10px 0 0 0;" @load-all-data='getdata'>
+			</yufp-ext-tree>
+		</el-col>
+		<el-col :span="14" class="custFlexytab">
+			<template>
+				<el-tabs v-model="activeName" @tab-click="handleClick">
+					<el-tab-pane label="查询条件" name="first">
+						<div id="queryCon" v-bind:style="{height: (height-104) + 'px' }" style="background-color:#FAFAFA" @drop="allowDrop($event)"
+						 @dragover='allowDropover($event)'>
+							<div class="ys-stGroup" v-for="(item,index) in list" :key="index">
+								<el-form label-width="80px" ref="item.index" :model="dataSqlTemp[item.index]">
+									<el-row class="conDisable">
+										<el-col :span="6">
+											<el-radio-group v-model="dataSqlTemp[item.index].radio2" v-show="radioshow">
+												<el-radio :label="item.and"></el-radio>
+												<el-radio :label="item.or"></el-radio>
+											</el-radio-group>
+										</el-col>
+									</el-row>
+									<div @drop='childrenallowDrop($event,index)' @dragover='Dragover($event)'>
+										<div class="formrow">
+											<el-row>
+												<el-col :span="7">
+													<el-form-item label="属性" class="mustWrite">
+														<el-input :placeholder="item.name" v-model="dataSqlTemp[item.index].proPer" readonly></el-input>
+													</el-form-item>
+												</el-col>
+												<el-col :span="7">
+													<el-form-item label="操作符" class="mustWrite">
+														<!-- <el-select placeholder="请选择" v-model="dataSqlTemp[item.index].signOp" @change="signchange">
+															<el-option v-for="(items, index) in signOptions" :key="index" :label="items.value" :value="items.key">
+															</el-option>
+														</el-select> -->
+														<yu-xform-item-part v-model="dataSqlTemp[item.index].signOp" rules="required" :ctype="item.section.ctype" :options="item.section.options"></yu-xform-item-part>
+														<!-- <yu-xform-item-part v-model="dataSqlTemp[item.id].signOp" :ctype="item.section.ctype"  :options="item.section.options" ></yu-xform-item-part>-->
+													</el-form-item>
+												</el-col>
+												<el-col :span="7">
+													<el-form-item label="属性值" class="mustWrite">
+														<!--<el-input placeholder='请填写' v-model="dataSqlTemp[item.id].signVal" ></el-input>-->
+														<yu-xform-item-part v-model="dataSqlTemp[item.index].signVal" :unit="item.items.unit" :ctype="item.items.ctype" :type="item.items.type"
+														 :options="item.items.options"></yu-xform-item-part>
+													</el-form-item>
+												</el-col>
+												<el-col :span="3">
+													<i class="el-icon-yx-cross" @click="queryCondelTableRow(index,list)"></i>
+												</el-col>
+											</el-row>
+											<div v-for="(item,index) in item.children">
+												<el-form label-width="80px" ref="refQueryChd" style="margin: 0px;margin-top: 10px;">
+													<!-- TODO -->
+											<el-radio-group v-model="dataSqlTemp[item.index].radio2">
+											<!-- <el-radio-group > -->
+												<el-radio :label="item.and"></el-radio>
+												<el-radio :label="item.or"></el-radio>
+											</el-radio-group>	
+											<div>
+												 <el-row class="formrow" style="margin-top: 0px;padding: 10px;">
+																			<el-col :span="7">
+													<el-form-item label="属性" class="mustWrite" >
+															<el-input :placeholder="item.name" v-model="dataSqlTemp[item.index].proPer" readonly></el-input>
+															<!-- <el-input :placeholder="item.name"  readonly></el-input> -->
+													</el-form-item>
+												</el-col>		
+												<el-col :span="7">
+													<el-form-item label="操作符" class="mustWrite" :rules="opRule" prop="childSignOp">
+														<!-- <el-select v-model="dataSqlTemp[item.id].signOp"> 
+															<el-option v-for="(items, index) in signOptions" :key="index" :label="items.value" :value="items.key">
+														</el-option>
+															</el-select> -->
+															<yu-xform-item-part v-model="dataSqlTemp[item.index].signOp" rules="required" :ctype="item.section.ctype" :options="item.section.options"></yu-xform-item-part>
+													</el-form-item>
+												</el-col>	
+												<el-col :span="7">
+													<el-form-item label="属性值" class="mustWrite" :rules="signvRule" prop="childsignVal">
+															<el-input placeholder='请填写' v-model="dataSqlTemp[item.index].signVal" ></el-input>
+														 <!-- <el-input placeholder='请填写'></el-input> -->
+															
+													</el-form-item>
+												</el-col>
+												<el-col :span="3">
+													<!-- TODO 需要添加删除逻辑 -->
+													<i class="el-icon-yx-cross"></i>
+												</el-col>
+											</el-row>
+											</div>
+										 </el-form>
+									</div>
+											<!--<div v-for="(item,index) in item.children">
+														<el-form label-width="80px" style="margin: 0px;margin-top: 10px;">
+													<el-radio-group v-model="dataSqlTemp[item.id].radio2">
+														<el-radio :label="1">并</el-radio>
+														<el-radio :label="2">或</el-radio>
+													</el-radio-group>	
+													<div>
+														 <el-row class="formrow" style="margin-top: 0px;padding: 10px;">
+																					<el-col :span="7">
+															<el-form-item label="属性" class="mustWrite" >
+																	<el-input :placeholder="item.name" v-model="dataSqlTemp[item.id].proPer" readonly></el-input>
+															</el-form-item>
+														</el-col>		
+														<el-col :span="7">
+															<el-form-item label="操作符" class="mustWrite" >
+																<el-select > 
+																	<el-option v-for="(items, index) in signOptions" :key="index" :label="items.value" :value="items.key">
+																</el-option>
+																	</el-select>
+															</el-form-item>
+														</el-col>	
+														<el-col :span="7">
+															<el-form-item label="属性值" class="mustWrite" >
+																 <el-input placeholder='请填写' v-model="dataSqlTemp[item.id].signVal" ></el-input>
+															</el-form-item>
+														</el-col>
+														<el-col :span="3">
+															<i class="el-icon-yx-cross"></i>
+														</el-col>
+													</el-row>
+													</div>
+												 </el-form>
+											</div>-->
+										</div>
+									</div>
+								</el-form>
+							</div>
+						</div>
+					</el-tab-pane>
+					<el-tab-pane label="显示列" name="second">
+						<div id="shouColumn" v-bind:style="{height: (height-104) + 'px' }" style="background-color:#FAFAFA">
+							<!--<div id="queryCon" v-bind:style="{height: (height-104) + 'px' }" style="background-color:#FAFAFA">-->
+							<div id="queryCon1" v-bind:style="{height: (height-104) + 'px' }" style="background-color:#FAFAFA" @drop="allowDrop1($event)"
+							 @dragover='allowDropover($event)'>
+								<div class="ys-stGroup" v-for="(item,index) in conlist ">
+									<el-form label-width="80px" ref="item.indexs" :model="dataTemp[item.indexs]">
+										<el-row class="formrow">
+											<el-col :span="10">
+												<el-form-item label="属性" class="mustWrite">
+													<el-input :placeholder="item.name" v-model="dataTemp[item.indexs].proPer" readonly></el-input>
+												</el-form-item>
+											</el-col>
+											<el-col :span="11">
+												<el-form-item label="排序方式" class="mustWrite">
+													<el-select placeholder="请选择" v-model="dataTemp[item.indexs].orderType">
+														<el-option v-for="items in orderOptions" :key="items.key" :label="items.value" :value="items.key">
+														</el-option>
+													</el-select>
+												</el-form-item>
+											</el-col>
+											<el-col :span="3">
+												<i class="el-icon-yx-cross" @click="delTableRow(index)"></i>
+											</el-col>
+										</el-row>
+									</el-form>
+								</div>
+								<!--</div>-->
+							</div>
+					</el-tab-pane>
+				</el-tabs>
+			</template>
+			<div class="yu-toolBar" style="text-align: center">
+				<span>筛选条数：</span>
+				<el-input v-model="limitNum" type="num" style="width: 60px;"></el-input>
+				<el-button type="warning" @click="queryInfoFn">查询结果</el-button>
+				<!-- <el-button type="primary" @click="reportPubFn">报表发布</el-button>
+				<el-button type="primary" @click="saveAsCustGroupFn">保存为客户群</el-button>
+				<el-button type="primary" @click="saveSetFn">保存</el-button> -->
+				<el-button type="primary" @click="resetconditionFn">重置</el-button>
+			</div>
+		</el-col>
+		<!--crm开发分组汇总-->
+		<el-col :span="7">
+			<h3>分组汇总</h3>
+			<el-form ref="groupform" :model="groupform" label-width="120px">
+				<el-row :gutter="28">
+					<el-col :span="26">
+						<el-form-item label="第一分组字段" class="mustWrite">
+							<el-select v-model="groupform.firstgroup" clearable size="small" v-show="true" @change="selectFirstGroup" @clear="clearGroupFn(1)">
+								<el-option v-for="(item,index) in firstOptions" :key="index" :label="item.name" :value="item.id">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="28">
+					<el-col :span="26">
+						<el-form-item label="第二分组字段" class="mustWrite">
+							<el-select v-model="groupform.secondgroup" size="small" v-show="true" @change="selectSecondGroup" clearable @clear="clearGroupFn(2)">
+								<el-option v-for="(item,index) in secondOptions" :key="index" :label="item.name" :value="item.id">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="28">
+					<el-col :span="26">
+						<el-form-item label="第三分组字段" class="mustWrite">
+							<el-select v-model="groupform.thirdgroup" size="small" v-show="true" @change="selectThirdGroup" clearable @clear="clearGroupFn(3)">
+								<el-option v-for="(item,index) in thirdOptions" :key="index" :label="item.name" :value="item.id">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="28">
+					<el-col :span="26">
+						<el-form-item label="第四分组字段" class="mustWrite">
+							<el-select v-model="groupform.fourgroup" size="small" v-show="true" @change="selectFourGroup" clearable @clear="clearGroupFn(4)">
+								<el-option v-for="(item,index) in fourOptions" :key="index" :label="item.name" :value="item.id">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="28">
+					<el-col :span="26">
+						<el-form-item label="第五分组字段" class="mustWrite">
+							<el-select v-model="groupform.fivegroup" size="small" v-show="true" @change="selectFiveGroup" clearable @clear="clearGroupFn(5)">
+								<el-option v-for="(item,index) in fiveOptions" :key="index" :label="item.name" :value="item.id">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+			<!--<el-table-x ref="grouptable"  :height="groupHeight" :pageable="false" :table-columns="tableColumns" data-url="/trade/flexy/query"  >
+				</el-table-x>-->
+			<el-table ref="grouptable" height="groupHeight" :data="tableData" :max-height="groupHeight" stripe border fit highlight-current-row
+			 element-loading-text="加载中...">
+				<el-table-column label="编号" width="60" type="index">
+				</el-table-column>
+				<el-table-column label="汇总字段" property="summColumn" width="120">
+					<template scope="scope">
+						<el-select v-model="scope.row.summColumn" size="small" v-show=true>
+							<el-option v-for="(item,index) in columnOptions" :key="index" :label="item.name" :value="item.id">
+							</el-option>
+						</el-select>
+					</template>
+				</el-table-column>
+				<el-table-column label="汇总类型" property="summType" width="120">
+					<template scope="scope">
+						<el-select v-model="scope.row.summType" size="small" v-show=true>
+							<el-option v-for="(item, index) in typeOptions" :key="index" :label="item.value" :value="item.key">
+							</el-option>
+						</el-select>
+					</template>
+				</el-table-column>
+				<el-table-column label="汇总后名称" property="summName" width="150">
+					<template scope="scope">
+						<el-input v-show=true size="small" v-model="scope.row.summName" @click.native.prevent="handleRow(scope.$index, tableData)">
+						</el-input>
+					</template>
+				</el-table-column>
+			</el-table>
+			<div class="yu-toolBar" style="margin-top:37px;text-align:  right">
+				<el-button type="primary" @click="groupSummFn">分组汇总统计</el-button>
+				<el-button type="primary" @click="resetGroupFn">重置</el-button>
+			</div>
+		</el-col>
+	</el-row>
+	<!-- 查询结果展示-->
+	<el-dialog-x title="查询结果" :visible.sync="dialogFormVisible1" width="900px" height="500px" class="dialogOne dialog1100">
+		<div>
+			<!--<el-row>	
+					<el-col :span="20">
+						<div>-->
+			<div class="yu-toolBar">
+				<el-button-group>
+					<!-- <el-button icon="yx-menu-4" @click="opencustViewFn">客户视图</el-button>
+					<el-button icon="el-icon-setting" @click="setatten">设置为我的关注客户</el-button>
+					<el-button icon="plus" @click="incustFn">加入客户群</el-button> -->
+					<el-button icon="yx-folder-upload" @click="exportInfoFn">导出</el-button>
+					<!-- <el-button icon="yx-menu-4" @click="setCustTags">设置标签</el-button> -->
+				</el-button-group>
+			</div>
+			<!--<el-form label-width="100px" ref="resultTemp" >-->
+			<!--<el-row :gutter="20">-->
+			<!--<el-form-item label="" >-->
+			<!--<el-col :span="12">-->
+			<!--<div class="info_field">-->
+			<!--<el-row :gutter="20">
+													<el-col :span="12">-->
+			<!--<template>-->
+			<el-table ref="qryresult" border tooltip-effect="dark" :data="data" :max-height="groupHeight" style="margin-bottom: 20px;">
+				<el-table-column type="selection"></el-table-column>
+				<el-table-column v-for="(item, index) in colunmNamelist" :key="index" :label="item.name" :prop="item.ename">
+					<!--<template scope="scope">-->
+					<!--<span>{{scope.row.qrylist[index].value}}</span>-->
+					<!-- </template>-->
+				</el-table-column>
+			</el-table>
+			<yu-pagination :total="pageData.total" :current-page.sync="pageData.page" :page-size="pageData.size" @size-change="mgrsizeChangeFn"
+          @current-change="mgrpageChangeFn" small :layout="pageData.layout">
+        </yu-pagination> 
+			<!--</template>
+													 </el-col>
+												</el-row>
+											</div>
+												</el-col>
+											</el-form-item>
+									</el-row>
+							</el-form>
+						</div>
+					</el-col>
+					<el-col :span="23">
+						<div>-->
+
+
+
+			<!--<div id="echartsPie" v-bind:style="{height: (height-54) + 'px' }" style="width:100%"></div>
+							<div id="echartsPie1" v-bind:style="{height: (height-54) + 'px' }" style="width:100%"></div>-->
+			<!--<div id="echartsPie" style="width: 680px;height:300px;" ></div>
+							<div id="echartsPie1" style="width: 680px;height:300px;"></div>-->
+			<!--</div>
+					</el-col>
+							</el-row>-->
+		</div>
+	</el-dialog-x>
+	<!-- 报表发布-->
+	<el-dialog-x ref="reportpub" title="报表发布" :visible.sync="reportdialogVisible" width="600px" height="80px" class="dialogOne">
+		<el-form label-width="100px" ref="reportTemp" :model="reportTemp">
+			<el-row :gutter="20">
+				<el-col :span="24">
+					<el-form-item label="报表名称" class="mustWrite">
+						<el-input placeholder='请填写' v-model="reportTemp.reportName"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+		</el-form>
+		<div slot="footer" class="dialog-footer">
+			<el-button type="primary" icon="yx-checkmark" :disabled="closebuttonsDisabled" @click="closedialog">关闭</el-button>
+			<el-button type="primary" icon="yx-checkmark" :disabled="pubbuttonsDisabled" @click="reportPublish">发布</el-button>
+		</div>
+	</el-dialog-x>
+	<!--保存方案-->
+	<el-dialog-x ref="solutionform" title="保存方案" :visible.sync="solutionformVisible" width="500px" height="230px" class="dialogOne cc">
+		<el-form label-width="100px" ref="itemssTemp" :model="itemssTemp">
+			<el-row :gutter="20">
+				<el-col :span="15">
+					<el-form-item label="方案名称" class="mustWrite">
+						<el-input placeholder='请填写方案名称' v-model="itemssTemp.ssName"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+		</el-form>
+		<div slot="footer" class="dialog-footer">
+			<el-button type="primary" icon="yx-checkmark" :disabled="closecustbuttonsDisabled" @click="closesave">关闭</el-button>
+			<el-button type="primary" icon="yx-checkmark" @click="saveSolutionsub">保存</el-button>
+		</div>
+	</el-dialog-x>
+	<!-- 保存为客户群-->
+	<el-dialog-x ref="customersdialog" title="新增自动筛选客户群" :visible.sync="addcustomersdialogVisible" width="600px" height="400px"
+	 class="dialogOne">
+		<el-form label-width="100px" ref="customersTemp" :model="customersTemp" :rules="ruless">
+			<el-row :gutter="20">
+				<el-col :span="24">
+					<el-form-item label="客户群名称" class="mustWrite" prop="custGroupName">
+						<el-input placeholder='请填写' v-model="customersTemp.custGroupName"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20">
+				<el-col :span="24">
+					<el-form-item label="客户群类型" class="mustWrite" prop="custGroupType">
+						<el-select placeholder="请选择" v-model="customersTemp.custGroupType">
+							<el-option v-for="(item,index) in customersOptions" :key="index" :label="item.value" :value="item.key">
+							</el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20">
+				<el-col :span="24">
+					<el-form-item label="筛选排序字段" class="mustWrite" prop="customersColumn">
+						<el-select placeholder="请选择" v-model="customersTemp.customersColumn">
+							<el-option v-for="(item,index) in conlist" :key="index" :label="item.name" :value="item.id">
+							</el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20">
+				<el-col :span="24">
+					<el-form-item label="群成员类型" class="mustWrite" prop="groupMemberType">
+						<el-select placeholder="请选择" v-model="customersTemp.groupMemberType">
+							<el-option v-for="(item,index)  in membersOptions" :key="index" :label="item.value" :value="item.key">
+							</el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<!--<el-row :gutter="20">
+						 <el-col :span="24">
+							 <el-form-item label="共享范围" class="mustWrite" >
+								<el-select   placeholder="请选择" v-model="customersTemp.shareFlag">
+										<el-option v-for="(item,index) in sharerangeOptions" :key="index" :label="item.value"
+																									 :value="item.key">
+															</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>-->
+			<el-row :gutter="20">
+				<el-col :span="24">
+					<el-form-item label="跑批标识" class="mustWrite" prop="batchType">
+						<el-select placeholder="请选择" v-model="customersTemp.batchType">
+							<el-option v-for="(item,index) in batchTypeOptions" :key="index" :label="item.value" :value="item.key">
+							</el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row :gutter="20">
+				<el-col :span="24">
+					<el-form-item label="客户群描述" class="mustWrite">
+						<el-input type="textarea" v-model="customersTemp.remark"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+		</el-form>
+		<div slot="footer" class="dialog-footer">
+			<el-button type="primary" icon="yx-checkmark" :disabled="closecustbuttonsDisabled" @click="closeaddcustomers">关闭</el-button>
+			<el-button type="primary" icon="yx-checkmark" :disabled="customersbuttonsDisabled" @click="savecustomers">保存</el-button>
+		</div>
+	</el-dialog-x>
+	<el-dialog-x ref="customersdialog" title="加入客户群" :visible.sync="customersdialogVisible" width="600px" height="300px" class="dialogOne">
+		<el-form label-width="100px" ref="customersTemp" :model="customersTemp">
+			<el-row>
+				<el-col :span="18">
+					<el-form-item label="选择客户群" class="mustWrite">
+						<el-form-q ref="aaa" :field-data="queryFieldss" :buttons="queryButtonss" :columns="1" class="tagCmpSingle"></el-form-q>
+					</el-form-item>
+				</el-col>
+			</el-row>
+		</el-form>
+		<div slot="footer" class="dialog-footer">
+			<el-button type="primary" icon="yx-checkmark" :disabled="closecustbuttonsDisabled" @click="closecustomers">关闭</el-button>
+			<el-button type="primary" icon="yx-checkmark" :disabled="customersbuttonsDisabled" @click="saveaddcustomers">保存</el-button>
+		</div>
+	</el-dialog-x>
+	<!-- 客户群查询-->
+	<!--<el-dialog-x ref="customersqrydialog" title="客户群查询"  :visible.sync="customersqrydialogVisible" width="1000px"  height="500px">
+		<el-row :gutter="10">
+				<el-col :span="12">
+								<el-form-q  :field-data="queryFields" search-table="mytable"></el-form-q>
+						<el-table-x ref="mytable" data-url="/clientsmanager/temp/clientsShow" :table-columns="tableColumns" :checkbox="true"></el-table-x>
+				</el-col>
+				<el-col :span="12">
+						<div class="yu-toolBar">
+								<h2>客户群成员列表</h2>
+						</div>
+						<el-table-x ref="mytable1" :data-url="joinUrl" :table-columns="clientsView1" :checkbox="true"></el-table-x>
+				</el-col>
+		</el-row>
+		<div slot="footer" class="dialog-footer">
+			<el-button type="primary" icon="yx-checkmark" :disabled="customersbuttonsDisabled" @click="choosecustomers">确定</el-button>
+			<el-button type="primary" icon="yx-checkmark" :disabled="closecustbuttonsDisabled" @click="closechoose">取消</el-button>
+		</div>
+	</el-dialog-x>-->
+	<!-- 分组-->
+	<el-dialog-x title="分组汇总统计" :visible.sync="dialogFormVisible2" width="780px" height="800px" class="dialogOne">
+		<el-row>
+			<el-col :span="24">
+				<!-- 点击页面“分组汇总统计”按钮后展示的表格 -->
+				<el-table-x ref="qrygroup" :checkbox="true" :default-load="false" :data="summTableData" :table-columns="resultTableColumns">
+					</el-table-x>
+			</el-col>
+			<!-- <el-col :span="10">
+				<el-form label-width="100px" ref="chartTemp">
+						<el-row>
+							<el-col :span="24">
+								<el-form-item label="图表名称" class="mustWrite">
+									<el-input placeholder='图表名称' v-model="chartTemp.chartName"></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="图表类型" class="mustWrite">
+									<el-select placeholder="请选择" v-model="chartTemp.chartType" @change="chartchange">
+										<el-option v-for="(item,index) in chartTypeOptions" :key="index" :label="item.value" :value="item.key">
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="图表大小" class="mustWrite">
+									<el-select placeholder="请选择" v-model="chartTemp.chartSize">
+										<el-option v-for="(item,index) in chartSizeOptions" :key="index" :label="item.value" :value="item.key">
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+					</el-form>
+					<el-form label-width="100px" ref="chartTagTemp" v-if="showPrise">
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="标签项" class="mustWrite">
+									<el-select placeholder="请选择" v-model="chartTagTemp.chartTag">
+										<el-option v-for="(item,index) in chartTagOptions" :key="index" :label="item.name" :value="item.ename">
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="指标项" class="mustWrite">
+									<el-select placeholder="请选择" v-model="chartTagTemp.chartTarget">
+										<el-option v-for="(item,index) in chartTargetOptions" :key="index" :label="item.value" :value="item.key">
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+					</el-form>
+					<el-form label-width="100px" ref="ychartNameTemp" v-if="showRentPrise">
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="y轴名称" class="mustWrite">
+									<el-input placeholder='y轴名称' v-model="ychartNameTemp.ychartName"></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="y轴起始值" class="mustWrite">
+									<el-input placeholder='y轴名称' v-model="ychartNameTemp.ychartBegin"></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="x轴标签序列" class="mustWrite">
+									<el-select placeholder="请选择" v-model="ychartNameTemp.xchartTag">
+										<el-option v-for="(item,index) in xchartTagOptions" :key="index" :label="item.name" :value="item.ename">
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="y轴指标序列" class="mustWrite">
+									<el-select placeholder="请选择" v-model="ychartNameTemp.ychartTarget">
+										<el-option v-for="(item,index) in ychartTargetOptions" :key="index" :label="item.value" :value="item.key">
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+					</el-form>
+					<div class="yu-toolBar">
+							<el-button type="primary" icon="yx-checkmark" @click="drawImage">预览</el-button>
+							<el-button type="primary" icon="yx-checkmark" @click="graphpub">发布</el-button>
+					</div>
+					<yufp-echart :echart-option="echartData" height="300px"></yufp-echart>
+			</el-col> -->
+		</el-row>
+	</el-dialog-x>
+<!-- 审批流组件 -->
+<yufp-wf-init ref="approvalRef" @afterinit="onAfterCloseFn" :common-params="wfCommonParams"></yufp-wf-init>
+	<!-- <el-dialog-x title="设置标签" :visible.sync="dialogTagForm" width="900px" height="500px" class="dialogOne" @close="dialogClose">
+		<el-form  label-width="100px" ref="tagTemp" :model="tagTemp" >
+			<el-row :gutter="22">
+				<el-col :span="7">
+						 <yufp-ext-tree ref="mytree" :height="450" @node-click="nodeClickFnofset"
+							:data-url="treeqryUrl" data-id="groupNo" data-label="groupName"
+							:default-expanded-keys="[278555]" node-key="groupNo"
+							data-pid="parentNo" :data-async="async" :data-params="param" data-root="0" style="margin:10px 10px 0 0;">
+					 </yufp-ext-tree>
+					</el-col>
+					<el-col :span="8">
+						 <el-form-item label="客户名称" class="mustWrite" >
+							<el-input placeholder='客户名称'  v-model="tagTemp.custName" :disabled="true"></el-input>
+					</el-form-item>
+				 </el-col>
+					<el-col :span="16">
+						<template>
+							<div class="x-panel-body x-panel-body-noheader x-panel-body-noborder"  
+								 style="overflow-y: auto; height: 240px; width: 100%;">
+								 <div  class=" ys-stChooseTags" style="overflow: auto; width: calc(100%-140px);;">
+									<div ><h1 class="ys-stctTitle">已有标签：</h1></div>
+									<div v-for="(item,index) in setselectList ">
+										<a class="ys-stcTag" href="javascript:void(0)" title="item.name">{{item.name}}<i  class="el-icon-yx-cross" @click="deleteSeTagFnofset(item)"></i></a>
+									</div>
+							 </div>
+								<div id="ext-comp-1016" class=" x-panel" style="width: 100%;">
+									<div class="x-panel-bwrap">
+										<div class="x-panel-body x-panel-body-noheader"  style="width: 100%;">
+												<div  class=" ys-stGroup" style="width: calc(100%-140px);" v-for="(item,index) in settinglist ">
+													<h1 class="ys-stgTitle" style="overflow:hidden; white-space:nowrap; text-overflow:ellipsis;" >
+														<input hidden="false" type="checkbox" checked="true" id="ext-gen152">
+														<label title="item.name">{{item.name}}：</label>
+													</h1>
+													<div v-for="(stu,stuindex) in item.stu "><a class="ys-stgTag" href="javascript:void(0)" @click="addsetTabQuryFn(stu,stuindex,index)"
+															title="stu.name" id="ext-gen153">{{stu.name}}<i :class="[{'el-icon-yx-checkmark':stu.state},{'el-icon-yx-cross':!stu.state}]"></i></a>
+													 </div>
+																	</div>
+											</div>
+								 </div>
+						</div>
+						</template>
+						</el-col>
+					<el-col :span="8">
+						<el-form-item label="自定义标签" class="transfer" >
+					<el-input placeholder='请输入新增自定义标签'  v-model="tagTemp.definedTag" ></el-input>
+				</el-form-item>
+					</el-col>
+					</el-row>
+					<el-row>
+					<el-col :span="24">
+					<div  align="center">
+					<el-button type="primary" icon="yx-checkmark" :disabled="buttonsDisabled" @click="settingSubFn">提交</el-button>
+					<el-button type="primary" icon="yx-undo2" @click="detailResetRule">取消</el-button>
+			</div>
+					</el-col>
+				</el-row>
+				</el-form>
+	</el-dialog-x> -->
+	</div>

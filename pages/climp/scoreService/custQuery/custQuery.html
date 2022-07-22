@@ -1,0 +1,41 @@
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2018-12-27 09:48:55.
+  @updated by
+  @description 客户查询
+-->
+<div>
+  <!-- 搜索表单 -->
+  <yu-xform related-table-name="refTable" form-type="search" label-width="100px">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="客户号" name="custId" ctype="input" :maxlength="30"></yu-xform-item>
+      <yu-xform-item placeholder="客户姓名" name="custName" ctype="input" :maxlength="200"></yu-xform-item>
+      <!--<yu-xform-item placeholder="证件类型" name="identType" ctype="select" data-code="CD0011"></yu-xform-item>-->
+      <yu-xform-item placeholder="证件号码" name="identNo" ctype="input" rules="IDCard" :maxlength="30"></yu-xform-item>
+      <yu-xform-item placeholder="综合积分(起)" name="totalNumStart" ctype="num" :maxlength="10"></yu-xform-item>
+      <yu-xform-item placeholder="综合积分(止)" name="totalNumEnd" ctype="num" :maxlength="10"></yu-xform-item>
+      <yu-xform-item placeholder="可用积分(起)" name="scoreNumStart" ctype="num" :maxlength="10"></yu-xform-item>
+      <yu-xform-item placeholder="可用积分(止)" name="scoreNumEnd" ctype="num" :maxlength="10"></yu-xform-item>
+      <yu-xform-item placeholder="冻结积分(起)" name="freezeNumStart" ctype="num" :maxlength="10"></yu-xform-item>
+      <yu-xform-item placeholder="冻结积分(止)" name="freezeNumEnd" ctype="num" :maxlength="10"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!--  工具按钮-->
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-lock" @click="customerViewFn">客户视图</yu-button> 
+    </yu-button-group>
+  </div>
+  <!--客户查询表格  -->
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio"  @row-dblclick="rowDblclickFn" :default-load="true">
+    <!-- <yu-xtable-column label="客户状态" prop="customType" data-code="CERT_TYPE"></yu-xtable-column> -->
+    <yu-xtable-column label="客户号" prop="custId" width="120px"></yu-xtable-column>
+    <yu-xtable-column label="客户姓名" prop="custName"  width="120px" width="120px"></yu-xtable-column>
+    <!--<yu-xtable-column label="证件类型" prop="identType" width="140px" data-code="CD0011"></yu-xtable-column>-->
+    <yu-xtable-column label="证件号码" prop="identNo" width="200px"></yu-xtable-column>
+    <yu-xtable-column label="综合积分" prop="totalNum" width="100px"></yu-xtable-column>
+    <yu-xtable-column label="可用积分" prop="scoreNum" width="100px"></yu-xtable-column>
+    <yu-xtable-column label="冻结积分" prop="freezeNum" width="100px"></yu-xtable-column>
+    <yu-xtable-column label="本月末失效积分" prop="nextInvalidNum" width="100px"></yu-xtable-column>
+    <yu-xtable-column label="累计失效积分" prop="nunaccNum" width="100px"></yu-xtable-column>
+  </yu-xtable>
+</div>

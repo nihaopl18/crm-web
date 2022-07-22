@@ -1,0 +1,57 @@
+<!-- 
+  @Created by yangye yangye@yusys.com on 2018-12-27 10:59:02.
+  @updated by
+	@description 原始交易查询
+-->
+<div>
+	<yu-xform related-table-name="refTable" form-type="search" label-width="80px">
+		<yu-xform-group :column="3">
+			<yu-xform-item placeholder="账户编号" name="accountNo" ctype="input"></yu-xform-item>
+			<yu-xform-item placeholder="账户名称" name="accountName" ctype="input"></yu-xform-item>
+			<yu-xform-item placeholder="客户号" name="custId" ctype="input"></yu-xform-item>
+			<yu-xform-item placeholder="交易日期开始" name="jyDateStart" ctype="datepicker"></yu-xform-item>
+			<yu-xform-item placeholder="交易日期结束" name="jyDateEnd" ctype="datepicker"></yu-xform-item>
+		</yu-xform-group>
+	</yu-xform>
+	</yu-xform>
+	<div class="yu-toolBar">
+		<yu-button-group>
+			<yu-button icon="document" @click="infoFn">交易详情</yu-button>
+		</yu-button-group>
+	</div>
+	<yu-xtable ref="refTable" row-number :data-url="dataUrl"  selection-type="radio">
+		<yu-xtable-column label="账户编号" prop="accountNo"></yu-xtable-column>
+		<yu-xtable-column label="账户名称" prop="accountName"></yu-xtable-column>
+		<yu-xtable-column label="操作分值" prop="balance"></yu-xtable-column>
+		<yu-xtable-column label="加分活动名称" prop="activityName"></yu-xtable-column>
+		<yu-xtable-column label="加分规程名称" prop="activityName" ></yu-xtable-column>
+		<yu-xtable-column label="交易日期" prop="jydate" ></yu-xtable-column>
+		<yu-xtable-column label="入账状态" prop="transState"></yu-xtable-column>
+		<yu-xtable-column label="原表主键ID" prop="consumerSeqNo"></yu-xtable-column>
+		<yu-xtable-column label="来源表" prop="sourceTable"></yu-xtable-column>
+	</yu-xtable>
+	<yu-xdialog title="交易详情" :visible.sync="dialogVisible" width="750px">
+		<yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="formDisabled">
+			<yu-xform-group>
+				<yu-xform-item label="序号" row-number ctype="num" name=""></yu-xform-item>
+				<yu-xform-item label="交易流水号" ctype="input" name=""></yu-xform-item>
+				<yu-xform-item label="交易日期" ctype="datepicker" name="jydate"></yu-xform-item>
+				<yu-xform-item label="交易时间" ctype="input" name=""></yu-xform-item>
+				<yu-xform-item label="交易机构" ctype="input" name=""></yu-xform-item>
+				<yu-xform-item label="交易渠道" ctype="input" name=""></yu-xform-item>
+				<yu-xform-item label="交易代码" ctype="input" name=""></yu-xform-item>
+				<yu-xform-item label="交易币种" ctype="input" name=""></yu-xform-item>
+				<yu-xform-item label="交易账号" ctype="input" name=""></yu-xform-item>
+				<yu-xform-item label="命中规则情况" ctype="input" name=""></yu-xform-item>
+				<yu-xform-item label="账户号" ctype="input" name="accountNo"></yu-xform-item>
+				<yu-xform-item label="账户名称" ctype="input" name="accountName"></yu-xform-item>
+				<yu-xform-item label="操作分值" ctype="input" name="balance"></yu-xform-item>
+				<yu-xform-item label="参与活动名称" ctype="input" name="activityName"></yu-xform-item>
+				<yu-xform-item label="参与规则名称" ctype="input" name="activityName"></yu-xform-item>
+			</yu-xform-group>
+			<div class="yu-grpButton">
+				<yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+			</div>
+		</yu-xform>
+	</yu-xdialog>
+</div>

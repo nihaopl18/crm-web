@@ -1,0 +1,317 @@
+<!--
+  @created by ranxun on 2021-8-6 09:46:35
+  @updated by
+  @description 东亚银行管理员首页
+-->
+<div class="home-container">
+    <link rel="stylesheet" type="text/css" href="pages/dy/managePage/managePage.css">
+    <div class="top-container">
+        <yu-row>
+            <yu-col :span="24">
+                <div class="top-leftmanage">
+                    <div class="custSearch" style="margin-right: 200px;">
+                        <el-input placeholder="请输入ECIF号、NDS号、客户中文名、客户英文名、手机号搜索" v-model="searchData" clearable>
+                            <!-- <span slot="prepend">客户</span> -->
+                        </el-input>
+                        <yu-button id="btn" slot="append" icon="search" type="danger" style="height: 36px;" @click="searchTenCusts"></yu-button>
+
+                        <div style="display: inline-block;padding-left: 20px;width: 153px;height: 20px;font-family: PingFangSC-Regular;font-size: 12px;color: #909399;line-height: 20px;font-weight: 400;">
+                            <span>数据更新时间：</span>
+                            <span>{{this.updatetimeTop}}</span>
+
+
+                        </div>
+
+                        <ul v-if="searchBoxShow" class="custResultBox" v-loading="loading">
+                            <li id="noDataid" class="noData" v-if="!custResults.length">没有查找到~</li>
+                            <!-- <li v-else v-for="item in custResults" :key="item.custId" @click="handleCustomerSelect(item)">
+                                {{ item.custName }} - {{item.custId}}
+                            </li> -->
+                            <el-table id="custtable" v-else :data="custResults" style="width: 100%;">
+                                <yu-xtable-column type="index" label="序号"></yu-xtable-column>
+                                <yu-xtable-column prop="custId" label="ECIF号" width="160px"></yu-xtable-column>
+                                <yu-xtable-column prop="ndsCustNo" label="NDS号" width="160px"></yu-xtable-column>
+                                <yu-xtable-column prop="custName" label="客户姓名" width="160px"></yu-xtable-column>
+                                <yu-xtable-column prop="nationality" label="地区" data-code="ORIGION_LIST"></yu-xtable-column>
+                                <yu-xtable-column prop="belongBranch" label="主办分行" width="200px"></yu-xtable-column>
+                                <yu-xtable-column prop="belongBrch" label="主办机构" width="200px"></yu-xtable-column>
+                                <yu-xtable-column prop="mgrNameOne" label="理财客户经理" width="160px"></yu-xtable-column>
+                                <yu-xtable-column prop="mgrNameTwo" label="个贷客户经理" width="160px"></yu-xtable-column>
+                                <yu-xtable-column prop="aumBalanceAvgRmb" label="AUM余额月日均" width="160px" sortable></yu-xtable-column>
+                                <yu-xtable-column prop="aumBalance" label="AUM余额" width="160px" sortable></yu-xtable-column>
+                                <yu-xtable-column prop="exchangeFinBalance" label="汇率"></yu-xtable-column>
+                                <yu-xtable-column prop="nonExchangeFinBalance" label="非汇"></yu-xtable-column>
+                                <yu-xtable-column prop="trustBalanceRmb" label="信托" width="160px"></yu-xtable-column>
+                                <yu-xtable-column prop="rmbFundBalance" label="基金" width="160px"></yu-xtable-column>
+                                <yu-xtable-column prop="assestManageBalance" label="资管" width="160px"></yu-xtable-column>
+                                <yu-xtable-column prop="qdiiBalanceRmb" label="QDII净值余额" width="160px"></yu-xtable-column>
+                                <yu-xtable-column prop="insurranceBalance" label="保险" width="160px"></yu-xtable-column>
+                                <yu-xtable-column prop="depositBalanceRmb" label="存款" width="160px"></yu-xtable-column>
+                            </el-table>
+                        </ul>
+                    </div>
+                    <!-- <el-scrollbar> -->
+                    <div class="top-cardBox">
+                        <div v-for="item in cardData" :key="item.title">
+                            <div>{{ item.title }}
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="title">{{ item.title }}</p>
+                                        <p class="content">{{ item.content }}</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p class="count">{{ item.data || '-' }}</p>
+                            <div class="compare">
+                                <div>
+                                    <span>同比</span>
+                                    <span>{{ yufp.util.returnPercent(item.tb) }}%
+                      <!-- <i :class="item.tbClass"></i> -->
+                      <i v-if='item.tbClass&lt;0' class="el-icon-caret-bottom"></i>
+                      <i v-else class="el-icon-caret-top"></i>
+                    </span>
+                                </div>
+                                <div>
+                                    <span>环比</span>
+                                    <span>{{ yufp.util.returnPercent(item.hb) }}%
+                      <!-- <i :class="item.hbClass"></i> -->
+                      <i v-if='item.hbClass&lt;0' class="el-icon-caret-bottom"></i>
+                      <i v-else class="el-icon-caret-top"></i>
+                    </span>
+                                </div>
+                            </div>
+                            <!-- 图底部 -->
+                            <div class="argbottom">
+                                <div class="argbottomdiv">
+                                    <span style="float: left;">{{item.countTitlef}}</span>
+                                    <span style="float:right;margin-right: 20px;">{{item.enddataf}}</span>
+                                </div>
+                                <div class="argbottomdiv">
+                                    <span style="float: left;">{{item.countTitles}}</span>
+                                    <span style="float:right;margin-right: 20px;">{{item.enddatas}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- </el-scrollbar> -->
+
+                    <!-- 客户概览 -->
+
+                    <div class="option-container">
+                        <div class="box-title">
+                            <div class="title" style="font-size: 18px;">客户概览</div>
+                        </div>
+                        <yu-row style="height: 300px;">
+                            <yu-col :span="12" style="height: 100%;">
+                                <yu-row style="height: 100%;">
+                                    <yu-col :span="12">
+                                        <p style="text-align: left;color:'#333333';font-size:14px; font-weight: 600; font-family: PingFangSC-Semibold">客户持有产品类型分布</p>
+                                        <div id="venn"></div>
+                                    </yu-col>
+                                    <yu-col :span="12" style="height: 100%;">
+                                        <div style="display: flex;flex-direction: column;justify-content: center;height: 100%;">
+                                            <!-- <p style="color: #909399;">
+                                                客户总数
+                                                <yu-tooltip class="item" effect="light" content="全行零售客户数" placement="bottom-start">
+                                                    <i class="el-icon-warning-outline"></i>
+                                                </yu-tooltip>
+                                            </p>
+                                            <p style="font-size: 24px;color: #303133;">{{vennData.total}}</p> -->
+                                            <div class="vennTitle">
+                                                <p style="margin-top: 20px">
+                                                    <span><i class="dot" style="background: #F06C7F"></i>个贷产品持有客户</span>
+                                                    <span>{{vennData.loan}}</span>
+                                                </p>
+                                                <p style="margin-top: 20px">
+                                                    <span><i class="dot" style="background: #508EFA"></i>理财&保险产品持有客户</span>
+                                                    <span>{{vennData.financing}}</span>
+                                                </p>
+                                                <p style="margin-top: 20px">
+                                                    <span><i class="dot" style="background: #6C5895"></i>同时持有客户</span>
+                                                    <span>{{vennData.both}}</span>
+                                                </p>
+                                                <!-- <p>
+                                                    <span><i class="dot" ></i>其他</span>
+                                                    <span>{{vennData.other}}</span>
+                                                </p> -->
+                                            </div>
+                                        </div>
+                                    </yu-col>
+                                </yu-row>
+                            </yu-col>
+                            <yu-col :span="12" style="height:100%;border-left:1px solid #ECEEF5; ;">
+                                <!-- <yu-echarts :option="this.histogramOption" width="330px" height="270px"></yu-echarts> -->
+                                <yu-echarts ref="echarts" :option="histogramOption" width="100%" height="280px"></yu-echarts>
+                            </yu-col>
+                        </yu-row>
+
+                        <yu-row style="height: 300px;">
+                            <yu-col :span="24" style="height: 100%;overflow-x:scroll">
+                                <yu-echarts ref="echarts" :option="histogramoptionorg" width="3900px" height="280px"></yu-echarts>
+
+                            </yu-col>
+                        </yu-row>
+                    </div>
+
+
+                    <!-- 收入看板 -->
+                    <div class="option-container">
+                        <div class="box-title">
+                            <div class="title" style="font-size: 18px;">收入看板</div>
+                            <div class="more">
+                                <div style="display: inline-block;">
+                                    <div style="border-radius: 4px 0px 0px 4px;float:left;_margin-right:-3px" :class="this.tapshowclass? 'tapshow':'tapnoshow'" @click="handleClickyear">当年累计</div>
+                                    <div style="border-radius: 0px 4px 4px 0px;" :class="this.tapshowclass? 'tapnoshow':'tapshow'" @click="handleClickmonth">当月累计</div>
+                                </div>
+                                <span @click="lookmoreFn">查看更多 ></span>
+                            </div>
+                        </div>
+                        <div class="top-kanban">
+                            <div class="top-circle">
+                                <div v-for="(item, index) in progressTop" :key="item.title">
+                                    <div class="left-content">
+                                        <div>{{ item.title }}
+                                            <!-- <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                                <div slot="content">
+                                                    <p class="title">{{ item.title }}</p>
+                                                    <p class="content">{{ item.content }}</p>
+                                                </div>
+                                                <i class="el-icon-warning-outline"></i>
+                                            </el-tooltip> -->
+                                        </div>
+                                        <p>{{ item.money }}</p>
+                                        <div class="compare">
+                                            <div>
+                                                <span>同比</span>
+                                                <span>{{yufp.util.returnPercent(item.tb)}}
+                                                    <span>%</span>
+                                                <i v-if='item.tb>=0' class="el-icon-caret-top colorRed"></i>
+                                                <i v-else class="el-icon-caret-bottom color-green"></i>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>环比</span>
+                                                <span>{{yufp.util.returnPercent(item.hb)}}
+                                                    <span>%</span>
+                                                <i v-if='item.hb>=0' class="el-icon-caret-top colorRed"></i>
+                                                <i v-else class="el-icon-caret-bottom color-green"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- 员工概览 -->
+                    <div class="option-container">
+                        <div class="box-title">
+                            <div class="title" style="font-size: 18px;">员工概览</div>
+                        </div>
+                        <div class="top-kanban">
+                            <div class="top-circle">
+                                <div v-for="(item, index) in progressbottom" :key="item.title">
+                                    <div class="left-content">
+                                        <div>{{ item.title }}
+                                            <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                                <div slot="content">
+                                                    <p class="title">{{ item.title }}</p>
+                                                    <p class="content">{{ item.content }}</p>
+                                                </div>
+                                                <i class="el-icon-warning-outline"></i>
+                                            </el-tooltip>
+                                        </div>
+                                        <p>{{ item.money }}</p>
+                                        <div class="compare">
+                                            <div>
+                                                <span>环比</span>
+                                                <span>{{yufp.util.returnPercent(item.hb)}}
+                                                <span>%</span>
+                                                <i v-if='item.hb>=0' class="el-icon-caret-top colorRed"></i>
+                                                <i v-else class="el-icon-caret-bottom color-green"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 员工概览下面表 -->
+
+                        <yu-xtable :data="cumtableData" :pageable="false" :border="false" style="width: 100%;border:0px solid black">
+                            <yu-xtable-column prop="ruleName" label="">
+                            </yu-xtable-column>
+
+                            <yu-xtable-column prop="aum" label="人均AUM余额" :render-header="renderHeader1">
+                                <template slot-scope="scope">
+                                    <!-- <i v-if ="scope.row.__vkey==1||scope.row.__vkey==2" class="el-icon-caret-top colorRed"></i> -->
+                                    <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.aum>=0" class="el-icon-caret-top colorRed"></i>
+                                    <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.aum<0" class="el-icon-caret-bottom color-green"></i>
+                                    <span v-if ="scope.row.__vkey==1||scope.row.__vkey==2">{{ yufp.util.returnPercent(scope.row.aum) }}<span>%</span></span>
+                                    <span v-if ="scope.row.__vkey==0">{{ yufp.util.moneyFormatter(scope.row.aum) }}</span>
+                                  </template>
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="avgLoan" label="人均个贷客户数" :render-header="renderHeader2">
+                                <template slot-scope="scope">
+                                    <!-- <i v-if ="scope.row.__vkey==1||scope.row.__vkey==2" class="el-icon-caret-top colorRed"></i> -->
+                                    <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgLoan>=0" class="el-icon-caret-top colorRed"></i>
+                                    <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgLoan<0" class="el-icon-caret-bottom color-green"></i>
+                                    <span v-if ="scope.row.__vkey==1||scope.row.__vkey==2">{{ yufp.util.returnPercent(scope.row.avgLoan) }}<span>%</span></span>
+                                    <span v-if ="scope.row.__vkey==0">{{ yufp.util.moneyFormatter(scope.row.avgLoan) }}</span>
+                                  </template>
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="avgFin" label="人均理财客户数" :render-header="renderHeader3">
+                                <template slot-scope="scope">
+                                    <!-- <i v-if ="scope.row.__vkey==1||scope.row.__vkey==2" class="el-icon-caret-top colorRed"></i> -->
+                                    <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgFin>=0" class="el-icon-caret-top colorRed"></i>
+                                    <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgFin<0" class="el-icon-caret-bottom color-green"></i>
+                                    <span v-if ="scope.row.__vkey==1||scope.row.__vkey==2">{{ yufp.util.returnPercent(scope.row.avgFin) }}<span>%</span></span>
+                                    <span v-if ="scope.row.__vkey==0">{{ yufp.util.moneyFormatter(scope.row.avgFin) }}</span>
+                                  </template>
+
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="avgCust" label="人均客户数" :render-header="renderHeader4">
+                                <template slot-scope="scope">
+                                    <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgCust>=0" class="el-icon-caret-top colorRed"></i>
+                                    <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgCust<0" class="el-icon-caret-bottom color-green"></i>
+
+                                    <span v-if ="scope.row.__vkey==1||scope.row.__vkey==2">{{ yufp.util.returnPercent(scope.row.avgCust) }}<span>%</span>    </span>
+                                    <span v-if ="scope.row.__vkey==0">{{ yufp.util.moneyFormatter(scope.row.avgCust) }}</span>
+                                  </template>
+                            </yu-xtable-column>
+                        </yu-xtable>
+                    </div>
+                </div>
+            </yu-col>
+        </yu-row>
+
+
+    </div>
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" title="信息" :visible.sync="optionDialogVisible" size="tiny" :show-close="false" :center="true">
+        <yu-xform ref="refDialogForm" label-width="120px" v-model="optionForm" :inline="false" label-position="top">
+            <yu-xform-group>
+                <yu-xform-item label="电话" name="phonenum" rules="required" colspan="24" ctype="input"></yu-xform-item>
+                <yu-xform-item label="邮箱" name="email" rules="required" colspan="24" ctype="input"></yu-xform-item>
+            </yu-xform-group>
+        </yu-xform>
+        <span slot="footer" class="dialog-footer">
+      <yu-button type="primary" id="confirmqd" @click="confirmFn">确 定</yu-button>
+    </span>
+    </yu-dialog>
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" :visible.sync="isChormeable" size="tiny" :show-close="false" :center="true">
+        <div style="height: 20px;padding-left:10px;line-height: 20px;font-size:20px;">
+            提示
+        </div>
+        <div style="height: 60px;text-align:center;line-height: 60px;font-size: 18px;">
+            请使用谷歌浏览器！
+        </div>
+        <div style="float:right;padding: 4px;">
+            <el-button type="danger" @click="sureFn">确定</el-button>
+        </div>
+    </yu-dialog>
+</div>

@@ -1,0 +1,70 @@
+<!-- 
+  @Created by xujiawei xujy3@yusys.com.cn on 2020-7-15 20:08:54.
+  @updated by
+  @description 折算系数补录
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="交易名称" ctype="yufp-trancode-selector" name="trancode" @select-fn="trancodeSelectFn"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+      <yu-button icon="plus" @click="importFn">导入</yu-button>
+      <yu-button icon="document" @click="saveFn">模板下载</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+    <yu-xtable-column label="交易代码" prop="trancode" ></yu-xtable-column>
+    <yu-xtable-column label="交易类型名称" prop="tranname"></yu-xtable-column>
+    <yu-xtable-column label="折算系数" prop="coefficient"></yu-xtable-column>
+  </yu-xtable>
+    <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+     <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+        <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="formDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="交易名称" name="trancode" ctype="yufp-trancode-selector" @select-fn="trancodeaddFn" :disabled="bizDisa" :hidden = "bizDisa"></yu-xform-item>
+            <yu-xform-item label="交易代码" name="trancode" :disabled="bizDisa" :hidden = "!bizDisa"></yu-xform-item>
+            <yu-xform-item label="交易名称" name="tranname" :disabled="bizDisa" :hidden = "!bizDisa"></yu-xform-item>
+            <yu-xform-item label="折算系数" name="coefficient" :rules="comRules.coefficient"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveAddFn">保存</yu-button>
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+  <yu-xdialog title="导入" :visible.sync="indexdialogVisible" width="40%">
+    <center>
+      <yu-upload
+        class="upload-demo"
+        :action="action"
+        :data="uploadData"
+        :headers="uploadHeaders"
+        :before-upload="beforeFileUpload"
+        :on-success="uploadSuccessFn"
+        :on-error="uploadErrorFn"
+        :on-timeout="uploadTimeoutFn"
+        :timeout="120000"
+        :show-file-list="false"
+        :auto-upload="true"
+        >
+        <yu-button size="small" type="primary">点击上传</yu-button>
+        <div slot="tip" class="el-upload__tip">请导入标准的模板文件</div>
+      </yu-upload>
+    </center>
+  </yu-xdialog>
+  <yu-xdialog title="导入错误信息" :visible.sync="erroDialogVisible" width="900px"  >
+    <yu-xtable ref="refErroTable"   :data="dataerroPData" :highlight-current-row="true" stripe="true" :pageable="false">
+            <yu-xtable-column label="错误信息" prop="errorNa" sortable align="center"></yu-xtable-column>
+    </yu-xtable>
+    <div style="padding-top:20px;text-align: center;">
+        <yu-button icon="yx-floppy-disk" type="primary" @click="closeBtn">关闭</yu-button>   
+</div>
+</yu-xdialog>
+</div>

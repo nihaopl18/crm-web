@@ -1,0 +1,341 @@
+<!--
+  @Created by 在修理费 zhengxl2@yusys.com.cn on 2020-1-3 14:59:05.
+  @updated by
+  @description 派生指标管理
+-->
+<div>
+    <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+    <yu-xform related-table-name="refTable" form-type="search">
+        <yu-xform-group :column="4">
+            <yu-xform-item placeholder="指标编号" name="indexId" ctype="input"></yu-xform-item>
+            <yu-xform-item placeholder="指标名称" name="indexName" ctype="input"></yu-xform-item>
+            <yu-xform-item placeholder="指标状态" name="indexState" ctype="select" data-code="INDEX_STATE" hidden="true"></yu-xform-item>
+        </yu-xform-group>
+    </yu-xform>
+    <div class="yu-toolBar">
+        <yu-button-group>
+            <yu-button icon="plus" @click="addFn" v-if="addButton">新增</yu-button>
+            <yu-button icon="edit" @click="modifyFn" v-if="modifyButton">修改</yu-button>
+            <yu-button icon="document" @click="infoFn" v-if="detailButton">详情</yu-button>
+            <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteButton">删除</yu-button>
+            <yu-button icon="check" @click="startFn" v-if="startButton">启动</yu-button>
+            <yu-button icon="close" @click="stopFn" v-if="stopButton">停用</yu-button>
+        </yu-button-group>
+    </div>
+    <yu-xtable ref="refTable" :data-url="dataUrl" selection-type="checkbox">
+        <yu-xtable-column label="指标编号" prop="indexId"></yu-xtable-column>
+        <yu-xtable-column label="指标名称" prop="indexName"></yu-xtable-column>
+        <yu-xtable-column label="指标状态" prop="indexState" data-code="INDEX_STATE"></yu-xtable-column>
+        <!-- <yu-xtable-column label="业务条线标志" prop="bussSysNo" data-code="BUSS_SYS_TYPE"></yu-xtable-column> -->
+        <yu-xtable-column label="考核对象" prop="objType" data-code="OBJ" width="80"></yu-xtable-column>
+        <yu-xtable-column label="创建机构" prop="orgName"></yu-xtable-column>
+        <yu-xtable-column label="创建人" prop="createUser"></yu-xtable-column>
+        <yu-xtable-column label="创建时间" prop="createDate" width="140"></yu-xtable-column>
+        <yu-xtable-column label="修改人" prop="updateUser"></yu-xtable-column>
+        <yu-xtable-column label="修改时间" prop="updateDate" width="140"></yu-xtable-column>
+    </yu-xtable>
+    <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+       width="650px" height="380px" -->
+    <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="800px">
+        <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+            <div class="buttonStyle">
+                <yu-button :disabled="formDisabled" type="primary" @click="editorFn">编辑公式</yu-button>
+            </div>
+            <yu-xform-group>
+                <yu-xform-item label="ID" ctype="input" name="id" :hidden="true" :disabled="true"></yu-xform-item>
+                <yu-xform-item label="orgId" ctype="input" name="orgId" :hidden="true" :disabled="true"></yu-xform-item>
+                <yu-xform-item label="creator" ctype="input" name="creator" :hidden="true"
+                               :disabled="true"></yu-xform-item>
+                <yu-xform-item label="createDate" ctype="input" name="createDate" :hidden="true"
+                               :disabled="true"></yu-xform-item>
+                <yu-xform-item label="modifyUser" ctype="input" name="modifyUser" :hidden="true"
+                               :disabled="true"></yu-xform-item>
+                <yu-xform-item label="updateDate" ctype="input" name="updateDate" :hidden="true"
+                               :disabled="true"></yu-xform-item>
+                <yu-xform-item label="statFlag" ctype="input" name="statFlag" :hidden="true"
+                               :disabled="true"></yu-xform-item>
+                <yu-xform-item label="bussSysNo" ctype="input" name="bussSysNo" :hidden="true"
+                               :disabled="true"></yu-xform-item>
+                <yu-xform-item label="指标编号" ctype="input" name="indexId" :hidden="hiddenDis"
+                               :disabled="true"></yu-xform-item>
+                <yu-xform-item label="指标名称" ctype="input" name="indexName" :rules="rule[0]"></yu-xform-item>
+                <yu-xform-item label="度量类型" ctype="select" name="metricType" data-code="METRIC_TYPE" :hidden="true"
+                               :disabled="true"></yu-xform-item>
+                <yu-xform-item label="考核对象" ctype="select" name="objType" data-code="OBJ"></yu-xform-item>
+                <yu-xform-item label="公式" ctype="input" name="formula" disabled="true" :colspan="20" rules="required" ></yu-xform-item>
+                <yu-xform-item label="公式描述" ctype="textarea" disabled="true" name="formulaNotes" :rows="4"
+                               :colspan="24"></yu-xform-item>
+                <yu-xform-item label="描述" ctype="textarea" name="remark" :rows="4" :colspan="24"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+    <yu-xdialog title="编辑指标公式" :visible.sync="dialogTwoVisible" width="1200px" class="dialogStyle">
+        <yu-row>
+            <yu-col :span="colv.leftCol" style="padding-right: 0px">
+                <div v-show="!collapse">
+                    <template>
+                        <yu-tabs v-model="activeName">
+                            <yu-tab-pane label="基础指标" name="first">
+                                <yu-xform related-table-name="refTableOne" ref="queryFormRefOne" v-model="queryFormOne"
+                                          form-type="search">
+                                    <yu-xform-group :column="4">
+                                        <yu-xform-item placeholder="编号" :colspan="6" name="indexId"
+                                                       ctype="input"></yu-xform-item>
+                                        <yu-xform-item placeholder="名称" :colspan="6" name="indexName"
+                                                       ctype="input"></yu-xform-item>
+                                    </yu-xform-group>
+                                    <yu-input disabled="true" placeholder="双击进行选择"  ></yu-input>
+                                </yu-xform>
+                                <yu-xtable ref="refTableOne" :data-url="dataUrlOne" :base-params="paramsOne"
+                                           :default-load="false" @cell-dblclick="infoOneFn">
+                                    <yu-xtable-column label="指标编号" prop="indexId"></yu-xtable-column>
+                                    <yu-xtable-column label="指标名称" prop="indexName"></yu-xtable-column>
+                                    <!--
+                                    <yu-xtable-column label="考核对象" prop="objType" data-code="OBJ"></yu-xtable-column>
+                                    -->
+                                </yu-xtable>
+                            </yu-tab-pane>
+                            <yu-tab-pane label="派生指标" name="second">
+                                <yu-xform related-table-name="refTableTwo" ref="queryFormRefTwo" v-model="queryFormTwo"
+                                          form-type="search">
+                                    <yu-xform-group :column="4">
+                                        <yu-xform-item placeholder="编号" :colspan="6" name="indexId"
+                                                       ctype="input"></yu-xform-item>
+                                        <yu-xform-item placeholder="名称" :colspan="6" name="indexName"
+                                                       ctype="input"></yu-xform-item>
+                                    </yu-xform-group>
+                                </yu-xform>
+                                <yu-xtable ref="refTableTwo" :data-url="dataUrlTwo" :base-params="paramsTwo"
+                                           :default-load="false" @cell-dblclick="infoTwoFn">
+                                    <yu-xtable-column label="指标编号" prop="indexId"></yu-xtable-column>
+                                    <yu-xtable-column label="指标名称" prop="indexName"></yu-xtable-column>
+                                    <yu-xtable-column label="考核对象" prop="objType" data-code="OBJ"></yu-xtable-column>
+                                    <yu-xtable-column label="创建机构" prop="orgName"></yu-xtable-column>
+                                </yu-xtable>
+                            </yu-tab-pane>
+                            <!--<yu-tab-pane label="机构参数" name="third">
+                                <yufp-ext-tree ref="refTableThree" :show-checkbox="false" :height="height - 10"
+                                               :data-url="dataUrlThree" data-id="id" data-label="name"
+                                               :render-content="renderContent" @node-dbclick="nodeClickFn"
+                                               data-pid="parentDirId" :highlight-current="true">
+                                </yufp-ext-tree>
+                            </yu-tab-pane>
+                            <yu-tab-pane label="人员岗位参数" name="fourth">
+                                <yufp-ext-tree ref="refTableFour" :show-checkbox="false" :height="height - 10"
+                                               :data-url="dataUrlFour" data-id="id" data-label="name"
+                                               :render-content="renderContent" @node-dbclick="nodeClickFn"
+                                               data-pid="parentDirId" :highlight-current="true">
+                                </yufp-ext-tree>
+                            </yu-tab-pane>-->
+                        </yu-tabs>
+                    </template>
+                </div>
+            </yu-col>
+            <yu-col :span="1" style="padding-right: 0px; position: relative;top: 16px;left: -18px;">
+                <div>
+                    <i class="el-icon-d-arrow-left cust-icon-oper" v-show="!collapse" @click="shrinkFn"></i>
+                    <i class="el-icon-d-arrow-right cust-icon-oper" v-show="collapse" @click="expandFn"></i>
+                </div>
+            </yu-col>
+            <yu-col :span="colv.rigthCol" style="padding-right: 0px;padding-top: 10px;">
+                <yu-row v-show="!dialogFourVisible" class="rowStyle">
+                    <yu-col :span="24">
+                        <div class="grid-content bg-purple-dark bg-title"><span class="fontStyle">工具栏</span></div>
+                    </yu-col>
+                    <div class="buttonStyleTwo">
+                        <yu-button type="primary" class="btn" @click="buttonFunc(1)">+</yu-button>
+                        <yu-button type="primary" class="btn" @click="buttonFunc(2)">-</yu-button>
+                        <yu-button type="primary" class="btn" @click="buttonFunc(3)">x</yu-button>
+                        <yu-button type="primary" class="btn" @click="buttonFunc(4)">/</yu-button>
+                        <yu-button type="primary" class="btn" @click="buttonFunc(5)">(</yu-button>
+                        <yu-button type="primary" class="btn" @click="buttonFunc(6)">)</yu-button>
+                        <!--<yu-button type="primary" class="btn" @click="buttonFunc(7)">IF函数</yu-button>-->
+                    </div>
+                </yu-row>
+                <yu-row v-show="!dialogFourVisible" class="rowStyle">
+                    <yu-col :span="24">
+                        <div class="grid-content bg-purple-dark"><span class="fontStyle">公式表达式</span></div>
+                    </yu-col>
+                    <yu-input type="textarea" :autosize="{ minRows: 7}" v-model="textarea"></yu-input>
+                </yu-row>
+                <yu-row v-show="!dialogFourVisible" class="rowStyle">
+                    <yu-col :span="24">
+                        <div class="grid-content bg-purple-dark"><span class="fontStyle">中文表达式</span></div>
+                    </yu-col>
+                    <yu-input type="textarea" disabled="true" :autosize="{ minRows: 7}"
+                              v-model="textareaChina"></yu-input>
+                </yu-row>
+                <div v-show="!dialogFourVisible" style="padding-top:20px;text-align: center;">
+                    <yu-button icon="yx-floppy-disk" type="primary" @click="validateFn">校验公式</yu-button>
+                    <yu-button icon="yx-floppy-disk" type="primary" @click="saveBtn">确定</yu-button>
+                    <yu-button icon="yx-undo2" type="primary" @click="clearFn">关闭</yu-button>
+                </div>
+                <yu-row v-show="dialogFourVisible" class="rowStyle">
+                    <yu-col :span="24">
+                        <div class="grid-content bg-purple-dark"><span class="fontStyle">IF表达式设置</span></div>
+                    </yu-col>
+                    <div class="yu-toolBar">
+                        <yu-button-group style="margin-top: 10px;">
+                            <yu-button icon="plus" @click="addIF">新建条件</yu-button>
+                        </yu-button-group>
+                    </div>
+                    <yu-xtable ref="refTableIf" :data="ifData" :pageable="false">
+                        <yu-xtable-column label="比较对象1" prop="objOne">
+                            <template slot-scope="scope">
+                                <yu-input v-model="scope.row.objOne"
+                                          @focus="savePosition(scope.$index,'objOne')"></yu-input>
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column ctype="select" data-code="SYMBOL_TYPE"
+                                          @focus="savePosition(scope.$index,'compareVal')" prop="compareVal"
+                                          label="比较符">
+                        </yu-xtable-column>
+                        <yu-xtable-column label="比较对象2" prop="objTwo">
+                            <template slot-scope="scope">
+                                <yu-input v-model="scope.row.objTwo"
+                                          @focus="savePosition(scope.$index,'objTwo')"></yu-input>
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column label="成立值" prop="buildVal">
+                            <template slot-scope="scope">
+                                <yu-input v-model="scope.row.buildVal"
+                                          @focus="savePosition(scope.$index,'buildVal')"></yu-input>
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column ctype="select" data-code="CONNECT_TYPE" prop="conditionVal"
+                                          @focus="savePosition(scope.$index,'conditionVal')" label="条件连接符">
+                        </yu-xtable-column>
+                        <yu-xtable-column label="操作">
+                            <template slot-scope="scope">
+                                <yu-button
+                                        size="small"
+                                        type="danger"
+                                        @click="handleDelete(scope.$index, scope.row)">删除条件
+                                </yu-button>
+                            </template>
+                        </yu-xtable-column>
+                    </yu-xtable>
+                    <yu-row class="rowStyle">
+                        <yu-col :span="24">
+                            <div class="grid-content bg-purple-dark"><span class="fontStyle">默认值</span></div>
+                        </yu-col>
+                        <yu-input type="textarea" :autosize="{ minRows: 5}" @focus="savebtnPosition('ifVal')"
+                                  v-model="ifVal"></yu-input>
+                    </yu-row>
+                    <yu-row class="rowStyle" style="margin-bottom:0px;">
+                        <yu-col :span="24">
+                            <div class="grid-content bg-purple-dark"><span class="fontStyle">中文表达式</span></div>
+                        </yu-col>
+                        <yu-input type="textarea" disabled="true" :autosize="{ minRows: 7}"
+                                  v-model="ifChina"></yu-input>
+                    </yu-row>
+                    <div style="text-align: center;">
+                        <yu-button icon="yx-floppy-disk" type="primary" @click="saveThree">确定</yu-button>
+                        <yu-button icon="yx-undo2" type="primary" @click="clearTwoFn">取消</yu-button>
+                    </div>
+                </yu-row>
+            </yu-col>
+        </yu-row>
+    </yu-xdialog>
+    <yu-xdialog title="指标信息" :visible.sync="dialogThreeVisible" width="800px">
+        <yu-collapse v-model="activeNames" class="myCollapse" style="margin-top: 20px;">
+            <yu-collapse-item title="指标基本信息" name="1">
+                <yu-xform ref="refFormOne" v-model="queryDataOne">
+                    <yu-xform-group :column="2">
+                        <yu-xform-item label="指标编号" name="indexId" disabled="false"></yu-xform-item>
+                        <yu-xform-item label="指标名称" name="indexName" disabled="false"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+            </yu-collapse-item>
+            <yu-collapse-item title="指标维度信息" name="2">
+                <yu-xform ref="refFormTwo" v-model="queryDataTwo">
+                    <yu-xform-group :column="2">
+                        <yu-xform-item label="余额类型" name="yeType" ctype="select" rules="required"
+                                       :rules="indexBaseRule.yeType"
+                                       :options="optionsYeType"
+                                       data-code="YE_TYPE"></yu-xform-item>
+                        <yu-xform-item label="应用类型" name="indexApplyType" ctype="select" rules="required"
+                                       :rules="indexBaseRule.applyTypeId"
+                                       :options="optionsIndexApplyType"
+                                       data-code="INDEX_APPLY_TYPE"></yu-xform-item>
+                        <yu-xform-item label="评价对象" name="objType" ctype="select" data-code="OBJ"
+                                       :options="optionsObjType"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+            </yu-collapse-item>
+        </yu-collapse>
+        <div class="yu-grpButton">
+            <yu-button icon="check" type="primary" @click="saveTwoFn">确定</yu-button>
+            <yu-button icon="yx-undo2" type="primary" @click="cancelTwoFn">取消</yu-button>
+        </div>
+    </yu-xdialog>
+    <yu-xdialog title="指标引用信息（该派生指标已被引用）" :visible.sync="indexquoDialogVisible" width="900px">
+        <yu-xtable ref="refQuoTable" :data="dataquoPData" :highlight-current-row="true" stripe="true" :pageable="false">
+            <yu-xtable-column label="引用编号" prop="qId" sortable align="center"></yu-xtable-column>
+            <yu-xtable-column label="引用名称" prop="qName" sortable align="center"></yu-xtable-column>
+            <yu-xtable-column label="指标编号" prop="indexId" sortable align="center"></yu-xtable-column>
+        </yu-xtable>
+        <div style="padding-top:20px;text-align: center;">
+            <yu-button icon="yx-floppy-disk" type="primary" @click="closeBtn">关闭</yu-button>
+        </div>
+    </yu-xdialog>
+</div>
+
+<style>
+    .buttonStyle {
+        display: block;
+        text-align: right;
+        height: 35px;
+        padding: 10px;
+        position: absolute;
+        margin-top: 42px;
+        margin-left: 650px;
+        z-index: 999;
+    }
+
+    .dialogStyle .el-dialog-x {
+        top: 5% !important;
+    }
+
+    .dialogStyle .el-dialog-x__header {
+        text-align: center;
+    }
+
+    .rowStyle .bg-purple-dark {
+        /* background: #58B7FF; */
+    }
+
+    .rowStyle .grid-content {
+        min-height: 30px;
+        display: flex;
+        align-items: center;
+    }
+
+    .rowStyle {
+        margin-bottom: 10px;
+    }
+
+    .fontStyle {
+        margin-left: 0px;
+        color: #8392A5;
+    }
+
+    .buttonStyleTwo .el-button + .el-button {
+        margin-left: -4px;
+    }
+
+    .buttonStyleTwo .el-button {
+        border-radius: 5px;
+        padding: 0 5px;
+        min-width: 40px;
+        height: 40px;
+        margin: 6px;
+        background: #F8F8F8;
+        color: #20A0FF;
+        border-color: #F8F8F8;
+    }
+</style>

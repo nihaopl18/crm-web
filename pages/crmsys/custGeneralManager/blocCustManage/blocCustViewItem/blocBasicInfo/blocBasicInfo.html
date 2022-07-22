@@ -1,0 +1,22 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-2-25 10:08:13.
+  @updated by
+  @description 集团客户视图项—基本信息
+-->
+<div>
+  <yu-xform ref="refBaseForm" label-width="120px" v-model="formdata" disabled class="yu-form-gap">
+    <yu-xform-group>
+      <yu-xform-item label="集团编号" name="groupNo" ctype="input"></yu-xform-item>
+      <yu-xform-item label="主申请(集团)名称" name="groupNameMain" ctype="input"></yu-xform-item>
+      <yu-xform-item label="集团母公司ID" name="groupRootCustId" ctype="input"></yu-xform-item>
+      <yu-xform-item label="集团类型" name="groupType"  ctype="select" data-code="GROUP_TYPE"></yu-xform-item>
+      <yu-xform-item label="集团状态" name="groupStatus"  ctype="select" data-code="GROUP_STATUS"></yu-xform-item>
+      <yu-xform-item label="更新日期" name="updateDate"  ctype="datepicker"></yu-xform-item>
+      <yu-xform-item label="最近更新人" name="updateUserId" ctype="input"></yu-xform-item>
+      <yu-xform-item label="创建日期" name="creataDate" ctype="datepicker"></yu-xform-item>
+      <yu-xform-item label="创建人ID" name="createUserId" ctype="input"></yu-xform-item>
+      <yu-xform-item label="创建人姓名" name="createUserName" ctype="input"></yu-xform-item>
+      <yu-xform-item label="创建机构" name="createUserOrgId" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+</div>

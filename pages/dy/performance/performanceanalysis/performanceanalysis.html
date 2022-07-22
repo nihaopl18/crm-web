@@ -1,0 +1,175 @@
+<!--
+  @created by ranxun on 2021-8-6 09:46:35
+  @updated by
+  @description 东亚银行管理员首页
+-->
+<div class="home-container">
+    <link rel="stylesheet" type="text/css" href="pages/dy/performance/performanceanalysis/performanceanalysis.css">
+    <div class="top-container">
+        <yu-row>
+            <yu-col :span="24">
+                <div class="top-left">
+                    <div class="custSearch" style="margin-top: 10px;padding-right: 300px;background: #ffffff;">
+                        <!-- <div style="width: 200px;display: inline;">
+                            <p style="height: 28px;font-family: PingFangSC-Medium;font-size: 20px;color: #303133;line-height: 28px;font-weight: 500;padding-left:20px;">业绩分析</p>
+                            <span style="height: 22px;font-family: PingFangSC-Regular;font-size: 14px;color: #909399;line-height: 22px;font-weight: 400;padding-left:20px;">业务管理 / </span><span style="width: 56px;height: 22px;font-family: PingFangSC-Regular;font-size: 14px;color: #303133;line-height: 22px;font-weight: 400;">业绩分析</span>
+                        </div> -->
+                        <div style="float:right;margin-top: -12px;padding-left: 20px;width: 153px;height: 22px;font-family: PingFangSC-Regular;font-size: 14px;color: #909399;line-height: 20px;font-weight: 400;">
+                            <span>数据更新时间：</span>
+                            <span>{{this.updatetimeTop}}</span>
+                            <span>存款更新时间：</span>
+                            <span>{{this.updatetimeTopRight}}</span>
+                        </div>
+                    </div>
+                    <!-- 上面 -->
+                    <yu-xtable :data="cumtableData" :pageable="false" :border="false" style="width: 100%;border:0px solid black">
+                        <yu-xtable-column prop="ruleName" label="">
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aum" :label=custAnaisy[this.anayindex].first :render-header="renderHeader1">
+                            <template slot-scope="scope">
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.aum>=0" class="el-icon-caret-top colorRed"></i>
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.aum=='-'" class="el-icon-caret-top colorRed"></i>
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.aum<0" class="el-icon-caret-bottom color-green"></i>
+                                <span v-if ="scope.row.__vkey==1||scope.row.__vkey==2">{{ yufp.util.returnPercent(scope.row.aum) }}<span>%</span></span>
+                                <span v-if ="scope.row.__vkey==0">{{ yufp.util.moneyFormatter(scope.row.aum) }}</span>
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="avgLoan" :label=custAnaisy[this.anayindex].second :render-header="renderHeader2">
+                            <template slot-scope="scope">
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgLoan>=0" class="el-icon-caret-top colorRed"></i>
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgLoan=='-'" class="el-icon-caret-top colorRed"></i>
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgLoan<0" class="el-icon-caret-bottom color-green"></i>
+                                <span v-if ="scope.row.__vkey==1||scope.row.__vkey==2">{{ yufp.util.returnPercent(scope.row.avgLoan) }}<span>%</span></span>
+                                <span v-if ="scope.row.__vkey==0">{{ yufp.util.moneyFormatter(scope.row.avgLoan) }}</span>
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="avgFin" :label=custAnaisy[this.anayindex].third :render-header="renderHeader3">
+                            <template slot-scope="scope">
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgFin>=0" class="el-icon-caret-top colorRed"></i>
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgFin=='-'" class="el-icon-caret-top colorRed"></i>
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgFin<0" class="el-icon-caret-bottom color-green"></i>
+                                <span v-if ="scope.row.__vkey==1||scope.row.__vkey==2">{{ yufp.util.returnPercent(scope.row.avgFin) }}<span>%</span></span>
+                                <span v-if ="scope.row.__vkey==0">{{ yufp.util.moneyFormatter(scope.row.avgFin) }}</span>
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="avgCust" :label=custAnaisy[this.anayindex].fourth v-if="this.anayindex==0" :render-header="renderHeader4">
+                            <template slot-scope="scope">
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgCust>=0" class="el-icon-caret-top colorRed"></i>
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgCust=='-'" class="el-icon-caret-top colorRed"></i>
+                                <i v-if ="(scope.row.__vkey==1||scope.row.__vkey==2)&&scope.row.avgCust<0" class="el-icon-caret-bottom color-green"></i>
+                                <span v-if ="scope.row.__vkey==1||scope.row.__vkey==2">{{ yufp.util.returnPercent(scope.row.avgCust) }}<span>%</span>    </span>
+                                <span v-if ="scope.row.__vkey==0">{{ yufp.util.moneyFormatter(scope.row.avgCust) }}</span>
+                             </template>
+                        </yu-xtable-column>
+                    </yu-xtable>
+                </div>
+            </yu-col>
+
+        </yu-row>
+        <yu-row>
+            <yu-col :span="14">
+                <div style="height: 560px;background-color: #ffffff;margin-right: 10px;margin-top: 20px;">
+                    <yu-col :span="24" class="option-container" style="background: #ffffff;margin-right: 16px;margin-bottom: 16px;">
+                        <yu-row style="height: 100px;">
+                            <yu-col :span="24" style="height: 100%;margin-bottom: 20px;">
+                                <yu-xform ref="custforSearchForm" v-model="forqueryFormdata" form-type="search" class="hide-form-search-btn" :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn">
+                                    <yu-xform-group>
+                                        <yu-xform-item start-placeholder="开始日期" label="时间" range-separator="至" end-placeholder="结束日期" value-format="yyyy-MM" ctype="datepicker" name="rangeDate" type="monthrange" @change="handleStartDateChange" v-model="dateRange"></yu-xform-item>
+                                        <yu-xform-item placeholder="请选择" label="指标" name="grantStutas" ctype="select" data-code="TRIUMPH_CODE" colspan="12" @change="grantStutasChange"></yu-xform-item>
+                                        <yu-xform-item placeholder="请选择" label="客户经理/机构" name="mktRespPerson" ctype="per-mgr-selector" name="relationCust" colspan="12" :params="selectCustParams" v-if="!isManager"></yu-xform-item>
+                                </yu-xform>
+                            </yu-col>
+                        </yu-row>
+                        <yu-row style="height: 360px;">
+                            <yu-col :span="24" style="height: 20%;margin-bottom: 16px;">
+                                <!-- <div class="box-title" style="float: right;width: 80px;height: 32px;background: #F0F2F5;border: 1px solid #DDDFE6;border-radius: 4px;" @click="exportFn">
+                                    <span class="el-icon-yx-share" style="margin-left: 15px;color: #C0C4CC;"></span>
+                                    <span style="width: 28px;height: 22px;font-family: PingFangSC-Regular;font-size: 14px;color: #C0C4CC;line-height: 22px;font-weight: 400;margin-right: 15px;">导出</span>
+                                </div> -->
+
+                                <div style="float:right">
+                                    <span style="margin-right: 20px">单位: {{ unit }}</span>
+                                    <!-- :class="['box-title', 'buttonExport': buttonshow,'noclick':noclickcs]" -->
+                                    <div class="box-title" :class="[{'buttonExport': buttonshow}, {'noclick':noclickcs}]" style=" display: inline-block;width: 80px;height: 32px;border: 1px solid #DDDFE6;border-radius: 4px; " @click="exportFn ">
+                                        <span class="el-icon-yx-share " style="margin-left: 15px; position: relative;top:25%;transform:translateY(-25%);"></span>
+                                        <span style="width: 28px;height: 22px;font-family: PingFangSC-Regular;font-size: 14px;line-height: 22px;font-weight: 400;margin-right: 15px; position: relative;top:25%;transform:translateY(-25%);">导出</span>
+                                    </div>
+                                </div>
+
+                            </yu-col>
+                            <yu-col :span="24" style="height: 90%;">
+
+                                <yu-echarts ref="echarts" :option="this.histogramoptionorg" width=90% height="280px"></yu-echarts>
+
+                            </yu-col>
+                        </yu-row>
+
+                    </yu-col>
+                </div>
+            </yu-col>
+
+            <yu-col :span="10">
+                <div style="height: 500px;background-color: #ffffff;margin-left: 10px;margin-top: 20px;">
+                    <yu-col :span="24" style="margin-right: -16px;margin-bottom: 16px;" class="option-container">
+                        <div>
+                            <div class="box-title" style="float: left;">
+                                <div class="title" style="font-size: 18px;">模拟PPOP</div>
+                            </div>
+                            <div style="float: right;width: 150px;padding-right: 80px;">
+                                <el-date-picker v-model="valuemonth" type="month" value-format="yyyy-MM" :clearable="false" @change="dateChange">
+                                </el-date-picker>
+                            </div>
+                            <div style="display: block;width: 200px;height:80px;padding-top: 80px;padding-left: 120px;">
+                                <div class="top-circle">
+                                    <div style="border-right: 0px;">
+                                        <div class="left-content">
+                                            <div style="font-size: 14px;color: #909399;padding-bottom: 4px;">{{ ppopdata.title }}
+                                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                                    <div slot="content">
+                                                        <p class="content">{{ ppopdata.content }}</p>
+                                                    </div>
+                                                    <i class="el-icon-warning-outline"></i>
+                                                </el-tooltip>
+                                            </div>
+                                            <p style="padding-bottom: 4px;font-size: 24px; color: #303133;">{{ ppopdata.money }}</p>
+                                            <div class="compare">
+                                                <div style="display: inline-block;">
+                                                    <span style="font-size: 12px;color: #606266;">环比</span>
+                                                    <span style="font-size: 12px;">{{yufp.util.returnPercent(ppopdata.hb)}}
+                                                <span>%</span>
+                                                    <i v-if='ppopdata.hb>=0||ppopdata.hb=="-"' class="el-icon-caret-top colorRed"></i>
+                                                    <i v-else class="el-icon-caret-bottom color-green"></i>
+                                                    </span>
+                                                </div>
+                                                <div style="display: inline-block;">
+                                                    <span style="font-size: 12px;color: #606266;">同比</span>
+                                                    <span style="font-size: 12px;">{{yufp.util.returnPercent(ppopdata.tb)}}
+                                                <span>%</span>
+                                                    <i v-if='ppopdata.tb>=0||ppopdata.tb=="-"' class="el-icon-caret-top colorRed"></i>
+                                                    <i v-else class="el-icon-caret-bottom color-green"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="" v-if="!isManager">
+                            <div style="padding-left: 10px ;width: 100%;height: 60px;line-height:60px;font-family: PingFangSC-Regular;font-size: 14px;color: #303133;background:#ffffff;font-weight: 400;">模拟PPOP排名</div>
+                            <yu-xtable :data="tableData" :pageable="false" :border="false" style="height: 310px;">
+                                <yu-xtable-column type="index" label="排名">
+                                </yu-xtable-column>
+                                <yu-xtable-column prop="name" label="机构">
+                                </yu-xtable-column>
+                                <yu-xtable-column prop="address" label="数额">
+                                </yu-xtable-column>
+                            </yu-xtable>
+                        </div>
+                    </yu-col>
+                </div>
+            </yu-col>
+        </yu-row>
+    </div>
+</div>

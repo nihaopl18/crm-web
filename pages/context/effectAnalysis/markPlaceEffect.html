@@ -1,0 +1,61 @@
+<!--
+  @created by houyx3 on 2019/05/13.
+  @description 实时数据
+-->
+<div id="realTimeData" style="margin-top: 20px">
+                  <yu-xform ref="validatorForm" label-width="100px" label-suffix="：" v-model="formdata" form-type="search" class="hide-form-search-btn">
+                      <yu-xform-group :column="4">
+                        <yu-xform-item label="渠道名称" ctype="input" name="activityId" ></yu-xform-item>
+                      </yu-xform-group>
+                  </yu-xform>
+              <yu-xform ref="custInfoRef" label-width="120px" v-model="custInfoData" :disabled="true">
+                      <yu-xform-group :column="2">
+                        <yu-xform-item label="渠道名称" ctype="input" name="channelName"></yu-xform-item>
+                        <yu-xform-item label="带来的客户总量" ctype="input" name="bringCustAllNum"></yu-xform-item>
+                        <yu-xform-item label="发起活动总数量" ctype="input" name="launchAllNum"></yu-xform-item>
+                        <yu-xform-item label="传播总人数" ctype="input" name="spreadCustAllNum"></yu-xform-item>
+                        <yu-xform-item label="营销总人数" ctype="input" name="markCustAllNum"></yu-xform-item>
+                        <yu-xform-item label="参与活动总人数" ctype="input" name="joinAllNum"></yu-xform-item>
+                        <yu-xform-item label="转发量" ctype="input" name="markCustNum"></yu-xform-item>
+                        <yu-xform-item label="曝光量" ctype="input" name="aanum"></yu-xform-item>
+                      </yu-xform-group>
+                    </yu-xform>
+                  <div class="yu-toolBar">
+                      <yu-button-group>
+                        <yu-button icon="document" @click="viewFn">渠道栏位效果详情</yu-button>
+                      </yu-button-group>
+                    </div>
+                    <yu-xtable :height="210" row-number selection-type="radio" ref="yutable4" :data="markPlaceData" style="width: 100%" >
+                        <yu-xtable-column prop="PlaceId" label="栏位ID"> </yu-xtable-column>
+                        <yu-xtable-column prop="PlaceName" label="栏位名称"> </yu-xtable-column>
+                        <yu-xtable-column prop="bringCustNum" label="带来的客户数量"> </yu-xtable-column>
+                        <yu-xtable-column prop="spreadCustNum" label="传播人数"> </yu-xtable-column>
+                        <yu-xtable-column prop="markCustNum" label="营销人数"> </yu-xtable-column>
+                        <yu-xtable-column prop="markCustNum" label="转发量"> </yu-xtable-column>
+                        <yu-xtable-column prop="markCustNum" label="曝光量"> </yu-xtable-column>
+                    </yu-xtable>
+                    <yu-dialog :visible.sync="subordinateVis" title="渠道栏位效果详情">
+                        <yu-xform ref="custInfoRef" label-width="120px" v-model="custInfoData" :disabled="true">
+                            <yu-xform-group :column="4">
+                              <yu-xform-item label="渠道名称" ctype="input" name="channelName"></yu-xform-item>
+                              <yu-xform-item label="被暂用栏位" ctype="input" name="xxx"></yu-xform-item>
+                              <yu-xform-item label="可投放栏位总是" ctype="input" name="xxx"></yu-xform-item>
+                            </yu-xform-group>
+                          </yu-xform>
+                          <div class="yu-toolBar">
+                              <yu-button-group>
+                                <yu-button icon="document" @click="activityView">活动效果详情</yu-button>
+                                <yu-button icon="document">活动参与人员</yu-button>
+                              </yu-button-group>
+                            </div>
+                          <yu-xtable :height="210" row-number selection-type="radio" ref="yutable4" :data="markPlaceData" style="width: 100%" >
+                              <yu-xtable-column prop="PlaceId" label="栏位ID"> </yu-xtable-column>
+                              <yu-xtable-column prop="PlaceName" label="栏位名称"> </yu-xtable-column>
+                              <yu-xtable-column prop="bringCustNum" label="带来的客户数量"> </yu-xtable-column>
+                              <yu-xtable-column prop="spreadCustNum" label="传播人数"> </yu-xtable-column>
+                              <yu-xtable-column prop="markCustNum" label="营销人数"> </yu-xtable-column>
+                              <yu-xtable-column prop="markCustNum" label="转发量"> </yu-xtable-column>
+                              <yu-xtable-column prop="markCustNum" label="曝光量"> </yu-xtable-column>
+                          </yu-xtable>
+                    </yu-dialog> 
+</div>

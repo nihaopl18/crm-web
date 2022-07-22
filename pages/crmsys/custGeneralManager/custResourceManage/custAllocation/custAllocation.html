@@ -1,0 +1,245 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-2 11:30:53.
+  @updated by
+  @description 客户分配
+-->
+<div>
+  <yu-xform ref="custSearchForm" v-model="queryFormdata" form-type="search" class="hide-form-search-btn" :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn">
+    <yu-xform-group :column="6">
+      <yu-xform-item placeholder="客户类型" name="custType" ctype="select" rules="required" :colspan="3" data-code="CD0016" @change="custTpChangeFn"></yu-xform-item>
+      <yu-xform-item placeholder="是否准入" name="isAdmitEnter" :colspan="3" rules="required" ctype="select" data-code="YES_NO_ADMIT"></yu-xform-item>
+      <yu-xform-item placeholder="客户号" name="custId" :colspan="3" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="custName" :colspan="3" ctype="input"></yu-xform-item>
+      <!-- 个人证件类型 -->
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+      <!-- 对公证件类型 -->
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != undefined" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item placeholder="证件号码" name="certNo" ctype="input"></yu-xform-item>
+      <!-- <yu-xform-item placeholder="客户状态" name="custStatus" ctype="select" :colspan="3" data-code="CD0019"></yu-xform-item> -->
+      <yu-xform-item placeholder="分配状态" name="custAssignStat" ctype="select" :colspan="3" data-code="CD0342"></yu-xform-item>
+      <yu-xform-item placeholder="是否有效客户" name="effectFlg" ctype="select" :colspan="3" data-code="CD0238"></yu-xform-item>
+      <!-- 个人价值等级 -->
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != '1'" data-code="CD0350"></yu-xform-item>
+      <!-- 对公价值等级 -->
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != '2'" data-code="CD0351"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != ''" data-code="CD0243"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != undefined" data-code="CD0243"></yu-xform-item>
+      <yu-xform-item placeholder="客户服务等级" name="servLev" ctype="select" :colspan="3" data-code="CD0032"></yu-xform-item>
+      <!-- <yu-xform-item placeholder="是否有贷户" name="entrantsDate" ctype="select" data-code="CD0242"></yu-xform-item> -->
+      <yu-xform-item placeholder="存款时点余额大于" name="dspBal" :colspan="3" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="时点AUM值大于" name="aumBal" :colspan="3" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="贷款时点余额大于" name="loanBal" :colspan="3" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+    <!-- <div slot="custom" class="yu-grpButton" style="text-align: right;">
+      <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+    </div> -->
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-flow-2" @click="orgAllocateFn" v-if="orgLocationBtn">机构分配</yu-button>
+      <yu-button icon="yx-users" @click="custManagerAllocateFn" v-if="mgrLocationBtn">客户经理分配</yu-button>
+      <yu-button icon="yx-zoom-out" @click="allocateHistoryFn" v-if="locationHisBtn">分配历史查询</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="custAllocateTable" class="permitSelect" @contextmenu.prevent.stop.native row-number :data-url="dataUrl" selection-type="checkbox" :default-load="false">
+    <yu-xtable-column label="客户号" prop="custId" width="120"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="证件类型" prop="certType" width="120" data-code="CD0011"></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="certNo" width="180"></yu-xtable-column>
+    <yu-xtable-column label="客户类型" prop="custType" width="120" data-code="CD0016"></yu-xtable-column>
+    <yu-xtable-column label="客户状态" prop="custStatus" width="120" data-code="CD0019"></yu-xtable-column>
+    <yu-xtable-column label="分配状态" prop="custAssignStat" width="120" data-code="CD0342"></yu-xtable-column>
+    <yu-xtable-column label="是否有效客户" prop="effectFlg" width="120" data-code="CD0238"></yu-xtable-column>
+    <yu-xtable-column label="AUM(时点)" prop="aumBal" width="120"></yu-xtable-column>
+    <yu-xtable-column label="存款余额（时点）" prop="dpsBal" width="120"></yu-xtable-column>
+    <yu-xtable-column label="贷款余额（时点）" prop="loanBal" width="120"></yu-xtable-column>
+    <yu-xtable-column label="综合贡献度（上月）" prop="reportSumNumber" width="150"></yu-xtable-column>
+    <!-- <yu-xtable-column label="持有中间业务产品数量" prop="reportSumNumber" width="120"></yu-xtable-column> -->
+    <yu-xtable-column label="客户价值等级" prop="valueLev" width="150" data-code="CD0243"></yu-xtable-column>
+    <yu-xtable-column label="客户服务等级" prop="servLev" width="120" data-code="CD0032"></yu-xtable-column>
+    <!-- TODO 归属机构类型 字段名 -->
+    <!-- <yu-xtable-column label="归属机构类型" prop="orgType" width="120" data-code="CD0241"></yu-xtable-column> -->
+    <!-- TODO 归属机构名称 字段名 -->
+    <yu-xtable-column label="主办机构" prop="orgName" width="120"></yu-xtable-column>
+    <!-- TODO 客户经理主协办类型 字段名 -->
+    <!-- <yu-xtable-column label="客户经理主协办类型" prop="mgrType" width="120" data-code="CD0241"></yu-xtable-column> -->
+    <!-- TODO 归属客户经理名称 字段名 -->
+    <yu-xtable-column label="主办客户经理" prop="userName" width="120"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <!-- 弹出框 -->
+  <yu-xdialog :title="viewTitle[modelType]" :visible.sync="dialogVisible" width="1080px" :min-height="720">
+    <!-- 机构分配模块 -->
+    <!-- <yufp-org-tree v-model="orgId" :raw-value="initialValue"></yufp-org-tree> -->
+    <yu-row :gutter="20">
+      <yu-col :span="9">
+        <h2 class="yu-formTitle">下级机构列表</h2>
+        
+        <yufp-ext-tree ref="orgTree" :data-url="orgUrl" data-id="orgId" data-label="orgName" data-pid="upOrgId"
+          lazy :highlight-current="true" @node-click="orgNodeClickFn"></yufp-ext-tree>
+        <!-- @loaded="orgdataLoadedFn"  -->
+        <!-- <yu-xtable ref="orgTable" row-number highlight-current-row :data="orgData" :pageable="false" :height="400">
+          <yu-xtable-column label="机构名称" prop="orgName"></yu-xtable-column>
+        </yu-xtable>
+        <yu-pagination :total="pageData.total" :current-page.sync="pageData.page" :page-size="pageData.size" @size-change="sizeChangeFn"
+          @current-change="pageChangeFn" small :layout="pageData.layout">
+        </yu-pagination> -->
+      </yu-col>
+      <yu-col :span="3">
+        <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button @click="setAuspiceOrgFn" style="margin-left: 18px;margin-top: 180px">设为主办</yu-button>
+            <yu-button @click="setSupportOrgFn" style="margin-left: 18px;margin-top: 30px">设为协办</yu-button>
+          </yu-button-group>
+        </div>
+      </yu-col>
+      <yu-col :span="12">
+        <yu-xform label-width="90px" ref="orgrefform" v-model="auspiceOrgFormdata" form-type="edit">
+          <yu-xform-group :column="1">
+            <yu-xform-item label="主办机构" ctype="input" name="orgName" :readonly="true" icon="circle-close" :on-icon-click="orgIconClickFn">
+            </yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+        <h2 class="yu-formTitle" style="margin-top: 10px;">协办机构</h2>
+        <yu-button icon="yx-bin" @click="removeOrgFn" style="margin-bottom: 10px;color: #48576a;border-color: #d1dbe5;">移除</yu-button>
+        <yu-xtable ref="orgAllocateTable" row-number :data="supportOrgData" selection-type="checkbox" :pageable="false" max-height="300">
+          <yu-xtable-column label="机构编号" prop="orgId"></yu-xtable-column>
+          <yu-xtable-column label="机构名称" prop="orgName"></yu-xtable-column>
+        </yu-xtable>
+      </yu-col>
+    </yu-row>
+    <div class="yu-grpButton">
+      <yu-button icon="yx-undo2" type="primary" @click="orgcancelFn">取消</yu-button>
+      <yu-button icon="check" type="primary" @click="orgsaveFn">保存</yu-button>
+    </div>
+  </yu-xdialog>
+  <yu-xdialog :title="viewTitle[modelType]" :visible.sync="alloCustmgrdialogVisible" width="1080px" :min-height="720">
+    <!-- 客户经理分配模块 -->
+    <!-- <yufp-duty-user-selector ></yufp-duty-user-selector> -->
+    <yu-row :gutter="20">
+      <yu-col :span="10">
+        <h2 class="yu-formTitle">下级机构客户经理列表</h2>
+        <!-- <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button @click="setAuspiceMgrFn">设为主办</yu-button>
+            <yu-button @click="setSupportMgrFn">设为协办</yu-button>
+          </yu-button-group>
+        </div> -->
+        <!-- <yufp-ext-tree ref="custMgr" :data-url="mgrUrl" data-id="userId" data-label="userName" data-pid="upMgrId"
+          lazy :highlight-current="true" @node-click="mgrNodeClickFn"></yufp-ext-tree> -->
+        <yu-xtable ref="custMgr" row-number :data="mgrData" highlight-current-row :pageable="false" :height="400">
+          <yu-xtable-column label="客户经理" prop="userName"></yu-xtable-column>
+          <yu-xtable-column label="归属机构" prop="orgName"></yu-xtable-column>
+        </yu-xtable>
+        <yu-pagination :total="mgrpageData.total" :current-page.sync="mgrpageData.page" :page-size="mgrpageData.size" @size-change="mgrsizeChangeFn"
+          @current-change="mgrpageChangeFn" small :layout="mgrpageData.layout">
+        </yu-pagination>
+      </yu-col>
+      <yu-col :span="3">
+        <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button @click="setAuspiceMgrFn" style="margin-left: 18px;margin-top: 180px">设为主办</yu-button>
+            <yu-button @click="setSupportMgrFn" style="margin-left: 18px;margin-top: 30px">设为协办</yu-button>
+          </yu-button-group>
+        </div>
+      </yu-col>
+      <yu-col :span="11">
+        <yu-xform label-width="140px" ref="mgrrefform" v-model="auspiceMgrFormdata" form-type="edit">
+          <yu-xform-group :column="1">
+            <yu-xform-item label="主办客户经理名称" ctype="input" name="mgrName" icon="circle-close" :on-icon-click="mgrIconClickFn">
+            </yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+        <h2 class="yu-formTitle" style="margin-top: 10px;">协办客户经理</h2>
+        <yu-button icon="yx-bin" style="margin-bottom: 10px;color: #48576a;border-color: #d1dbe5;" @click="removeMgrFn">移除</yu-button>
+        <yu-xtable ref="custManagerAllocateTable" row-number :data="supportMgrData" selection-type="checkbox" :pageable="false" max-height="300">
+          <yu-xtable-column label="归属客户经理名称" prop="mgrName"></yu-xtable-column>
+          <yu-xtable-column label="归属机构" prop="orgName"></yu-xtable-column>
+        </yu-xtable>
+      </yu-col>
+    </yu-row>
+    <div class="yu-grpButton">
+      <yu-button icon="yx-undo2" type="primary" @click="mgrcancelFn">取消</yu-button>
+      <yu-button icon="check" type="primary" @click="mgrsaveFn">保存</yu-button>
+    </div>
+  </yu-xdialog>
+  <!-- 分配历史面板内容 -->
+  <yu-xdialog :title="viewTitle[modelType]" :visible.sync="alloHistorydialogVisible" width="950px">
+    <!-- <yu-xform related-table-name="custAllocateHistoryTable" v-model="hisFormdata" form-type="search" class="hide-form-search-btn"> -->
+      <yu-xform ref="custAllocateHistoryForm" v-model="hisFormdata" form-type="search" class="hide-form-search-btn">
+      <yu-xform-group :column="6">
+        <yu-xform-item placeholder="客户号" name="custId" disabled = "false" ctype="input"></yu-xform-item>
+        <!-- TODO 数据字典 -->
+        <yu-xform-item placeholder="调整类型" name="workTranLevel" ctype="select" data-code="WORK_TRAN_LEVEL"></yu-xform-item>
+        <yu-xform-item placeholder="调整开始时间" name="beginDate" :colspan="6" ctype="datepicker"></yu-xform-item>
+        <yu-xform-item placeholder="调整结束时间" name="endDate" :colspan="6" ctype="datepicker"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton" style="text-align: right;">
+        <yu-button icon="search" type="primary" @click="searchFn1">查询</yu-button>
+        <yu-button icon="yx-loop2" type="primary" @click="resetMainFn1">重置</yu-button>
+      </div>
+    </yu-xform>
+    <yu-xtable ref="custAllocateHistoryTable" row-number :data-url="hisdataUrl" :default-load="false">
+     
+      <yu-xtable-column label="客户编号" prop="custId" width="100"></yu-xtable-column>
+      <yu-xtable-column label="客户名称" prop="custName" width="140"></yu-xtable-column>
+      <yu-xtable-column label="操作类型" prop="workTranLevel" width="160" data-code="WORK_TRAN_LEVEL"></yu-xtable-column>
+      <yu-xtable-column label="原归属机构" prop="orgNamePre" width="120"></yu-xtable-column>
+      <yu-xtable-column label="原机构主协办类型" prop="orgTypePre" data-code="CD0241" width="120"></yu-xtable-column>
+      <yu-xtable-column label="新归属机构" prop="orgName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="新机构类型" prop="orgType" data-code="CD0241" width="100"></yu-xtable-column>
+      <yu-xtable-column label="原客户经理" prop="mgrNamePre" width="120"></yu-xtable-column>
+      <yu-xtable-column label="原客户经理主协办类型" prop="mgrTypePre" width="120" data-code="CD0241"></yu-xtable-column>
+      <yu-xtable-column label="新客户经理" prop="mgrName" width="160"></yu-xtable-column>
+      <yu-xtable-column label="新客户经理类型" prop="mgrType" width="120" data-code="CD0241"></yu-xtable-column>
+      <yu-xtable-column label="调整时间" prop="assignDate" width="160" :formatter="dateFormatter"></yu-xtable-column>
+      <yu-xtable-column label="调整人" prop="userName" width="180"></yu-xtable-column>
+      <yu-xtable-column label="调整机构" prop="lastname" width="160"></yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+  <yu-xdialog :title="viewTitle[modelType]" :visible.sync="allHistorydialogVisible" width="950px">
+      <!-- <yu-xform  related-table-name="custAllocateHistoryTableAll" v-model="allhisFormdata"  form-type="search" class="hide-form-search-btn"> -->
+          <yu-xform  ref="custAllocateHistoryFormAll" v-model="allhisFormdata"  form-type="search" class="hide-form-search-btn">
+        <yu-xform-group :column="6">
+          <!-- TODO 数据字典 -->
+          <yu-xform-item placeholder="调整类型" name="workTranLevel" ctype="select" data-code="WORK_TRAN_LEVEL"></yu-xform-item>
+          <yu-xform-item placeholder="调整开始时间" name="beginDate" :colspan="6" ctype="datepicker"></yu-xform-item>
+          <yu-xform-item placeholder="调整结束时间" name="endDate" :colspan="6" ctype="datepicker"></yu-xform-item>
+        </yu-xform-group>
+        <div class="yu-grpButton" style="text-align: right;">
+          <yu-button icon="search" type="primary" @click="searchFn2">查询</yu-button>
+          <yu-button icon="yx-loop2" type="primary" @click="resetMainFn2">重置</yu-button>
+        </div>
+      </yu-xform>
+      <yu-xtable ref="custAllocateHistoryTableAll" row-number :data-url="hisdataUrl" :default-load="false">
+          <yu-xtable-column label="客户编号" prop="custId" width="100"></yu-xtable-column>
+      <yu-xtable-column label="客户名称" prop="custName" width="140"></yu-xtable-column>
+      <yu-xtable-column label="操作类型" prop="workTranLevel" width="160" data-code="WORK_TRAN_LEVEL"></yu-xtable-column>
+      <yu-xtable-column label="原归属机构" prop="orgNamePre" width="120"></yu-xtable-column>
+      <yu-xtable-column label="原机构主协办类型" prop="orgTypePre" data-code="CD0241" width="120"></yu-xtable-column>
+      <yu-xtable-column label="新归属机构" prop="orgName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="新机构类型" prop="orgType" data-code="CD0241" width="100"></yu-xtable-column>
+      <yu-xtable-column label="原客户经理" prop="mgrNamePre" width="120"></yu-xtable-column>
+      <yu-xtable-column label="原客户经理主协办类型" prop="mgrTypePre" width="120" data-code="CD0241"></yu-xtable-column>
+      <yu-xtable-column label="新客户经理" prop="mgrName" width="160"></yu-xtable-column>
+      <yu-xtable-column label="新客户经理类型" prop="mgrType" width="120" data-code="CD0241"></yu-xtable-column>
+      <yu-xtable-column label="调整时间" prop="assignDate" width="160" :formatter="dateFormatter"></yu-xtable-column>
+      <yu-xtable-column label="调整人" prop="userName" width="180"></yu-xtable-column>
+      <yu-xtable-column label="调整机构" prop="lastname" width="160"></yu-xtable-column>
+      </yu-xtable>
+    </yu-xdialog>
+</div>
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

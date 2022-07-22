@@ -1,0 +1,439 @@
+<!-- 
+  @Created by mayan mayan2@yusys.com.cn on 2019-2-4 19:25:42.
+  @updated by
+  @description 对公客户视图首页
+-->
+<div>
+  <div>
+  <el-row :gutter="5" style="padding-top: 10px;height: 480px;">
+    <el-col :span="18">
+      <div style="border: 1px solid rgb(190, 183, 183);height:460px;">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+         自然属性
+        </div>
+        
+       <div class="base_info" >
+                <div class="img_info" >
+                      <img   src="themes/default/images/qiyelogo.png" class="img_top"/>   
+                     
+                  <div class="img_bottom">
+                      <div style=" font-size: 15px;color: #2d2d2d;font-weight: bold;white-space: normal">{{baseformdata.custName}}</div>
+                    <!--  <p style=" font-size: 14px;color: #888585;;">{{baseformdata.sexName}},{{baseformdata.birthDt}},{{baseformdata.age}}岁</p>-->
+                  </div>
+                  </div>
+                <div>
+                        <div class="info_div">
+                              <span class="label">客户号:</span>
+                              <span class="value">{{baseformdata.custId}}</span>
+                              <span  class="label">证件类型:</span>
+                              <span class="value">{{baseformdata.certTypeName}}</span>
+                              
+                        </div>
+                        <div class="info_div">
+                            <span  class="label">服务等级:</span>
+                            <span class="value">{{baseformdata.servLevName}}</span>
+                          
+                            <span  class="label">证件号码:</span>
+                          <span class="value">{{baseformdata.certNo}}</span>
+                            
+                        </div>
+                        <div class="info_div">             
+                          <span  class="label">价值等级:</span>
+                          <span class="value">{{baseformdata.valueLevName}}</span>
+                            <span  class="label">贡献度:</span>
+                            <span class="value">{{baseformdata.mSumContribu}}</span>
+                            
+                    </div>
+                        <div class="info_div">
+                          <span  class="label">五级分类:</span>
+                          <span class="value">{{baseformdata.loanSevenLevname}}</span>
+                          <span  class="label">客户状态:</span>
+                            <span class="value">{{baseformdata.custStatusName}}</span>
+                        </div>
+                        
+                        <div class="info_div">
+                            <span  class="label">信用等级:</span>
+                            <span class="value">{{baseformdata.creditLevName}}</span>
+                          <span  class="label">第一联系人:</span>
+                            <span class="value">{{baseformdata.contMan}}</span>
+                              
+                      </div>
+                      <div class="info_div">
+                        
+                        <span  class="label">联系人电话:</span>
+                          <span class="value">{{baseformdata.contTelNo}}</span>     
+                          <span  class="label">行业分类:</span>
+                        <span class="value">{{baseformdata.indusCdName}}</span>
+                    </div>
+                    <div class="info_div">
+                      
+                      <span  class="label">法定代表人:</span>
+                      <span class="value">{{baseformdata.legalName}}</span>
+                      <span  class="label" style="width: 100px">客户经理电话:</span>
+              <span class="value">{{baseformdata.mgrTel}}</span>
+                </div>
+                    <div class="info_div">
+                      <span  class="label">注册币种:</span>
+                      <span class="value">{{baseformdata.regCurrCdName}}</span>
+                      <span  class="label">实际控制人:</span>
+                      <span class="value">{{baseformdata.realCntr}}</span> 
+                  </div> 
+            <div class="info_div">
+                  <span  class="label">是否有效户:</span>
+                  <span class="value">{{baseformdata.effectFlgName}}</span>
+                  <span  class="label"  style="width: 100px">注册资本（元）:</span>
+                  <span class="value">{{baseformdata.regCapital}}</span>
+
+            </div>
+            <div class="info_div">
+                 
+                <span  class="label">员工规模:</span>
+                <span class="value">{{baseformdata.empNum}}</span>
+                  <span  class="label"  style="width: 100px">资产规模（元）:</span>
+                  <span class="value">{{baseformdata.totalAssets}}</span>
+
+          </div>
+          
+        <div class="info_div">
+              <span  class="label">主办机构:</span>
+              <span class="value">{{baseformdata.orgName}}</span>
+              <span  class="label"  style="width: 100px">年销售额（元）:</span>
+              <span class="value">{{baseformdata.totalSales}}</span>
+        </div>
+        <div class="info_div">
+          <span  class="label">成立日期:</span>
+          <span class="value">{{baseformdata.comEstabDate}}</span>
+              
+              <span  class="label" style="width: 100px">主办客户经理:</span>
+              <span class="value">{{baseformdata.userName}}</span>
+      </div>
+          
+      <div class="info_div">
+        <span  class="label">注册地:</span>
+        <p class="value">{{baseformdata.regAddr}}</p>
+  </div>
+ <!-- <div class="info_div">
+    <span  class="label">主营范围:</span>
+    {{baseformdata.comMainOptScp}}
+</div>-->
+  </div>
+  </div> 
+      </div>
+    </el-col>
+    <el-col :span="6">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          客户持有我行产品信息
+        </div>
+        <div style="height:445px;     word-wrap: break-word;  white-space: normal;">
+          <yu-tag style="    margin: 0.7em; white-space: normal;"  v-for="tag in tags" :key="tag.name" :type="tag.type" >
+           <b> {{tag.name}}</b>
+           </yu-tag>
+         
+        </div>
+      </div>
+    </el-col>
+  </el-row>
+</div>
+  <el-row >
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          存款信息（万元）
+        </div>
+        <div>
+          <yu-echarts :option="option" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)  ;margin:0 5px">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          理财信息（万元）
+        </div>
+        <div>
+          <yu-echarts :option="option1" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          贷款信息（万元）
+        </div>
+        <div>
+          <yu-echarts :option="option2" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+  </el-row>
+  <el-row style="padding-top: 10px;">
+  
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          存款变化趋势图（万元）
+        </div>
+        <div>
+          <yu-echarts :option="option3" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+    <!-- <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)  ;margin:0 5px">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          贡献度占比信息
+        </div>
+        <div>
+          <yu-echarts :option="option4" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col> -->
+    <!-- <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          贡献度变化趋势图
+        </div>
+        <div>
+          <yu-echarts :option="option5" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col> -->
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)  ;margin:0 5px">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          业务汇总-资产负债信息
+        </div>
+        <div>
+          <yu-echarts :option="option7" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+  <el-col :span="8">
+    <div style="border: 1px solid rgb(190, 183, 183)">
+      <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+        关键人信息-TOP5
+      </div>
+      <div>
+        <yu-xtable ref="keyrefTable" row-number :data-url="keydataUrl" :pageable="false" height="270">
+          <yu-xtable-column label="联系人" prop="custNameRel"></yu-xtable-column>
+          <yu-xtable-column label="关键类型" prop="relaType" data-code="CD0285" ></yu-xtable-column>
+          <yu-xtable-column label="手机号码" prop="mobileNo" ></yu-xtable-column>
+        </yu-xtable>
+      </div>
+    </div>
+  </el-col>
+  </el-row>
+  
+  <el-row style="padding-top: 10px;">
+    <!-- <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          贷款变化趋势图（万元）
+        </div>
+        <div>
+          <yu-echarts :option="option6" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col> -->
+    <!-- <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183)  ;margin:0 5px">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            业务汇总-资产负债信息
+          </div>
+          <div>
+            <yu-echarts :option="option7" width="330px" height="270px"></yu-echarts>
+          </div>
+        </div>
+      </el-col>
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          关键人信息-TOP5
+        </div>
+        <div>
+          <yu-xtable ref="keyrefTable" row-number :data-url="keydataUrl" :pageable="false" height="270">
+            <yu-xtable-column label="联系人" prop="custNameRel"></yu-xtable-column>
+            <yu-xtable-column label="关键类型" prop="relaType" data-code="CD0285" ></yu-xtable-column>
+            <yu-xtable-column label="手机号码" prop="mobileNo" ></yu-xtable-column>
+          </yu-xtable>
+        </div>
+      </div>
+    </el-col> -->
+  </el-row>
+  <!--<el-row style="padding-top: 10px;">
+  
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183); height: 220px;">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          业务汇总-表内负债
+        </div>
+        <div>
+          <div class="info_div">
+                <span class="label3">一般贷款:</span>
+                <span class="value">{{bussoneformdata.loanBal}}</span>
+          </div>
+          <div class="info_div">
+              <span class="label3">银票贴现:</span>
+              <span class="value">{{bussoneformdata.silverDiscount}}</span>
+          </div>
+          <div class="info_div">
+            <span class="label3">商票贴现及商票保贴:</span>
+            <span class="value">{{bussoneformdata.disGuaranTick}}</span>
+          </div>
+          <div class="info_div">
+            <span class="label3">应收账款融资,保理,发票融资:</span>
+            <span class="value">{{bussoneformdata.finFactInvoice}}</span>
+         </div>
+        <div class="info_div">
+          <span class="label3">进出口项下融资:</span>
+          <span class="value">{{bussoneformdata.finUnderImpExp}}</span>
+        </div>
+        <div class="info_div">
+            <span class="label3">表内总负债:</span>
+            <span class="value">{{bussoneformdata.totalLiaState}}</span>
+      </div>
+   
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)  ;margin:0 5px ; height: 220px;">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          业务汇总-表外或有负债
+        </div>
+        <div>
+            <div class="info_div">
+                <span class="label3">未支付银行承兑汇票:</span>
+                <span class="value">{{busstwoformdata.unpaidBankAccBill}}</span>
+          </div>
+       <!--   <div class="info_div">
+              <span class="label3">未支付L/C:</span>
+              <span class="value">{{busstwoformdata.unpaidLc}}</span>
+        </div>
+        <div class="info_div">
+            <span class="label3">未支付SBLC:</span>
+            <span class="value">{{busstwoformdata.unpaidSblc}}</span>
+        </div>
+        <div class="info_div">
+            <span class="label3">未支付保函:</span>
+            <span class="value">{{busstwoformdata.unpaidGuar}}</span>
+        </div>
+        <div class="info_div">
+            <span class="label3">未结清外汇买卖:</span>
+            <span class="value">{{busstwoformdata.unpaidForExcg}}</span>
+        </div>
+        <div class="info_div">
+            <span class="label3">表外或有总负债:</span>
+            <span class="value">{{busstwoformdata.offBalSheet}}</span>
+      </div>
+       
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183);  height: 220px;">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          业务汇总-授信信息
+        </div>
+        <div>
+            <div class="info_div">
+                <span class="label3">授信额度:</span>
+                <span class="value">{{bussthreeformdata.creditLine}}</span>
+          </div>
+          <div class="info_div">
+              <span class="label3">授信有效期:</span>
+              <span class="value">{{bussthreeformdata.creditDate}}</span>
+        </div>
+        <div class="info_div">
+            <span class="label3">可用额度:</span>
+            <span class="value">{{bussthreeformdata.availCredit}}</span>
+        </div>
+        <div class="info_div">
+            <span class="label3">风险等级:</span>
+            <span class="value">{{bussthreeformdata.riskLevel}}</span>
+        </div>
+        <!--  <yu-xtable ref="bussthreerefTable" row-number :data-url="bussthreeUrl" :pageable="false" height="300">
+            <yu-xtable-column label="" prop="" width="150"></yu-xtable-column>
+            <yu-xtable-column label="" prop="" width="150"></yu-xtable-column>
+            <yu-xtable-column label="" prop="" width="150" ></yu-xtable-column>
+            <yu-xtable-column label="" prop="" width="150" ></yu-xtable-column>
+          </yu-xtable>
+        </div>
+      </div>
+    </el-col>
+  </el-row>
+-->
+
+  <el-row style="padding-top: 10px;">
+      <!-- <el-col :span="8">
+          <div style="border: 1px solid rgb(190, 183, 183)  ;margin:0 5px; height: 270px;">
+            <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+              最新事件-TOP5
+            </div>
+            <div>
+              <yu-xtable ref="eventrefTable" row-number :data-url="eventdataUrl" :pageable="false" height="240">
+                <yu-xtable-column label="事件名称" prop="eventName"></yu-xtable-column>
+                <yu-xtable-column label="产生日期" prop="eventDate" ></yu-xtable-column>
+              
+              </yu-xtable>
+            </div>
+          </div>
+        </el-col> -->
+   
+  </el-row>
+</div>
+<style>
+    .info_div:after{
+      clear:both;
+      content: '';
+    }
+    .info_div{
+      padding:0.5em;
+    }
+    .label{
+      /* float:left; */
+      font-size:  1.2em;
+      color: #888585;
+      display: inline-block;
+      width:5.2em;
+    }
+    .label3{
+    /* float:left; */
+    font-size: 14px;
+    color: #888585;
+    display: inline-block;
+   
+  }
+    .value{
+      font-size: 14px;
+      color: #2d2d2d;
+      display: inline-block;
+      width: 9.8em;
+    }
+    .base_info{
+      height: 100%;
+      width: 100%; 
+         padding-top: 1.3em;
+    }
+    .img_info{
+      float: left;
+      text-align: center;
+      height: 92%;
+      width: 30%;
+    }
+    .img_top{
+      /* position: relative;
+      left: 12%;*/
+      width: 8em;
+      height: 8em;
+      border-radius: 50%; 
+      margin-left: 25%;
+      margin-top: 15%;
+    /* background-color:red;*/
+    }
+    .img_bottom{
+  
+      margin-top: 80%;
+    }
+  </style>

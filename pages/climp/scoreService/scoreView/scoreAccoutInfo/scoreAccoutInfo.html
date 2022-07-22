@@ -1,0 +1,52 @@
+·
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2018-12-27 14:30:15.
+  @updated by
+  @description 积分账户信息
+-->
+
+<div>
+  <yu-xform related-table-name="refTable" class="yu-customer-query" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="账户编号" name="accountNo" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="账户名称" name="accountName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="综合积分(起)" name="totalNumStart" ctype="input" rules="number"></yu-xform-item>
+      <yu-xform-item placeholder="综合积分(止)" name="totalNumEnd" ctype="input" rules="number"></yu-xform-item>
+      <yu-xform-item placeholder="可用积分(起)" name="scoreNumStart" ctype="input" rules="number"></yu-xform-item>
+      <yu-xform-item placeholder="可用积分(止)" name="scoreNumEnd" ctype="input" rules="number"></yu-xform-item>
+      <yu-xform-item placeholder="冻结积分(起)" name="freezeNumStart" ctype="input" rules="number"></yu-xform-item>
+      <yu-xform-item placeholder="冻结积分(止)" name="freezeNumEnd" ctype="input" rules="number"></yu-xform-item>
+      <yu-xform-item placeholder="消费积分(起)" name="costNumStart" ctype="input" rules="number"></yu-xform-item>
+      <yu-xform-item placeholder="消费积分(止)" name="costNumEnd" ctype="input" rules="number"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="document" @click="accountListFn">账户明细</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+    <yu-xtable-column prop="accountNo" label="账户编号"></yu-xtable-column>
+    <yu-xtable-column prop="accountName" label="账户名称"></yu-xtable-column>
+    <yu-xtable-column prop="totalNum" label="综合积分"></yu-xtable-column>
+    <yu-xtable-column prop="scoreNum" label="可用积分"></yu-xtable-column>
+    <yu-xtable-column prop="nunaccNum" label="过期积分数"></yu-xtable-column>
+    <yu-xtable-column prop="freezeNum" label="冻结积分"></yu-xtable-column>
+    <yu-xtable-column prop="costNum" label="消费积分"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="900px" height="500px" -->
+  <yu-xdialog title="账户明细详情" :visible.sync="scoreAccoutDialogVisible" width="800px" height="400px">
+    <yu-xtable ref="refAccountDetailTable" row-number :data-url="dataUrl">
+      <yu-xtable-column label="账户编号" name="accountNo"></yu-xtable-column>
+      <yu-xtable-column label="账户名称" name="accountName"></yu-xtable-column>
+      <yu-xtable-column label="积分值" name="balance"></yu-xtable-column>
+      <yu-xtable-column label="可用积分" name="scoreNum"></yu-xtable-column>
+      <yu-xtable-column label="冻结积分" name="freezeNum"></yu-xtable-column>
+      <yu-xtable-column label="有效期" name="valid"></yu-xtable-column>
+      <yu-xtable-column label="入账状态" name="transState"></yu-xtable-column>
+      <yu-xtable-column label="交易日期" name="jyDate"></yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+
+</div>

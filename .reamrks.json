@@ -1,0 +1,531 @@
+[33mcommit a4e3796b10ceabd9f14a15eaa9fcf922f2c99adb[m[33m ([m[1;36mHEAD -> [m[1;32mdevelop[m[33m)[m
+Author: 张成龙 <zhangcl3@yusys.com.cn>
+Date:   Thu Feb 21 19:32:18 2019 +0800
+
+    修改提交
+
+[33mcommit 0eb2aaffa129af409734e4083ef35a8d09e03348[m
+Author: 张成龙 <zhangcl3@yusys.com.cn>
+Date:   Wed Feb 20 13:43:54 2019 +0800
+
+    备注修改提交
+
+[33mcommit fa1997da4356cf58f09bd17a8db70cfd320569f1[m
+Merge: d5dc1fa e28af0e
+Author: 张成龙 <zhangcl3@yusys.com.cn>
+Date:   Tue Feb 19 15:25:59 2019 +0800
+
+    解决合并
+
+[33mcommit d5dc1fa6fe4b67bbea7e95f12ec29d21002c460e[m
+Author: 张成龙 <zhangcl3@yusys.com.cn>
+Date:   Tue Feb 19 15:20:48 2019 +0800
+
+    客户评价提交
+
+[33mcommit e28af0ed464b5edeecb3ec1bb360fb444ecb33e1[m
+Author: yanty1 <yanty1@yusys.com.cn>
+Date:   Mon Feb 18 17:59:02 2019 +0800
+
+    产品管理
+
+[33mcommit bae274a56d247de8ef7004f13cbf9e2502eca5ab[m
+Author: zhangxs4 <zhangxs4@yusys.com.cn>
+Date:   Mon Feb 18 17:47:59 2019 +0800
+
+    用户管理业务条线改造
+
+[33mcommit 3433b4b985c4846da5f6ac703d55a6b3c2a18860[m
+Author: yanty1 <yanty1@yusys.com.cn>
+Date:   Mon Feb 18 16:08:24 2019 +0800
+
+    产品管理
+
+[33mcommit 3897a306f18301deffaed2191330555804cf3e2e[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Mon Feb 18 16:03:56 2019 +0800
+
+    修改树组件，监听dataPrams方式为深度监听
+
+[33mcommit 41fb4ec5174b230e64d0766f427fadedbf46b433[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Mon Feb 18 13:55:43 2019 +0800
+
+    1、修改yufp-user-selector组件
+    2、修改客户经理团队页面
+
+[33mcommit 442e0968327a821f0927e47dd6156dd803c89d38[m
+Author: yanty1 <yanty1@yusys.com.cn>
+Date:   Mon Feb 18 10:20:27 2019 +0800
+
+    备注信息
+
+[33mcommit 8bb6d6826e61e1c407aa95b1ae75e436974edeb9[m
+Author: yanty1 <yanty1@yusys.com.cn>
+Date:   Mon Feb 18 10:19:29 2019 +0800
+
+    产品管理
+
+[33mcommit 21968028ecf64867ace9060ff05256e617cb8180[m
+Author: lixt1 <lixt1@yusys.com.cn>
+Date:   Mon Feb 18 10:11:18 2019 +0800
+
+    日程安排-新增
+
+[33mcommit 43535c3d60b0892dae58eddf262495e0cf56a46f[m
+Author: mayan2 <mayan2@yusys.com.cn>
+Date:   Mon Feb 18 10:02:24 2019 +0800
+
+    零售客户视图页面备注
+
+[33mcommit ae355bb509ab8c3f343b0f2be824797c48233f39[m
+Author: mayan2 <mayan2@yusys.com.cn>
+Date:   Mon Feb 18 09:57:38 2019 +0800
+
+    零售客户视图页面提交
+
+[33mcommit e48412fa80a66b34392102bf5dbe2439af2130a4[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Mon Feb 18 09:09:23 2019 +0800
+
+    客户经理查询修改
+
+[33mcommit 0d825fce2c50e7093a10bf00685151e19cb3c4df[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Sun Feb 17 16:34:56 2019 +0800
+
+    客户经理团队修改
+
+[33mcommit a844717f53959b0ea50363d902382275898e515f[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Sat Feb 16 15:05:58 2019 +0800
+
+    客户经理团队视图-客户经理团队客户模糊查询
+
+[33mcommit 5e1d5d705e5e181a262d7b8319ed637ce54d2e50[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Sat Feb 16 14:56:37 2019 +0800
+
+    客户经理团队视图-客户经理团队业绩修改
+
+[33mcommit 8d96ab5dfa95626d88a520f63af94ccc2a917511[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Fri Feb 15 18:33:28 2019 +0800
+
+    客户经理团队视图-客户经理团队业绩
+
+[33mcommit 01a7314d0eb603dcd4761179a081af07813ac310[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Fri Feb 15 18:25:42 2019 +0800
+
+    营销活动管理，关联产品 关联客户 关联指标 关联附件连调，
+
+[33mcommit 165faff3de890a58f186bf5f3353bd5257ff521f[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Fri Feb 15 18:02:30 2019 +0800
+
+    1、新增：
+    全行客户放大镜，所辖客户放大镜
+    2、修改：
+    客户分配页面——>分配保存逻辑
+
+[33mcommit 3d76c81bf3faff996d465a2f87a4d92629aee1c7[m
+Author: yanty1 <yanty1@yusys.com.cn>
+Date:   Fri Feb 15 16:48:37 2019 +0800
+
+    产品管理界面
+
+[33mcommit 42adc8d6eac466d72cba21f4709013c122cb8abb[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Fri Feb 15 14:52:31 2019 +0800
+
+    客户经理团队视图-客户经理团队客户、表格样式调整
+
+[33mcommit ff276d05ee0a36ca4510324a9ebe21704cdbfc70[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Thu Feb 14 18:28:36 2019 +0800
+
+    营销活动管理连调90%
+
+[33mcommit 4ae6bdce90f0d0ffdf132c903ddefb8f81eaa1ef[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Thu Feb 14 18:03:22 2019 +0800
+
+    1、修改客户分配页面——>分配保存逻辑
+
+[33mcommit ea165fab5cb3af8b1c8a45da12b9af029fbc156a[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Thu Feb 14 16:08:28 2019 +0800
+
+    客户经理团队视图-客户经理团队成员管理
+
+[33mcommit 3a3e75cbf0dfafaefbaba6347550443a36fb11de[m
+Merge: 5d7ee2c 4ee5e2c
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Thu Feb 14 14:21:05 2019 +0800
+
+    Merge branch 'develop' of http://192.168.254.128/YSCIMC/crm-web into develop
+
+[33mcommit 5d7ee2c0920419903defa58e5312ba4c0492bc62[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Thu Feb 14 14:20:15 2019 +0800
+
+    1、调整客户托管页面所辖客户放大镜
+
+[33mcommit 4ee5e2c0509d47a47c7d3b6cc7dcb1ab59247cb1[m
+Author: zhangkun <zhangkun@yusys.com.cn>
+Date:   Thu Feb 14 14:19:23 2019 +0800
+
+    首页分屏数据为空时无法拖动问题解决
+
+[33mcommit 6d8a8b284c1c80a4d1b6c01a1c779824c893e3b2[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Thu Feb 14 10:28:47 2019 +0800
+
+    客户经理团队视图、客户经理团队视图-基本信息
+
+[33mcommit f0da84f8a287947b60bb151dcf3c7399ebb7df62[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Thu Feb 14 10:02:46 2019 +0800
+
+    修改视图项名称输入项为非必输
+
+[33mcommit 3207c2bbd53c5c56e5cdd9ba073c60eaedf2f9c6[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Wed Feb 13 20:37:06 2019 +0800
+
+    营销活动管理连调70%，产品放大镜连调90%
+
+[33mcommit 43e6df6c20cd5de8e63f5f7556e1f95fa061c41c[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Wed Feb 13 18:31:39 2019 +0800
+
+    客户经理团队管理
+
+[33mcommit 884478d80a60de42c1c84fecb5dec1e59188d67e[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Wed Feb 13 17:27:10 2019 +0800
+
+    1、修改新增修改功能点
+
+[33mcommit 29e58d8a322b88449076392de27e6be994c87772[m
+Merge: 7cae13a 8f65bc4
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Wed Feb 13 17:24:36 2019 +0800
+
+    Merge branch 'develop' of http://192.168.254.128/YSCIMC/crm-web into develop
+
+[33mcommit 7cae13a49599e745e130452643b9e884383a9193[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Wed Feb 13 17:23:22 2019 +0800
+
+    1、修改潜在客户管理的新增修改功能点
+
+[33mcommit 8f65bc449d312594d04141dcd32bcd3e5f062884[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Tue Feb 12 18:19:55 2019 +0800
+
+    新增灵活图标授权,灵活报表查询，灵活报表授权
+
+[33mcommit 027251a4332ea29a4c50fbf77c6ef62aadeaf56b[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Tue Feb 12 18:06:33 2019 +0800
+
+    1、修改所辖客户查询页—>查询功能，功能点完成100%
+    2、根据需求修改客户授权页
+    3、修改客户托管页->选择客户功能点
+
+[33mcommit 5c6e77fc0775eb113ee035157bbdbc3da58f1f7c[m
+Author: 张成龙 <zhangcl3@yusys.com.cn>
+Date:   Tue Feb 12 17:49:49 2019 +0800
+
+    金融小工具修改提交，客户评级提交
+
+[33mcommit 17d440031321c366ea4ec15db125d73ae4bd999b[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Tue Feb 12 13:55:49 2019 +0800
+
+    产品方案展示改bug
+
+[33mcommit da2a3cddf37b495ad3faea77bdaf7de5032ad590[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Mon Feb 11 21:32:57 2019 +0800
+
+    客户经理视图首页
+
+[33mcommit b4582d5812830368d0013945478b52b521f5323f[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Mon Feb 11 21:29:06 2019 +0800
+
+    添加码值信息
+
+[33mcommit a066ebe602c87aed3d50cf052006ac4d095c712e[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Mon Feb 11 19:31:31 2019 +0800
+
+    1、修改所辖客户查询页面——实现设置为我的关注客户功能，完成60%
+    2、联调我的关注客户页面——遗留加入客户群功能
+    3、联调潜在客户管理页面—— 联调完成50%
+
+[33mcommit 7739bf986e503ddf2f3f12ded0aa35a0481f6f89[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Mon Feb 11 16:06:30 2019 +0800
+
+    删除客户经理视图主页(旧)
+
+[33mcommit d0e9843ef33e3cee7e4d2813c694f7becf017739[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Mon Feb 11 16:00:57 2019 +0800
+
+    客户经理视图业绩概览修改
+
+[33mcommit 3be0f656b73449e2a7c9cbb4a87bf360dd8b2a10[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Mon Feb 11 11:16:21 2019 +0800
+
+    修改客户经理业绩概览
+
+[33mcommit bdff1427d39c89a236d0458c7a596a194cc09a54[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Mon Feb 11 11:07:07 2019 +0800
+
+    客户经理视图-客户经理业绩概览
+
+[33mcommit 23ca8591de5da32a2da59362a060632e43debd97[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Mon Feb 11 09:37:43 2019 +0800
+
+    客户经理视图-客户经理业绩概览
+
+[33mcommit da6978592cdb94850b73dda3b5c5d541724cbe00[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Mon Feb 4 18:47:22 2019 +0800
+
+    新增客户经理基本信息
+
+[33mcommit 9525067c326831e7ea2e42d3c6963a764783fe63[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Fri Feb 1 18:09:49 2019 +0800
+
+    修改客户分配页面字段
+    完善客户托管页面
+
+[33mcommit 10106de92ac9cdea9641f002fb649bd418ffdf71[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Thu Jan 31 21:50:40 2019 +0800
+
+    修改客户经理查询
+
+[33mcommit 056a06d66a41a4e0430d75f6aad84c51aa06549c[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Thu Jan 31 18:10:47 2019 +0800
+
+    1、修改客户托管和客户授权页面，页面联调完成80%
+
+[33mcommit 53d24903d2ea62b348adbca7eb1e53b972dfb487[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Thu Jan 31 17:35:51 2019 +0800
+
+    改bug
+
+[33mcommit 10cef1bdc641788c315ffa21b8104c73e50d6c24[m
+Author: houyx3 <houyx3@yusys.com.cn>
+Date:   Thu Jan 31 09:45:00 2019 +0800
+
+    更新
+
+[33mcommit 85d0f0324ab938e0fe64a9ae797c40e1445fe97a[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Wed Jan 30 20:18:12 2019 +0800
+
+    银行产品树连调100%；产品基础数据定义，方案展示修改部分BUG
+
+[33mcommit 1f56bed9450d46249ad24cc9d23ffbba15ca22d9[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Wed Jan 30 17:48:30 2019 +0800
+
+    修改视图树bug
+
+[33mcommit 367ee8f723a08e6125dc1bd38c3cf1c1c97c6317[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Wed Jan 30 16:17:12 2019 +0800
+
+    修改视图项管理bug
+
+[33mcommit 4fc6f7cc961e737797899f5497842a8510f74cbe[m
+Author: zhangxs4 <zhangxs4@yusys.com.cn>
+Date:   Wed Jan 30 16:14:46 2019 +0800
+
+    修改视图项删除参数
+
+[33mcommit 117f0955fc77da0f1db25c32bf1649a9ac0dbdde[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Wed Jan 30 16:10:04 2019 +0800
+
+    新增客户经理视图-业绩明细查询
+
+[33mcommit ba49f1b40c5596a383821ec3206be74c99354668[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Wed Jan 30 15:09:08 2019 +0800
+
+    1、修改删除时的传值方式
+
+[33mcommit 2dae7f39700341222f8a325f659f8ae21d0f6fd6[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Wed Jan 30 14:42:23 2019 +0800
+
+    1、修改视图树管理页面缺陷
+    2、修改session.js中判断视图控制权限的方法
+    3、修改视图跳转时传递的参数
+
+[33mcommit 555b45b36e03f426e50cfbad806d4e7b025cbbf7[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Wed Jan 30 10:54:39 2019 +0800
+
+    1、修改视图授权保存方法的问题
+    2、修改视图管理页面校验规则
+
+[33mcommit ad86cb6f2065a5deff950372b390edd5ef9b9fb7[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Tue Jan 29 21:01:43 2019 +0800
+
+    1、新增9类客户视图
+    2、新增视图路由信息表
+    3、修改视图管理类页面的样式问题
+    4、修改yufp.session.js 文件，添加判断视图控制点权限内容
+
+[33mcommit 06d88b41a6afb35008d927ed75ecfa1215aa2dae[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Tue Jan 29 18:01:32 2019 +0800
+
+    产品展示方案连调100%，增加校验，产品数据定义增加校验，新增银行产品树页面
+
+[33mcommit ca669bb11bb2f4c6ae40d24cd8f822c086eeff3f[m
+Author: lixt1 <lixt1@yusys.com.cn>
+Date:   Tue Jan 29 09:50:06 2019 +0800
+
+    修改客户流失预警
+
+[33mcommit 457a4c9b3a1276b9a99c03ebae3e4b068f6e68b5[m
+Author: zhangxs4 <zhangxs4@yusys.com.cn>
+Date:   Tue Jan 29 09:33:33 2019 +0800
+
+    修正配置文件
+
+[33mcommit 3c84a47411add834fb0933e221f3abd85787a7bb[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Mon Jan 28 21:13:24 2019 +0800
+
+    1、新增个人客户视图页面
+    2、调整我的关注客户的页面字段
+
+[33mcommit 76c8e6645a2295ca4bbc8793f3ab8dbb9e3f0f59[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Mon Jan 28 20:28:58 2019 +0800
+
+    修改url为jekins地址
+
+[33mcommit b3ae2e215b221ea50bdddfe8fc192ede5eb43e96[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Mon Jan 28 18:52:04 2019 +0800
+
+    产品展示方案连调，营销活动管理连调
+
+[33mcommit fd569a8818774fbe4b32c099ef489b7ee5a82174[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Mon Jan 28 14:05:43 2019 +0800
+
+    客户经理视图、管户清单
+
+[33mcommit 0204b0f74afc7f701e3c6b25120744efb3e4264b[m
+Author: lixt1 <lixt1@yusys.com.cn>
+Date:   Mon Jan 28 12:22:00 2019 +0800
+
+    新增客户流失预警
+
+[33mcommit 47231e44ef41dddf3c88c2c57ee1b87e767b2f7e[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Mon Jan 28 10:44:16 2019 +0800
+
+    1、提交修视图授权
+
+[33mcommit 4d6005dd44b20e5721e82eb83d2fd45fe56dd869[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Mon Jan 28 10:07:44 2019 +0800
+
+    修改机构树
+
+[33mcommit 3fe0d8dcaa041354ba6a8a2903203552a446008b[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Sun Jan 27 18:10:06 2019 +0800
+
+    1、调整所辖客户查询页面，完成页面可以进行客户查询
+    2、视图授权页面完成进度90%
+
+[33mcommit ce2172972af0e9e82fab4323a9b9f425781e7db4[m
+Merge: ae02042 a679dea
+Author: 张成龙 <zhangcl3@yusys.com.cn>
+Date:   Sat Jan 26 22:17:00 2019 +0800
+
+    Merge branch 'develop' of http://192.168.254.128/YSCIMC/crm-web into develop
+
+[33mcommit ae02042943ba502666354472d358e1ecaea16bb2[m
+Author: 张成龙 <zhangcl3@yusys.com.cn>
+Date:   Sat Jan 26 22:08:59 2019 +0800
+
+    理财计算器
+
+[33mcommit a679dea390c5db9bcdc5d68041bcc62b5b67b6e8[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Fri Jan 25 18:00:13 2019 +0800
+
+    产品视图展示方案连调90%；微调客户放大镜，
+
+[33mcommit bd3991208c0124014210a124aad10f737b007024[m
+Author: luhy1 <luhy1@yusys.com.cn>
+Date:   Fri Jan 25 17:32:10 2019 +0800
+
+    客户经理查询、业绩明细查询
+
+[33mcommit 88ab5ac7c3491a6567bd0705061eea97ca558b9a[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Thu Jan 24 20:40:39 2019 +0800
+
+    1、联调视图树管理页，完成进度100%
+    2、联调视图控制点管理，完成进度100%
+    3、修复菜单组件bug
+
+[33mcommit 2e24dd6efa9dfb38eab249a212b9aab92d822f72[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Thu Jan 24 20:12:23 2019 +0800
+
+    产品基础数据定义连调，产品方案展示优化，增加商机管理部分控件
+
+[33mcommit 0a9a3ed93b33cd3abe7b5e2544c96ccfae1937aa[m
+Author: zhangkun <zhangkun@yusys.com.cn>
+Date:   Thu Jan 24 18:17:09 2019 +0800
+
+    首页拖拽效果优化
+
+[33mcommit 60756c0c302ebd096941c79a0a7f0c8b3a3241a9[m
+Author: zhangkun <zhangkun@yusys.com.cn>
+Date:   Thu Jan 24 10:30:57 2019 +0800
+
+    首页细节调整：
+    1.保存方式从每拖动一次保存更改为点击保存按钮保存。
+    2.增加更多按钮。
+    3.放大功能完善
+
+[33mcommit 67201651305fcfd4909329e11fb44101167158a4[m
+Author: taoting1 <taoting1@yusys.com.cn>
+Date:   Wed Jan 23 20:42:12 2019 +0800
+
+    1、修改视图控制点，完成进度70%，剩余没有测接口是否OK
+    2、视图项管理页面，完成进度100%
+    3、视图树管理页面，完成进度70%，剩余没有测接口是否OK
+
+[33mcommit 0110136d8a27b1fdba128ffe838dd6c9f2c14188[m
+Author: zhuly6 <zhu_zhulingying@163.com>
+Date:   Wed Jan 23 20:35:00 2019 +0800
+
+    商机管理连调到90%,优化产品视图展示方案

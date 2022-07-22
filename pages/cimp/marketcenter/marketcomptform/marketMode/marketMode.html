@@ -1,0 +1,24 @@
+<!--
+  @created by hujun3 on 2019/02/18.
+ @description 营销组件FORM表单-营销组件-营销方式
+-->
+<div>
+  <yufp-node-cmp ref="ncmpRef" :design-body="flowNode.designBody"></yufp-node-cmp>
+  <el-collapse v-model="activeNames">
+        <el-collapse-item title="操作" name="1">
+            <yu-xform label-width="100px" label-suffix="：" v-model="formdata" ref="refForm">
+                <yu-xform-group :column="2">
+                <yu-xform-item label="营销方式" :colspan="8" ctype="select" name="marketMode" :options="options" rules="required" @change="selectFn"></yu-xform-item>
+                <yu-xform-item label="URL" :colspan="16" ctype="input" name="marketUrl" :disabled="true"></yu-xform-item>
+                </yu-xform-group>
+                <div class="button-group">
+                    <el-button type="primary" icon="check" @click="saveFn" :disabled="buttonHiden">保存</el-button>
+                    <el-button type="primary" icon="el-icon-yx-undo2" @click="preview">预览</el-button>
+                </div>
+            </yu-xform>
+        </el-collapse-item>
+    </el-collapse>
+    <yu-xdialog :visible.sync="centerDialogVisible" width="375px"height="640px">
+        <img :src="imageSrc" style="height: 640px;width: 333px;margin-left: 5px">
+    </yu-xdialog>
+ </div>

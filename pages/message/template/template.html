@@ -1,0 +1,109 @@
+<!-- 必须全局拥有唯一的id -->
+<div id="messagetemplate">
+
+    <!-- 搜索栏 -->
+    <el-form-q form="query" :field-data="queryFields" search-table="demoTable" :buttons="queryButtons"></el-form-q>
+
+    <!-- 工具栏 -->
+    <div class="yu-toolBar">
+        <el-button-group style="margin-left: 20px;">
+            <el-button icon="add" @click="openCreateFn">新增</el-button>
+            <el-button icon="delete" @click="deleteOp">删除</el-button>
+            <el-button icon="edit" @click="editOp">编辑</el-button>
+            <el-button @click="sendOp">发送测试</el-button>
+        </el-button-group>
+    </div>
+
+    <!-- 表格 -->
+    <el-table-x ref="messagetemplateTable" :max-height="height" :data-url="urls.dataUrl" :table-columns="tableColumns" @custom-row-op="customRowOp">
+    </el-table-x>
+
+    <el-dialog title="消息配置" :visible.sync="dialogVisible">
+        <el-form ref="form0" :model="form0" label-width="80px" :rules="rules0">
+            <el-form-item label="消息类型" prop="messageType" v-show="!editVisible">
+                <el-input v-model="form0.messageType"></el-input>
+            </el-form-item>
+            <el-form-item label="消息等级" prop="messageLevel">
+                <el-select v-model="form0.messageLevel">
+                    <el-option label="很低" value="1"></el-option>
+                    <el-option label="低" value="2"></el-option>
+                    <el-option label="中等" value="3"></el-option>
+                    <el-option label="高" value="4"></el-option>
+                    <el-option label="很高" value="5"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="模板类型" prop="templateType">
+                <el-select v-model="form0.templateType">
+                    <el-option label="实时消息" value="S"></el-option>
+                    <el-option label="订阅消息" value="D"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="描述" prop="messageDesc">
+                <el-input v-model="form0.messageDesc"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="saveOp()">保 存</el-button>
+        </div>
+    </el-dialog>
+
+
+    <el-dialog title="模板编辑" :visible.sync="templateDialogVisible" @open="open()">
+        <el-form ref="form" :model="form" label-width="80px" :rules="rules">
+            <el-form-item label="异常重发次数" prop="sendNum">
+                <el-select v-model.number="form.sendNum">
+                    <el-option label="0" value="0"></el-option>
+                    <el-option label="1" value="1"></el-option>
+                    <el-option label="2" value="2"></el-option>
+                    <el-option label="3" value="3"></el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="模板内容" prop="templateContent">
+                <el-input type="textarea" v-model="form.templateContent"></el-input>
+            </el-form-item>
+
+            <el-form-item label="标题" v-show="emailVisible">
+                <el-input v-model="form.emailTitle"></el-input>
+            </el-form-item>
+
+            <el-form-item label="免打扰" v-show="timeVisible">
+                <el-radio v-for="item in isTimes" v-model="form.isTime" :label="item">{{isTimesMap[item]}}</el-radio>
+            </el-form-item>
+
+
+            <!--<el-form-item label="时间段" v-show="timeVisible">
+                <el-col :span="11">
+                    <el-time-select v-model="form.timeStart" format= "HH:mm" value-format="HHmm" :picker-options="{ start: '00:00', step: '00:10', end: '23:59'}"
+                            placeholder="选择开始时间">
+                    </el-time-select>
+                </el-col>
+                <el-col :span="2">
+                    <el-form-item label="-"></el-form-item>
+                </el-col>
+                <el-col :span="11">
+                    <el-time-select v-model="form.timeEnd" format= "HHmm" value-format="HHmm" :picker-options="{ start: '00:00', step: '00:10', end: '23:59',minTime: form.timeStart}"
+                                    placeholder="选择结束时间" >
+                    </el-time-select>
+                </el-col>
+            </el-form-item>-->
+
+            <el-form-item label="消息标识" hidden="true">
+                <el-input v-model="form.messageType"></el-input>
+            </el-form-item>
+            <el-form-item label="渠道类型" hidden="true">
+                <el-input v-model="form.channelType"></el-input>
+            </el-form-item>
+            <el-form-item label="模板类型" hidden="true">
+                <el-input v-model="form.templateType"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="templateDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="saveTemplate()">确 定</el-button>
+            <el-button @click="deleteTemplate()">删 除</el-button>
+        </div>
+    </el-dialog>
+
+</div>

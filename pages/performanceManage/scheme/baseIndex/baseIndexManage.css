@@ -1,0 +1,3 @@
+.yu-xform .el-form-item__content[aria-ctype=select] {
+  height: auto;
+}

@@ -1,0 +1,57 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-2-12 19:30:18.
+  @updated by
+  @description 黑名单信息
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true" @cell-dblclick="tableDbClick">
+    <yu-xtable-column label="数据日期" prop="dataDate" width="100"></yu-xtable-column>
+    <yu-xtable-column label="账号" prop="acctId" width="120"></yu-xtable-column>
+    <yu-xtable-column label="发布机构" prop="orgName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="黑名单类型" prop="blackType" width="120" data-code="CD0039"></yu-xtable-column>
+    <yu-xtable-column label="进入黑名单日期" prop="entrDate" width="120"></yu-xtable-column>
+    <yu-xtable-column label="解除黑名单日期" prop="remvDate" width="120"></yu-xtable-column>
+    <yu-xtable-column label="登记人" prop="userName" width="100"></yu-xtable-column>
+    <yu-xtable-column label="登记日期" prop="inputDate" width="100"></yu-xtable-column>
+    <yu-xtable-column label="黑名单描述" prop="blackDesc"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+    <yu-xform ref="refForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="主键" name="id" :hidden="true" ctype="input"></yu-xform-item>
+        <yu-xform-item label="账号" name="acctId" ctype="input" :rules="rule.acctId"></yu-xform-item>
+        <yu-xform-item label="黑名单类型" name="blackType" ctype="select" data-code="CD0039" :rules="rule.blackType"></yu-xform-item>
+        <yu-xform-item label="进入黑名单日期" name="entrDate" ctype="datepicker" :editable="false"></yu-xform-item>
+        <yu-xform-item label="解除黑名单日期" name="remvDate" ctype="datepicker" :editable="false"></yu-xform-item>
+        <yu-xform-item label="登记人" name="inputId" :hidden="true" :disabled="inputIdDisabled" ctype="input"></yu-xform-item>
+        <yu-xform-item label="登记日期" name="inputDate" :hidden="true"  ctype="datepicker"></yu-xform-item>
+        <!-- rules="required" -->
+        <yu-xform-item label="黑名单描述" name="blackDesc" ctype="textarea" :rows="3" :colspan="24" :rules="rule.blackDesc"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

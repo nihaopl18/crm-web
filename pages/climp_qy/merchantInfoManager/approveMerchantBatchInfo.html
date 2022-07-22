@@ -1,0 +1,25 @@
+<div>
+  <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="true" style="margin-top:20px">
+    <!-- 商户批量审批页面 -->
+    <yu-xtable ref="refTable" row-number  :data-url="dataUrl" :base-params="dataParams">
+      <!-- <yu-xtable-column label="ID" prop="merchantId" width="120"></yu-xtable-column> -->
+      <yu-xtable-column label="商户名称" prop="merchantName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="商户工商名称" prop="merIacName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="商户门店名称" prop="merStroeName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="法人名称" prop="legalPersonNm" width="120"></yu-xtable-column>
+      <yu-xtable-column label="证件类型" prop="certType" width="120" data-code="IDENT_TYPE"></yu-xtable-column>
+      <yu-xtable-column label="证件号" prop="certNo" width="120"></yu-xtable-column>
+      <yu-xtable-column label="经营范围" prop="manageAType" width="120" data-code="MANAGE_A_TYPE"></yu-xtable-column>
+      <yu-xtable-column label="导入批次" prop="batchNo" width="120"></yu-xtable-column>
+      <yu-xtable-column label="联系信息" prop="contactInfo" width="120"></yu-xtable-column>
+      <yu-xtable-column label="详细地址" prop="addressInfo" width="120"></yu-xtable-column>
+      <yu-xtable-column label="数据状态" prop="dataSts" width="120" data-code="DATA_STS"></yu-xtable-column>
+      <!-- <yu-xtable-column label="审批状态" prop="wfApprSts" width="120" data-code="WF_APP_STATUS"></yu-xtable-column> -->
+      <yu-xtable-column label="创建人" prop="createUserName" width="120" :hidden="true"></yu-xtable-column>
+      <yu-xtable-column label="创建日期" prop="createDate" width="100" :formatter="dateFormatterSimple"></yu-xtable-column>
+      <yu-xtable-column label="创建机构" prop="createOrgName" width="120" :hidden="true"></yu-xtable-column>
+      <yu-xtable-column label="最近修改人" prop="updateUserName" width="120" :hidden="true"></yu-xtable-column>
+      <yu-xtable-column label="最近修改日期" prop="updateDate" width="120" :formatter="dateFormatterSimple"></yu-xtable-column>
+      <yu-xtable-column label="最近修改机构" prop="updateOrgName" width="120"></yu-xtable-column>
+    </yu-xtable>
+</div>

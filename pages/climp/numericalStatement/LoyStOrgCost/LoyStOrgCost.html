@@ -1,0 +1,36 @@
+<!--
+  @created by geyun geyun@yusys.com.cn on 2019-1-28 15:48:59.
+  @updated by 
+  @description 积分统计报表
+-->
+<div>
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="refTable" form-type="search" v-model="formdata">
+    <yu-xform-group :column="8">
+      <yu-xform-item placeholder="积分归属业务部门" ctype="yufp-org-tree1" name="dptId"></yu-xform-item>
+      <yu-xform-item placeholder="年度选择" ctype="datepicker" name="etlDtY" @change="changeY" :disabled="isTrueY"></yu-xform-item>
+      <yu-xform-item placeholder="月度选择" ctype="datepicker" name="etlDtM" @change="changeM" :disabled="isTrueM"></yu-xform-item>
+      <yu-xform-item placeholder="分行名称" ctype="yufp-org-tree" name="twoLevelOrgId"></yu-xform-item>
+      <yu-xform-item placeholder="支行名称" ctype="yufp-org-tree" name="orgId"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 查询显示表格 -->
+  <yu-xtable ref="refTable" :data-url="dataUrl" :summary-method="getSummaries"
+  show-summary>
+    <yu-table-column prop="dptName" label="积分归属部门" width="200">
+    </yu-table-column>
+    <yu-table-column prop="dptPayCost" label="部门支付费用" width="200">
+    </yu-table-column>
+    <yu-table-column prop="twoLevelOrgName" label="分行名称" width="200">
+    </yu-table-column>
+    <yu-table-column prop="twoLevelPayCost" label="分行支付费用" width="200">
+    </yu-table-column>
+    <yu-table-column prop="orgName" label="支行名称" width="200">
+    </yu-table-column>
+    <yu-table-column prop="orgPayCost" label="支行支付费用" width="200">
+    </yu-table-column>
+
+  </yu-xtable>
+</div>
+<script>
+</script>

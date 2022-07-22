@@ -1,0 +1,55 @@
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2018-12-28 16:24:58.
+  @updated by
+  @description 引用参数配置
+-->
+<div>
+  <!-- 搜索表单 -->
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="6">
+      <yu-xform-item placeholder="参数编码" ctype="input" name="paramCode" :maxlength="20"></yu-xform-item>
+      <yu-xform-item placeholder="参数名称" ctype="input" name="paramName" :maxlength="100"></yu-xform-item>
+      <yu-xform-item placeholder="业务类型" ctype="select" name="paramType" data-code='PARAM_TYPE'></yu-xform-item>
+      <yu-xform-item placeholder="属性类别" ctype="select" name="paramProperty" data-code="FIELD_TYPE"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 工具条 -->
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="delete" @click="deleteFn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <!-- 引用参数表格展示 -->
+  <yu-xtable ref="refTable" row-number :data-url="ruleParaTableDataUrl" selection-type="checkbox">
+    <yu-xtable-column label="参数编码" prop="paramCode"></yu-xtable-column>
+    <yu-xtable-column label="参数名称" prop="paramName"></yu-xtable-column>
+    <yu-xtable-column label="业务类型" prop="paramType" data-code="PARAM_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="属性类别" prop="paramProperty" data-code="FIELD_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="类别映射" prop="paramMapping" data-code="PARAM_MAPPING"></yu-xtable-column>
+    <yu-xtable-column label="放大镜" prop="magnifier" data-code="FIELD_OPTIONS"></yu-xtable-column>
+  </yu-xtable>
+  <!--新增、修改、详情弹出框 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible">
+    <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="参数编码" ctype="input" name="paramCode" :rules="paramCodeRule" :maxlength="20"></yu-xform-item>
+        <yu-xform-item label="参数名称" ctype="input" name="paramName" rules="required" :maxlength="100"></yu-xform-item>
+        <yu-xform-item label="业务类型" ctype="select" name="paramType" data-code="PARAM_TYPE" rules="required"></yu-xform-item>
+        <yu-xform-item label="属性类别" ctype="select" name="paramProperty" data-code="FIELD_TYPE" rules="required" @change="propertyChangeFn"></yu-xform-item>
+        <yu-xform-item label="类别映射" ctype="select" name="paramMapping" :rules="paramMappingRule" data-code="PARAM_MAPPING" :hidden="isMappingHidden" filterable></yu-xform-item>
+        <yu-xform-item label="放大境" ctype="select" name="magnifier" :rules="magnifierRule" data-code="FIELD_OPTIONS" :hidden="isMagnifierHidden"></yu-xform-item>
+        <yu-xform-item label="SQL名称" ctype="input" name="statementName" :maxlength="200"></yu-xform-item>
+        <yu-xform-item label="SQL语句" ctype="textarea" name="statement" :maxlength="2000":rows="3" :colspan="24" placeholder="2000个字符以内" rules="required"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button v-show="addSaveBtnShow" icon="check" type="primary" @click="addSaveFn">保存</yu-button>
+        <yu-button v-show="modifySaveBtnShow" icon="check" type="primary" @click="modifySaveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

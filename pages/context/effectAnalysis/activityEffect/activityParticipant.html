@@ -1,0 +1,53 @@
+<!--
+  @created by houyx3 on 2019/05/13.
+  @description 活动参与人
+-->
+<div id="realTimeData">
+	<link rel="stylesheet" href="pages/context/effectAnalysis/activityEffect/temp.css">
+	<div class="title">
+		<h2>活动效果详情</h2>
+		<div>
+			<span>活动名称：xxx活动1</span>
+			<span>所属机构：总行</span>
+			<span>创建人：王xx</span>
+		</div>
+		<yu-button type="primary">活动效果详情导出</yu-button>
+	</div>
+	<div class="vuebox" style="margin-top: 30px;">
+		<div class="topTitle">
+			<span>参与人员转化情况</span>
+			<div>
+				<yu-button type="primary">导出CSV</yu-button>
+			</div>
+			<div>活动时间
+				<yu-date-picker v-model="value1" type="datetimerange" placeholder="选择日期"></yu-date-picker>
+			</div>
+		</div>
+		<el-row :gutter="10">
+			<el-col :span="24">
+				<yu-echarts ref="echarts" :option="funnelChart" width="100%" height="280px"></yu-echarts>
+			</el-col>
+		</el-row>
+	</div>
+	<div class="serch-group">
+		<yu-xform v-model="formdata1" related-table-name="yutable" form-type="search">
+			<yu-xform-group :column="6">
+				<yu-xform-item placeholder="客户名称" ctype="input" name="name"></yu-xform-item>
+				<yu-xform-item placeholder="类型" ctype="select" :options="options" name="org"></yu-xform-item>
+				<yu-xform-item placeholder="手机号" ctype="input" name="custPhone"></yu-xform-item>
+				<yu-xform-item placeholder="是否种子客户" ctype="select" :options="options" name="org"></yu-xform-item>
+			</yu-xform-group>
+		</yu-xform>
+		<yu-xtable :height="210" ref="yutable4" :data="tableData" :pageable="false" style="width: 100%">
+			<yu-xtable-column prop="custName" label="客户姓名"> </yu-xtable-column>
+			<yu-xtable-column prop="custPhone" label="客户手机号"> </yu-xtable-column>
+			<yu-xtable-column prop="name" label="姓名"> </yu-xtable-column>
+			<yu-xtable-column prop="recPhone" label="推荐手机号"> </yu-xtable-column>
+			<yu-xtable-column prop="org" label="所属机构"> </yu-xtable-column>
+			<yu-xtable-column prop="markingName" label="营销人员姓名"> </yu-xtable-column>
+			<yu-xtable-column prop="gainPhoneTime" label="获得手机号时间"> </yu-xtable-column>
+			<yu-xtable-column prop="channel" label="传播渠道"> </yu-xtable-column>
+		</yu-xtable>
+	</div>
+
+</div>

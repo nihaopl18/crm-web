@@ -1,0 +1,167 @@
+<!--
+  @created by 冉珣 on 2021-10-11 11:38:38
+  @updated by
+  @description 理财管户
+-->
+<div class="account-manage">
+    <link rel="stylesheet" type="text/css" href="./pages/dy/custResourceManage/custResourceManage.css">
+    <yu-row>
+        <yu-col :span="20">
+            <yu-xform ref="refSearchForm" label-width="120px" v-model="searchForm">
+                <yu-xform-group>
+                    <yu-xform-item label="" ctype="custom" colspan="8">
+                        <yu-input placeholder="请输入客户名称/客户ECIF号" v-model="searchForm.searchKeywords">
+                            <yu-button slot="append" icon="search" @click="searchListCust"></yu-button>
+                        </yu-input>
+                    </yu-xform-item>
+                    <yu-xform-item colspan="8" ref="mgrSel" v-if="hashCodeMap[hashCode].indexOf('分配') != -1" label="状态" ctype="select" placeholder="请选择" data-code="ASSIGN_CODE" name="assignStatus" @change="stutasChange"></yu-xform-item>
+                    <yu-xform-item colspan="6" ref="mgrSel" v-if="hashCodeMap[hashCode].indexOf('调整') != -1" label="状态" ctype="select" placeholder="请选择" data-code="ASSIGN" name="assignStatus" @change="stutasChange"></yu-xform-item>
+                    <yu-xform-item colspan="8" ref="mgrSel" v-if="hashCodeMap[hashCode].indexOf('托管') != -1" label="状态" ctype="select" placeholder="请选择" data-code="ASSIGN" name="trustStat" @change="tgstutasChange"></yu-xform-item>
+                    <yu-xform-item colspan="8" ref="mgrSel" v-if="hashCodeMap[hashCode].indexOf('调整') != -1" label="客户经理" ctype="yufp-mgrall-selector" name="mgrId" @select-fn="mgrSelectFnToSearch"></yu-xform-item>
+                    <yu-xform-item colspan="2" v-if="hashCodeMap[hashCode].indexOf('调整') != -1" ctype="custom">
+                        <yu-button type="primary" @click="resetFn">重置</yu-button>
+                    </yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+        </yu-col>
+        <yu-col :span="4" style="text-align: right">
+            <yu-button icon="el-icon-yx-equalizer" type="primary" v-if="hashCodeMap[hashCode].indexOf('分配') != -1" @click="optionFn('distribute')">批量分配</yu-button>
+            <yu-button icon="el-icon-yx-equalizer" type="primary" v-if="hashCodeMap[hashCode].indexOf('调整') != -1" @click="optionFn('justify')">批量调整</yu-button>
+            <yu-button icon="el-icon-yx-equalizer" type="primary" v-if="hashCodeMap[hashCode].indexOf('托管') != -1" @click="optionFn('hosting')">批量托管</yu-button>
+        </yu-col>
+    </yu-row>
+    <yu-xtable selection-type="checkbox" ref="listTable" :border="false" reserve-selection row-key="custId" :data-url="urlMap[hashCode]" :default-load="false" style="margin-top: 24px">
+        <yu-xtable-column prop="custId" label="ECIF号"></yu-xtable-column>
+        <yu-xtable-column prop="custName" label="客户姓名">
+            <template slot-scope="scope">
+        <el-link type="primary" @click="toCust360View(scope.row)">{{scope.row.custName}}</el-link>
+      </template>
+        </yu-xtable-column>
+        <yu-xtable-column prop="assignStatus" label="分配状态" data-code="ASSIGN" v-if="hashCodeMap[hashCode].indexOf('分配') != -1 || hashCodeMap[hashCode].indexOf('管户调整') != -1">
+            <template slot-scope="scope">
+                <!-- <span>{{ scope.row.assignStatus ? scope.row.assignStatus == '01' ? '草稿' : scope.row.assignStatus == '02' ? '审批中' : scope.row.assignStatus == '03' ? '退回' : scope.row.assignStatus == '04' ? '生效' ：'已分配' ：'已分配' }}</span> -->
+                <span v-if="hashCodeMap[hashCode].indexOf('分配') != -1 && !scope.row.assignStatus">未分配</span>
+                <span v-if="hashCodeMap[hashCode].indexOf('管户调整') != -1 && !scope.row.assignStatus">已分配</span>
+                <span v-if="scope.row.assignStatus == '01' ">草稿</span>
+                <span v-if="scope.row.assignStatus == '02' ">审批中</span>
+                <span v-if="scope.row.assignStatus == '03' ">驳回</span>
+                <span v-if="scope.row.assignStatus == '04' ">生效</span>
+                <span v-if="scope.row.assignStatus == '05' ">撤回</span>
+            </template>
+        </yu-xtable-column>
+        <yu-xtable-column prop="trustStat" label="托管状态" data-code="ASSIGN" v-if="hashCodeMap[hashCode].indexOf('托管') != -1">
+            <template slot-scope="scope">
+                <!-- <span>{{ scope.row.trustStat ? scope.row.trustStat == '01' ? '草稿' : scope.row.trustStat == '02' ? '审批中' : scope.row.trustStat == '03' ? '退回' : scope.row.trustStat == '04' ? '生效' ：'已分配' ：'已分配' }}</span> -->
+                <span v-if="!scope.row.trustStat">已分配</span>
+                <span v-if="scope.row.trustStat == '01' ">草稿</span>
+                <span v-if="scope.row.trustStat == '02' ">审批中</span>
+                <span v-if="scope.row.trustStat == '03' ">驳回</span>
+                <span v-if="scope.row.trustStat == '04' ">生效</span>
+                <span v-if="scope.row.trustStat == '05' ">撤回</span>
+            </template>
+        </yu-xtable-column>
+        <yu-xtable-column prop="mgrName" label="归属客户经理" v-if="hashCodeMap[hashCode].indexOf('调整') != -1"></yu-xtable-column>
+        <yu-xtable-column prop="orgName" label="归属机构"></yu-xtable-column>
+        <yu-xtable-column label="操作">
+            <template slot-scope="scope">
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('分配') != -1 && scope.row.assignStatus !== '02'" @click="optionFn('distribute', scope.row)"> 分配 </yu-button>
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('调整') != -1 && scope.row.assignStatus !== '02'" @click="optionFn('justify', scope.row)"> 调整 </yu-button>
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('托管') != -1 && scope.row.trustStat !== '02'" @click="optionFn('hosting', scope.row)"> 托管 </yu-button>
+
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('分配') != -1 && scope.row.assignStatus == '02'" @click="withdrawfn(scope.row)"> 撤回 </yu-button>
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('调整') != -1 && scope.row.assignStatus == '02'" @click="withdrawfn(scope.row)"> 撤回 </yu-button>
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('托管') != -1 && scope.row.trustStat == '02'" @click="withdrawfn(scope.row,'hosting')"> 撤回 </yu-button>
+
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('分配') != -1" @click="custHistory(scope.row)"> 分配历史 </yu-button>
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('调整') != -1" @click="custHistory(scope.row)"> 调整历史 </yu-button>
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('托管') != -1" @click="custHistory(scope.row)"> 托管历史 </yu-button>
+        <!-- <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('分配') != -1 && scope.row.assignStatus == '01'" @click="submittableFn('distribute', scope.row)"> 提交 </yu-button>
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('调整') != -1 && scope.row.assignStatus == '01'" @click="submittableFn('justify', scope.row)"> 提交 </yu-button>
+        <yu-button style="padding: 0" type="text" size="small" v-if="hashCodeMap[hashCode].indexOf('托管') != -1 && scope.row.trustStat == '01'" @click="submittableFn('hosting', scope.row)"> 提交 </yu-button> -->
+
+      </template>
+        </yu-xtable-column>
+    </yu-xtable>
+    <template>
+            <div style="color: red;" >注：不选择客户时默认为全选</div>
+    </template>
+    <!-- 变更操作：分配，调整，托管 -->
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" :title="titleViews[titleType]" :visible.sync="optionDialogVisible" size="tiny" :before-close="handleOptionClose">
+        <yu-xform ref="refDialogForm" label-width="120px" v-model="optionForm" :inline="false" label-position="top">
+            <yu-xform-group>
+                <yu-xform-item label="客户经理" ctype="yufp-mgr-selector" name="trustMgrName" colspan="24" @select-fn="mgrSelectFnChange" rules="required"></yu-xform-item>
+                <yu-xform-item label="变更原因" ctype="textarea" name="changeReason" placeholder="不超过100字" maxlength="100" row="3" colspan="24" rules="required"></yu-xform-item>
+                <yu-xform-item label="托管有效期" v-if="hashCodeMap[hashCode].indexOf('管户托管') != -1" name="deadLine" ctype="datepicker" rules="required" format="yyyy-MM-dd" :picker-options="pickerOptions"></yu-xform-item>
+                <!-- <yu-xform-item label="" ctype="custom" colspan="24">
+            <yu-checkbox v-model="optionForm.notify">发送短信通知</yu-checkbox>
+        </yu-xform-item> -->
+            </yu-xform-group>
+        </yu-xform>
+        <span slot="footer" class="dialog-footer">
+      <yu-button @click="handleOptionClose">取 消</yu-button>
+      <!-- 1124提出先隐藏保存按钮 -->
+      <!-- <yu-button type="primary" id="savebc" @click="saveFn(titleType)" v-if="hashCodeMap[hashCode].indexOf('托管') != -1 ">保 存</yu-button> -->
+      <yu-button type="primary" id="saveqd" @click="confirmFn(titleType)">提 交</yu-button>
+    </span>
+    </yu-dialog>
+    <!-- 管户历史 -->
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" title="管户历史" :visible.sync="historyDialogVisible" size="tiny" class="historyDialog" :before-close="handleHistoryClose">
+        <div class="content">
+            <div class="content-head">
+                <el-avatar :size="48" src="../../../themes/common/images/avatar-126.png"></el-avatar>
+                <p>{{custName}}</p>
+                <yu-tag type="gray">ECIF号：{{custId}}</yu-tag>
+            </div>
+            <yu-xtable ref="historyListTable" :border="false" :data-url="historyUrlMap[hashCode]" :default-load="false" style="margin-top: 24px">
+                <yu-xtable-column prop="assignType" label="变更类别" v-if="hashCodeMap[hashCode].indexOf('管户托管') == -1">
+                    <template slot-scope="scope">
+                        <el-tag :type="tagTypes[scope.row.assignType]" effect="plain">{{scope.row.assignType === '01' ? '分配' : '调整'}}</el-tag>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="assignUserName" label="提交人" v-if="hashCodeMap[hashCode].indexOf('管户托管') != -1">
+                    <template slot-scope="scope">
+                        {{scope.row.setUserName || '-'}}/{{scope.row.setUserId || '-'}}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="assignUserName" label="提交人" v-else>
+                    <template slot-scope="scope">
+                        {{scope.row.assignUserName || '-'}}/{{scope.row.assignUserId || '-'}}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="trustReason" label="托管原因" v-if="hashCodeMap[hashCode].indexOf('管户托管') != -1"></yu-xtable-column>
+                <yu-xtable-column prop="changeReason" label="变更原因" v-else></yu-xtable-column>
+                <yu-xtable-column prop="deadLine" label="托管有效期" v-if="hashCodeMap[hashCode].indexOf('管户托管') != -1"></yu-xtable-column>
+                <yu-xtable-column label="原客户经理" v-if="hashCodeMap[hashCode].indexOf('管户托管') != -1">
+                    <template slot-scope="scope">
+                        {{scope.row.mgrName || '-'}}/{{scope.row.mgrId || '-'}}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="原客户经理" v-else>
+                    <template slot-scope="scope">
+                        {{scope.row.mgrNamePre || '-'}}/{{scope.row.mgrIdPre || '-'}}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="trustMgrName" label="托管至" v-if="hashCodeMap[hashCode].indexOf('管户托管') != -1">
+                    <template slot-scope="scope">
+                        {{scope.row.trustMgrName || '-'}}/{{scope.row.trustMgrId || '-'}}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="mgrName" label="调整至" v-else>
+                    <template slot-scope="scope">
+                        {{scope.row.mgrName || '-'}}/{{scope.row.mgrId || '-'}}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="orgName" label="归属机构"></yu-xtable-column>
+                <yu-xtable-column prop="setDate" label="变更时间" v-if="hashCodeMap[hashCode].indexOf('管户托管') != -1"></yu-xtable-column>
+                <yu-xtable-column prop="assigndate" label="变更时间" v-else></yu-xtable-column>
+            </yu-xtable>
+        </div>
+    </yu-dialog>
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" :visible.sync="pltz" size="tiny" :show-close="false" :center="true">
+        <div>批量调整中，请稍后...</div>
+    </yu-dialog>
+
+    <!-- 工作报告审批流程提交组件-->
+    <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" @endrefresh="refreshfn" :common-params="wfCommonParams">
+    </yufp-wf-init>
+</div>

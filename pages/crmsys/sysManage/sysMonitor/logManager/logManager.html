@@ -1,0 +1,21 @@
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2018-1-9
+  @updated by
+  @description 系统管理-系统监控-日志管理
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="3">
+      <yu-xform-item placeholder="操作用户" name="author" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="操作时间" name="" ctype="datepicker"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" @row-dblclick="infoFn">
+    <yu-xtable-column label="日志类型" prop=""></yu-xtable-column>
+    <yu-xtable-column label="操作用户" prop="author"></yu-xtable-column>
+    <yu-xtable-column label="操作信息" prop=""  ctype="select"></yu-xtable-column>
+    <yu-xtable-column label="参数" prop=""></yu-xtable-column>
+    <yu-xtable-column label="登录IP地址" prop=""></yu-xtable-column>
+    <yu-xtable-column label="操作时间" prop=""></yu-xtable-column>
+  </yu-xtable>
+</div>

@@ -1,0 +1,127 @@
+<!--
+  @created by 罗顺 on 2018/11/16.
+  @description 营销组件FORM表单-渠道组件-手机银行
+-->
+<div>
+    <yu-collapse v-model="activeNames">
+        <yu-collapse-item v-for="item in options" :key="item.key" :title="item.value" :name="item.key">
+            <el-form :class="`myform${item.key}`" :ref="`myform${item.key}`" :model="model[item.key]" :key="item.key" label-position="left" label-suffix=":" :rules="rules">
+                <el-form-item :hidden="(marketAssemblyId[model[item.key].marketTypeId] === '14' || marketAssemblyId[model[item.key].marketTypeId] === '55' || marketAssemblyId[model[item.key].marketTypeId] === '71') ? true : false" 
+                              label="素材类型"
+                              required
+                              prop="displayType"
+                >
+                    <el-col :span="10" >
+                        <yu-select v-model="model[item.key].displayType" placeholder="请选择"  :clearable="true" @visible-change="getModelKey(item.key)" @change="displaySelectFn">
+                            <yu-option v-for="item in displayOptions" :key="item.key"  :label="item.value" :value="item.key"> </yu-option>
+                        </yu-select>
+                    </el-col>
+                </el-form-item>
+                <el-form-item :hidden="(marketAssemblyId[model[item.key].marketTypeId] === '14' || marketAssemblyId[model[item.key].marketTypeId] === '55' || marketAssemblyId[model[item.key].marketTypeId] === '71') ? true : false"
+                              v-if="model[item.key].displayType"
+                              label="标题素材"
+                              required="required"
+                              prop="activityStartPic"
+                >
+                    <el-col :span="10" >
+                        <div v-if="model[item.key].activityStartPic">
+                            <img v-if="model[item.key].displayType== '1' || model[item.key].displayType == '4' || model[item.key].displayType == '6'" 
+                                :src="fileIdToURL(model[item.key].activityStartPic)" class="avatar">
+                            <img v-else-if="model[item.key].displayType == '4'"
+                                src="pages/context/materialmanager/materailManager/video_icon.png" class="avatar">
+                            <img v-else-if="model[item.key].displayType == '5'"
+                                src="pages/context/materialmanager/materailManager/audio_icon.png" class="avatar">
+                            <img v-else src="pages/context/materialmanager/materailManager/word_icon.png" class="avatar">
+                        </div>
+                        <i v-else class="el-icon-plus avatar-uploader-icon" @click="addPic(item.key)"></i>
+                    </el-col>
+                </el-form-item>
+                <!-- <el-form-item hidden  :prop="model[item.key].ctNodeId">
+                        
+                </el-form-item> -->
+                <!-- <el-form-item label="文  章" :required="requiredwz"  prop="activityStartPic" v-if="model[item.key].displayType=='4'">
+                        <el-col :span="10" >
+                            <yu-select v-model="model[item.key].activityStartPic" placeholder="请选择"  :clearable="true">
+                                <yu-option v-for="item in articleOptions" :key="item.key"  :label="item.value" :value="item.key"> </yu-option>
+                            </yu-select>
+                        </el-col>
+                </el-form-item> -->
+                <el-form-item label="有效时间" required :hidden="(marketAssemblyId[model[item.key].marketTypeId] === '14' || marketAssemblyId[model[item.key].marketTypeId] === '55' || marketAssemblyId[model[item.key].marketTypeId] === '71') ? true : false">
+                    <el-col :span="10">
+                        <el-form-item prop="marketBeginTime">
+                            <yu-date-picker  v-model="model[item.key].marketBeginTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期时间" :picker-options="validStartDate" @focus="getModelKey(item.key)"> </yu-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col align="center" :span="2">—</el-col>
+                    <el-col :span="10">
+                        <el-form-item prop="marketEndTime">
+                            <yu-date-picker  v-model="model[item.key].marketEndTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期时间" :picker-options="validEndDate" @focus="getModelKey(item.key)"> </yu-date-picker>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="营销方式">
+                    <el-col :span="10" >
+                        <yu-select v-model="model[item.key].marketTypeId" placeholder="请选择" @visible-change="getModelKey(item.key)"  @change="changeMarketType">
+                            <yu-option v-for="item in options1" :key="item.key" :label="item.value" :value="item.key"> </yu-option>
+                        </yu-select>
+                    </el-col>
+                </el-form-item>
+            </el-form>
+            
+         </yu-collapse-item>
+    </yu-collapse>
+    <div class="dialog-footer">
+        <el-button type="primary" @click="reset" :disabled="buttonHiden">重置</el-button>
+        <el-button type="primary" @click="save" :disabled="buttonHiden">保存</el-button>
+    </div>
+    <yu-xdialog title="素材选择" :visible.sync="dialogVisible" width="1200px" :before-close="handleMaterialClose">
+        <material-center ref="material" @send-data="getPicData" :modelKey="tempModelKey" :modelKey1="modelDisplayType"></material-center>
+        <span slot="footer">
+            <yu-button @click="handleMaterialClose">取消</yu-button>
+            <yu-button type="primary" @click="sureFn">确定</yu-button>
+        </span>
+    </yu-xdialog>
+</div>
+<style>
+    .material {
+        width: 220px;
+        height: 280px;
+        margin: 5px;
+    }
+    .material-image{
+        width: 220px;
+        height: 220px;
+        display: block;
+    }
+    .material-span {
+        font-size: 17px;
+        position: absolute;
+        left: 18px;
+        top: 83%;
+    }
+    .el-card {
+        box-sizing: border-box;
+        cursor: pointer
+    }
+    .el-card.is-select {
+        border: 1px solid red
+    }
+    .dialog-footer {
+        padding: 10px;
+        text-align: center
+    }
+    .avatar {
+        width: 100px;
+        height: 100px;
+        display: block;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 100px;
+        line-height: 100px;
+        /* line-height: 178px; */
+        text-align: center;
+        border: 1px dashed #ccc
+    }
+</style>

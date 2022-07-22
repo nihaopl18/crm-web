@@ -1,0 +1,62 @@
+/**
+ * @created by jiangcheng 2017-11-15
+ * @updated by
+ * @description 登录页
+ */
+ #login{width:100%;height:100%;margin:0;padding:0;overflow:hidden;font-size:12px;color:#333;outline:0;background-image: url(../../../themes/common/images/LoginBG\ T.jpg);background-size: 100% 100%;}
+ #login div,#login ul,#login li,#login h1{margin:0;padding:0;list-style:none}
+ *{font-family: Helvetica, Tahoma, Arial, "Microsoft YaHei","微软雅黑","Heiti SC","黑体-简", "WenQuanYi Micro Hei", sans-serif;}
+ #login .yu-headerContainer{display:block; background-color:#fff;height: 90px;}
+ #login .yu-headerContainer .logo{position:relative;float:left; margin-top:5px; background: url(../../../themes/common/images/dy-login.png) left center no-repeat;padding-left: 156px;margin-left: 20px;font-size: 24px;height: 67px;line-height: 67px;background-size: contain}
+ #login .yu-bottomBar{position:absolute;z-index:1;bottom:0;width:100%;text-align:center;height:120px;line-height:42px;font-size:12px;color:#999;background-color: #fff;}
+ #login .yu-centerPic{width: 900px; height: 468px;position: absolute;top: 50%;margin-top: -234px;z-index: 2; left: 50%;margin-left: -600px;background: url(../../../themes/common/images/pic_02.png) left center no-repeat;}
+ #login .yu-loginBox{position:absolute;z-index:2; width:510px;height:486px;right:50%;top:50%;margin-right:-255px;margin-top:-243px;background:rgba(255,255,255,1);border-radius: 8px;box-shadow:0 2px 5px rgba(0,0,0,.15);overflow:hidden;padding: 64px 68px 40px;box-sizing: border-box}
+ #login .yu-loginBox>h1 {
+  display: block;
+  height: 36px;
+  width: 374px;
+  margin: 0 auto;
+  text-align: center;
+  color: #20a0ff;
+  overflow: hidden;
+}
+
+#login .yu-loginBox>h1>img {
+  width: 374px;
+  height: 36px
+}
+ /* #login .yu-loginBox>h1{display:block;height:44px;width:242px;margin: 0 auto; text-align: center;color: #20a0ff;overflow: hidden;} */
+ /* #login .yu-loginBox>h1>img{height: 100%;} */
+ /* #login .yu-loginBox>p{text-align: center;font-size: 20px;font-weight: 400;line-height: 28px;margin-top: 16px;margin-bottom: 54px;};
+ #login .yu-loginBox>p>em{font-weight: 500}; */
+ #login .yu-loginBox>h2{
+  width: 374px;
+  height: 36.41px;
+  margin: 40px 0px;
+ }
+ #login .yu-loginBox>h2>img{width: 374px;}
+ #login .yu-loginBox>ul{display:block;}
+ #login .yu-loginBox>ul>li{padding:10px 0;position:relative;}
+ #login .yu-loginBox>ul>li>i{display:block;position:absolute;width:30px;height:16px;line-height:16px;left:8px;top:25px;text-align:center;color:#bbb;font-size:16px;border-right: 1px #e5e5e5 solid;}
+ #login .yu-lbTxt,.yu-lbBt{display:block;width:100%;border:0;outline:0;transition: .2s;}
+ #login .yu-lbTxt{width:100%;font-size:14px;border:1px #DDDFE6 solid;background-color:#fff;height:40px;line-height:42px;vertical-align:middle;border-radius:4px;text-indent:45px;}
+ #login .yu-lbBt{box-sizing: border-box; background-color:#E30A2A ;border-bottom: 2px #E30A2A solid; height:42px;border-radius:4px;color:#fff;font-size:18px;position:relative;margin-top: 28px}
+ #login .yu-lbTxt:focus{border-color:#20a0ff;}
+ #login .yu-lbTxt:focus+i{color:#20a0ff;}
+ #login .yu-lbBt:hover{background-color:#8b0c1f;border-bottom: 2px #8b0c1f solid;}
+ #login .yu-lbBt:active{background-color:#8b0c1f;border-bottom: 2px #8b0c1f solid;}
+ #login .yu-loginBox>ul>li>a:link,.yu-loginBox>ul>li>a:visited{font-size:12px;color:#666;text-decoration:none;outline:0;}
+ #login .yu-loginBox>ul>li>a:hover{color:#20a0ff;text-decoration:none;}
+ #login .yu-loginBox>ul>li>a:active{color:#666;}
+ #login .yu-loginMsg{color: #ff4949;}
+ #login .yu-loginMsg:before{margin-right: 5px;}
+ @media screen and (max-height: 680px) {
+   #login .yu-headerContainer,#login .yu-bottomBar{height: 80px;}
+   #login .yu-headerContainer .logo{margin-top: 5px;}
+ }
+ #login .logo>span{padding-right: 16px;background: url(../../../themes/default/images/pic_02.gif) right center no-repeat;cursor: pointer;}
+ #login .logo>span.ck{background: url(../../../themes/default/images/pic_02_1.gif) right center no-repeat;}
+ #login .logo>span+ul{border-radius: 3px; position: absolute;top:55px;right: 0; width: auto;line-height: 29px;z-index: 10;background-color: #fff;border: 1px solid #d1dbe5 ;height: auto; box-shadow:0 2px 4px rgba(0,0,0,.2);}
+ #login .logo>span+ul>li{clear: left;cursor:pointer; position:relative; padding: 0 15px; text-align: left;height: 29px;line-height:29px;border-bottom:0px solid #bfdaee;font-size: 12px;color: #666; transition: .2s;overflow: hidden; text-overflow: ellipsis;white-space: nowrap;}
+ #login .logo>span+ul>li:hover{color: #20a0ff;background-color: #e4e8f1;}
+ /*login end*/

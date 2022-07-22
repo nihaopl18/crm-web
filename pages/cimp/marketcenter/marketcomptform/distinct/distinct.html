@@ -1,0 +1,58 @@
+<!--
+  @created by zhuly6 on 2018/11/16.
+  @description 营销组件FORM表单-流程组件-去重
+-->
+<div>
+		<el-collapse v-model="activeNames">
+			<el-collapse-item title="输入" name="1">
+					<el-button type="primary" icon="plus" @click="addFn">增加</el-button>
+					<el-button type="primary" icon="delete">删除</el-button>
+					<el-table  ref="custMagTable" style="width: 100%" :data="tableData" border @row-click="rowClickFn">
+							<el-table-column prop="name1" label="客户群名称" >
+									<template scope="scope">
+											<el-input v-show="scope.row.edit" size="small" v-model="scope.row.name1"></el-input>
+											<span v-show="!scope.row.edit">{{ scope.row.name1}}</span>
+																	</template>
+													</el-table-column>
+													<el-table-column prop="name2" label="客户数" >
+									<template scope="scope">
+											<el-input v-show="scope.row.edit" size="small" v-model="scope.row.name2"></el-input>
+											<span v-show="!scope.row.edit">{{ scope.row.name2 }}</span>
+																	</template>
+							</el-table-column>
+					</el-table>
+			</el-collapse-item>
+			<el-collapse-item title="操作" name="2">
+									<el-form :inline="true"  class="demo-form-inline">
+													<el-form-item label="客户群名称">
+																	<el-input placeholder="客户群名称"></el-input>
+													</el-form-item>
+													<el-form-item label="描述">
+																	<el-input placeholder=""></el-input>
+													</el-form-item>
+										</el-form>
+			</el-collapse-item>
+			<el-collapse-item title="输出" name="3">
+									<el-form :inline="true"  class="demo-form-inline">
+													<el-form-item label="客户群名称">
+																	<el-input placeholder="客户群名称"></el-input>
+													</el-form-item>
+													<el-form-item label="客户群数量">
+																	<el-input placeholder=""></el-input>
+													</el-form-item>
+											</el-form>
+							<el-table :data="options4" border style="width: 100%" height="120">
+									<el-table-column prop="field"  width="200" label="字段一">
+									</el-table-column>
+									<el-table-column prop="field1" label="字段一">
+									</el-table-column>
+									<el-table-column prop="field2" label="字段二">
+									</el-table-column>
+									<el-table-column prop="field2" label="字段三">
+									</el-table-column>
+									<el-table-column prop="field2" label="字段三">
+											</el-table-column>
+							</el-table>
+			</el-collapse-item>
+		</el-collapse>
+	</div>

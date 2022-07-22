@@ -1,0 +1,518 @@
+<div id="fx_marksupervisor">
+    <!-- 营销主管首页 -->
+    <!--mainContainer sta-->
+    <div class="yu-mainContainer">
+        <div class="el-row">
+             <!--待办事项 sta-->
+             <yu-lazy>
+                    <div class="yu-Con el-col-8">
+                            <div class="yu-box color-box">
+                                <div class="yu-content yu-chart-box" data-item="yu-duty" style="height:144px;">
+                                    <div class="yu-chart-box-title">
+                                        <div class="yu-chart-box-left">
+                                            <span class="yu-chart-box-val">{{toDoTotal}}</span>
+                                            <span class="yu-chart-box-label">待办事项</span>
+                                            <div class="yu-chart-box-tips">
+                                                <ul class="yu-chart-box-tips-left">
+                                                    <li class="li-item" v-for="(item,index) in ToDos">
+                                                        <div class="li-left" @click="clickToDo(item)">
+                                                            <span class="li-item-title">{{item.wfJobName}}</span>
+                                                            <span class="li-item-desc">{{item.wfStartTime}}</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <div class="yu-chart-box-tips-right" @click="clickMore()">更多
+                                                    <i class="el-icon-yx-ctrl r90"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="yu-chart-box-middle">
+                                            <!-- doneWorkTotal、endWorkTotal -->
+                                            <span class="yu-chart-box-val">{{doneTotal}}</span>
+                                            <span class="yu-chart-box-label">已办事项</span>
+                                            <div class="yu-chart-box-tips">
+                                                <ul class="yu-chart-box-tips-left">
+                                                    <li class="li-item" v-for="(item,index) in Dones">
+                                                        <div class="li-left" @click="clickDone(item)">
+                                                            <span class="li-item-title">{{item.wfJobName}}</span>
+                                                            <span class="li-item-desc">{{item.wfStartTime}}</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <div class="yu-chart-box-tips-right" @click="clickMore()">更多
+                                                    <i class="el-icon-yx-ctrl r90"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="yu-chart-box-right">
+                                            <span class="yu-chart-box-val">{{EndsTotal}}</span>
+                                            <span class="yu-chart-box-label">办结事项</span>
+                                            <div class="yu-chart-box-tips">
+                                                <ul class="yu-chart-box-tips-left">
+                                                    <li class="li-item" v-for="(item,index) in Ends">
+                                                        <div class="li-left" @click="clickEndDo(item)">
+                                                            <span class="li-item-title">{{item.wfJobName}}</span>
+                                                            <span class="li-item-desc">{{item.wfStartTime}}</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <div class="yu-chart-box-tips-right" @click="clickMore()">更多
+                                                    <i class="el-icon-yx-ctrl r90"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </yu-lazy>
+            
+            <!--待办事项 end-->
+
+            <!--我的任务 sta-->
+            <yu-lazy>
+                    <div class="yu-Con el-col-8">
+                            <div class="yu-box color-box">
+                                <div class="yu-content yu-chart-box" data-item="yu-task" style="height:144px;">
+                                    <div class="yu-chart-box-title">
+                                        <div class="yu-chart-box-left">
+                                            <span class="yu-chart-box-val" style="color: #5DA5FF">{{taskTotal}}</span>
+                                            <span class="yu-chart-box-label">我的任务</span>
+                                            <div class="yu-chart-box-tips">
+                                                <ul class="yu-chart-box-tips-left">
+                                                    <li class="li-item" v-for="(item,index) in Tasks">
+                                                        <div class="li-left" @click="clickTask(item)">
+                                                            <span class="li-item-title">{{item.taskName}}</span>
+                                                            <span class="li-item-desc">{{item.startTime}}</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <div class="yu-chart-box-tips-right" @click="clickMore()">更多
+                                                    <i class="el-icon-yx-ctrl r90"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="yu-chart-box-middle">
+                                            <span class="yu-chart-box-val">{{noStartTaskTotal}}</span>
+                                            <span class="yu-chart-box-label">未开始</span>
+                                            <div class="yu-chart-box-tips">
+                                                <ul class="yu-chart-box-tips-left">
+                                                    <li class="li-item" v-for="(item,index) in noStartTasks">
+                                                        <div class="li-left" @click="clickTask(item)">
+                                                            <span class="li-item-title">{{item.taskName}}</span>
+                                                            <span class="li-item-desc">{{item.startTime}}</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <div class="yu-chart-box-tips-right" @click="clickMore()">更多
+                                                    <i class="el-icon-yx-ctrl r90"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="yu-chart-box-right">
+                                            <span class="yu-chart-box-val">{{todoTaskTotal}}</span>
+                                            <span class="yu-chart-box-label">执行中</span>
+                                            <div class="yu-chart-box-tips">
+                                                <ul class="yu-chart-box-tips-left">
+                                                    <li class="li-item" v-for="(item,index) in todoTasks">
+                                                        <div class="li-left" @click="clickTask(item)">
+                                                            <span class="li-item-title">{{item.taskName}}</span>
+                                                            <span class="li-item-desc">{{item.startTime}}</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <div class="yu-chart-box-tips-right" @click="clickMore()">更多
+                                                    <i class="el-icon-yx-ctrl r90"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </yu-lazy>
+          
+            <!--我的任务 end-->
+
+            <!--我的公告 sta-->
+            <yu-lazy>
+            <div class="yu-Con el-col-4">
+                <div class="yu-box color-box1">
+                    <div class="yu-content yu-chart-box" data-item="yu-notice" style="height:144px;">
+                        <div class="yu-chart-box-title">
+                            <div class="yu-chart-box-content">
+                                <span class="yu-chart-box-val">{{NoticesTotal}}</span>
+                                <span class="yu-chart-box-label">未阅公告</span>
+                                <div class="yu-chart-box-tips">
+                                    <ul class="yu-chart-box-tips-left">
+                                        <li class="li-item" v-for="(item,index) in Notices">
+                                            <div class="li-left" @click="clickNotice(item)">
+                                                <span class="li-item-title">{{item.noticeTitle}}</span>
+                                                <span class="li-item-desc">{{item.activeDate}}</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="yu-chart-box-tips-right" @click="clickMore()">更多
+                                        <i class="el-icon-yx-ctrl r90"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </yu-lazy>
+            <!--我的公告 end-->
+
+            <!--我的消息 sta-->
+            <yu-lazy>
+                    <div class="yu-Con el-col-4">
+                            <div class="yu-box color-box1">
+                                <div class="yu-content yu-chart-box" data-item="yu-remind" style="height:144px;">
+                                    <div class="yu-chart-box-title">
+                                        <div class="yu-chart-box-content tips-no-offset">
+                                            <span class="yu-chart-box-val" style="color: #35D0AF">{{MessagesTotal}}</span>
+                                            <span class="yu-chart-box-label">未读消息</span>
+                                            <div class="yu-chart-box-tips">
+                                                <ul class="yu-chart-box-tips-left">
+                                                    <li class="li-item" v-for="(item,index) in Messages">
+                                                        <div class="li-left" @click="clickMessage(item)">
+                                                            <span class="li-item-title">{{item.ruleName}}</span>
+                                                            <span class="li-item-desc">{{item.msgCrtDate}}</span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <div class="yu-chart-box-tips-right" @click="clickMore()">更多
+                                                    <i class="el-icon-yx-ctrl r90"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </yu-lazy>
+            <!--我的消息 end-->
+        </div>
+        
+        <div class="middle-part" style="height: 40px;">
+        </div>
+        
+        <div class="el-row">
+            <!--客户指标 sta-->
+            <div class="yu-Con el-col-12">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">客户指标</div>
+                        <div class="model-tilte-right"></div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="customerChartBox" style="width: 100%; height:100%;"></div>
+                        <div class="yu-content-chart-label">
+                            <em>客户总量</em>
+                            <span class="c7cdbc7">46</span>
+                            <em>对公客户量</em>
+                            <span>34</span>
+                            <em>零售客户量</em>
+                            <span>12</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--客户指标 end-->
+
+            <!--活动监控 sta-->
+            <div class="yu-Con el-col-12">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left" style="width: 50%">活动监控</div>
+                        <div class="model-tilte-right" style="width: 25%">
+                            <yu-xselect v-model="activeValue" :options="activeOptions" :filterable="true" size="small"></yu-xselect>
+                            <yu-xselect v-model="moniTypeValue" :options="moniTypeOptions" :filterable="true" size="small"></yu-xselect>
+                        </div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <yu-xtable ref="ativityMoniTable" :data="ativityMoniTableData" :border="false" :pageable="false">
+                            <yu-xtable-column prop="name" width="180" label="对象名称">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="customer" label="下发客户数" >
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="product" label="下发产品数">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="noStart" label="未开始">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="todo" label="执行中">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="completion" label="成功完成">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="fail" label="失败">
+                            </yu-xtable-column>
+                        </yu-xtable>
+                    </div>
+                </div>
+            </div>
+            <!--活动监控 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--客户星级占比-->
+            <div class="yu-Con  el-col-24">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">客户星级占比</div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="publicChartBox" style="width: 50%; height:100%;float: left"></div>
+                        <div id="retailClientChartBox" style="width: 50%; height:100%;float:left"></div>
+                    </div>
+                </div>
+            </div>
+            <!--客户星级占比 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--客户等级提升 sta-->
+            <div class="yu-Con el-col-12">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">客户等级提升</div>
+                        <div class="model-tilte-right"></div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="userGradeChartBox" style="width: 100%; height:100%;"></div>
+                        <div class="yu-content-chart-label">
+                            <em>客户提升总量</em>
+                            <span class="c7cdbc7">46</span>
+                            <em>对公客户提升量</em>
+                            <span>34</span>
+                            <em>零售客户提升量</em>
+                            <span>12</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--客户等级提升 end-->
+
+            <!--营销渠道触达监控 sta-->
+            <div class="yu-Con el-col-12">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left" style="width: 50%">营销渠道触达监控</div>
+                        <div class="model-tilte-right" style="width: 25%">
+                            <yu-xselect v-model="activeValue" :options="activeOptions" :filterable="true" size="small"></yu-xselect>
+                            <yu-xselect v-model="channelValue" :options="channelOptions" :filterable="true" size="small"></yu-xselect>
+                            
+                        </div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <yu-xtable ref="channelMoniTable" :data="ativityMoniTableData" :pageable="false" style="width: 100%">
+                            <yu-xtable-column prop="name" width="180" label="对象名称">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="customer" width="120" label="下发客户数">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="product" width="120" label="下发产品数">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="noStart" label="未开始">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="todo" label="执行中">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="completion" label="成功完成">
+                            </yu-xtable-column>
+                            <yu-xtable-column prop="fail" label="失败">
+                            </yu-xtable-column>
+                        </yu-xtable>
+                    </div>
+                </div>
+            </div>
+            <!--营销渠道触达监控 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--客户星级升级数 star-->
+            <div class="yu-Con  el-col-24">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">客户等级升级数-对公客户</div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="publicUpgradeChartBox" style="width: 100%; height:100%;"></div>
+
+                    </div>
+                </div>
+            </div>
+            <!--客户星级升级数 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--客户星级升级数-零售客户 star-->
+            <div class="yu-Con  el-col-24">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">客户等级升级数-零售客户</div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="retailUpgradeChartBox" style="width: 100%; height:100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <!--客户星级升级数-零售客户 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--存款规模 sta-->
+            <div class="yu-Con  el-col-24">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">存款规模</div>
+                        <div class="model-tilte-right" style="width: 15%">
+                            <yu-xselect v-model="depositOrgValue" :options="depositOrgOptions" :filterable="true"></yu-xselect>
+                            <yu-xselect v-model="averageValue" :options="averageOptions" :filterable="true"></yu-xselect>
+                        </div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="depositsChartBox" style="width: 100%; height:100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <!--存款规模 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--客户贷款余额 sta-->
+            <div class="yu-Con  el-col-24">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">客户贷款余额</div>
+                        <div class="model-tilte-right" style="width: 15%">
+                            <yu-xselect v-model="depositOrgValue" :options="depositOrgOptions" :filterable="true"></yu-xselect>
+                            <yu-xselect v-model="averageValue" :options="averageOptions" :filterable="true"></yu-xselect>
+                        </div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="loansChartBox" style="width: 100%; height:100%;"></div>
+
+                    </div>
+                </div>
+            </div>
+            <!--客户贷款余额 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--中收 sta-->
+            <div class="yu-Con  el-col-24">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">中收</div>
+                        <div class="model-tilte-right" style="width: 15%">
+                            <yu-xselect v-model="depositOrgValue" :options="depositOrgOptions" :filterable="true"></yu-xselect>
+                            <yu-xselect v-model="averageValue" :options="averageOptions" :filterable="true"></yu-xselect>
+                        </div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="zShouChartBox" style="width: 100%; height:100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <!--中收 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--营销活动 sta-->
+            <div class="yu-Con  el-col-24">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">营销活动</div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="marketingChartBox" style="width: 100%; height:100%;"></div>
+
+                    </div>
+                </div>
+            </div>
+            <!--营销活动 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--待分配任务 sta-->
+            <div class="yu-Con el-col-12">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">待分配任务</div>
+                        <div class="model-tilte-right"></div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="assignTaskChartBox" style="width: 100%; height:100%;"></div>
+                        <div class="yu-content-chart-label">
+                            <em>待分配任务总量</em>
+                            <span class="c7cdbc7">46</span>
+                            <em>商机数</em>
+                            <span>34</span>
+                            <em>风险关注数</em>
+                            <span>12</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--客户指标 end-->
+
+            <!--商机转化率 sta-->
+            <div class="yu-Con el-col-12">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">商机转化率</div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="convertRatioChartBox" style="width: 100%; height:100%;"></div>
+                    </div>
+                </div>
+            </div> 
+            <!--商机转化率 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--客户等级分布 sta-->
+            <div class="yu-Con el-col-12">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">客户等级分布</div>
+                        <div class="model-tilte-right"></div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="gradeDistributeChartBox" style="width: 100%; height:100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <!--客户指标 end-->
+
+            <!--客户等级分布-对公客户 sta-->
+            <div class="yu-Con el-col-12">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">客户等级分布-对公客户</div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="publicDistributeChartBox" style="width: 100%; height:100%;"></div>    
+                    </div>
+                </div>
+            </div>
+            <!--客户等级分布-对公客户 end-->
+        </div>
+
+        <div class="el-row margintop50">
+            <!--客户等级分布-零售客户 sta-->
+            <div class="yu-Con el-col-12">
+                <div class="yu-box">
+                    <div class="model-title">
+                        <div class="model-tilte-left">客户等级分布-零售客户</div>
+                    </div>
+                    <div class="yu-content" style="height:288px;">
+                        <div id="retailDistributeChartBox" style="width: 100%; height:100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <!--客户等级分布-零售客户 end-->
+        </div>
+    </div>
+</div>
+<!--mainContainer end-->
+</div>

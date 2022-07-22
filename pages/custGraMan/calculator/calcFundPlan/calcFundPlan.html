@@ -1,0 +1,50 @@
+<!--
+  @created by 张成龙 on 2019-1-25 16:18:36
+  @updated by
+  @description 基金定投计算器
+-->
+<div>
+    <yu-row>
+        <yu-col :span="23">
+         <div class="yu-gridRightPanel" >
+  <yu-xform ref="searchFrom" v-model="searchformdata" label-width="160px" :height="grpFormHeight" >
+      <h1 style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;font-size:16px;margin-bottom: 20px;" borderStyle="border:0;">基金定投计算器(仅供参考)</h1>
+      <yu-xform-group :column="2">
+          <yu-xform-item label="计划月定投金额(元)" placeholder="计划月定投金额(元)" ctype="num" name="param1"  :rules="rules.all"  ></yu-xform-item>                  
+          <yu-xform-item label="计划投资年限(年)" placeholder="计划投资年限(年)" ctype="num"  name="param2"   :rules="rules.all"></yu-xform-item>                            
+          <yu-xform-item label="预期年收益率(%)" placeholder="预期年收益率(%)"  ctype="num" name="param3" :rules="rules.all"></yu-xform-item>   
+         </yu-xform-group>
+    <div class="yu-grpButton">                                                                                      
+      <yu-button-group>                                                                                                
+        <yu-button icon="check" type="primary" @click="calculate">计算</yu-button>                                                        
+        <yu-button icon="yx-undo2" type="" @click="restSeacher">重置</yu-button>                                                  
+      </yu-button-group>                                                                                               
+    </div>               
+  </yu-xform>
+  </div>
+  </yu-col>
+    <yu-col :span="23">
+      <div class="yu-gridRightPanel" :style="{ 'height': (height - 200) + 'px' }">
+        <h1>计算结果</h1>
+        <yu-xform ref="refForm" label-width="140px" :height="grpFormHeight" v-model="formdata" :disabled="formDisabled">
+          <yu-xform-group :column="2">
+              <yu-xform-item label="到期本金(元)" ctype="num" name="resultMoney1" :readonly="readFlag"></yu-xform-item> 
+              <yu-xform-item label="到期总收益(元)" ctype="input" name="resultMoney2" :readonly="readFlag"></yu-xform-item> 
+              <yu-xform-item label="到期本金收益和(元)" ctype="input" name="resultMoney3" :readonly="readFlag"></yu-xform-item> 
+              <yu-xform-item label="资产增加率(%)" ctype="input" name="resultMoney4" :readonly="readFlag"></yu-xform-item> 
+
+            </yu-xform-group>
+        </yu-xform>
+      </div>
+        <div property="footer"style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;" borderStyle="border:0;">
+            <br/>
+            <p style="font-size: 14px;color: #D83C3B">到期本金=计划月定投金额（元）*计划投资年限（年）*12;</p>                          
+            <p style="font-size: 14px;color: #D83C3B">到期总收益= 计划月定投金额（元）*12*(1+预期年收益率)*[(1+预期年收益率)^计划投资年限-1]/预期年收益率-计划月定投金额（元）*12*计划投资年限;</p>    
+            <p style="font-size: 14px;color: #D83C3B">到期本金收益和=到期本金+到期总收益;</p>         
+            <p style="font-size: 14px;color: #D83C3B">资产增加率=到期总收益/到期本金;</p>                                
+            <br/>
+            <p style="font-size: 14px;color: #D83C3B">本计算器结果仅供参考!</p>
+          </div>
+    </yu-col>
+  </yu-row>
+</div>

@@ -1,0 +1,52 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2019-1-23 10:06:51.
+  @updated by
+  @description 知识库检索
+-->
+<div>
+    <yu-xform related-table-name="refTable" form-type="search" style="padding: 20px 20px;">
+        <yu-xform-group :column="4">
+            <yu-xform-item placeholder="检索范围" ctype="select" name="searchScope" :options="scopeOptions"></yu-xform-item>
+            <yu-xform-item placeholder="检索信息" ctype="input" name="searchContent" clearable></yu-xform-item>
+            <yu-xform-item ref="refSectionId" ctype="yufp-org-tree" name="sectionId" :params="treeParams" clearable></yu-xform-item>
+            <yu-xform-item placeholder="发布时间" ctype="datepicker" name="publishDate" :editable="false" clearable></yu-xform-item>
+            <yu-xform-item placeholder="发布时间至" ctype="datepicker" name="publishDateTo" :editable="false"></yu-xform-item>
+            <yu-xform-item placeholder="发布者" ctype="yufp-mgr-selector" name="publishUser" :params="custManagerParams" :knowledgeisno="false" :hidden="publishSearch"></yu-xform-item>
+            <!-- <yu-xform-item placeholder="发布机构" ctype="yufp-org-tree" name="publishOrg"></yu-xform-item> -->
+        </yu-xform-group>
+    </yu-xform>
+    <div class="yu-toolBar" style="padding-left: 20px;">
+        <yu-button-group>
+            <yu-button icon="document" @click="infoFn">详情</yu-button>
+        </yu-button-group>
+    </div>
+    <yu-xtable ref="refTable" style="padding: 20px 20px;" :border="false" row-number :data-url="dataUrl" selection-type="radio" @row-dblclick="rowDblClick">
+        <yu-xtable-column label="所属栏目" prop="sectionName" width="110"></yu-xtable-column>
+        <yu-xtable-column label="文档标题" prop="messageTitle" width="180"></yu-xtable-column>
+        <yu-xtable-column label="文档摘要" prop="messageIntroduce" width="300" show-overflow-tooltip="true"></yu-xtable-column>
+        <yu-xtable-column label="发布时间" prop="publishDate" width="120" sortable></yu-xtable-column>
+        <yu-xtable-column label="发布者" prop="publishUserName" width="130"></yu-xtable-column>
+        <yu-xtable-column label="发布机构" prop="publishOrgName"></yu-xtable-column>
+    </yu-xtable>
+    <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+    <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="60%">
+        <yu-xform label-width="120px" ref="refForm" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+                <yu-xform-item label="所属栏目" ctype="input" name="sectionName"></yu-xform-item>
+                <yu-xform-item label="文档名称" ctype="input" name="messageTitle" placeholder="50个字以内"></yu-xform-item>
+                <yu-xform-item label="共享范围" ctype="select" name="publicType" data-code="CD0337" :hidden="!searchScrope"></yu-xform-item>
+                <yu-xform-item label="共享范围" ctype="select" name="publicType" data-code="PUBLIC_TYPE" :hidden="searchScrope"></yu-xform-item>
+                <yu-xform-item label="文档描述" ctype="input" name="messageIntroduce" placeholder="50个字以内" :colspan="24"></yu-xform-item>
+            </yu-xform-group>
+        </yu-xform>
+        <el-collapse value="1">
+            <el-collapse-item title="附件列表" name="1">
+                <yufp-upload-table ref="fileTable" :data-params="initFilesParams" :data="fileUpLoadBusNo" :multiple="false" :upload-visible="false" :download-visible="true" :delete-visible="false"></yufp-upload-table>
+            </el-collapse-item>
+        </el-collapse>
+        <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        </div>
+    </yu-xdialog>
+</div>

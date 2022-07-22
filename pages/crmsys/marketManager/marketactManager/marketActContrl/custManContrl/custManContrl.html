@@ -1,0 +1,55 @@
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2019-1-4
+  @updated by
+  @description 营销活动管理-营销活动监控-客户经理监控
+-->
+<div>
+    <yu-xform related-table-name="refTable" form-type="search">
+      <yu-xform-group :column="4">
+        <yu-xform-item placeholder="所属机构" name="orgId"  ctype="yufp-org-tree" :colspan="4"></yu-xform-item>
+        <yu-xform-item placeholder="客户经理" name="exeObjName" ctype="yufp-mgr-selector" :colspan="4"></yu-xform-item>
+        <yu-xform-item placeholder="营销活动名称" name="actiName" ctype="input" :colspan="4"></yu-xform-item>
+        <yu-xform-item placeholder="活动状态" name="actiStat" ctype="select" data-code="OCRM_MKT_ACTI_STAT" :colspan="4"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <yu-xtable ref="refTable" row-number :data-url="refDataUrl" @cell-click="processNumFn" :default-load = false>
+      <yu-xtable-column label="所属机构" prop="orgId"></yu-xtable-column>
+      <yu-xtable-column label="客户经理" prop="exeObjName"></yu-xtable-column>
+      <yu-xtable-column label="营销活动名称" prop="actiName" width="100"></yu-xtable-column>
+      <yu-xtable-column label="客户数" prop="custNum"></yu-xtable-column>
+      <yu-xtable-column label="产品数" prop="prodNum"></yu-xtable-column>
+      <yu-xtable-column label="执行中数" prop="processNum"></yu-xtable-column>
+      <yu-xtable-column label="已联系客户数" prop="relationNum" width="100"></yu-xtable-column>
+      <yu-xtable-column label="成功完成数" prop="successNum"></yu-xtable-column>
+      <yu-xtable-column label="失败完成数" prop="failNum"></yu-xtable-column>
+      <yu-xtable-column label="成功率" prop="successPercent"></yu-xtable-column>
+      <yu-xtable-column label="失败率" prop="failPercent"></yu-xtable-column>
+    </yu-xtable>
+    <!-- 执行中的活动，完成的活动弹窗-->
+    <yu-xdialog :title="viewTitles" :visible.sync="carringVisible">
+      <yu-xtable ref="carringTable" row-number :data-url="proDataUrl" :base-params="queryParams">
+        <yu-xtable-column label="客户经理" prop="exeObjName" ></yu-xtable-column>
+        <yu-xtable-column label="营销活动名称" prop="actiName"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+        <yu-xtable-column label="产品名称" prop="prodName"></yu-xtable-column>
+      </yu-xtable>
+    </yu-xdialog>
+    <!-- 失败的活动-->
+    <yu-xdialog :title="viewTitles" :visible.sync="fallActVisible">
+      <yu-xtable ref="carringTable" row-number :data-url="faiDataUrl" :base-params="queryParams">
+        <yu-xtable-column label="客户经理" prop="exeObjName"></yu-xtable-column>
+        <yu-xtable-column label="营销活动名称" prop="actiName" ></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+        <yu-xtable-column label="失败理由" prop="remark"></yu-xtable-column>
+      </yu-xtable>
+    </yu-xdialog> 
+     <!--成功完成数 -->
+    <yu-xdialog :title="viewTitles" :visible.sync="sucVisible">
+      <yu-xtable ref="carringTable" row-number :data-url="sucDataUrl" :base-params="queryParams">
+        <yu-xtable-column label="客户经理" prop="exeObjName"></yu-xtable-column>
+        <yu-xtable-column label="营销活动名称" prop="actiName"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+        <yu-xtable-column label="产品名称" prop="prodName"></yu-xtable-column>
+      </yu-xtable>
+    </yu-xdialog>
+  </div>

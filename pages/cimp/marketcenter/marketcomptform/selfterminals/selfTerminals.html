@@ -1,0 +1,129 @@
+<!--
+  @created by 罗顺 on 2018/11/16.
+  @description 营销组件FORM表单-渠道组件-自助终端
+-->
+<div>
+  <el-collapse v-model="activeNames">
+    <el-collapse-item title="输入" name="1">
+      <el-tabs :active-name="activeName1">
+        <el-tab-pane label="客户集合" name="person">
+          <template>
+            <el-table border style="width: 100%" height="120">
+              <el-table-column prop="custGroupId" label="客户群编号" width="180"></el-table-column>
+              <el-table-column prop="custGroupName" label="客户群名称" width="180"></el-table-column>
+              <el-table-column prop="custNum" label="客户数"></el-table-column>
+            </el-table>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane label="产品集合" name="product">
+          <template>
+            <el-table border style="width: 100%" height="120">
+              <el-table-column type="index" label="序号" width="120"></el-table-column>
+              <el-table-column prop="ProductId" label="产品编号" width="120"></el-table-column>
+              <el-table-column prop="prodName" label="产品名称" width="120"></el-table-column>
+              <el-table-column prop="prodTypeId" label="产品类型" width="120"></el-table-column>
+              <el-table-column prop="prodDesc" label="产品分类" width="120"></el-table-column>
+              <el-table-column prop="displayFlag" label="是否在售" width="120"></el-table-column>
+              <el-table-column prop="money" label="币种" width="120"></el-table-column>
+              <el-table-column prop="riskLevel" label="风险等级" width="120"></el-table-column>
+              <el-table-column prop="prodDept" label="管理部门" width="120"></el-table-column>
+              <el-table-column prop="prodMag" label="产品经理" width="120"></el-table-column>
+              <el-table-column prop="rate" label="基准利率" width="120"></el-table-column>
+              <el-table-column prop="tradeChn" label="可用营销渠道" width="120"></el-table-column>
+              <el-table-column prop="modelName" label="营销渠道模板"></el-table-column>
+            </el-table>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane label="关怀集合" name="relation">
+          <template>
+            <el-table border style="width: 100%" height="120">
+              <el-table-column type="index" label="序号" width="120"></el-table-column>
+              <el-table-column prop="applyType" label="关怀类型" width="180"></el-table-column>
+              <el-table-column prop="modelName" label="营销渠道模板"></el-table-column>
+            </el-table>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane label="关注风险集合" name="risk">
+          <template>
+            <el-table border style="width: 100%" height="120">
+              <el-table-column type="index" label="序号" width="120"></el-table-column>
+              <el-table-column prop="applyType" label="风险类型" width="180"></el-table-column>
+              <el-table-column prop="modelName" label="营销渠道模板"></el-table-column>
+            </el-table>
+          </template>
+        </el-tab-pane>
+      </el-tabs>
+    </el-collapse-item>
+    <el-collapse-item title="操作" name="2">
+      <el-form ref="myform" :model="model" label-position="left" label-suffix=":" :rules="rules">
+        <el-form-item label="可拜访时间" required>
+            <el-col :span="10">
+              <el-form-item prop="beginTime">
+                <el-time-picker v-model="model.beginTime" :picker-options="{selectableRange: '08:00:00 - 18:00:00'}" placeholder="开始时间">
+                </el-time-picker>
+              </el-form-item>
+            </el-col>
+            <el-col align="center" :span="2">—</el-col>
+            <el-col :span="10">
+              <el-form-item prop="endTime">
+                <el-time-picker v-model="model.endTime" :picker-options="{selectableRange: '08:00:00 - 18:00:00'}" placeholder="结束时间">
+                </el-time-picker>
+              </el-form-item>
+            </el-col>
+        </el-form-item>
+        <el-form-item align="center">
+          <el-button type="primary" @click="reset">重置</el-button>
+          <el-button type="primary" @click="save">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </el-collapse-item>
+    <el-collapse-item title="输出" name="3">
+      <el-tabs :active-name="activeName2">
+        <el-tab-pane label="产品营销短信" name="product">
+          <template>
+            <el-table border style="width: 100%" height="120">
+              <el-table-column type="index" label="序号" width="120"></el-table-column>
+              <el-table-column prop="isCall" label="是否已触达" width="120"></el-table-column>
+              <el-table-column prop="custId" label="客户编号" width="120"></el-table-column>
+              <el-table-column prop="personalName" label="客户名称" width="120"></el-table-column>
+              <el-table-column prop="orgCustType" label="客户类型" width="120"></el-table-column>
+              <el-table-column prop="telNum" label="手机号码" width="120"></el-table-column>
+              <el-table-column prop="productId" label="产品编号" width="120"></el-table-column>
+              <el-table-column prop="prodName" label="产品名称" width="120"></el-table-column>
+              <el-table-column prop="prodTypeId" label="产品类型" width="120"></el-table-column>
+              <el-table-column prop="temp" label="营销话术"></el-table-column>
+            </el-table>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane label="关怀营销短信" name="relation">
+          <template>
+            <el-table border style="width: 100%" height="120">
+              <el-table-column type="index" label="序号" width="120"></el-table-column>
+              <el-table-column prop="isCall" label="是否已触达" width="120"></el-table-column>
+              <el-table-column prop="custId" label="客户编号" width="120"></el-table-column>
+              <el-table-column prop="personalName" label="客户名称" width="120"></el-table-column>
+              <el-table-column prop="orgCustType" label="客户类型" width="120"></el-table-column>
+              <el-table-column prop="telNum" label="手机号码" width="120"></el-table-column>
+              <el-table-column prop="applyType" label="关怀类型" width="120"></el-table-column>
+              <el-table-column prop="temp" label="关怀营销话术"></el-table-column>
+            </el-table>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane label="风险关注短信" name="risk">
+          <template>
+            <el-table border style="width: 100%" height="120">
+              <el-table-column type="index" label="序号" width="120"></el-table-column>
+              <el-table-column prop="isCall" label="是否已触达" width="120"></el-table-column>
+              <el-table-column prop="custId" label="客户编号" width="120"></el-table-column>
+              <el-table-column prop="personalName" label="客户名称" width="120"></el-table-column>
+              <el-table-column prop="orgCustType" label="客户类型" width="120"></el-table-column>
+              <el-table-column prop="telNum" label="手机号码" width="120"></el-table-column>
+              <el-table-column prop="applyType" label="关怀类型" width="120"></el-table-column>
+              <el-table-column prop="temp" label="关注风险话术"></el-table-column>
+            </el-table>
+          </template>
+        </el-tab-pane>
+      </el-tabs>
+    </el-collapse-item>
+  </el-collapse>
+</div>

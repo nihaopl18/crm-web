@@ -1,0 +1,9 @@
+<!-- 必须全局拥有唯一的id -->
+<div id="messagePool">
+	<!-- 搜索栏 -->
+    <el-form-q form="query" :field-data="queryFields" search-table="messageTable" :buttons="queryButtons"></el-form-q>
+	<!-- 表格 -->
+    <el-table-x ref="messageTable"  :max-height="height" :checkbox="check"
+                :data-url="urls.dataUrl" :table-columns="tableColumns">
+    </el-table-x>
+</div>

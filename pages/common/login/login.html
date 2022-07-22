@@ -1,0 +1,49 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-18 15:30:48
+ * @update by: 
+ * @description: 
+-->
+<!--
+  @created by jiangcheng 2017-11-15
+  @updated by weimei1 2018-09-18 重构为vue
+  @description 登录页
+-->
+<div id="login" @click="clickFn" @keyup.enter="checkImageFn">
+
+    <div class="yu-loginBox">
+        <!--../../../-->
+        <h1><img src="themes/common/images/Login_Logo@2x.png" alt=""></h1>
+        <h2><img src="themes/common/images/Welcome@2x.png" alt=""></h2>
+        <!-- <p>欢迎来到 <em style="color: #E30A2A">PCRM</em> 新一代客户关系管理系统</p> -->
+        <ul>
+            <!-- <li><input class="yu-lbTxt" id="username" type="text" value="" placeholder="用户名" ref="username" v-model="username" /><i class="el-icon-yx-user"></i></li>
+            <li><input class="yu-lbTxt" id="password" type="password" value="" placeholder="密码" ref="password" v-model="password" /><i class="el-icon-yx-lock"></i></li> -->
+
+            <li><input class="yu-lbTxt" id="username" type="text" value="" placeholder="用户名" ref="username" v-model="username" /><i style="position: relative;top:10%;left:3%;transform:translateY(-190%);"><img src="themes/common/images/Login_user@2x.png" height="16px"width="16px"></i></li>
+            <li><input class="yu-lbTxt" id="password" type="password" value="" placeholder="密码" ref="password" v-model="password" /><i style="position: relative;top:10%;left:3%;transform:translateY(-190%);"><img src="themes/common/images/Login_lock@2x.png" height="16px"width="16px"></i></li>
+            <!-- <li style="height: 40px">
+                <input class="yu-lbTxt" id="imageCode" type="text"  placeholder="验证码" :style="{float:'left',width: 130+'px',borderColor:borderColor}" ref="imageCode" v-model="imageCode"/><i class="el-icon-yx-lock"></i>
+                <img ref="validateImg" type="image"  id="imageCodePicture" @click="freshImageCodeFn" title="图片看不清？点击换一张" style="float:right;margin-right:2px;cursor:pointer;width:100px;height:40px;border-radius: 20px;"/>
+            </li> -->
+            <li><input class="yu-lbBt" id="submitBtn" type="button" value="登　录" @click="submitFn" /></li>
+            <li style="position: relative;top: -4px;"><span class="yu-loginMsg el-icon-yx-warning" id="msg" v-show="msgShow">{{message}}</span></li>
+        </ul>
+    </div>
+    <div>
+        <el-dialog-x title="首次登录密码修改" :visible.sync="dialogVisible">
+            <el-form-x ref="passwdform" :group-fields="passwdFields" :buttons="buttons" label-width="80px"></el-form-x>
+        </el-dialog-x>
+    </div>
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" :visible.sync="isChormeable" size="tiny" :show-close="false" :center="true">
+        <div style="height: 20px;padding-left:10px;line-height: 20px;font-size:20px;">
+            提示
+        </div>
+        <div style="height: 60px;text-align:center;line-height: 60px;font-size: 18px;">
+            请使用谷歌浏览器！
+        </div>
+        <div style="float:right;padding: 4px;">
+            <el-button type="danger" @click="sureFn">确定</el-button>
+        </div>
+    </yu-dialog>
+</div>

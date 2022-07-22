@@ -1,0 +1,31 @@
+<!-- 
+  @Created by luhy1 luhy1@yusys.com.cn on 2019-2-26 10:12:53.
+  @updated by
+  @description 客户财务信息
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="财务报表类型" name="finStatTypeCd" ctype="select" data-code="CD0041"></yu-xform-item>
+      <yu-xform-item placeholder="财报维度" name="finStatCd" ctype="select" data-code="CD0346"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar" style="padding-top: 10px;padding-left: 0px;">
+    <yu-button-group>
+      <yu-button icon="yx-newspaper" @click="infoFn">报表详情</el-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true" :default-load="false">
+    <yu-xtable-column label="财务报表类型" prop="finStatTypeCd" data-code="CD0041"></yu-xtable-column>
+    <yu-xtable-column label="财报维度" prop="finStatCd" data-code="CD0346"></yu-xtable-column>
+    <yu-xtable-column label="财报日期" prop="dataDt"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle" :visible.sync="dialogVisible" width="850px" height="650px">
+    <yu-xtable ref="refDetailTable" row-number :data-url="detailDataUrl" :pageable="false" :highlight-current-row="false" :stripe="true">
+      <yu-xtable-column label="项目名称" prop="itemName"></yu-xtable-column>
+      <yu-xtable-column label="项目值" prop="amt"></yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+</div>

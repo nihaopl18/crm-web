@@ -1,0 +1,46 @@
+.calc-page{
+  padding: 16px 6px;
+}
+
+.calc-form-box{
+  max-width: 600px;
+}
+
+.calc-panel{
+}
+
+.calc-panel + .calc-panel{
+  border-top: 1px solid #bfcbd9;
+}
+
+.calc-head{
+  margin-top: 16px;
+  padding: 8px;
+
+}
+
+.calc-title{
+  position: relative;
+    padding-left: 14px;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.calc-title:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 16px;
+  border-radius: 3px;
+  background-image: linear-gradient(180deg, #7496FF 0%, #6170FF 100%);
+}
+
+.calc-body{
+  padding: 8px;
+}
+
+.calc-tip{
+  color: #ccc;
+}

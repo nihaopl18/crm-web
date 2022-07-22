@@ -1,0 +1,33 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-22 10:18:07.
+  @updated by
+  @description 交易渠道信息
+-->
+<div>
+  <yu-tabs v-model="activeName" @tab-click="handleClick">
+    <yu-tab-pane label="交易渠道信息" name="channelInfo">
+      <yu-xform related-table-name="channelTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="channelTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+        <!-- <yu-xtable-column label="法人" prop="corpOrgCode" width="120"></yu-xtable-column> -->
+        <yu-xtable-column label="统计时间" prop="dataDt" width="120"></yu-xtable-column>
+        <yu-xtable-column label="客户号" prop="custId" width="120"></yu-xtable-column>
+        <yu-xtable-column label="交易渠道类型" prop="channelType" width="120" data-code="CD0067"></yu-xtable-column>
+        <yu-xtable-column label="上月交易次数" prop="lmTransNum" width="120"></yu-xtable-column>
+        <yu-xtable-column label="上月交易金额" prop="lmTransBal" width="120"></yu-xtable-column>
+        <yu-xtable-column label="最近6个月(自然月)交易次数" prop="lastSixTransNum" width="200"></yu-xtable-column>
+        <yu-xtable-column label="最近6个月(自然月)交易金额" prop="lastSixTransBal" width="200"></yu-xtable-column>
+        <yu-xtable-column label="最近12个月(自然月)交易次数" prop="lastTwelveTransNum" width="200"></yu-xtable-column>
+        <yu-xtable-column label="最近12个月(自然月)交易金额" prop="lastTwelveTransBal" width="200"></yu-xtable-column>
+        <yu-xtable-column label="累计(系统上线开始)交易次数" prop="transNumSum" width="200"></yu-xtable-column>
+        <yu-xtable-column label="累计(系统上线开始)交易金额" prop="transBalSum" width="200"></yu-xtable-column>
+      </yu-xtable>
+    </yu-tab-pane>
+  </yu-tabs>
+</div>

@@ -1,0 +1,444 @@
+<!-- 
+  @Created by mabintao on 2022-02-18
+  @updated by
+  @description 分行明细报表
+-->
+<div id="infoTable2">
+    <link href="./pages/dy/infoTable2/infoTable2.css" rel="stylesheet" type="text/css">
+    <div>
+        <div class="mt20 bgWhite" style="padding: 0px 20px;">
+            <yu-row :gutter="20">
+                <yu-col :span="23" :offset="1">
+                    <yu-xform size="small" v-model="queryParams" label-width="140px" ref="queryParams" related-table-name="yutable1" responsive>
+                        <yu-xform-group :column="2">
+                            <yu-quarter ref="quarterRef" :quar-params="fourOrOne"></yu-quarter>
+                            <yu-xform-item label="是否涉及民生" ctype="select" placeholder="请选择" @change="changePeople" name="isPeople" data-code="CD0255" :rules="rule.required"></yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-group :column="2">
+                            <yu-xform-item label="AUM余额[万元]" ctype="custom" v-if="isBranch || isManage">
+                                <yu-col :sm="11" :xs="24">
+                                    <yu-input v-model="queryParams.aumBalanceStart" placeholder="请输入" maxlength="10"></yu-input>
+                                </yu-col>
+                                <yu-col class="line" :span="2" style="text-align: center">→</yu-col>
+                                <yu-col :sm="11" :xs="24">
+                                    <yu-input v-model="queryParams.aumBalanceEnd" placeholder="请输入" maxlength="10"></yu-input>
+                                </yu-col>
+                            </yu-xform-item>
+                            <yu-xform-item placeholder="请选择" label="客户经理/机构" @change="mktRespPersonFn" v-model="mktRespPerson" ctype="per-mgr-selector" @select-fn="mktRespPersonFn" :params="selectCustParams" v-if="isBranch || showCust"></yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-group :column="2">
+                            <yu-xform-item label="客户等级" ctype="checkbox" @change="custGrage"  data-code="CUST_GRADE" name="custGrade" v-if="isManage"></yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-item ctype="custom" style="text-align: right;">
+                            <yu-button v-if="roleFlag" @click="backFn()">返回</yu-button>
+                            <yu-button @click="resetFormFn('queryParams')">重置</yu-button>
+                            <yu-button type="primary" @click="searchFn('queryParams')">查询</yu-button>
+                            <yu-button type="primary" @click="exportFn()">导出</yu-button>
+                        </yu-xform-item>
+                    </yu-xform>
+                </yu-col>
+            </yu-row>
+        </div>
+
+        <div class="bgWhite" style="padding: 0px 20px;">
+            <yu-xtable v-loading="loading2"  v-if="isHeadOffice" key="isHeadOffice" height="55vh"  :select-on-indeterminate="false" ref="multipleTable" :data="tableData" :base-params="baseParams" class="mt20" :default-load="false" @selection-change="selectChange" border :pageable="false" style="width: 100%">
+                <yu-xtable-column prop="branch" label="分行" width="150px">
+                    <template slot-scope="scope">
+                        <yu-button @click.native.prevent="searchBranch(scope.row)" type="text" style="color: #2877FF;" size="small">
+                            {{ scope.row.branch }}
+                        </yu-button>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="onJob" label="在职" width=""></yu-xtable-column>
+                <yu-xtable-column label="客户数" align="center">
+                    <yu-xtable-column prop="effCustnumber" label="有效及以上客户数" width="160px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.effCustnumber || 0,'no') }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="youhuiCustnumber" label="优慧客户数" width="160px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.youhuiCustnumber || 0,'no') }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="xianzhuoCustnumber" label="显卓及以上客户数" width="160px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.xianzhuoCustnumber || 0,'no') }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumBalanceavgTHt" label="AUM月日均[1000，10万）" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumBalanceavgTHt || 0,'no') }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumBalanceavgHtFht" label="AUM月日均[10万，50万）" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumBalanceavgHtFht || 0,'no') }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumBalanceavgFhtTm" label="AUM月日均[50万，300万）" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumBalanceavgFhtTm || 0,'no') }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumBalanceavgTmSm" label="AUM月日均[300万，600万）" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumBalanceavgTmSm || 0,'no') }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumBalanceavgSmEndless" label="AUM月日均[600万，∞）" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumBalanceavgSmEndless || 0,'no') }}
+                        </template>
+                    </yu-xtable-column>
+                </yu-xtable-column>
+                <yu-xtable-column label="客户AUM分布（万）" align="center" width="300px">
+                    <yu-xtable-column prop="aumBalance" label="AUM余额" width="100px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumBalance || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumDeposit" label="一般存款" width="">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumDeposit || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumDepositSort" label="一般存款占比" width="">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.aumDepositSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumRate" label="汇率">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumRate || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumRateSort" label="汇率占比">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.aumRateSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumNonrate" label="非汇">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumNonrate || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumNonrateSort" label="非汇占比">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.aumNonrateSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="consignment" label="代销信托" width="100px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.consignment || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="consignmentSort" label="代销信托占比" width="100px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.consignmentSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="danaharta" label="资管">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.danaharta || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="danahartaSort" label="资管占比">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.danahartaSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="qdii" label="QDII">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.qdii || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="qdiiSort" label="QDII占比">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.qdiiSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="rmbfund" label="人民币基金" width="100px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.rmbfund || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="rmbfundSort" label="人民币基金占比" width="120px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.rmbfundSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="insurrance" label="保险">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.insurrance || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="insurranceSort" label="保险占比">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.insurranceSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                </yu-xtable-column>
+            </yu-xtable>
+            <div v-if="isBranch">
+                <yu-xtable v-loading="loading2"
+                key="isBranch" height="55vh"  :pageable="false"  :select-on-indeterminate="false" ref="multipleTable" :data="tableData" :base-params="baseParams" class="mt20" :default-load="false" @selection-change="selectChange" border style="width: 100%">
+                    <yu-xtable-column type="selection" width="55"></yu-xtable-column>
+                    <yu-xtable-column prop="rm" label="RM">
+                        <template slot-scope="scope">
+                            <yu-button @click.native.prevent="searchRm(scope.row)" type="text" style="color: #2877FF;" size="small">
+                                {{ scope.row.rm }}
+                            </yu-button>
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="job" label="岗位" width=""></yu-xtable-column>
+                    <yu-xtable-column prop="employeeYears" label="入职年限" width=""></yu-xtable-column>
+                    <yu-xtable-column prop="occupationRank" label="职级" width=""></yu-xtable-column>
+                    <yu-xtable-column prop="userId" label="工号" width=""></yu-xtable-column>
+                    <yu-xtable-column prop="superintend" label="主管" width=""></yu-xtable-column>
+                    <yu-xtable-column prop="branch" label="分行" width=""></yu-xtable-column>
+                    <yu-xtable-column label="客户数" align="center">
+                        <yu-xtable-column prop="effCustnumber" label="有效及以上客户数" width="160px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.effCustnumber || 0,'no') }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="youhuiCustnumber" label="优慧客户数" width="160px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.youhuiCustnumber || 0,'no') }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="xianzhuoCustnumber" label="显卓及以上客户数" width="160px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.xianzhuoCustnumber || 0,'no') }}
+                            </template>
+                        </yu-xtable-column>
+                    </yu-xtable-column>
+                    <yu-xtable-column label="AUM月日均分布" width="400px" align="center">
+                        <yu-xtable-column prop="aumBalanceavgTHt" label="AUM月日均[1000，10万）" width="200px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.aumBalanceavgTHt || 0,'no') }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumBalanceavgHtFht" label="AUM月日均[10万，50万）" width="200px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.aumBalanceavgHtFht || 0,'no') }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumBalanceavgFhtTm" label="AUM月日均[50万，300万）" width="200px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.aumBalanceavgFhtTm || 0,'no') }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumBalanceavgTmSm" label="AUM月日均[300万，600万）" width="200px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.aumBalanceavgTmSm || 0,'no') }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumBalanceavgSmEndless" label="AUM月日均[600万,∞）" width="200px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.aumBalanceavgSmEndless || 0,'no') }}
+                            </template>
+                        </yu-xtable-column>
+                    </yu-xtable-column>
+                    <yu-xtable-column label="客户AUM分布（万）" align="center" width="300px">
+                        <yu-xtable-column prop="aumBalance" label="AUM余额" width="100px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.aumBalance || 0,2) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumDeposit" label="一般存款" width="">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.aumDeposit || 0,2) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumDepositSort" label="一般存款占比" width="">
+                            <template slot-scope="scope">
+                                {{ yufp.util.toPercent(scope.row.aumDepositSort || 0) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumRate" label="汇率">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.aumRate || 0,2) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumRateSort" label="汇率占比">
+                            <template slot-scope="scope">
+                                {{ yufp.util.toPercent(scope.row.aumRateSort || 0) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumNonrate" label="非汇">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.aumNonrate || 0,2) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumNonrateSort" label="非汇占比">
+                            <template slot-scope="scope">
+                                {{ yufp.util.toPercent(scope.row.aumNonrateSort || 0) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="consignment" label="代销信托" width="100px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.consignment || 0,2) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="consignmentSort" label="代销信托占比" width="100px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.toPercent(scope.row.consignmentSort || 0) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="danaharta" label="资管">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.danaharta || 0,2) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="danahartaSort" label="资管占比">
+                            <template slot-scope="scope">
+                                {{ yufp.util.toPercent(scope.row.danahartaSort || 0) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="qdii" label="QDII">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.qdii || 0,2) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="qdiiSort" label="QDII占比">
+                            <template slot-scope="scope">
+                                {{ yufp.util.toPercent(scope.row.qdiiSort || 0) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="rmbfund" label="人民币基金" width="100px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.rmbfund || 0,2) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="rmbfundSort" label="人民币基金占比" width="120px">
+                            <template slot-scope="scope">
+                                {{ yufp.util.toPercent(scope.row.rmbfundSort || 0) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="insurrance" label="保险">
+                            <template slot-scope="scope">
+                                {{ yufp.util.moneyFormatter(scope.row.insurrance || 0,2) }}
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="insurranceSort" label="保险占比">
+                            <template slot-scope="scope">
+                                {{ yufp.util.toPercent(scope.row.insurranceSort || 0) }}
+                            </template>
+                        </yu-xtable-column>
+                    </yu-xtable-column>
+                </yu-xtable>
+                <yu-pagination :total="pageData.total" :current-page.sync="pageData.page" :page-size="pageData.size" @size-change="mgrsizeChangeFn"
+                @current-change="mgrpageChangeFn" small :layout="pageData.layout">
+                </yu-pagination>
+            </div>
+            <div v-if="isManage">
+                <yu-xtable  v-loading="loading2"  key="isManage" height="55vh"  :pageable="false"  :select-on-indeterminate="false" ref="multipleTable" :data="tableData" :base-params="baseParams" class="mt20" :default-load="false" @selection-change="selectChange" border style="width: 100%">
+                    <yu-xtable-column type="selection" width="55"></yu-xtable-column>
+                    <yu-xtable-column prop="ecifCustNo" label="ECIF客户号" width="100px"></yu-xtable-column>
+                    <yu-xtable-column prop="ndsCustNo" label="NDS客户号" width="100px"></yu-xtable-column>
+                    <yu-xtable-column prop="custName" label="客户中文名称" width="100px"></yu-xtable-column>
+                    <yu-xtable-column prop="custEngName" label="客户英文名称" width="100px"></yu-xtable-column>
+                    <yu-xtable-column prop="belongBrch" label="主办机构名称" width="100px"></yu-xtable-column>
+                    <yu-xtable-column prop="manageMgr" label="理财客户经理名称" width="120px"></yu-xtable-column>
+                    <yu-xtable-column prop="aumBalance" label="AUM余额" width="100px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumBalance || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumDeposit" label="一般存款" width="">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumDeposit || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumDepositSort" label="一般存款占比" width="">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.aumDepositSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumRate" label="汇率">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumRate || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumRateSort" label="汇率占比">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.aumRateSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumNonrate" label="非汇">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.aumNonrate || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="aumNonrateSort" label="非汇占比">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.aumNonrateSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="consignment" label="代销信托" width="100px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.consignment || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="consignmentSort" label="代销信托占比" width="100px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.consignmentSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="danaharta" label="资管">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.danaharta || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="danahartaSort" label="资管占比">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.danahartaSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="qdii" label="QDII">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.qdii || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="qdiiSort" label="QDII占比">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.qdiiSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="rmbfund" label="人民币基金" width="100px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.rmbfund || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="rmbfundSort" label="人民币基金占比" width="120px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.rmbfundSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="insurrance" label="保险">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.insurrance || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="insurranceSort" label="保险占比">
+                        <template slot-scope="scope">
+                            {{ yufp.util.toPercent(scope.row.insurranceSort || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                </yu-xtable>
+                <yu-pagination :total="pageData.total" :current-page.sync="pageData.page" :page-size="pageData.size" @size-change="mgrsizeChangeFn"
+                @current-change="mgrpageChangeFn" small :layout="pageData.layout">
+                </yu-pagination>
+            </div>
+            <!-- <template>
+                <div class="table-pagination">
+                <div class="demonstration">
+                    如果不勾选涉及民生，则在优慧客户数和显卓客户数的页面显示减掉民生数
+                </div>
+                </div>
+            </template> -->
+        </div>
+    </div>
+</div>

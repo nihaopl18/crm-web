@@ -1,0 +1,55 @@
+<!-- 
+  @Created by luhy1 luhy1@yusys.com.cn on 2019-1-30 16:17:05.
+  @updated by
+  @description 客户经理基本信息
+-->
+<div>
+  <el-row style="padding-top: 10px;">
+    <el-col :span="24">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          客户经理基本信息
+        </div>
+        <div>
+          <yu-xform ref="refForm" label-width="200px" v-model="formdata" class="yu-form-gap" style="padding-top: 20px;">
+            <yu-xform-group :column="2">
+              <yu-xform-item label="员工工号" name="custManagerId" ctype="input" :colspan="10" :disabled="true" rules="required"></yu-xform-item>
+              <yu-xform-item label="用户名称" name="custManagerName" ctype="input" :colspan="10" :disabled="true" rules="required"></yu-xform-item>
+              <yu-xform-item label="归属机构" name="orgId" ctype="yufp-org-tree" :colspan="10" :disabled="true"></yu-xform-item>
+              <yu-xform-item label="归属条线" name="busiType" ctype="select" :colspan="10" :disabled="true" data-code="CD0327" rules="required"></yu-xform-item>
+              <yu-xform-item label="最高学历" name="education" ctype="select" :colspan="10" data-code="CD0430"></yu-xform-item>
+              <yu-xform-item label="毕业院校" name="graduateSchool" ctype="input" :colspan="10" :rules="rule.graduateSchool"></yu-xform-item>
+              <yu-xform-item label="开始工作时间" name="beginWorkDate" ctype="datepicker" :colspan="10" :editable="false"></yu-xform-item>
+              <yu-xform-item label="入行时间" name="entrantsDate" ctype="datepicker" :colspan="10" :editable="false"></yu-xform-item>
+              <yu-xform-item label="任职客户经理时间" name="custmgrDate" ctype="datepicker" :colspan="10" :editable="false"></yu-xform-item>
+              <yu-xform-item label="金融从业时间（月）" name="financialJobTime" ctype="input" :colspan="10" :rules="rule.financialJobTime"></yu-xform-item>
+              <yu-xform-item label="是否为内部培训师" name="isInnerTrainer" ctype="select" :colspan="10" data-code="YESNO"></yu-xform-item>
+              <yu-xform-item label="专业" name="major" ctype="input" :colspan="10" :rules="rule.major"></yu-xform-item>
+              <yu-xform-item label="专长" name="expertise" ctype="textarea" :colspan="20" :rules="rule.expertise"></yu-xform-item>
+              <yu-xform-item label="爱好" name="hobby" ctype="textarea" :colspan="20" :rules="rule.hobby"></yu-xform-item>
+              <yu-xform-item label="年度培训次数" name="trainNumYear" ctype="input" :colspan="10" :rules="rule.trainNumYear"></yu-xform-item>
+              <yu-xform-item label="累计培训次数" name="trainNumTotal" ctype="input" :colspan="10" :rules="rule.trainNumTotal"></yu-xform-item>
+              <yu-xform-item label="培训经历" name="trainExperience" ctype="textarea" :colspan="20" :rules="rule.trainExperience"></yu-xform-item>
+              <yu-xform-item label="年度授课次数" name="teachNumYear" ctype="input" :colspan="10" :rules="rule.teachNumYear"></yu-xform-item>
+              <yu-xform-item label="累计授课次数" name="teachNumTotal" ctype="input" :colspan="10" :rules="rule.teachNumTotal"></yu-xform-item>
+              <yu-xform-item label="授课经历" name="teachExperience" ctype="textarea" :colspan="20" :rules="rule.teachExperience"></yu-xform-item>
+              <yu-xform-item label="所获奖励" name="award" ctype="input" :colspan="10" :rules="rule.award"></yu-xform-item>
+              <yu-xform-item label="资格证书" name="certificate" ctype="input" :colspan="10" :rules="rule.certificate"></yu-xform-item>
+              <yu-xform-item label="生日" name="birthday" ctype="datepicker" :colspan="10" :editable="false"></yu-xform-item>
+              <yu-xform-item label="性别" name="sex" ctype="select" :colspan="10" data-code="SEX_TYPE"></yu-xform-item>
+              <yu-xform-item label="是否具有信贷从业资格" name="isLoanQua" ctype="select" :colspan="10" data-code="YESNO"></yu-xform-item>
+              <yu-xform-item label="任职日期" name="positionTime" ctype="datepicker" :colspan="10" :editable="false"></yu-xform-item>
+              <yu-xform-item label="联系手机" name="mobile" ctype="input" :colspan="10" :rules="rule.mobile"></yu-xform-item>
+              <yu-xform-item label="办公座机" name="phone" ctype="input" :colspan="10" :rules="rule.phone"></yu-xform-item>
+              <yu-xform-item label="备注" name="remark" ctype="textarea" :colspan="20" :rules="rule.remark"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="check" type="primary" @click="saveFn" v-if="saveBtn">保存</yu-button>
+            </div>
+          </yu-xform>
+        </div>
+      </div>
+    </el-col>
+  </el-row>
+
+</div>

@@ -1,0 +1,27 @@
+<div>
+  <yu-xform ref="refForm" label-width="120px" v-model="formdata">
+    <!-- 积分调加和调减 -->
+    <yu-xform-group>
+      <yu-xform-item label="放大镜" ctype="input" name="custId" icon="search" :on-icon-click="handleIconClick"></yu-xform-item>></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 工具按钮弹窗 -->
+  <yu-dialog :title="viewTitle" :visible.sync="dialogVisible">
+    <!-- 查询表单 -->
+    <yu-xform related-table-name="refTable" form-type="search">
+      <yu-xform-group>
+        <yu-xform-item placeholder="客户号" ctype="input" name="custId"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <!-- 查询显示表格 -->
+    <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+      <yu-xtable-column label="客户号" prop="custId" width="110" sortable>
+      </yu-xtable-column>
+      <yu-xtable-column label="客户姓名" prop="custName">
+      </yu-xtable-column>
+    </yu-xtable>
+    <div class="yu-grpButton">
+      <yu-button icon="check" type="primary" @click="returnFunction">选取返回</yu-button>
+    </div>
+  </yu-dialog>
+</div>

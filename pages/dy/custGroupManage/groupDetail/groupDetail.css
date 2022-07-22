@@ -1,0 +1,195 @@
+/**
+ * @created by zhangkun6 on 2021-8-27 16:58:15
+ * @updated by
+ * @description 客群详情
+ */
+
+.box-card {
+  box-shadow: none;
+  /* border: none */
+  margin-top: 10px;
+  margin-bottom: 16px;
+}
+
+.box-card .el-card__header {
+  border: none;
+}
+
+.box-card .clearfix:before,
+.box-card .clearfix:after {
+  display: table;
+  content: "";
+}
+
+.box-card .clearfix:after {
+  clear: both
+}
+
+.box-card .title {
+  font-weight: bold;
+  font-size: 20px;
+  color: #303133;
+}
+
+.box-card .el-tag {
+  vertical-align: bottom;
+}
+
+.box-card .tag .el-tag {
+  border-radius: 12px;
+  float: left;
+  margin-bottom: 10px;
+}
+
+.box-card .content .rule {
+  font-size: 14px;
+  color: #303133;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.box-card .content .detail {
+  margin-top: 36px;
+}
+
+.box-card .content .detail p {
+  margin: 8px 0;
+}
+
+.box-card .content .detail p .count {
+  font-size: 24px;
+  color: #303133;
+  font-weight: bold;
+}
+
+.box-card .content .detail label {
+  font-size: 14px;
+  color: #909397;
+}
+
+.group-table {
+  padding: 30px 20px;
+}
+
+.group-table .el-table {
+  margin-top: 24px;
+}
+
+.createBox .el-dialog {
+  width: 920px;
+}
+
+.createBox .step-box {
+  height: 90px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  width: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.createBox .step-box ul {
+  overflow: hidden;
+  text-align: center;
+  /* width: 75%;
+  margin: 0 auto; */
+  display: flex;
+  justify-content: center
+}
+
+.createBox .step-box ul li {
+  float: left;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.45);
+  line-height: 24px;
+  position: relative;
+}
+
+.createBox .step-box ul li.active {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: bold;
+}
+
+.createBox .step-box ul li::before {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #DDDFE6;
+  border-radius: 50%;
+  line-height: 32px;
+}
+
+.createBox .step-box ul li.active::before {
+  background: #EE434C;
+  color: #fff
+}
+
+.createBox .step-box ul li:not(:last-child)::after {
+  display: inline-block;
+  content: '';
+  width: 150px;
+  height: 1px;
+  background: #DDDFE6;
+  margin: 0 7px;
+  vertical-align: middle
+}
+
+.createBox .step-box ul li:first-child::before {
+  content: '1';
+  margin-right: 8px;
+}
+
+.cust-group-detail .createBox .step-box ul li:nth-child(2)::before {
+  content: '2';
+  margin-right: 8px;
+}
+
+.createBox .step-box ul li:nth-child(3):before {
+  content: '3';
+  margin-right: 8px;
+}
+
+.createBox .step-box ul li.finish::before {
+  color: #EE434C;
+  border: 1px solid #EE434C;
+  content: '√'
+}
+
+.createBox .cust-form {
+  margin-top: 52px;
+  padding: 0 15px;
+}
+
+.createBox .cust-form .filterBtn {
+  text-align: right;
+  color: #EC5964;
+  cursor: pointer;
+}
+
+.createBox .condition-box {
+  background: #F8F9FA;
+  border-radius: 4px;
+  padding: 10px
+}
+
+.createBox .deleteBtn {
+  margin-top: 14px;
+  margin-left: -14px;
+}
+
+
+.cust-group-detail .up {
+  color: #E63C22
+}
+
+.cust-group-detail .down {
+  color: #13BF4F
+}
+
+.text-ellipsis .el-input_inner {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

@@ -1,0 +1,99 @@
+<!-- 
+  @Created by  yangxiao2 on 2019-7-19 16:24:32.
+  @updated by
+  @description 积分兑换
+-->
+<div id="pointExch">
+    <yu-row>
+        <h2 class="titleo">礼品照片</h2>
+        <div id="container" v-for="(item, index) in sysmineInfo">
+            <div class="lablename">图{{item.name}}：</div>
+            <img class="lable" src="themes/default/images/sexnan.png" />
+        </div>
+    </yu-row>
+    <yu-row>
+        <h2 class="titleo" @click="picfn">礼品照片二</h2>
+        <div id="container" v-for="(item, index) in sysmineInfo" v-show="pic">
+            <div class="lablename">图{{item.name}}：</div>
+            <img class="lable" src="" />
+        </div>
+    </yu-row>
+    <yu-row>
+        <h2 class="titleo">礼品基本信息</h2>
+        <yu-xform label-width="140px" ref="refForm" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+                <yu-xform-item label="礼品名称" name="commodityName" rules="required" ctype="input"></yu-xform-item>
+                <yu-xform-item label="礼品积分价值" name="commodityLValue" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="礼品现金价值" name="commodityMValue" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="礼品库存数量" name="commodityStgNum" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="库存预警" name="stgAlarm" ctype="input"></yu-xform-item>
+                <yu-xform-item label="礼品名称" name="commodityName" rules="required" ctype="input"></yu-xform-item>
+                <yu-xform-item label="礼品积分价值" name="commodityLValue" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="礼品现金价值" name="commodityMValue" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="礼品库存数量" name="commodityStgNum" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="库存预警" name="stgAlarm" ctype="input"></yu-xform-item>
+                <yu-xform-item label="礼品名称" name="commodityName" rules="required" ctype="input"></yu-xform-item>
+                <yu-xform-item label="礼品积分价值" name="commodityLValue" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="礼品现金价值" name="commodityMValue" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="礼品库存数量" name="commodityStgNum" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="库存预警" name="stgAlarm" ctype="input"></yu-xform-item>
+                <yu-xform-item label="礼品现金价值" name="commodityMValue" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="礼品库存数量" name="commodityStgNum" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="库存预警" name="stgAlarm" ctype="input"></yu-xform-item>
+                <yu-xform-item label="礼品名称" name="commodityName" rules="required" ctype="input"></yu-xform-item>
+                <yu-xform-item label="礼品积分价值" name="commodityLValue" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="礼品现金价值" name="commodityMValue" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="礼品库存数量" name="commodityStgNum" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="库存预警" name="stgAlarm" ctype="input"></yu-xform-item>
+            </yu-xform-group>
+
+        </yu-xform>
+    </yu-row>
+    <yu-row>
+        <h2 class="titleo">扩展属性</h2>
+        <yu-xtable style="padding-left: 20px;" :borde="false" ref="multipleTable" :data-url="tableUrl" max-height="350" min-height="250" :pageable="true" :default-load=false>
+            <yu-xtable-column type="index" label="序号"></yu-xtable-column>
+            <yu-xtable-column prop="custName" label="客户姓名" width="110px"></yu-xtable-column>
+            <yu-xtable-column prop="custNo" label="ECIF号" width="160px"></yu-xtable-column>
+            <yu-xtable-column prop="finaningMgrUserName" label="理财客户经理" width="160px"></yu-xtable-column>
+            <yu-xtable-column prop="holdShare" label="持有份额" width="110px">
+                <template slot-scope="scope">
+                    {{ yufp.util.moneyFormatter(scope.row.holdShare || 0) }}
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="marketValue" label="持有净值" width="110px">
+                <template slot-scope="scope">
+                    {{ yufp.util.moneyFormatter(scope.row.marketValue || 0) }}
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="totalProfitRate" label="当前收益率（%）" width="140px">
+                <template slot-scope="scope">
+                    <span>{{yufp.util.toPercentno(scope.row.totalProfitRate)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="totalProfit" label="当前收益（元）" width="140px">
+                <template slot-scope="scope">
+                    {{ yufp.util.moneyFormatter(scope.row.totalProfit || 0) }}
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="totalProfit" label="当前收益（元）" width="140px">
+                <template slot-scope="scope">
+                    {{ yufp.util.moneyFormatter(scope.row.totalProfit || 0) }}
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="totalProfit" label="当前收益（元）" width="140px">
+                <template slot-scope="scope">
+                    {{ yufp.util.moneyFormatter(scope.row.totalProfit || 0) }}
+                </template>
+            </yu-xtable-column>
+        </yu-xtable>
+    </yu-row>
+    <yu-row>
+        <h2 class="titleo">附件列表</h2>
+        <div>
+            <yufp-upload-table ref="filesTable" :data-params="initFilesParams" :data="reportUpLoadBusNo" :before-upload="beforeAvatarUpload" :upload-visible="uploadVisible" :download-visible="true" :delete-visible="false"></yufp-upload-table>
+        </div>
+    </yu-row>
+
+
+</div>

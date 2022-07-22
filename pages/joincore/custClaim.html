@@ -1,0 +1,26 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-4 11:27:47.
+  @updated by
+  @description 客户认领
+-->
+<div>
+  <!-- TODO 表格字段，需求和接口不一致，以哪个为准 -->
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :base-params="baseParams">
+    <yu-xtable-column label="客户编号" prop="custId" width="120"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="证件类型" prop="certType" width="120" data-code="CD0011"></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="certNo" width="120"></yu-xtable-column>
+    <yu-xtable-column label="客户类型" prop="custType" width="120" data-code="CD0016"></yu-xtable-column>
+    <yu-xtable-column label="客户标志" prop="custStatus" width="120" data-code="CD0019"></yu-xtable-column>
+    <!-- <yu-xtable-column label="客户归属主办机构ID" prop="oldOrgId" width="120"></yu-xtable-column> -->
+    <yu-xtable-column label="客户归属主办机构" prop="oldOrgName" width="120"></yu-xtable-column>
+    <!-- <yu-xtable-column label="认领人" prop="applyUser" width="120"></yu-xtable-column> -->
+    <yu-xtable-column label="认领人名称" prop="applyUsername" width="120"></yu-xtable-column>
+    <!-- <yu-xtable-column label="认领机构" prop="applyInit" width="120"></yu-xtable-column> -->
+    <yu-xtable-column label="认领机构名称" prop="applyInitname" width="120"></yu-xtable-column>
+    <yu-xtable-column label="认领时间" prop="createDate" width="120" :formatter="formData"></yu-xtable-column>
+    <!-- <yu-xtable-column label="认领期限（天）" prop="deadLine" width="120"></yu-xtable-column> -->
+    <yu-xtable-column label="审批状态" prop="approvelStatus" data-code="WF_APP_STATUS"></yu-xtable-column>
+    <!-- <yu-xtable-column label="认领理由" prop="applyReason"></yu-xtable-column> -->
+  </yu-xtable>
+</div>

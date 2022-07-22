@@ -1,0 +1,78 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-2-12 19:30:18.
+  @updated by
+  @description 对公关键人信息
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true" @row-dblclick="rowDblclick">
+    <!-- <yu-xtable-column label="主键"  prop="id" hidden></yu-xtable-column> -->
+    <!--<yu-xtable-column label="客户标识" prop="custId" width="120"></yu-xtable-column>-->
+    <yu-xtable-column label="关键人姓名" prop="custNameRel" width="120"></yu-xtable-column>
+    <yu-xtable-column label="关键人类型" prop="relaType" width="120" data-code="CD0285"></yu-xtable-column>
+    <yu-xtable-column label="关键人职位" prop="jobPosi" width="120" data-code="CD0047"></yu-xtable-column>
+    <yu-xtable-column label="办公电话" prop="offiTelNo" width="120"></yu-xtable-column>
+    <yu-xtable-column label="家庭电话" prop="homeTelNo" width="120"></yu-xtable-column>
+    <yu-xtable-column label="手机号码" prop="mobileNo" width="120"></yu-xtable-column>
+    <yu-xtable-column label="电子邮件" prop="email" ></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+    <yu-xform ref="refForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="关键人客户编号" :hidden="true" name="keyCustId" ctype="input"></yu-xform-item>
+        <yu-xform-item label="客户标识" name="custId" :hidden="true" :disabled="inputIdDisabled" ctype="input"></yu-xform-item>
+        <yu-xform-item label="客户名称" name="custName" :hidden="true" :disabled="inputIdDisabled" ctype="input"></yu-xform-item>
+        <yu-xform-item label="关键人姓名" name="custNameRel" ctype="input" :rules="rule.custNameRel"></yu-xform-item>
+        <yu-xform-item label="关键人类型" name="relaType" ctype="select" data-code="CD0285" :rules="rule.relaType"></yu-xform-item>
+        <yu-xform-item label="关键人职位" name="jobPosi" ctype="select" data-code="CD0047" :rules="rule.jobPosi"></yu-xform-item>
+        <yu-xform-item label="关键人性别" name="sex" ctype="select" data-code="SEX_TYPE":rules="rule.sex"></yu-xform-item>
+        <yu-xform-item label="关键人称谓" name="custTitle" ctype="input" :rules="rule.custTitle"></yu-xform-item>
+        <yu-xform-item label="证件类型" name="certType" ctype="select" data-code="CD0348" :rules="rule.certType"></yu-xform-item>
+        <yu-xform-item label="证件号码" name="certNo" ctype="input" :rules="rule.certNo"></yu-xform-item>
+        <yu-xform-item label="办公电话" name="offiTelNo" ctype="input" :rules="rule.offiTelNo"></yu-xform-item>
+        <yu-xform-item label="家庭电话" name="homeTelNo" ctype="input" :rules="rule.homeTelNo"></yu-xform-item>
+        <yu-xform-item label="手机号码" name="mobileNo" ctype="input" :rules="rule.mobileNo"></yu-xform-item>
+        <yu-xform-item label="电子邮件" name="email" ctype="input" :rules="rule.email"></yu-xform-item>
+        <!-- <yu-xform-item label="联系优先级" name="contPrio" ctype="select" data-code="CD0126" :rules="rule.contPrio"></yu-xform-item> -->
+        <yu-xform-item label="微信号" name="wechat" ctype="input" :rules="rule.wechat"></yu-xform-item>
+        <yu-xform-item label="QQ" name="qq" ctype="input" :rules="rule.qq"></yu-xform-item>
+        <yu-xform-item label="微博" name="weibo" ctype="input" :rules="rule.weibo"></yu-xform-item>
+        <yu-xform-item label="学历" name="eduRec" ctype="select" data-code="CD0048" :rules="rule.eduRec"></yu-xform-item>
+        <yu-xform-item label="婚姻状况" name="marriStat" ctype="select" data-code="CD0005" :rules="rule.marriStat"></yu-xform-item>
+        <yu-xform-item label="配偶姓名" name="spouseName" ctype="input" :rules="rule.spouseName"></yu-xform-item>
+        <yu-xform-item label="配偶证件类型" name="spouseCertType" ctype="select" data-code="CD0348" :rules="rule.spouseCertType"></yu-xform-item>
+        <yu-xform-item label="配偶证件号码" name="spouseCertNo" ctype="input" :rules="rule.spouseCertNo"></yu-xform-item>
+        <yu-xform-item label="配偶联系电话" name="spouseTelNo" ctype="input" :rules="rule.spouseTelNo"></yu-xform-item>
+        <yu-xform-item label="配偶职业" name="spouseIndOcc" ctype="select" :rules="rule.spouseIndOcc" data-code="CD0010"></yu-xform-item>
+        <!-- <yu-xform-item label="价值等级" name="valueLev" :disabled="inputIdDisabled" ctype="input"></yu-xform-item>
+        <yu-xform-item label="服务等级" name="servLev" :disabled="inputIdDisabled" ctype="select" data-code="CD0126"></yu-xform-item> -->
+        <yu-xform-item label="是否有效" name="validFlg" ctype="select" data-code="CD0238" :rules="rule.validFlg"></yu-xform-item>
+        <yu-xform-item label="最新更新人" name="userName" :disabled="inputIdDisabled" ctype="input" :rules="rule.userName" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="最新更新人机构" name="orgName" :disabled="inputIdDisabled" ctype="input" :rules="rule.orgName" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="最新更新日期" name="lastChgDt" :disabled="inputIdDisabled" ctype="datepicker" :rules="rule.lastChgDt" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="备注" name="remark" ctype="textarea" :rows="3" :colspan="24" :rules="rule.remark"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="btnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

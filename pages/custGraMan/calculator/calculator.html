@@ -1,0 +1,38 @@
+<!--金融小工具 树 -->
+<!-- 客户视图布局 -->
+<!-- <style type="text/css">
+  .frame-right{
+      margin:-5px 10px 10px 5px;
+  }
+  .frame-left{
+      margin:1% 5px 10px 5px;
+  }
+  .orgTitle{
+      font-size: 12px;
+      font-weight: bold;
+      margin: 5px 12px;
+  }
+  .el-table{
+   min-height:100px;
+  }
+</style> -->
+<div>
+  <el-row>
+          <el-col :span="4">
+               <div class="frame-left">
+                  <el-tree
+                      :data="treeData"
+                      :props="defaultProps"
+                      default-expand-all
+                      node-key="id"
+                      @node-click="goRoute"
+                      ref="calTree">
+                  </el-tree>
+              </div>
+          </el-col>
+          <el-col :span="20">
+                  <div id ="routeMenu" class="frame-right" v-show="true"></div>
+          </el-col>
+  </el-row>
+ 
+</div>

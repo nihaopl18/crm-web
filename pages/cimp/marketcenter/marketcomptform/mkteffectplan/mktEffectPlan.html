@@ -1,0 +1,74 @@
+<!--
+  @created by zhuly6 on 2018/11/16.
+  @description 营销组件FORM表单-分析组件-营销成效指标策划
+-->
+<div>
+  <el-tabs type="border-card">
+    <!-- <el-form-q ref="refFormQ" :field-data="queryFields" :buttons="queryButtons"></el-form-q> -->
+
+    <!-- <el-form-x ref="refFormQ" :group-fields="queryFields" :buttons="queryButtons" label-width="110px">
+    </el-form-x> -->
+
+    <!-- <yu-xform >
+      <yu-xform-group :column="1">
+        <yu-xform-item label="选择对象" ctype="radio" name="label" :options="options" @change="changeValue"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform> -->
+
+
+    <el-radio-group v-model="objType" @change="changeValue" style="margin: 20px;">
+      <el-radio label="01">客户经理</el-radio>
+      <el-radio label="02">机构</el-radio>
+      <el-radio label="03">渠道</el-radio>
+    </el-radio-group>
+    <div class="yu-toolBar">
+      <el-button-group>
+        <el-button icon="plus" @click="addFn">增加</el-button>
+        <!-- <el-button icon="yx-bin" @click="deleteFn">删除</el-button> -->
+        <el-button icon="document" @click="saveFn">保存</el-button>
+        <el-button icon="plus" @click="addTargetFn">增加指标</el-button>
+        <!-- <el-button icon="yx-bin" @click="delTargetFn">删除指标</el-button> -->
+      </el-button-group>
+    </div>
+    <!-- <yu-xtable ref="reftable" row-number :data="tabdata" selection-type="radio" :default-load="false" @loaded="tabload"
+      @row-click="clickFn">
+      <yu-xtable-column :label="x.label" :prop="x.prop" :key='x.key' width="110" v-for="x in tableColumns"
+        :formatter="x.formatter" :ctype='x.ctype' :data-code='x.dataCode' :render-header="x.renderHeader">
+        <yu-xtable-column :label="y.label" :prop="y.prop" :key='y.key' width="110" v-for="y in x.children"
+          :ctype='y.ctype' :disabled="y.disabled">
+
+        </yu-xtable-column>
+      </yu-xtable-column>
+    </yu-xtable>
+  </el-tabs> -->
+
+    <yu-xtable ref="reftable" row-number :data="tabdata" selection-type="radio" :default-load="false" @loaded="tabload"
+      @row-click="clickFn" :pageable="false">
+      <yu-xtable-column label="操作" width="110">
+        <template slot-scope="scope">
+          <yu-button @click="deleteRow(scope.$index, tabdata)" type="text" size="small">
+            移除
+          </yu-button>
+        </template>
+      </yu-xtable-column>
+
+      <yu-xtable-column :label="x.label" :prop="x.prop" :key='x.key' width="110" v-for="x in tableColumns"
+        :formatter="x.formatter" :ctype='x.ctype' :data-code='x.dataCode' :render-header="x.renderHeader">
+        <yu-xtable-column :label="y.label" :prop="y.prop" :key='y.key' width="110" v-for="y in x.children"
+          :ctype='y.ctype' :disabled="y.disabled">
+
+        </yu-xtable-column>
+      </yu-xtable-column>
+    </yu-xtable>
+  </el-tabs>
+
+  <el-dialog-x title="增加指标" :visible.sync="dialogVisibleAddTarget" width="650px">
+    <el-form-x ref="refTargetForm" :group-fields="Fields" :buttons="Buttons" label-width="80px" inline>
+    </el-form-x>
+  </el-dialog-x>
+  <!-- <el-dialog-x title="增加数据" :visible.sync="dialogVisibleAdd" width="650px">
+    <el-form-x ref="reformAdd" :group-fields="updateFieldsAdd.fields" :buttons="updateFieldsAdd.addButtons"
+      label-width="100px">
+    </el-form-x>
+  </el-dialog-x> -->
+</div>

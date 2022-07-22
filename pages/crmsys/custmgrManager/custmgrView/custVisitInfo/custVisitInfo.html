@@ -1,0 +1,27 @@
+<!-- 
+  @Created by luhy1 luhy1@yusys.com.cn on 2019-2-19 10:36:19.
+  @updated by
+  @description 客户接触信息
+-->
+<div style="padding-top: 10px;">
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+    </yu-xform-group>
+  </yu-xform>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+    <yu-xtable-column label="客户编号" prop="custId" width="100"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+    <yu-xtable-column label="任务安排人" width="100px" prop="arangeName"></yu-xtable-column>
+    <yu-xtable-column label="接触状态" prop="visitStat" data-code="CD0331"></yu-xtable-column>
+    <yu-xtable-column label="接触方式" prop="visitType" data-code="CD0332"></yu-xtable-column>
+    <yu-xtable-column label="接触目的" prop="visitAims"></yu-xtable-column>
+    <yu-xtable-column label="联系和接触情况" width="120px" prop="visitNote"></yu-xtable-column>
+    <yu-xtable-column label="接触成效" prop="visitEffect"></yu-xtable-column>
+    <yu-xtable-column label="接触开始时间"  width="100px" prop="visitStartDate"></yu-xtable-column>
+    <yu-xtable-column label="接触结束时间" width="100px" prop="visitEndDate"></yu-xtable-column>
+    <yu-xtable-column label="下次接触时间" width="100px" prop="nextVisitDate"></yu-xtable-column>
+    <yu-xtable-column label="下次接触方式" width="100px" prop="nextVisitType" data-code="CD0332"></yu-xtable-column>
+    <yu-xtable-column label="联系电话" prop="phone"></yu-xtable-column>
+    <yu-xtable-column label="接触人" prop="visitorName"></yu-xtable-column>
+  </yu-xtable>
+</div>

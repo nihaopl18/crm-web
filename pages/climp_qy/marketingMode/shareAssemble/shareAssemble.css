@@ -1,0 +1,76 @@
+.sign-up {
+    padding: 30px
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #20a0ff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+  }
+  .pre-view {
+    height: 667px;
+    width: 375px;
+    margin: 60px auto;
+    box-sizing: border-box;
+  }
+  .pre-view .title {
+      height: 46px;
+      line-height: 46px;
+      background-color: #000;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      font-weight: bold;
+  }
+  .pre-view .body-content {
+      padding: 24px;
+      background-color: #efeff4;
+      display: flex;
+      flex-direction: column;
+      height: calc(667px - 46px);
+      overflow: hidden;
+  }
+  .pre-view .input-box {
+      margin-top: 20px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+  }
+  .pre-view .rule-box {
+      margin-top: 40px;
+  }
+  .pre-view .rule-box .rule-title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 30px;
+  }
+  .pre-view .rule-box .rule-sub-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      margin-top: 10px;
+      font-size: 14px;
+  }
+  .pre-view .bannerImg {
+      height: 180px;
+      width: 100%;
+  }

@@ -1,0 +1,101 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:37
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 闫天一 yanty1@yusys.com.cn on 2019-1-29 10:11:51.
+  @updated by
+  @description 产品查询
+-->
+<div>
+
+    <yu-col :span="5">
+        <yufp-ext-tree ref="productTree" :show-checkbox="false" @node-click="nodeClickFn" :data-url="productTreeUrl" data-id="catlCode" data-label="catlName" data-pid="catlParent" :height="height - 112" style="margin:10px 10px 0 0;">
+        </yufp-ext-tree>
+    </yu-col>
+
+    <yu-col :span="19">
+
+
+        <yu-xform related-table-name="refTable" v-model="reform">
+            <yu-xform-group :column="4">
+                <yu-xform-item placeholder="产品目录" name="catlCode" readonly></yu-xform-item>
+                <yu-xform-item placeholder="产品状态" ctype="select" name="prodStatus" data-code="PROD_STATUS"></yu-xform-item>
+                <yu-xform-item placeholder="产品代码" name="srcProdCode"></yu-xform-item>
+                <yu-xform-item placeholder="产品名称" name="prodName"></yu-xform-item>
+                <!-- <yu-xform-item placeholder="币种" name="cuyyenType" ctype="select" data-code="CD0071"></yu-xform-item>
+            <yu-xform-item placeholder="风险等级" name="riskLevel" ctype="select" data-code="CD0201"></yu-xform-item>
+            <yu-xform-item placeholder="管理部门" name="managerDept" ctype="yufp-dpt-selector"></yu-xform-item> -->
+            </yu-xform-group>
+            <div class="yu-grpButton" style="text-align: right;">
+                <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+                <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+            </div>
+        </yu-xform>
+
+
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="yx-newspaper" @click="openview" v-if="viewButton">产品视图</yu-button>
+                <!-- <yu-button icon="plus" @click="addFn" v-if="addButton">新增</yu-button>
+                <yu-button icon="edit" @click="modifyFn" v-if="updButton">修改</yu-button> -->
+                <!-- <yu-button icon="delete" @click="deleteFn">删除</yu-button>   -->
+                <!-- <yu-button icon="document" @click="infoFn">详情</yu-button>  -->
+            </yu-button-group>
+        </div>
+
+        <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true" @row-dblclick="rowDBlclick" height="550px">
+            <yu-xtable-column label="产品代码" prop="prodCode" width="200"></yu-xtable-column>
+            <yu-xtable-column label="产品名称" prop="prodName" width="250"></yu-xtable-column>
+            <yu-xtable-column label="风险等级" prop="riskLevel" width="120" data-code="RISKLEVEL"></yu-xtable-column>
+            <yu-xtable-column label="产品状态" prop="prodStatus" width="120" data-code="PROD_STATUS"></yu-xtable-column>
+            <yu-xtable-column label="产品认购开始日" prop="subscribeStartDate" width="120"></yu-xtable-column>
+            <yu-xtable-column label="产品认购结束日" prop="subscribeEndDate" width="120"></yu-xtable-column>
+            <yu-xtable-column label="期限" prop="term" width="120"></yu-xtable-column>
+            <yu-xtable-column label="利率(单位%)" prop="rate" width="120">
+                <template slot-scope="scope">
+                    <span>{{yufp.util.toPercentno(scope.row.rate)}}</span>
+                </template>
+            </yu-xtable-column>
+        </yu-xtable>
+
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1050px">
+            <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+                <yu-xform-group :column="2">
+                    <yu-xform-item label="逻辑ID" name="proId" ctype="input" hidden></yu-xform-item>
+                    <yu-xform-item label="产品编号" name="productId" ctype="input" :disabled="proIdDisabled" :rules="rule.productId"></yu-xform-item>
+                    <yu-xform-item label="产品名称" name="prodName" ctype="input" :rules="rule.prodName" disable="true"></yu-xform-item>
+                    <yu-xform-item label="产品分类" ref="catlCode" name="catlCode" ctype="yufp-prod-tree" :rules="rule.catlCode"></yu-xform-item>
+                    <yu-xform-item label="管理部门" name="managerDept" ctype="yufp-dpt-selector" :rules="rule.managerDept"></yu-xform-item>
+                    <yu-xform-item label="是否在售" name="prodState" ctype="select" data-code="CD0242" :rules="rule.prodState"></yu-xform-item>
+                    <yu-xform-item label="风险等级" name="riskLevel" ctype="select" data-code="CD0201" :rules="rule.riskLevel"></yu-xform-item>
+                    <yu-xform-item label="利率" name="rate" ctype="input" :rules="rule.rate"></yu-xform-item>
+                    <yu-xform-item label="费率" name="freeRate" ctype="input" :rules="rule.freeRate"></yu-xform-item>
+                    <yu-xform-item label="产品期限" name="prodTerm" ctype="input" :rules="rule.prodTerm"></yu-xform-item>
+                    <yu-xform-item label="币种" name="cuyyenType" ctype="select" data-code="CD0071" :rules="rule.cuyyenType"></yu-xform-item>
+                    <yu-xform-item label="产品发布日期" name="prodStartDate" ctype="datepicker" :rules="rule.prodStartDate" :editable="false"></yu-xform-item>
+                    <yu-xform-item label="产品截止日期" name="prodEndDate" ctype="datepicker" :rules="rule.prodEndDate" :editable="false"></yu-xform-item>
+                </yu-xform-group>
+                <yu-xform-group :column="1">
+                    <yu-xform-item label="简介" name="prodDesc" ctype="textarea" :rules="rule.prodDesc"></yu-xform-item>
+                    <yu-xform-item label="产品特点" name="prodCharact" ctype="textarea" :rules="rule.prodCharact"></yu-xform-item>
+                    <yu-xform-item label="认购起点金额" name="subscribeStartAmt" ctype="textarea" :rules="rule.subscribeStartAmt"></yu-xform-item>
+                    <yu-xform-item label="适用对象" name="appObj" ctype="textarea" :rules="rule.appObj"></yu-xform-item>
+                    <yu-xform-item label="办理条件" name="buyCondition" ctype="textarea" :rules="rule.buyCondition"></yu-xform-item>
+                    <yu-xform-item label="业务流程" name="handProcess" ctype="textarea" :rules="rule.handProcess"></yu-xform-item>
+                    <yu-xform-item label="办理渠道" name="handChannle" ctype="textarea" :rules="rule.handChannle"></yu-xform-item>
+                    <yu-xform-item label="优惠信息" name="discntInfo" ctype="textarea" :rules="rule.discntInfo"></yu-xform-item>
+                    <yu-xform-item label="一句话营销话术" name="mktMsg" ctype="textarea" :rules="rule.mktMsg"></yu-xform-item>
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                    <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+
+    </yu-col>
+    </yu-row>
+</div>

@@ -1,0 +1,27 @@
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2019-1-29
+  @updated by
+  @description 银行产品树 
+-->
+<div>
+ <yu-row>
+   <!-- <yu-col :span="5">
+     <yu-xtree ref="refTree" :height="height - 20" data-root="1002" :data-url="treeDataurl" data-id="productId" data-label="prodName"
+     data-pid="catlParent"  style="margin:10px 10px 0 0;" @node-click="getTabledataFn">
+     </yu-xtree>
+   </yu-col> -->
+   <yu-col :span="5">
+    <yufp-ext-tree ref="refTree" :show-checkbox="false"  @node-click="getTabledataFn"
+      :data-url="treeDataurl" data-id="catlCode" data-label="catlName" :data-params = "baseParams"
+      data-pid="catlParent" :height="height - 112" style="margin:10px 10px 0 0;">
+    </yufp-ext-tree>
+  </yu-col>
+   <yu-col :span="19" id="prodTable">
+     <yu-xtable ref="refTable" row-number :data-url="dataUrl" :default-load="defaultLoad" :highlight-current-row="true" :stripe="true" :fit="true">
+       <yu-xtable-column v-for="(item, index) in tablelable" :key="index" :label="item.columnOthName" :prop="item.columnName" >
+        <!-- :data-code="item.dicName" -->
+       </yu-xtable-column>
+     </yu-xtable>
+   </yu-col>
+ </yu-row>
+</div>

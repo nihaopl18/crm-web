@@ -1,0 +1,60 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-21 13:58:21.
+  @updated by
+  @description 授信信息
+-->
+<div>
+  <yu-tabs v-model="activeName" @tab-click="handleClick">
+    <yu-tab-pane label="授信信息" name="credit">
+      <yu-xform related-table-name=creditTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="document" @click="creditinfoFn">详情</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="creditTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+          <yu-xtable-column label="额度状态" prop="agtStatCd" width="120" data-code="CD0391"></yu-xtable-column>
+          <yu-xtable-column label="额度有效起日" prop="startDate" width="150"></yu-xtable-column>
+          <yu-xtable-column label="额度有效止日" prop="endDate" width="150"></yu-xtable-column>
+          <yu-xtable-column label="额度类型" prop="lmtTypeCd" width="120" data-code="CD0392"></yu-xtable-column>
+          <yu-xtable-column label="业务性质" prop="bizPropCd" width="120" data-code="CD0394"></yu-xtable-column>
+          <yu-xtable-column label="授信品种" prop="productCd" width="120" data-code="CD0370"></yu-xtable-column>
+          <yu-xtable-column label="授信额度" prop="approveCreditLimit" width="100" align="right"></yu-xtable-column>
+          <yu-xtable-column label="可用额度" prop="approvedFreeLimit" width="100" align="right"></yu-xtable-column>
+          <yu-xtable-column label="已用额度" prop="approvedUsedLimit" align="right"></yu-xtable-column>
+      </yu-xtable>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+          <yu-xform ref="creditfForm" label-width="180px" v-model="formdata" :disabled="formDisabled" @row-dblclick="rowDblClick">
+            <yu-xform-group>
+              <yu-xform-item label="额度状态" name="agtStatCd" ctype="select" data-code="CD0391"></yu-xform-item>
+              <yu-xform-item label="币种" name="ccyCd" ctype="select" data-code="CD0071"></yu-xform-item>
+              <yu-xform-item label="额度有效起日" name="startDate" ctype="input"></yu-xform-item>
+              <yu-xform-item label="额度有效止日" name="endDate" ctype="input"></yu-xform-item>
+              <yu-xform-item label="额度期限" name="term" ctype="input"></yu-xform-item>
+              <yu-xform-item label="期限单位" name="termUnitCd" ctype="select" data-code="CD0440"></yu-xform-item>
+              <yu-xform-item label="额度类型" name="lmtTypeCd" ctype="select" data-code="CD0392"></yu-xform-item>
+              <yu-xform-item label="冻结额度" name="frozenInd" ctype="input"></yu-xform-item>
+              <yu-xform-item label="业务性质" name="bizPropCd" ctype="select" data-code="CD0394"></yu-xform-item>
+              <yu-xform-item label="授信品种" name="productCd" ctype="select" data-code="CD0370"></yu-xform-item>
+              <!-- <yu-xform-item label="对私客户行业类型" name="industryCd" ctype="select" data-code="CD0050"></yu-xform-item> -->
+              <yu-xform-item label="担保方式" name="guarMethCd" ctype="select" data-code="CD0085"></yu-xform-item>
+              <yu-xform-item label="批复结论" name="approveConclusionCd" ctype="select" data-code="CD0396"></yu-xform-item>
+              <yu-xform-item label="授信额度_申请" name="applyAmt" ctype="input"></yu-xform-item>
+              <yu-xform-item label="授信额度" name="approveCreditLimit" ctype="input" align="right"></yu-xform-item>
+              <yu-xform-item label="可用额度" name="approvedFreeLimit" ctype="input" align="right"></yu-xform-item>
+              <yu-xform-item label="已用额度  " name="approvedUsedLimit" ctype="input" align="right"></yu-xform-item>
+              <!-- <yu-xform-item label="担保品类型" name="guarantyTypeCd" ctype="select" data-code="CD0414"></yu-xform-item>确实码值 -->
+              <!-- <yu-xform-item label="本次担保债权金额" name="guarantyAmt" ctype="input" align="right"></yu-xform-item>
+              <yu-xform-item label="抵质押类型" name="guaranteeType" ctype="select" data-code="CD0372"></yu-xform-item> -->
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="cancelFn">返回</yu-button>
+            </div>
+          </yu-xform>
+      </yu-xdialog>
+    </yu-tab-pane>
+  </yu-tabs>
+</div>

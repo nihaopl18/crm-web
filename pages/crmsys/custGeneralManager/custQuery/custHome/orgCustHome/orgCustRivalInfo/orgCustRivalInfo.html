@@ -1,0 +1,106 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-22 09:48:59.
+  @updated by
+  @description 交易对手信息
+-->
+<div>
+  <yu-tabs v-model="activeName" @tab-click="handleClick">
+    <yu-tab-pane label="交易对手信息" name="rivalInfo">
+      <yu-xform related-table-name="rivalInfoTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="document" @click="rivalinfoFn">详情</yu-button>
+          <!-- <yu-button icon="yx-checkmark" @click="transDetail">交易明细</yu-button> -->
+          <yu-button icon="yx-checkmark2" @click="transList">交易流水</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="rivalInfoTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+        <!-- <yu-xtable-column label="法人" prop="corpOrgCode" width="150"></yu-xtable-column> -->
+        <yu-xtable-column label="数据日期" prop="dataDate" width="150"></yu-xtable-column>
+        <yu-xtable-column label="客户标识" prop="custId" width="150"></yu-xtable-column>
+        <yu-xtable-column label="交易方向" prop="tranType" width="150" data-code="CD0431"></yu-xtable-column>
+        <yu-xtable-column label="对方帐号" prop="othsideAcct" width="200"></yu-xtable-column>
+        <yu-xtable-column label="对方是否我行客户" prop="othsideFlag" width="200" data-code="CD0238"></yu-xtable-column>
+        <yu-xtable-column label="交易对手名称" prop="othsideName" width="200"></yu-xtable-column>
+        <yu-xtable-column label="最近三个月(自然月)交易总额" prop="lastThreeTranAmt" width="200"></yu-xtable-column>
+        <yu-xtable-column label="最近六个月(自然月)交易总额" prop="lastSixTranAmt" width="200"></yu-xtable-column>
+        <yu-xtable-column label="最近12个月(自然月)交易总额" prop="lastTwelveTranAmt" width="200"></yu-xtable-column>
+      </yu-xtable>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="saveDialogVisible" width="1100px">
+          <yu-xform ref="saverefForm" label-width="210px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+                <!-- <yu-xform-item label="法人" name="corpOrgCode" ctype="input"></yu-xform-item> -->
+                <yu-xform-item label="数据日期" name="dataDate" ctype="input"></yu-xform-item>
+                <yu-xform-item label="客户标识" :hidden="true" name="custId" ctype="input"></yu-xform-item>
+                <yu-xform-item label="交易方向" name="tranType" ctype="select" data-code="CD0431"></yu-xform-item>
+                <yu-xform-item label="对方帐号/客户号" name="othsideAcct" ctype="input"></yu-xform-item>
+                <yu-xform-item label="交易对手名称" name="othsideName" ctype="input"></yu-xform-item>
+                <yu-xform-item label="最近三个月(自然月)交易总额" name="lastThreeTranAmt" ctype="input"></yu-xform-item>
+                <yu-xform-item label="最近六个月(自然月)交易总额" name="lastSixTranAmt" ctype="input"></yu-xform-item>
+                <yu-xform-item label="最近12个月(自然月)交易总额" name="lastTwelveTranAmt" ctype="input"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="savecancelFn">返回</yu-button>
+            </div>
+          </yu-xform>
+      </yu-xdialog>
+      <!-- <yu-xdialog :title="viewTitle[viewType]" :visible.sync="transDetailDialogVisible" width="1000px">
+        <yu-xform related-table-name="transDetailTable" form-type="search">
+          <yu-xform-group :column="4">
+          </yu-xform-group>
+        </yu-xform>
+        <yu-xtable ref="transDetailTable" row-number :data-url="transDetailDataUrl" :highlight-current-row="true" :stripe="true">
+            <yu-xtable-column label="数据日期" prop="dataDate" width="120"></yu-xtable-column>
+            <yu-xtable-column label="客户标识" prop="custId" width="120"></yu-xtable-column>
+            <yu-xtable-column label="交易方向" prop="tranType" width="120" data-code="CD0431"></yu-xtable-column>
+            <yu-xtable-column label="对方帐号/客户号" prop="othsideAcct" width="120"></yu-xtable-column>
+            <yu-xtable-column label="交易对手名称" prop="othsideName" width="120"></yu-xtable-column>
+            <yu-xtable-column label="起始日期" prop="beginTime" width="100"></yu-xtable-column>
+            <yu-xtable-column label="结束日期" prop="endTime" width="100"></yu-xtable-column>
+            <yu-xtable-column label="交易金额（开始）" prop="amtBegin"></yu-xtable-column>
+            <yu-xtable-column label="交易金额（结束）" prop="amtEnd"></yu-xtable-column>
+          </yu-xtable>
+      </yu-xdialog> -->
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="transDialogVisible" width="1000px">
+          <yu-xform related-table-name="transTable" form-type="search" ref="transForm" class="hide-form-search-btn" v-model="queryFormdata1">
+              <yu-xform-group :column="4">
+                <yu-xform-item placeholder="起始日期" ctype="datepicker" name="startTM" rules="required"></yu-xform-item>
+                <yu-xform-item placeholder="结束日期" ctype="datepicker" name="endTM" rules="required"></yu-xform-item>
+                <yu-xform-item placeholder="交易开始金额" ctype="input" name="startAmt"></yu-xform-item>
+                <yu-xform-item placeholder="交易结束金额" ctype="input" name="endAmt"></yu-xform-item>
+                <yu-xform-item placeholder="交易渠道" ctype="select" name="channel" data-code="CD0401"></yu-xform-item>
+              </yu-xform-group>
+              <div class="yu-grpButton" style="text-align: right;">
+                  <yu-button icon="search" type="primary" @click="searchFn1">查询</yu-button>
+                  <yu-button icon="yx-file-excel" @click="exportFn1" v-if="false">导出</yu-button>
+                 <yu-button icon="yx-loop2" type="primary" @click="resetMainFn1">重置</yu-button>
+                </div>
+          </yu-xform>
+          <yu-xtable ref="transTable" row-number :data-url="transDataUrl" :highlight-current-row="true" :stripe="true" :default-load="false">
+              <yu-xtable-column label="交易日期" prop="transDt" width="100"></yu-xtable-column>
+              <yu-xtable-column label="交易时间" prop="transTm" width="150"></yu-xtable-column>
+              <yu-xtable-column label="交易机构编号" prop="orgNo" width="120"></yu-xtable-column>
+              <yu-xtable-column label="交易机构名称" prop="orgName" width="120"></yu-xtable-column>
+              <yu-xtable-column label="原交易代码" prop="ptxnCodeNo" width="120"></yu-xtable-column>
+              <yu-xtable-column label="现转标志" prop="ctInd" width="120" data-code="CD0064"></yu-xtable-column>
+              <yu-xtable-column label="子账户编号" prop="subacctNo" width="120"></yu-xtable-column>
+              <yu-xtable-column label="账户编号" prop="acctNo" width="120"></yu-xtable-column>
+              <yu-xtable-column label="币种" prop="ccyCd" width="120" data-code="CD0071"></yu-xtable-column>
+              <yu-xtable-column label="交易金额" prop="tranAmt" width=""></yu-xtable-column>
+              <yu-xtable-column label="余额" prop="bal" width=""></yu-xtable-column>
+              <yu-xtable-column label="借贷标志" prop="cdInd" width="120" data-code="CD0063"></yu-xtable-column>
+              <yu-xtable-column label="对方账户编号" prop="toacctNo" width="120"></yu-xtable-column>
+              <yu-xtable-column label="对方账户名称" prop="ftfAccName" width="120"></yu-xtable-column>
+              <yu-xtable-column label="渠道代码" prop="channelCd" width="120" ></yu-xtable-column>
+              <yu-xtable-column label="交易渠道" prop="channel" width="120" data-code="CD0401"></yu-xtable-column>
+              <yu-xtable-column label="交易柜员编号" prop="tlrNo" width="120"></yu-xtable-column>
+              <yu-xtable-column label="交易柜员名称" prop="userName" width="120"></yu-xtable-column>
+              <yu-xtable-column label="交易摘要" prop="tranBrief"></yu-xtable-column>
+          </yu-xtable>
+      </yu-xdialog>
+    </yu-tab-pane>
+  </yu-tabs>
+</div>

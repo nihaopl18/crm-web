@@ -1,0 +1,64 @@
+<div>
+
+  <yu-xform related-table-name="refTable" form-type="search" ref="searchForm">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="业绩类型" v-model="bussType" name="bussType" rules="required" ctype="yu-xselect" :options="bussOption" @change="bussChange"></yu-xform-item>
+      <yu-xform-item placeholder="客户经理" v-model="managerId" name="managerId" ctype="yufp-user-selector"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" v-model="custName" name="custName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户编号" v-model="custNumber" name="custNumber" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="机构" v-model="orgId" name="orgId" ctype="yufp-org-tree"></yu-xform-item>
+      <yu-xform-item placeholder="分配状态" v-model="dstrSts" name="dstrSts" ctype="yu-xselect" data-code="DS0001"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+
+  <div class="yu-toolBar" style="margin-top:10px;">
+    <yu-button-group>
+      <yu-button icon="plus" @click="importFn">导入</yu-button>
+      <yu-button icon="yx-folder-download" @click="exportFn">导出</yu-button>
+    </yu-button-group>
+  </div>
+
+  <yu-xtable ref="refTable"
+             height="550"
+             :default-load="false"
+             row-number
+             selection-type="checkbox"
+             :data-url="dataUrl"
+             v-show="xtableShow"
+             style="padding-left: 0px;" :highlight-current-row="true"
+             @loaded="refTableLoaded"
+
+             :stripe="true">
+    <yu-xtable-column v-for="(item, index) in columnList"
+                      :key="index"
+                      :label="item.label"
+                      :prop="item.prop"
+                      width="150px"
+                      :hidden="item.prop == 'id'"
+                      :formatter="colValConvert"
+    ></yu-xtable-column>
+  </yu-xtable>
+  <yu-xdialog :title="viewTitle" :visible.sync="importShow"  width="40%">
+    <center>
+    <yu-upload
+            class="upload-demo"
+            ref="upload"
+            :action="action"
+            :data="uploadData"
+            :headers="uploadHeaders"
+            :before-upload="beforeFileUpload"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :on-success="uploadSuccessFn"
+            :on-error="uploadErrorFn"
+            :on-timeout="uploadTimeoutFn"
+            :timeout="720000"
+            :show-file-list="false"
+            :auto-upload="true">
+      <yu-button slot="trigger" size="small" type="primary">选取文件</yu-button>
+      <div slot="tip" class="el-upload__tip">只能上传.xsl和.xslx结尾文件</div>
+    </yu-upload>
+    </center>
+  </yu-xdialog>
+  <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" :common-params="wfCommonParams" />
+</div>

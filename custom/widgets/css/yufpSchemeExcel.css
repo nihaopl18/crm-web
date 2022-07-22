@@ -1,0 +1,99 @@
+#excelCenter {
+  position: relative;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.l-table-edit {
+    
+}
+
+.l-table-edit-td {
+  padding: 4px;
+}
+
+.l-button-submit,.l-button-reset {
+  width: 80px;
+  float: left;
+  margin-left: 10px;
+  padding-bottom: 2px;
+}
+
+.l-verify-tip {
+  left: 230px;
+  top: 120px;
+}
+
+.own-formitem-style {
+  width: 108px;
+}
+
+.queryContent {
+  overflow: auto;
+  border: 1px solid #C1C1C1;
+  margin: 0.5px;
+}
+
+.query-dim-item {
+  height: 20px;
+  float: left;
+  line-height: 20px;
+  border: 1px solid #D4D4D4;
+  color: #4C4C4C;
+  margin: 2px;
+  padding: 0 2px;
+  background-color: #F0F0F0;
+  border-radius: 2px;
+  cursor: default;
+}
+
+.dim-drag-place {
+  height: 20px;
+  width: 55px;
+  float: left;
+  border: 1px dotted #D4D4D4;
+  margin: 2px;
+  padding: 0 2px;
+  border-radius: 2px;
+  cursor: default;
+}
+
+.query-dim-item-close {
+  cursor: pointer;
+}
+
+.query-module-item {
+  height: 35px;
+  float: left;
+  line-height: 35px;
+  border: 1px solid #D4D4D4;
+  color: #4C4C4C;
+  margin: 2px;
+  padding: 0 2px;
+  background-color: #F0F0F0;
+  border-radius: 2px;
+  cursor: default;
+}
+
+.module-drag-place {
+  height: 35px;
+  width: 80px;
+  float: left;
+  border: 1px dotted #D4D4D4;
+  margin: 2px;
+  padding: 0 2px;
+  border-radius: 2px;
+  cursor: default;
+}
+
+.query-module-item-close {
+  cursor: pointer;
+}
+
+.query-hightlight {
+  background-color: #6BEDDA;
+}

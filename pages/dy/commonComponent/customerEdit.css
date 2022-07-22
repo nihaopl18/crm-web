@@ -1,0 +1,22 @@
+.edit .el-form-item__content {
+  margin-left: 10px !important;
+  height: 72px !important;
+}
+/* .yu-xform-group .el-form-item:nth-child(2) {
+  margin-left: 20px !important;
+} */
+.edit .el-form-item__label {
+  font-size: 14px;
+  margin-left: 10px;
+}
+.edit .dialog-footer {
+ padding-top: 10px; 
+ border-top: 1px solid  #E5E7ED;
+ text-align: center;
+}
+.edit .el-select__tags-text {
+  color: #606266;
+}
+.edit .el-select .el-tag__close.el-icon-close {
+  right: -4px;
+}

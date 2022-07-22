@@ -1,0 +1,25 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-2-13 15:56:43.
+  @updated by
+  @description 客户风险预警信息
+-->
+<div>
+  <yu-tabs v-model="activeName" @tab-click="handleClick">
+      <yu-tab-pane label="风险评级信息" name="messageTip">
+        <yu-xform related-table-name="refTable" form-type="search">
+          <yu-xform-group :column="4">
+          </yu-xform-group>
+        </yu-xform>
+        <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+          <yu-xtable-column label="数据日期" prop="dataDate" width="100"></yu-xtable-column>
+          <yu-xtable-column label="高风险标志" prop="riskType" width="120" data-code="CD0238"></yu-xtable-column>
+          <!-- <yu-xtable-column label="风险描述" prop="riskDesc" width="120"></yu-xtable-column> -->
+          <yu-xtable-column label="风险等级" prop="riskLev" width="120" data-code="CD0439"></yu-xtable-column>
+          <yu-xtable-column label="风险状态" prop="riskStatus" width="120" data-code="CD0252"></yu-xtable-column>
+          <yu-xtable-column label="风险有效日期" prop="riskTipDate" width="100"></yu-xtable-column>
+          <!-- <yu-xtable-column label="风险处置日期" prop="riskSetDate" width="100"></yu-xtable-column> -->
+          <yu-xtable-column label="来源系统" prop="srcSysCd"></yu-xtable-column>
+        </yu-xtable>
+      </yu-tab-pane>
+  </yu-tabs>
+</div>

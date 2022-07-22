@@ -1,0 +1,63 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-2-12 19:30:18.
+  @updated by
+  @description 对公股东信息
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true" @cell-dblclick="tableDbClick">
+    <yu-xtable-column label="股东名称" prop="holderName" width="160"></yu-xtable-column>
+    <yu-xtable-column label="股东类型" prop="holderType" width="160" data-code="CD0037"></yu-xtable-column>
+    <yu-xtable-column label="持股比例" prop="stockPerc" width="100" align="right"></yu-xtable-column>
+    <yu-xtable-column label="最新更新人" prop="userName" width="160"></yu-xtable-column>
+    <yu-xtable-column label="最新更新人机构" prop="orgName" width="200"></yu-xtable-column>
+    <yu-xtable-column label="最新更新日期" prop="lastChgDt" ></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+    <yu-xform ref="refForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="主键" name="id" :hidden="true" ctype="input"></yu-xform-item>
+        <yu-xform-item label="股东客户号" :hidden="true" name="holderCustId" ctype="input"></yu-xform-item>
+        <yu-xform-item label="股东名称" name="holderName" ctype="input"  :rules="rule.holderName"></yu-xform-item>
+        <yu-xform-item label="股东类型" name="holderType" ctype="select" data-code="CD0037" rules="required" :rules="rule.holderType"></yu-xform-item>
+        <!-- <yu-xform-item label="股东证件类型" name="certType" ctype="select" data-code="CD0011" rules="required" :rules="rule.certType"></yu-xform-item>
+        -->
+        <yu-xform-item label="股东证件类型" name="certType" ctype="select" :hidden="formdata.holderType != '1'" data-code="CD0348" rules="required" :rules="rule.certType"></yu-xform-item>
+        <!-- 对公证件类型 -->
+        <yu-xform-item label="股东证件类型" name="certType" ctype="select" :hidden="formdata.holderType != '2'" data-code="CD0349" rules="required" :rules="rule.certType"></yu-xform-item>
+        <yu-xform-item label="股东证件号码" name="certNo" ctype="input"  :rules="rule.certNo"></yu-xform-item>
+        <yu-xform-item label="法人代表客户号" name="legalCustId" ctype="input" :rules="rule.legalCustId"></yu-xform-item>
+        <yu-xform-item label="法人代表名称" name="legalName" ctype="input" :rules="rule.legalName"></yu-xform-item>
+        <yu-xform-item label="法人代表证件类型" name="legalCertType" ctype="select" data-code="CD0348" :rules="rule.legalCertType"></yu-xform-item>
+        <yu-xform-item label="法人代表证件号码" name="legalCertNo" ctype="input" :rules="rule.legalCertNo"></yu-xform-item>
+        <yu-xform-item label="出资方式" name="invType" ctype="select" data-code="CD0289" :rules="rule.invType"></yu-xform-item>
+        <yu-xform-item label="出资币种" name="invCurrCd" ctype="select" data-code="CD0071" :rules="rule.invCurrCd"></yu-xform-item>
+        <yu-xform-item label="出资金额" name="invAmt" ctype="input" :rules="rule.invAmt"></yu-xform-item>
+        <yu-xform-item label="出资日期" name="sponsorDate" ctype="datepicker"></yu-xform-item>
+        <yu-xform-item label="持股比例%" name="stockPerc" ctype="input" :rules="rule.stockPerc"></yu-xform-item>
+        <yu-xform-item label="实际持股金额(元)" name="actStockAmt" ctype="input" :rules="rule.actStockAmt"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="btnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

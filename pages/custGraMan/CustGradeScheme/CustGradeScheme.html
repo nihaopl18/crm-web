@@ -1,0 +1,233 @@
+<!-- 
+  @Created by 张成龙 zhangcl3@yusys.com.cn on 2019-2-15 09:25:13.
+  @updated by
+  @description 客户评价方案
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="方案名称" ctype="input" name="schemeName"></yu-xform-item>
+      <yu-xform-item placeholder="适用客户" ctype="select" name="gradeType" data-code="CD0016"></yu-xform-item>
+      <yu-xform-item placeholder="是否启用" ctype="select" name="isUsed" data-code="CD0238"></yu-xform-item>
+      <!-- <yu-xform-item placeholder="适用客户" ctype="datepicker" name="createAt"></yu-xform-item> -->
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+      <yu-button icon="yx-bin" @click="enableFn">启用</yu-button>
+      <yu-button icon="yx-bin" @click="disEnableFn">禁用</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" @row-dblclick="rowDblClick">
+      <yu-xtable-column label="方案ID" prop="schemeId" width="110" v-if="false"></yu-xtable-column>
+      <yu-xtable-column label="方案名称" prop="schemeName" width="200" ></yu-xtable-column>
+      <yu-xtable-column label="适用客户" prop="gradeType" width="110" data-code="CD0016"></yu-xtable-column>
+      <yu-xtable-column label="是否启用" prop="isUsed" width="110" data-code="CD0238"></yu-xtable-column>
+      <yu-xtable-column label="评价方案类型" prop="gradeUseage" width="130"  :options="schemeType"></yu-xtable-column>
+      <yu-xtable-column label="评价频率" prop="gradeFrequency" width="110" :options="gradeFrequency"></yu-xtable-column>
+      <yu-xtable-column label="评价起始日期" prop="gradeBeginDate" :formatter="formData"></yu-xtable-column>
+      <yu-xtable-column label="评价结束日期" prop="gradeEndDate" :formatter="formData"></yu-xtable-column>
+      <yu-xtable-column label="维护人" prop="lastChgUsrName" width="180"></yu-xtable-column>
+      <yu-xtable-column label="维护日期" prop="lastChgDt" :formatter="formData"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1200px">
+    <yu-xform ref="refForm" label-width="140px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+          <yu-xform-item label="方案ID" ctype="input" name="schemeId" :hidden="true" ></yu-xform-item>
+          <yu-xform-item label="方案名称" ctype="input" name="schemeName" :rules="rule[0]"></yu-xform-item>
+          <yu-xform-item label="评价方案类型" ctype="select" name="gradeUseage" :rules="rule[0]" :options="schemeType" @change="changeParam"></yu-xform-item>
+          <yu-xform-item label="适用客户" ctype="select" name="gradeType" data-code="CD0016" :rules="rule[0]"></yu-xform-item>
+          <yu-xform-item label="是否启用" ctype="select" name="isUsed" data-code="CD0238" :rules="rule[0]"></yu-xform-item>
+          <yu-xform-item label="评价频率" ctype="select" name="gradeFrequency" :rules="rule[0]" :options="gradeFrequency"></yu-xform-item>
+          <yu-xform-item label="评价起始日期" ctype="datepicker" :editable="false" name="gradeBeginDate" :rules="rule[0]"></yu-xform-item>
+          <yu-xform-item label="评价结束日期" ctype="datepicker" :editable="false" name="gradeEndDate" :rules="rule[0]"></yu-xform-item>
+          <yu-xform-item label="备注" ctype="textarea" name="memo" :rows="3" :colspan="24" placeholder="1000个字符以内" :rules="rule[1]"></yu-xform-item>
+      </yu-xform-group>
+      <el-collapse  v-model="activeNames">
+          <el-collapse-item name="1" title="评价标准列表">
+              <div class="yu-toolBar">
+                  <yu-button-group> 
+                    <yu-button icon="plus" v-show="saveBtnShow" @click="addStandardFn(standardData)">新增</yu-button>
+                    <!-- <yu-button icon="yx-bin" v-show="saveBtnShow" @click="deleteGradeFn">删除</yu-button> -->
+                  </yu-button-group>
+                </div>
+                <template >
+                    <el-table border :data="standardData" highlight-current-row @row-click="handleCurrentChange" 
+                     style="width: 100%" >
+                        <el-table-column prop="standardId" label="标识ID" v-if='false'>
+                            <template scope="scope">
+                                        <el-input  v-model="scope.row.standardId" :disabled="true"  ></el-input>
+                            </template>
+                           </el-table-column>
+                           <el-table-column prop="standardName" label="标准名称">
+                              <template scope="scope">
+                                          <el-input  v-model="scope.row.standardName"  ></el-input>
+                              </template>
+                             </el-table-column>
+                             <el-table-column prop="standardType" label="标准类型" style="width:6vw;" >
+                               <template scope="scope">
+                                   <el-select v-model="scope.row.standardType" clearable >
+                                     <el-option
+                                       v-for="item in STANDARD_TYPE"
+                                       :key="item.key"
+                                       :label="item.value"
+                                       :value="item.key">
+                                     </el-option>
+                                   </el-select>
+                               </template>
+                               </el-table-column>
+                               <el-table-column prop="minusLevel" label="是否启用" style="width:6vw;" >
+                                  <template scope="scope">
+                                      <el-select v-model="scope.row.minusLevel" clearable >
+                                        <el-option
+                                          v-for="item in IF_FLAG"
+                                          :key="item.key"
+                                          :label="item.value"
+                                          :value="item.key">
+                                        </el-option>
+                                      </el-select>
+                                  </template>
+                                  </el-table-column>
+                                  <el-table-column prop="gradeFormula" label="评级公式指标">
+                                      <template scope="scope">
+                                                   <el-input v-if="inputShow"  v-model="scope.row.gradeFormula"  @focus="showZj(scope.$index, standardData)"></el-input> 
+                                                   <yufp-base-index  v-if="!inputShow" v-model="scope.row.gradeFormula"  placeholder="指标选择" name="指标选择" :params="params" @select-fn="callExplain"></yufp-base-index> 
+                                                  <!-- <yu-xform-item ctype="yufp-base-index"   ></yu-xform-item> -->
+                                      </template>
+                                     </el-table-column>
+                                     <el-table-column prop="gradeFormulaExplain" label="评级公式解释">
+                                        <template scope="scope">
+                                                    <el-input  v-model="scope.row.gradeFormulaExplain"  :disabled="true" ></el-input>
+                                        </template>
+                                       </el-table-column>
+                         <!-- <el-table-column prop="gradeLevel" label="服务等级" style="width:6vw;" >
+                          <template scope="scope">
+                              <el-select v-model="scope.row.gradeLevel" clearable :disabled="viewType=='DETAIL'"  >
+                                <el-option
+                                  v-for="item in SERV_LEV"
+                                  :key="item.key"
+                                  :label="item.value"
+                                  :value="item.key">
+                                </el-option>
+                              </el-select>
+                          </template>
+                          </el-table-column>
+                         <el-table-column prop="preferentStr" label="优惠折扣">
+                          <template scope="scope">
+                                      <el-input  v-model="scope.row.preferentStr"  :disabled="viewType=='DETAIL'" ></el-input>
+                          </template>
+                         </el-table-column> -->
+                  <el-table-column   label="操作" prop="oper">
+                  <template slot-scope="scope">
+                  <el-button v-show="saveBtnShow" @click.native.prevent="deleteRow(scope.$index, standardData)" size="small"> 移除 </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </template>
+          </el-collapse-item>
+          <el-collapse-item name="2" title="评价标准参数表">
+                <template >
+                    <el-table border :data="levelData" style="width: 100%" >
+                        <el-table-column prop="standardId" label="标识ID" v-if='false' >
+                            <template scope="scope">
+                                        <el-input  v-model="scope.row.standardId" ></el-input>
+                            </template>
+                           </el-table-column>
+                             <el-table-column prop="gradeLevel" label="价值等级" style="width:6vw;" >
+                               <template scope="scope">
+                                   <el-select v-model="scope.row.gradeLevel" clearable :disabled="true">
+                                     <el-option
+                                       v-for="item in GRADE_LEVEL"
+                                       :key="item.key"
+                                       :label="item.value"
+                                       :value="item.key">
+                                     </el-option>
+                                   </el-select>
+                               </template>
+                               </el-table-column>
+                                  <el-table-column prop="levelLower" label="指标总分下限(包含)">
+                                      <template scope="scope">
+                                                  <el-input placeholder="请输入数字" v-model="scope.row.levelLower" onkeyup="value=value.replace(/[^\d]/g,'')" ></el-input>
+                                      </template>
+                                     </el-table-column>
+                                     <el-table-column prop="levelUpper" label="指标总分上限(不包含)">
+                                        <template scope="scope">
+                                                    <el-input  v-model="scope.row.levelUpper"  placeholder="请输入数字" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+                                        </template>
+                                       </el-table-column>
+                                       <el-table-column prop="levelCritical"  label="等级临界参数(%)">
+                                          <template scope="scope">
+                                                      <el-input  v-model="scope.row.levelCritical" placeholder="请输入数字" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+                                          </template>
+                                         </el-table-column>
+                         <!-- <el-table-column prop="gradeLevel" label="服务等级" style="width:6vw;" >
+                          <template scope="scope">
+                              <el-select v-model="scope.row.gradeLevel" clearable :disabled="viewType=='DETAIL'"  >
+                                <el-option
+                                  v-for="item in SERV_LEV"
+                                  :key="item.key"
+                                  :label="item.value"
+                                  :value="item.key">
+                                </el-option>
+                              </el-select>
+                          </template>
+                          </el-table-column>
+                         <el-table-column prop="preferentStr" label="优惠折扣">
+                          <template scope="scope">
+                                      <el-input  v-model="scope.row.preferentStr"  :disabled="viewType=='DETAIL'" ></el-input>
+                          </template>
+                         </el-table-column> -->
+              </el-table>
+            </template>
+          </el-collapse-item>
+        </el-collapse>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+
+  <yu-xdialog :title="deatilTitle" :visible.sync="deatilVisible" width="1200px">
+      <yu-xtable ref="refDeatilTable"  :data-url="dataUrlDeatil" :pageable="false" :span-method="arraySpanMethod">
+      <yu-xtable-column label="备注" prop="memo" width="150"></yu-xtable-column>
+      <yu-xtable-column label="评级标准列表" align="center">
+          <yu-xtable-column label="标准名称" prop="standardName" width="150"></yu-xtable-column>
+          <yu-xtable-column label="标准类型" prop="standardType" width="150" :options="STANDARD_TYPE"></yu-xtable-column>
+          <yu-xtable-column label="是否启用" prop="minusLevel" width="150" :options="IF_FLAG"></yu-xtable-column>
+      </yu-xtable-column>
+
+      <yu-xtable-column label="评级公式指标列表" align="center">
+          <yu-xtable-column label="评级公式指标" prop="gradeFormula" width="150"></yu-xtable-column>
+          <yu-xtable-column label="评级公式指标解释" prop="gradeFormulaExplain" width="150"></yu-xtable-column>
+      </yu-xtable-column>
+      <yu-xtable-column label="评价结果细项" align="center">
+          <yu-xtable-column label="价值等级" prop="gradeLevel" width="150" data-code="CD0032"></yu-xtable-column>
+          <yu-xtable-column label="指标总分下限(包含)" prop="levelLower" width="150" ></yu-xtable-column>
+          <yu-xtable-column label="指标总分上限(不包含)" prop="levelUpper" width="150" ></yu-xtable-column>
+          <yu-xtable-column label="等级临界参数(%)" prop="levelCritical" width="150" ></yu-xtable-column>
+      </yu-xtable-column>
+      </yu-xtable>
+      <div class="yu-grpButton">
+          <yu-button icon="yx-undo2" type="primary" @click="cancelDetailFn">取消</yu-button>
+        </div>
+  </yu-xdialog>
+
+
+  <yu-xdialog title="指标编辑" :visible.sync="dialogVisibleShow" width="800px">
+      <yu-xform-group ref="formGroup"  :column="1" v-model="index">
+        <yu-xform-item ctype="yufp-base-index"  v-model="indexCode"  placeholder="指标选择" name="指标选择" :params="params" @select-fn="selectIndex"></yu-xform-item>
+        <yu-xform-item ctype="textarea" v-model="index.selectIndexCode" name="index.selectIndexCode" :rows="3" :colspan="24" placeholder="评价指标公式" :rules="rule[0]"></yu-xform-item>
+        <yu-xform-item  ctype="textarea" v-model="index.selectIndexName"  name="index.selectIndexName" :rows="3" :colspan="24" placeholder="评价指标公式解释" :rules="rule[0]" ></yu-xform-item>
+      </yu-xform-group>
+     <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFnZj">确定</yu-button>
+     </div>
+     </yu-xdialog> 
+</div>

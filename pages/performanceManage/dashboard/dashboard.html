@@ -1,0 +1,315 @@
+<div class="crm-screen">
+    <link rel="stylesheet" type="text/css" href="pages/common/dashboard/dashboard.css" />
+    <div class="main-page" v-cloak>
+        <div class="main-page-item">
+            <yu-row :gutter="20">
+                <yu-col :span="5" style="width: 16.6%;" v-for="(item, index) in noticeList" :key="item.type">
+                    <div :class="['notice-box']" @click="viewDetail(item)">
+                        <i :class="['el-icon-yx-stack', 'notice-icon', 'notice-box-val-color-' + (index + 1)]"></i>
+                        <div class="notice-content">
+                            <div :class="['notice-box-val', 'notice-box-val-color-' + (index + 1)]">{{item.infoSum}}</div>
+                            <div class="notice-box-label">{{item.title}}</div>
+                        </div>
+                    </div>
+
+                    <!--<div class="target-box cursor" @click="viewDetail(item)">-->
+                    <!--<div class="yu-chart-box-content tips-no-offset">-->
+                    <!---->
+                    <!--</div>-->
+                    <!--</div>-->
+                </yu-col>
+            </yu-row>
+        </div>
+        <div class="main-page-item" v-if="taskList.length > 0">
+
+            <div class="task-progress">
+                <h4>指标完成情况</h4>
+                <yu-xtable ref="taskRefTable" :data-url="taskDataUrl" :base-params="taskTableParams" :default-load="false">
+                    <yu-xtable-column label="指标名称" prop="indexName"></yu-xtable-column>
+                    <yu-xtable-column label="指标值(万元)">
+                        <template scope="scope">
+                            <span v-html="yufp.util.moneyFormatter(Number(scope.row.indexValue) / 10000, 4)"></span>
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column label="任务值(万元)">
+                        <template scope="scope">
+                            <span v-html="yufp.util.moneyFormatter(Number(scope.row.impValue) / 10000, 4)"></span>
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column label="任务完成率" prop="planPer"></yu-xtable-column>
+                </yu-xtable>
+                <!-- <el-table :data="taskData.slice(0,5)" border stripe style="width: 100%">
+                    <el-table-column prop="indexName" header-align="center" align="left" label="指标名称">
+                    </el-table-column>
+                    <el-table-column prop="indexValue" header-align="center" align="center" label="指标值(万元)" width="180">
+                    </el-table-column>
+                    <el-table-column prop="planValue" header-align="center" align="center" label="任务值(万元)" width="180">
+                    </el-table-column>
+                    <el-table-column prop="planPer" header-align="center" align="center" label="任务完成率" width="180">
+                    </el-table-column>
+                    <el-table-column
+                                header-align="center"
+                                align="center"
+                                label="是否完成"
+                                width="100">
+                            <template slot-scope="scope">
+                                <i class="el-icon-circle-check" style="color: #67C23A;font-size: 16px;"
+                                   v-if="scope.row.ifFinsh == 1"></i>
+                                <i class="el-icon-circle-close" style="color: #F56C6C;font-size: 16px;"
+                                   v-else-if="scope.row.ifFinsh == 0"></i>
+                            </template>
+                        </el-table-column>
+                </el-table> -->
+                <!-- <el-tooltip class="item" effect="dark" content="点击查看任务详情" placement="top"> -->
+                <!-- <div class="progress-box cursor">
+                        <span class="progress-title">指标完成情况/span>
+                      <div class="progress">
+                            <div :class="progressStyle" :style="{width: taskCompRate}"></div>
+                        </div>
+                        <span :class="progressTextStyle">{{taskCompRate}}</span> -->
+                <!--   </div> 
+                </el-tooltip>-->
+
+            </div>
+        </div>
+        <!-- <div class="main-page-item echarts clearfix" v-if="mapList.length > 0">
+
+            <div class="panel">
+                <div class="panel-head">
+                    <div class="panel-title">{{mapList[0] ? mapList[0].title: '标题'}}</div>
+                    <div class="panel-tools">
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="echarts-box" style="position: relative;">
+                        <yu-select v-model="mapBarValue" v-if="isMapCenter" placeholder="请选择" style="position: absolute; top: 20px; right: 20px; width: 200px; z-index: 99;"
+                            @change="mapBarChange">
+                            <yu-option v-for="item in mapBarOptions" :key="item.indexId" :label="item.indexName" :value="item.indexId"></yu-option>
+                        </yu-select>
+                        <div id="mapArea" style=" height: 450px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div style="width: 100%;margin: 20px 0 10px 0;">
+            <yu-xform v-model="formInline">
+                <yu-xform-group :column="4">
+                    <yu-xform-item label="指标类型" placeholder="指标类型" ctype="select" name="indexType"  data-code="REMIND_ACCT_TYPE"  @change="lookUpChange"></yu-xform-item>
+                    <yu-xform-item label="指标" placeholder="指标" colspan="12" :options="options" ctype="yu-xselect" name="indexId" ></yu-xform-item>
+                    <yu-xform-item label="日期" placeholder="日期" ctype="datepicker" name="date"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+        </div>
+        <div class="main-page-item ranking clearfix">
+            <div class="col" v-for="item in rankingList" :key="item.id">
+                <div class="panel">
+                    <div class="panel-head">
+                        <div class="panel-title">{{item.title}}</div>
+                        <div class="panel-tools">
+                            <yu-button v-if="item.data.length>0" @click="viewRankingDetail(item)" type="text" class="btn-more">更多
+                                <i class="el-icon-arrow-right el-icon--right"></i>
+                            </yu-button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="ranking-box" v-if="item.data.length>0">
+                            <div class="ranking-box-left">
+                                <div class="ranking-first">
+                                    <div class="ranking-index">
+                                        <i class="icon-ranking icon-first"></i>
+                                    </div>
+                                    <div class="ranking-title">{{item.data.length>0 ? item.data[0].name : ''}}
+                                    </div>
+                                    <div class="ranking-score">{{item.data.length>0 ? item.data[0].val : ''}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ranking-box-right" v-if="item.data.length>1">
+                                <div class="ranking-list">
+                                    <div class="ranking-list-item" v-for="(dataItem, index) in item.data.slice(1, 4)" :key="item.rowId">
+                                        <div class="ranking-index" v-if="dataItem.rankNum === 2">
+                                            <i class="icon-ranking icon-second"></i>
+                                        </div>
+                                        <div class="ranking-index" v-if="dataItem.rankNum === 3">
+                                            <i class="icon-ranking icon-third"></i>
+                                        </div>
+                                        <div class="ranking-index" v-if="dataItem.rankNum === 4">4</div>
+                                        <div class="ranking-title">{{dataItem.name}}</div>
+                                        <div class="ranking-score">{{dataItem.val}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="ranking-box no-data">
+                            <span style="color: #999;">暂无数据</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-page-item echarts clearfix">
+            <div class="col" v-for="(item, index) in chartList" :key="index">
+                <div class="panel">
+                    <div class="panel-head">
+                        <div class="panel-title">{{item.title}}</div>
+                        <div class="panel-tools">
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="echarts-box">
+                            <yu-echarts :option="item.option" height="240px"></yu-echarts>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- 大额变动dialog -->
+    <yu-xdialog :title="tempNoticeTitle" :visible.sync="balNoticeDialogVisible" width="80%">
+        <div>
+            <!-- <yu-xform related-table-name="refBaseTable" form-type="search">
+                <yu-xform-group :column="4">
+                    <yu-xform-item placeholder="提醒内容" name="remindInfo" ctype="input"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform> -->
+            <yu-xtable ref="balRefBaseTable" :data-url="noticeDataUrl" :default-load="false" :base-params="params" :highlight-current-row="true"
+                stripe="true">
+                <yu-xtable-column label="规则类别名称" prop="ruleName" align="center"></yu-xtable-column>
+                <yu-xtable-column label="客户名称" prop="custName" align="center"></yu-xtable-column>
+                <yu-xtable-column label="客户类型" prop="custType" data-code="CUST_TYPE" align="center"></yu-xtable-column>
+                <yu-xtable-column label="账户类型" prop="acctType" data-code="REMIND_ACCT_TYPE" align="center"></yu-xtable-column>
+                <yu-xtable-column label="账户号码" prop="acctNo" align="center"></yu-xtable-column>
+                <yu-xtable-column label="变动金额(元)" align="right">
+                    <template scope="scope">
+                        <span v-html="yufp.util.moneyFormatter(scope.row.changeBal, 2)"></span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="提醒生成日期" align="center">
+                    <template scope="scope">
+                        <span v-html="yufp.util.dateFormat(new Date(scope.row.remindCreateDate), '{y}-{m}-{d}')"></span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="提醒到期日期" align="center">
+                    <template scope="scope">
+                        <span v-html="yufp.util.dateFormat(new Date(scope.row.remindExpireDate), '{y}-{m}-{d}')"></span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="开户机构" prop="openOrgName" align="center"></yu-xtable-column>
+                <yu-xtable-column label="已读标识" prop="isRead" data-code="IS_READ" align="center"></yu-xtable-column>
+                <yu-xtable-column label="已读时间" prop="readTime" align="center"></yu-xtable-column>
+                <yu-table-column fixed="right" align="center">
+                    <template slot-scope="scope">
+                        <yu-tooltip class="item" effect="light" :content="scope.row.isRead == '1' ? '已读' : '未读'" placement="top-start">
+                            <yu-button type="text" style="font-size:20px; color:#ffb521eb" 
+                                :icon="scope.row.isRead == '1' ? 'yx-star-full' : 'yx-star-empty'"
+                                @click="balRefBaseTableClick(scope.row)"></yu-button>
+                        </yu-tooltip>
+                    </template>
+                </yu-table-column>
+            </yu-xtable>
+        </div>
+    </yu-xdialog>
+    <!-- 到期提醒dialog -->
+    <yu-xdialog :title="tempNoticeTitle" :visible.sync="noticeDialogVisible" width="80%">
+        <div>
+            <!-- <yu-xform related-table-name="refBaseTable" form-type="search">
+                <yu-xform-group :column="4">
+                    <yu-xform-item placeholder="提醒内容" name="remindInfo" ctype="input"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform> -->
+            <yu-xtable ref="refBaseTable" :data-url="noticeDataUrl" :default-load="false" :base-params="params" :highlight-current-row="true"
+                stripe="true">
+                <yu-xtable-column label="规则类别名称" prop="ruleName" align="center"></yu-xtable-column>
+                <yu-xtable-column label="客户名称" prop="custName" align="center"></yu-xtable-column>
+                <yu-xtable-column label="客户类型" prop="custType" data-code="CUST_TYPE" align="center"></yu-xtable-column>
+                <yu-xtable-column label="账户类型" prop="acctType" data-code="REMIND_ACCT_TYPE" align="center"></yu-xtable-column>
+                <yu-xtable-column label="账户号码" prop="acctNo" align="center"></yu-xtable-column>
+                <yu-xtable-column label="到期日期" prop="expiredDate" align="center"></yu-xtable-column>
+                <yu-xtable-column label="提醒生成日期" align="center">
+                    <template scope="scope">
+                        <span v-html="yufp.util.dateFormat(new Date(scope.row.remindCreateDate), '{y}-{m}-{d}')"></span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="提醒到期日期" align="center">
+                    <template scope="scope">
+                        <span v-html="yufp.util.dateFormat(new Date(scope.row.remindExpireDate), '{y}-{m}-{d}')"></span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="开户机构" prop="openOrgName" align="center"></yu-xtable-column>
+                <yu-xtable-column label="已读标识" prop="isRead" data-code="IS_READ" align="center"></yu-xtable-column>
+                <yu-xtable-column label="已读时间" prop="readTime" align="center"></yu-xtable-column>
+                <yu-table-column fixed="right" align="center">
+                    <template slot-scope="scope">
+                        <yu-tooltip class="item" effect="light" :content="scope.row.isRead == '1' ? '已读' : '未读'" placement="top-start">
+                            <yu-button type="text" style="font-size:20px; color:#ffb521eb" 
+                                :icon="scope.row.isRead == '1' ? 'yx-star-full' : 'yx-star-empty'"
+                                @click="refBaseTableClick(scope.row)"></yu-button>
+                        </yu-tooltip>
+                    </template>
+                </yu-table-column>
+            </yu-xtable>
+        </div>
+    </yu-xdialog>
+     <!-- 到期提醒dialog -->
+     <yu-xdialog :title="tempNoticeTitle" :visible.sync="todoDialogVisible" width="80%">
+        <div>
+            <yu-xtable ref="refBaseTable" :data-url="noticeDataUrl" :highlight-current-row="true"
+                stripe="true" :pageable="false" @row-dblclick="rowDblclick">
+                <yu-xtable-column label="功能点" prop="funCode" align="center"></yu-xtable-column>
+                <yu-xtable-column label="功能点名称" prop="funName" align="center"></yu-xtable-column>
+                <yu-xtable-column label="待办数量" prop="remindNum" align="center"></yu-xtable-column>
+            </yu-xtable>
+        </div>
+    </yu-xdialog>
+
+
+    <yu-xdialog :title="tempRankingTitle" :visible.sync="rankingDialogVisible" width="1024px">
+        <div>
+            <!--<yu-xform related-table-name="refRankingTable" form-type="search">-->
+            <!--<yu-xform-group :column="4">-->
+            <!--<yu-xform-item placeholder="机构名称" name="orgName" ctype="input"></yu-xform-item>-->
+            <!--</yu-xform-group>-->
+            <!--</yu-xform>-->
+            <yu-xtable ref="refRankingTable" :data-url="rankingDataUrl" :default-load="false" :base-params="params" :highlight-current-row="true"
+                stripe="true">
+                <yu-table-column label="排名" prop="rankNum" align="center"></yu-table-column>
+                <yu-xtable-column label="名称" prop="name" header-align="center" align="center"></yu-xtable-column>
+                <!-- <yu-xtable-column label="得分" prop="val" align="center"></yu-xtable-column> -->
+                <yu-xtable-column label="年初值" prop="yearBegVal" align="center"></yu-xtable-column>
+                <yu-xtable-column label="增长值" prop="increVal" align="center"></yu-xtable-column>
+                <yu-xtable-column label="余额" prop="val" align="center"></yu-xtable-column>
+            </yu-xtable>
+        </div>
+    </yu-xdialog>
+
+    <yu-xdialog title="任务详情" :visible.sync="taskDialogVisible" width="1024px">
+        <div>
+            <el-table :data="taskData" class="taskClass" border stripe style="width: 100%">
+                <el-table-column prop="indexName" header-align="center" align="left" label="指标名称">
+                </el-table-column>
+                <el-table-column prop="indexValue" header-align="center" align="center" label="指标值(万元)" width="180">
+                </el-table-column>
+                <el-table-column prop="planValue" header-align="center" align="center" label="任务值(万元)" width="180">
+                </el-table-column>
+                <el-table-column prop="planPer" header-align="center" align="center" label="任务完成率" width="180">
+                </el-table-column>
+                <!-- <el-table-column
+                        header-align="center"
+                        align="center"
+                        label="是否完成"
+                        width="100">
+                    <template slot-scope="scope">
+                        <i class="el-icon-circle-check" style="color: #67C23A;font-size: 16px;"
+                           v-if="scope.row.ifFinsh == 1"></i>
+                        <i class="el-icon-circle-close" style="color: #F56C6C;font-size: 16px;"
+                           v-else-if="scope.row.ifFinsh == 0"></i>
+                    </template>
+                </el-table-column> -->
+            </el-table>
+        </div>
+    </yu-xdialog>
+
+
+</div>

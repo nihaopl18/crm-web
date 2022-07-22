@@ -1,0 +1,92 @@
+<!--
+  @created by luoshun 2019-1-4
+  @updated by 
+  @description 提醒规则
+-->
+<div class="yu-scoreView">
+  <yu-tabs v-model="tabName" @tab-click="handleClick">
+    <yu-tab-pane label="客户积分到期" name="custScore">
+      <!-- 客户积分到期 -->
+      <yu-xform label-width="160px" ref="custScoreRef" v-model="custScoreFormdata">
+        <yu-xform-group>
+          <yu-xform-item label="规则名称" ctype="input" name="ruleName" rules="required"></yu-xform-item>
+          <yu-xform-item label="接收角色" ctype="select" name="ruleRole" :data-url="roleUrl"></yu-xform-item>
+          <yu-xform-item label="是否启用" ctype="select" name="isUse" rules="required" data-code="IS_USE"></yu-xform-item>
+          <yu-xform-item label="提醒提前天数" ctype="input" name="beforeDays" :rules="rules"></yu-xform-item>
+          <yu-xform-item label="提醒持续天数" ctype="input" name="lastDays" :rules="rules"></yu-xform-item>
+          <yu-xform-item label="提醒模板" ctype="textarea" name="remindModle" rules="required" :colspan="24"></yu-xform-item>
+          <yu-xform-item label="规则编号" ctype="textarea" name="ruleId" rules="required" :colspan="24" hidden></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <div class="fontSet">
+        提醒模板变量命名规则：
+        <p class="font">$(CUST_NAME)客户，你的积分还有$(BEFORE_DAYS)天过期，请关注</p>
+      </div>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveFn('custScoreRef','custScoreFormdata')">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="handleClick('custScore')">重置</yu-button>
+      </div>
+    </yu-tab-pane>
+    <yu-tab-pane label="积分活动到期" name="scoreActive">
+      <!-- 积分活动到期 -->
+      <yu-xform label-width="160px" ref="scoreActiveRef" v-model="scoreActiveFormdata">
+        <yu-xform-group>
+          <yu-xform-item label="规则名称" ctype="input" name="ruleName" rules="required"></yu-xform-item>
+          <yu-xform-item label="接收角色" ctype="select" name="ruleRole" rules="required" :data-url="roleUrl"></yu-xform-item>
+          <yu-xform-item label="是否启用" ctype="select" name="isUse" rules="required" data-code="IS_USE"></yu-xform-item>
+          <yu-xform-item label="提醒提前天数" ctype="input" name="beforeDays" :rules="rules"></yu-xform-item>
+          <yu-xform-item label="提醒持续天数" ctype="input" name="lastDays" :rules="rules"></yu-xform-item>
+          <yu-xform-item label="提醒模板" ctype="textarea" name="remindModle" rules="required" :colspan="24"></yu-xform-item>
+          <yu-xform-item label="规则编号" ctype="textarea" name="ruleId" rules="required" :colspan="24" hidden></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <div class="fontSet">
+        提醒模板变量命名规则：
+        <p class="font">活动名称：$(ACTIVITY_NAME)，活动还有$(BEFORE_DAYS)天过期，请关注</p>
+      </div>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveFn('scoreActiveRef','scoreActiveFormdata')">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="handleClick('scoreActive')">重置</yu-button>
+      </div>
+    </yu-tab-pane>
+    <yu-tab-pane label="积分池达到预警值" name="iScore">
+      <yu-xform ref="iScoreRef" label-width="160px" v-model="iScoreFormdata">
+        <yu-xform-group>
+          <yu-xform-item label="是否启用" ctype="select" name="isUse" rules="required" data-code="IS_USE"></yu-xform-item>
+          <yu-xform-item label="接收角色" ctype="select" name="ruleRole" rules="required" :data-url="roleUrl"></yu-xform-item>
+          <yu-xform-item label="提醒持续天数" ctype="input" name="lastDays" :rules="rules"></yu-xform-item>
+          <yu-xform-item label="规则编号" ctype="textarea" name="ruleId" rules="required" :colspan="24" hidden></yu-xform-item>
+          <yu-xform-item label="提醒模板" ctype="textarea" name="remindModle" rules="required" :colspan="24"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <div class="fontSet">
+        提醒模板变量命名规则：
+        <p class="font">积分池名称：$(POOL_NAME)，使用已达到预警阈值，请关注</p>
+      </div>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveFn('iScoreRef','iScoreFormdata')">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="handleClick('iScore')">重置</yu-button>
+      </div>
+    </yu-tab-pane>
+    <yu-tab-pane label="积分赠送" name="scoreGive">
+      <!-- 综合积分信息表单 -->
+      <yu-xform ref="scoreGiveRef" label-width="160px" v-model="scoreGiveFormdata">
+        <yu-xform-group>
+            <yu-xform-item label="是否启用" ctype="select" name="isUse" rules="required" data-code="IS_USE"></yu-xform-item>
+            <yu-xform-item label="接收角色" ctype="select" name="ruleRole" :data-url="roleUrl"></yu-xform-item>
+            <yu-xform-item label="最小提醒额度" ctype="input" name="threshhold" :rules="rules"></yu-xform-item>
+            <yu-xform-item label="提醒模板" ctype="textarea" name="remindModle" rules="required" :colspan="24"></yu-xform-item>
+          <yu-xform-item label="规则编号" ctype="textarea" name="ruleId" rules="required" :colspan="24" hidden></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <div class="fontSet">
+        提醒模板变量命名规则：
+        <p class="font">$(CUST_NAME)客户，你有赠送积分，请关注</p>
+      </div>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveFn('scoreGiveRef','scoreGiveFormdata')">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="handleClick('scoreGive')">重置</yu-button>
+      </div>
+    </yu-tab-pane>
+  </yu-tabs>
+</div>

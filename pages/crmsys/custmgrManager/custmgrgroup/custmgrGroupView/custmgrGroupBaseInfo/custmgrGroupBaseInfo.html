@@ -1,0 +1,31 @@
+<!-- 
+  @Created by luhy1 luhy1@yusys.com.cn on 2019-2-14 09:30:13.
+  @updated by
+  @description 客户经理团队基本信息
+-->
+<div>
+    <el-row style="padding-top: 10px;">
+      <el-col :span="24">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            客户经理团队基本信息
+          </div>
+          <div>
+            <yu-xform ref="refForm" label-width="200px" v-model="formdata" class="yu-form-gap" style="padding-top: 20px;" :disabled="true">
+              <yu-xform-group :column="2">
+                <yu-xform-item label="团队名称" name="mktTeamName" ctype="input" :colspan="10"></yu-xform-item>
+                <yu-xform-item label="所属机构" name="orgId" ctype="yufp-org-tree" :colspan="10"></yu-xform-item>></yu-xform-item>
+                <yu-xform-item label="团队类型" name="teamType" ctype="select" :colspan="10" data-code="CD0338"></yu-xform-item>
+                <yu-xform-item label="团队成员人数" name="teamMemberNum" ctype="input" :colspan="10"></yu-xform-item>
+                <yu-xform-item label="团队客户数" name="teamCustNum" ctype="input" :colspan="10"></yu-xform-item>
+                <yu-xform-item label="负责人" name="teamLeader" ctype="input" :colspan="10"></yu-xform-item>
+                <yu-xform-item label="创建人" name="createUserName" ctype="input" :colspan="10"></yu-xform-item>
+                <yu-xform-item label="创建时间" name="createDate" ctype="input" :colspan="10"></yu-xform-item>
+              </yu-xform-group>
+            </yu-xform>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+  
+  </div>

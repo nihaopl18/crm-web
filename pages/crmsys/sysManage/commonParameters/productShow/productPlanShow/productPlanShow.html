@@ -1,0 +1,117 @@
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2019-1-5
+  @updated by
+  @description 系统参数管理-公共参数管理-产品方案展示
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="方案名称" name="planName" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="edit" @click="handFn('add')">新增</yu-button>
+      <yu-button icon="document" @click="handFn('edit')">修改</yu-button>
+      <yu-button icon="edit" @click="deleteFn">删除</yu-button>
+      <!-- <yu-button icon="plus" @click="infoFn">详情</yu-button> -->
+      <yu-button icon="plus" @click="tabRelDefFn">表关联定义</yu-button>
+      <yu-button icon="plus" @click="tabPropDefFn">属性定义</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="checkbox">
+    <yu-xtable-column label="方案名称" prop="planName"></yu-xtable-column>
+    <yu-xtable-column label="方案类型" prop="planType" data-code="PLAN_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="创建人" prop="userName"></yu-xtable-column>
+    <yu-xtable-column label="创建时间" prop="createDate"></yu-xtable-column>
+    <yu-xtable-column label="备注" prop="remark"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 新增修改弹窗 -->
+  <yu-xdialog :title="viewTitle[0]" :visible.sync="proTabAddVisible">
+    <yu-xform ref="proTabForm" label-width="120px" v-model="proTabFormdata">
+      <yu-xform-group :column="3">
+        <yu-xform-item label="方案名称" name="planName" rules="required" ctype="input" @blur="planNameValidateFn"></yu-xform-item>
+        <yu-xform-item label="方案类型" name="planType" ctype="select" rules="required" data-code="PLAN_TYPE"></yu-xform-item>
+        <yu-xform-item label="备注" name="remark" ctype="textarea"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="" @click="cancleFn('proTabForm')">取消</yu-button>
+        <yu-button icon="check" @click="saveHandFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 详情弹窗 -->
+  <yu-xdialog :title="viewTitle[1]" :visible.sync="proTabInfoVisible">
+    <yu-xform ref="proTabInfoForm" label-width="120px" v-model="proTabInfoFormdata">
+      <yu-xform-group :column="3">
+        <yu-xform-item label="方案名称" name="planName" rules="CREATE_USER" ctype="input"></yu-xform-item>
+        <yu-xform-item label="方案类型" name="planType" ctype="select" rules="required" data-code="PLAN_TYPE"></yu-xform-item>
+        <yu-xform-item label="备注" name="remark" ctype="textarea" rules="required"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="" @click="cancleFn('proTabInfoForm')">取消</yu-button>
+        <yu-button icon="check" @click="">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 表关联定义 -->
+  <yu-xdialog :title="viewTitle[2]" :visible.sync="tabRelDefVisible">
+    <yu-button-group>
+      <yu-row>
+        <yu-col :span="8">
+          <yufp-select-cust placeholder="增加" :params="selectTabParams"  @select-fn="getTableFn"></yufp-select-cust>
+        </yu-col>
+        <yu-col :span="4">
+          <yu-button icon="document" @click="deleteRelFn">删除</yu-button>
+        </yu-col>
+      </yu-row>
+    </yu-button-group>
+    <yu-xtable ref="tabRelDefTable" row-number :data-url="tabRelDefTableUrl" @loaded="getTabRelDefTabledataFn" :base-params="planId" selection-type="checkbox">
+      <yu-xtable-column label="方案名称" prop="planName"></yu-xtable-column>
+      <yu-xtable-column label="引用表" prop="tableName"></yu-xtable-column>
+      <yu-xtable-column label="引用表中文名" prop="tableChName"></yu-xtable-column>
+      <yu-xtable-column label="引用表别名" prop="tableOthName"></yu-xtable-column>  
+    </yu-xtable>
+    <yu-xform ref="tabRelDefForm" label-width="120px" v-model="tabRelDefFormdata">
+      <yu-xform-group :column="1">
+        <yu-xform-item label="客户连接字段" name="custColumn" ctype="input" :hidden	="proHidden"></yu-xform-item>
+        <yu-xform-item label="关联表语句" name="rfrom" ctype="input" rules="required"></yu-xform-item>
+        <yu-xform-item label="表连接语句" name="rwhere" ctype="input" rules="required"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <h>填写要求:
+              客户连接字段指连接客户条件的字段，必须包含表别名；关联表语句 从from开始写，表别名必须使用关联表定义中的别名 ;表连接语句 从where写起，如果没有特殊条件，写where 1=1</h>
+    <div class="yu-grpButton">
+      <yu-button icon="" @click="cancleFn('tabRelDefFrom')" type="primary">关闭</yu-button>
+      <yu-button icon="check" @click="saveTableRelDefFn" type="primary">试查询</yu-button>
+    </div>
+
+  </yu-xdialog>
+  <!-- 表属性定义弹窗 -->
+  <yu-xdialog :title="viewTitle[3]" :visible.sync="tabPropDefVisible">
+    <yu-row>
+      <yu-col :span="12">
+        <yu-button-group>
+          <yu-button icon="plus" @click="tabPropDefAddFn">添加</yu-button>
+        </yu-button-group>
+        <yu-xtable ref="propTable" row-number :data-url="tabDataUrl" :base-params="planId" selection-type="checkbox">
+          <yu-xtable-column label="引用表中文名" prop="tableChName"></yu-xtable-column>
+          <yu-xtable-column label="字段中文名" prop="columnOthName"></yu-xtable-column>
+        </yu-xtable>
+      </yu-col>
+      <yu-col :span="12">
+        <yu-button-group>
+          <yu-button icon="delete" @click="tabPropDefDelFn">移除</yu-button>
+          <yu-button icon="check" @click="saveTabPropDefFn">保存</yu-button>
+        </yu-button-group>
+        <yu-xtable ref="addPropTable" row-number :data-url="propDataUrl" :base-params="planId" @loaded="addPropTabledataFn" selection-type="checkbox">
+          <yu-xtable-column label="字段中文名" prop="columnOthName"></yu-xtable-column>
+          <yu-xtable-column label="字段排序" prop="cloumnSquence" ctype="input"></yu-xtable-column>
+        </yu-xtable>
+      </yu-col>
+    </yu-row>
+    <div class="yu-grpButton">
+      <yu-button icon="" @click="cancleFn('tabPropDefFrom')" type="primary">关闭</yu-button>
+    </div>
+  </yu-xdialog>
+</div>

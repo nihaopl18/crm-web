@@ -1,0 +1,43 @@
+.bankAccount .el-form-item__content {
+  margin-left: 10px !important;
+  height: 72px !important;
+}
+.bankAccount .el-form-item__label {
+  font-size: 14px;
+  margin-left: 10px;
+}
+.bankAccount .dialog-footer {
+  margin: 14px 0;
+}
+.bankAccount .groupItem {
+  padding: 18px 24px;
+  border-bottom: 1px solid  #E5E7ED;
+}
+
+.bankAccount .groupItem p:first-child {
+   color:#303133;
+   font-weight: bold;
+   margin-bottom: 10px;
+}
+.bankAccount .groupItem p:last-child {
+  color: #909399;
+  font-size: 12px;
+}
+
+.bankAccount .addGroup {
+  margin-bottom: 130px;
+}
+.bankAccount .addGroup a {
+  color: #B96D06!important;
+}
+.bankAccount .add-group-layout {
+  padding: 0 40px;
+  margin-bottom: 130px;
+}
+.bankAccount .add-group-title{
+  margin: 24px 0 8px;
+  color:#303133
+}
+.bankAccount .active p{
+  color: #E30A2A!important;
+}

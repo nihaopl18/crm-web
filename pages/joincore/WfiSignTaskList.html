@@ -1,0 +1,81 @@
+<!-- 必须全局拥有唯一的id -->
+<div id="WfiSignTaskList">
+    <el-form-q form="query" :field-data="queryFields" search-table="WfiSignTaskList" :buttons="WfiSignTaskButtons"></el-form-q>
+    <div class="yu-toolBar">
+        <el-button-group>
+            <el-button icon="add" type="primary" @click="doWfiSignTask" >处理</el-button>
+        </el-button-group>
+    </div>
+    <el-table-x ref="WfiSignTaskList"  :max-height="height" :data-url="urls.dataUrl" :base-params="dataParams" :table-columns="tableColumns" >
+    </el-table-x>
+
+    <!--处理会签事项-->
+    <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible"  height="360px" width="550px" @close="beforeClose">
+        <el-card class= "box-card" >
+            <div slot= "header" class= "clearfix" >
+                <span v-text="formTitle"></span>
+            </div>
+            <el-form ref="wfSignApproveForm" :model="wfSignApproveForm" :rules="rules" label-position="left" label-width="110px"  >
+                <el-form-item label="任务名称"  prop="stTaskName">
+                    <el-input type="input" v-model="wfSignApproveForm.stTaskName" :disabled="disabled"></el-input>
+                </el-form-item>
+                <el-form-item label="会签策略"  prop="stConfig">
+                    <el-input type="input" v-model="wfSignApproveForm.stConfig" :disabled="disabled"></el-input>
+                </el-form-item>
+                <el-form-item label="业务流水号"  prop="serno">
+                    <el-input type="input" v-model="wfSignApproveForm.serno" :disabled="disabled"></el-input>
+                </el-form-item>
+                <el-form-item label="会议安排人"  prop="stExeUser">
+                    <el-input type="input" v-model="wfSignApproveForm.stExeUser" :disabled="disabled"></el-input>
+                </el-form-item>
+                <el-form-item label="执行机构"  prop="stExeOrg">
+                    <el-input type="input" v-model="wfSignApproveForm.stExeOrg" :disabled="disabled"></el-input>
+                </el-form-item>
+                <el-form-item label="开始时间"  prop="stStartTime">
+                    <el-input type="input" v-model="wfSignApproveForm.stStartTime" :disabled="disabled"></el-input>
+                </el-form-item>
+                <el-form-item label="本次会议成员"  prop="stMembers">
+                    <el-select v-model="wfSignApproveForm.stMembers" :multiple="true" @change="memberChange" :disabled="memberDisabled" @remove-tag="removeTag">
+                        <el-option v-for="item in stMembersOptions" :key="item.key" :label="item.value" :value="item.key">
+                            <span style="float: left">{{ item.value }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.key }}</span>
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="会议牵头人"  prop="stLeader">
+                    <el-select v-model="wfSignApproveForm.stLeader" >
+                        <el-option v-for="item in stLeaderOptions" :key="item.key" :label="item.value" :value="item.key">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="会签人数"  prop="stTotalCount">
+                    <el-input type="input" v-model="wfSignApproveForm.stTotalCount" :disabled="disabled"></el-input>
+                </el-form-item>
+                <el-form-item label="参与投票人数"  prop="stVoteCount">
+                    <el-input type="input" v-model="wfSignApproveForm.stVoteCount" :disabled="disabled"></el-input>
+                </el-form-item>
+                <el-form-item label="会议状态" prop="stTaskStatus">
+                    <el-select v-model="wfSignApproveForm.stTaskStatus" :disabled="disabled">
+                        <el-option v-for="item in stTaskStatusOptions" :key="item.key" :label="item.value" :value="item.key">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+        </el-card>
+        <el-card class= "box-card" :hidden="cardHidden">
+            <div slot= "header" class= "clearfix" >
+                <span v-text="userTitle"></span>
+            </div>
+            <el-table-x ref="stMembersList"  :data-url="urls.signTaskVotesUrl" :default-load=false  :base-params="stMembersParams" :table-columns="stMembersTableColumns" >
+            </el-table-x>
+        </el-card>
+            <div slot="footer" align="center">
+                <el-button type="primary" @click="saveFn" v-show="!saveHidden">保存</el-button>
+                <el-button type="primary" @click="wfBeginSignTask" v-show="!wfBeginSignTaskHidden">开始会议</el-button>
+                <el-button type="primary" @click="wfCancleSignTask"  v-show="!wfCancleSignTaskHidden">取消会议</el-button>
+                <el-button type="primary" @click="wfReBeginSignTask" v-show="!wfReBeginSignTaskHidden">重开会议</el-button>
+                <el-button type="primary" @click="wfEndSignTask" v-show="!wfEndSignTaskHidden">终止会议</el-button>
+                <el-button type="primary" @click="wfFinishSignTask" v-show="!wfFinishSignTaskHidden">结束会议</el-button>
+            </div>
+    </el-dialog-x>
+</div>

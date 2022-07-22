@@ -1,0 +1,22 @@
+<!--
+  @created by  on 2019-6-27 18:38:34
+  @updated by
+  @description 短信发送历史
+-->
+<div class="blank_template">
+  <div>
+    <yu-xform related-table-name="refTable" form-type="search">
+      <yu-xform-group :column="4">
+          <yu-xform-item placeholder="规则类别" name="typeId" ctype="select" data-code="CD0451"></yu-xform-item>
+          <yu-xform-item placeholder="发送时间" name="sendTime" ctype="datepicker"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+        <yu-xtable-column label="规则类别名称" prop="typeId" width="120" data-code='CD0451'></yu-xtable-column>
+        <yu-xtable-column label="短信发送人" prop="messageSendName" width='100'></yu-xtable-column>
+        <yu-xtable-column label="短信接收人" prop="messageReceName" width='100'></yu-xtable-column>
+        <yu-xtable-column label="短信内容" prop="messageInfo"></yu-xtable-column>
+        <yu-xtable-column label="发送时间" prop="sendTime" width='140'></yu-xtable-column>
+        <yu-xtable-column label="本地文件名" prop="messageName" width='230'></yu-xtable-column>
+    </yu-xtable>
+</div>

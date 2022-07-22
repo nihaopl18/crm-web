@@ -1,0 +1,12 @@
+<div id="exceptionDemo">
+    <br/>
+    <div style="color:red">
+        <h2> 异常抛出YuspException使用示例：</h2>
+    </div>
+    <el-card class="box-card">
+        throw new YuspException(new Message(ReturnT.FAIL_CODE, "异常原因XXXXX", MessageConstans.MSG_LEVEL_ERROR));
+    </el-card>
+    <br/>
+    <br/>
+    <el-button  type="success"  @click="generateException">产生异常按钮</el-button>
+</div>

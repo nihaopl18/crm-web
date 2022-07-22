@@ -1,0 +1,76 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-21 13:58:21.
+  @updated by
+  @description 客户信息提醒
+-->
+<div>
+  <yu-tabs v-model="activeName" @tab-click="handleClick">
+    <yu-tab-pane label="信息提醒" name="remind">
+      <yu-xform related-table-name="remindTable" form-type="search" ref="seachForm">
+          <yu-xform-group :column="4">
+              <yu-xform-item placeholder="提醒类别名称" ctype="yufp-org-tree" :params="treeParams" name="typeId"></yu-xform-item>
+              <yu-xform-item placeholder="提醒生成日期" ctype="datepicker" name="startTM" @change="checkDate"></yu-xform-item>
+              <yu-xform-item placeholder="提醒到期日期" ctype="datepicker" name="endTM" @change="checkDate"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="document" @click="remindinfoFn" v-if="detailBtn">详情</yu-button>
+          <yu-button icon="yx-compass" @click="mesSendFn" v-if="sendBtn">信息发送</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="remindTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true" @row-dblclick="rowDblClick">
+          <yu-xtable-column label="提醒类别名称" prop="typeName" width="155"></yu-xtable-column>
+          <yu-xtable-column label="提醒生成日期" prop="remindCreateDate" width="150"></yu-xtable-column>
+          <yu-xtable-column label="提醒到期日期" prop="remindExpireDate" width="150"></yu-xtable-column>
+          <yu-xtable-column label="提醒内容" prop="remindInfo"></yu-xtable-column>
+      </yu-xtable>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+          <yu-xform ref="remindForm" label-width="180px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+                <yu-xform-item label="提醒类别名称" name="typeName" ctype="input" :rows="3" :colspan="24"></yu-xform-item>
+                <yu-xform-item label="提醒生成日期" name="remindCreateDate" ctype="datepicker"></yu-xform-item>
+                <yu-xform-item label="提醒到期日期" name="remindExpireDate" ctype="datepicker"></yu-xform-item>
+                <yu-xform-item label="提醒内容" name="remindInfo" ctype="textarea" :rows="3" :colspan="24"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="cancelFn">返回</yu-button>
+            </div>
+          </yu-xform>
+      </yu-xdialog>
+      <yu-xdialog title="信息发送" :visible.sync="mesDialogVisible" width="60%">
+        <yu-steps :active="active" finish-status="success" :align-center="true" :center="true" style="width: 70%;margin: auto;">
+          <yu-step title="选择联系方式" icon="yx-address-book"></yu-step>
+          <yu-step title="确认" icon="check"></yu-step>
+        </yu-steps>
+        <div style="margin: auto;padding: 20px 0px 0px 0px;">
+          <yu-xform ref="refFormTwo" label-width="150px" :hidden="formTwoHide">
+            <yu-xtable ref="telTable" row-number :data-url="telDataUrl" selection-type="radio">
+              <!--<yu-xtable-column label="客户编号" prop="custId" width="150"></yu-xtable-column>
+              <yu-xtable-column label="客户类型" prop="custType" width="100" data-code="CD0016"></yu-xtable-column>
+              <yu-xtable-column label="联系人" prop="contName" width="180"></yu-xtable-column>-->
+              <yu-xtable-column label="联系方式类型" prop="contType" width="130" data-code="CD0258"></yu-xtable-column>
+              <yu-xtable-column label="联系方式" prop="contMeth"></yu-xtable-column>
+            </yu-xtable>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-arrow-right" type="primary" @click="nextFn">下一步</yu-button>
+            </div>
+          </yu-xform>
+          <yu-xform ref="refFormThree" label-width="150px" v-model="finishFormData" :hidden="formThreeHide">
+            <yu-xform-group :column="2">
+              <yu-xform-item label="发送渠道" ctype="input" name="sendChlName" :disabled="true"></yu-xform-item>
+              <yu-xform-item label="接收号码" ctype="input" name="rcvNum" :disabled="true"></yu-xform-item>
+              <yu-xform-item label="发送日期" ctype="datepicker" name="sendDate" rules="required" :editable="false"></yu-xform-item>
+              <yu-xform-item label="发送时间" name="sendTime" ctype="timepicker" rules="required" :disabled="false"></yu-xform-item> 
+              <yu-xform-item label="发送内容" ctype="textarea" name="sendContent" :rows="5" :colspan="24" :disabled="true"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-arrow-left" type="primary" @click="backFn">上一步</yu-button>
+              <yu-button icon="check" type="primary" @click="finishFn">发送</yu-button>
+            </div>
+          </yu-xform>
+        </div>
+      </yu-xdialog>
+    </yu-tab-pane>
+  </yu-tabs>
+</div>

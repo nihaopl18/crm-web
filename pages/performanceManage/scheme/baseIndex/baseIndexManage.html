@@ -1,0 +1,345 @@
+<!-- 
+  @Created by mayan2 mayan2@yusys.com.cn on 2019-12-26
+  @updated by
+  @description 基础指标管理
+-->
+<div>
+    <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+    <link href="./pages/performanceManage/scheme/baseIndex/baseIndexManage.css" rel="stylesheet" type="text/css">
+    <yu-row :gutter="20">
+        <yu-col :span="6">
+            <div class="grid-content bg-purple">
+                <div class="yu-toolBar" style="padding-top: 10px;padding-left: 0px;">
+                    <yu-button-group>
+                        <yu-button icon="plus" @click="addMenuFn" v-if="addMenuBtn">新增</yu-button>
+                        <yu-button icon="edit" @click="modifyMenuFn" v-if="editMenuBtn">编辑</yu-button>
+                        <yu-button icon="yx-bin" @click="deleteMenuFn" v-if="deleteMenuBtn">删除</yu-button>
+                        <!-- <yu-button icon="document" @click="detailMenuFn" v-if="detailMenuBtn">详情</yu-button> -->
+                    </yu-button-group>
+                </div>
+                <!-- <yufp-ext-tree ref="baseIndexMenuTree" :show-checkbox="false" :data="treedata" :props="defaultProps"    @node-click="nodeClickFn"  >
+                    </yufp-ext-tree>  -->
+                <yufp-ext-tree ref="baseIndexMenuTree" :show-checkbox="false" :height="height - 112"
+                    :data-url="baseIndexMenuTreeUrl" data-id="id" data-label="typeName" @node-click="nodeClickFn"
+                    data-pid="parentId" :highlight-current="true" @get-tree-datas="loadCateData">
+                </yufp-ext-tree>
+                <!-- <yu-tree :data="treedata" :props="defaultProps" @node-click="nodeClickFn"></yu-tree> -->
+                <yu-xdialog title="基础指标目录维护" :visible.sync="baseIndexMenuDialogVisible" width="512px"
+                    :before-close="handlemenuDialogClose">
+                    <yu-xform ref="indexMenuForm" label-width="150px" v-model="indexMenulFormdata"
+                        :disabled="menuformDisabled" hidden-rule="false">
+                        <yu-xform-item label="目录名称" name="typeName" ctype="input" :rules="indexBaseMenuRule.typeName">
+                        </yu-xform-item>
+                        <yu-xform-item label="上级目录名称" name="parentName" disabled="true"></yu-xform-item>
+                        <yu-xform-item label="上级目录编号" name="parentId" hidden="true"></yu-xform-item>
+                        <div style="padding-top:20px;text-align: center;">
+                            <yu-button icon="yx-floppy-disk" type="primary" @click="saveMenugFn"
+                                v-show="saveMenuBtnShow">保存</yu-button>
+                            <yu-button icon="yx-undo2" type="primary" @click="cancelMenuFn">取消</yu-button>
+                        </div>
+                    </yu-xform>
+                </yu-xdialog>
+            </div>
+        </yu-col>
+        <yu-col :span="18">
+            <div class="grid-content bg-purple-light">
+                <yu-xform related-table-name="refBaseTable" form-type="search" v-model="queryData">
+                    <yu-xform-group :column="4">
+                        <yu-xform-item placeholder="指标编号" name="indexId" ctype="input"></yu-xform-item>
+                        <yu-xform-item placeholder="指标名称" name="indexName" ctype="input"></yu-xform-item>
+                        <yu-xform-item placeholder="指标状态" name="indexState" ctype="select" data-code="INDEX_STATE"></yu-xform-item>
+                        <yu-xform-item placeholder="考核对象" name="obj" ctype="select" data-code="OBJ"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+                <div class="yu-toolBar" style="padding-top: 10px;padding-left: 0px;">
+                    <yu-button-group>
+                        <yu-button icon="plus" @click="addFn" v-if="addBtn">新增指标</yu-button>
+                        <yu-button icon="edit" @click="modifyFn" v-if="editBtn">编辑指标</yu-button>
+                        <yu-button icon="yx-bin" @click="deleteFn" v-if="delBtn">删除指标</yu-button>
+                        <yu-button icon="document" @click="infoFn">指标详情</yu-button>
+                        <yu-button icon="close" @click="stopFn" v-if="stoptn">停用</yu-button>
+                        <yu-button icon="check" @click="startFn" v-if="startBtn">启用</yu-button>
+                    </yu-button-group>
+                </div>
+                <yu-xtable ref="refBaseTable" :data-url="dataUrl" :base-params="dataParams"
+                    :highlight-current-row="true" selection-type="checkbox" stripe="true">
+
+                    <yu-xtable-column label="指标编号" prop="indexId" sortable align="center"></yu-xtable-column>
+                    <yu-xtable-column label="指标名称" prop="indexName" sortable align="center"></yu-xtable-column>
+                    <yu-xtable-column label="指标业务类型" prop="indexBusinessType" sortable align="center" data-code="INDEX_YW_TYPE">
+                    </yu-xtable-column>
+                    <yu-xtable-column label="指标类型" prop="indexType" sortable align="center" data-code="LOGIC_TYPE">
+                    </yu-xtable-column>
+                    <yu-xtable-column label="指标状态" prop="indexState" sortable align="center" data-code="INDEX_STATE">
+                    </yu-xtable-column>
+                    <yu-xtable-column label="创建时间" prop="createDate" sortable align="center"></yu-xtable-column>
+                    <yu-xtable-column label="创建人" prop="userName" sortable align="center"></yu-xtable-column>
+                    <yu-xtable-column label="最近更新时间" prop="updateDate" sortable align="center"></yu-xtable-column>
+                    <yu-xtable-column label="最近更新人" prop="updateUserName" sortable align="center"></yu-xtable-column>
+
+                </yu-xtable>
+                <yu-xdialog title="指标引用信息" :visible.sync="indexquoDialogVisible" width="900px">
+                    <yu-xtable ref="refQuoTable" :data="dataquoPData" :highlight-current-row="true" stripe="true"
+                        :pageable="false">
+                        <yu-xtable-column label="引用类型" prop="quoteName" sortable align="center"></yu-xtable-column>
+                        <yu-xtable-column label="引用编号" prop="qId" sortable align="center"></yu-xtable-column>
+                        <yu-xtable-column label="引用名称" prop="qName" sortable align="center"></yu-xtable-column>
+                        <yu-xtable-column label="指标编号" prop="indexId" sortable align="center"></yu-xtable-column>
+                    </yu-xtable>
+                    <div style="padding-top:20px;text-align: left;color: red">
+                        注：该指标正在被列表中的数据引用，不可删除或停用！
+                    </div>
+                    <div style="padding-top:20px;text-align: center;">
+                        <yu-button icon="yx-floppy-disk" type="primary" @click="closeBtn">关闭</yu-button>
+                    </div>
+                </yu-xdialog>
+                <yu-xdialog :title="viewTitle[viewType]" :visible.sync="addIndexDialogVisible" width="1024px"
+                    :before-close="handleindexinfoDialogClose">
+                    <template>
+                        <yu-tabs v-model="activeName">
+                            <yu-tab-pane label="指标信息" name="indexBaseInfo" v-show="indexTabShow"
+                                :disabled="indexDisable">
+                                <yu-xform ref="refIndexBasegForm" label-width="150px" v-model="indexbaseFormdata"
+                                    :disabled="formDisabled">
+                                    <yu-collapse v-model="activeNames" class="myCollapse">
+                                        <yu-collapse-item title="基础信息" name="1" disabled="true">
+                                            <yu-xform-group :column="2">
+                                                <yu-xform-item label="指标编号" name="indexId" ctype="input"
+                                                    disabled="true" :hidden="viewType == 'ADD'">
+                                                </yu-xform-item>
+                                                <yu-xform-item label="目录名称" name="indexCatalogId" ctype="select" :options="cateData"
+                                                    disabled="true">
+                                                </yu-xform-item>
+                                                <yu-xform-item label="指标业务类型" name="indexBusinessType" data-code="INDEX_YW_TYPE"
+                                                    ctype="select" :rules="indexBaseRule.bizFlg" @change="bizFlgClick"
+                                                    :disabled="bizDisa">
+                                                </yu-xform-item>
+                                                <yu-xform-item label="指标类型" name="indexType" data-code="LOGIC_TYPE"
+                                                    ctype="select" :rules="indexBaseRule.logicType" @change="logicClick"
+                                                    :disabled="logicDisa">
+                                                </yu-xform-item>
+                                                <yu-xform-item label="指标名称" name="indexName" ctype="input"
+                                                    :rules="indexBaseRule.indexName">
+                                                </yu-xform-item>
+                                                <!-- <yu-xform-item label="业务品种" ref="bussNoRef" name="bussNo"
+                                                    ctype="yufp-buss-tree" rules="required" :hidden="midBussTyHidden"
+                                                    :params="bussParams"></yu-xform-item> -->
+                                                <!-- <yu-xform-item label="业务品种" ref="bussNoRef" name="bussNo"  ctype="input" ></yu-xform-item> -->
+                                            </yu-xform-group>
+                                        </yu-collapse-item>
+                                        <yu-collapse-item title="维度信息" name="2" disabled="true">
+                                            <yu-xform-group :column="2">
+                                                <yu-xform-item label="考核对象" name="obj" data-code="OBJ" multiple
+                                                    ctype="select" :rules="indexBaseRule.obj"></yu-xform-item>
+                                                <yu-xform-item label="应用类型" name="applyTypeId" multiple
+                                                    data-code="INDEX_APPLY_TYPE" ctype="select"
+                                                    :rules="indexBaseRule.applyTypeId"></yu-xform-item>
+                                                <yu-xform-item label="余额类型" name="yeType" multiple data-code="YE_TYPE"
+                                                    ctype="select" :rules="indexBaseRule.yeType"></yu-xform-item>
+                                                <yu-xform-item label="币种" name="currency" data-code="CURRENCY_TYPE"
+                                                    ctype="select" :rules="indexBaseRule.currency">
+                                                </yu-xform-item>
+                                            </yu-xform-group>
+                                        </yu-collapse-item>
+                                    </yu-collapse>
+                                    <div style="padding-top:20px;text-align: center;">
+                                        <yu-button icon="yx-floppy-disk" type="primary" @click="nexthandleClick"
+                                            v-show="saveIndexNextBtnShow">下一步</yu-button>
+                                        <yu-button icon="yx-floppy-disk" type="primary" @click="savaIndexInfoBtn"
+                                            v-show="saveIndexBtnShow">保存</yu-button>
+                                    </div>
+                                </yu-xform>
+                            </yu-tab-pane>
+                            <yu-tab-pane v-if="selTabShow" label="筛选信息" name="selInfo" :disabled="selDisable">
+                                <yu-row>
+                                    <yu-col :span="6">
+                                        <div class="grid-content bg-purple">
+                                            <yu-xtable ref="refColumnTable" :data="columnData"
+                                                :highlight-current-row="true" stripe="true" :pageable="false"
+                                                :height="400" @cell-dblclick="columninfoFn">
+                                                <yu-xtable-column label="字段名称" prop="columnName" align="center">
+                                                </yu-xtable-column>
+                                                <yu-xtable-column label="注释" prop="comments" align="center">
+                                                </yu-xtable-column>
+                                            </yu-xtable>
+                                        </div>
+                                    </yu-col>
+                                    <yu-col :span="18">
+                                        <div class="grid-content bg-purple-light">
+                                            <yu-xtable ref="refConditionTable" :data="conditionData"
+                                                :highlight-current-row="true" stripe="true" :pageable="false">
+                                                <yu-xtable-column label="条件类型" prop="cdtType" sortable align="center"
+                                                    data-code="CONDITION_TYPE"></yu-xtable-column>
+                                                <yu-xtable-column label="条件字段" prop="cdtColumn" sortable align="center">
+                                                </yu-xtable-column>
+                                                <yu-xtable-column label="条件值" prop="cdtValue" sortable align="center">
+                                                </yu-xtable-column>
+                                                <yu-xtable-column label="操作" align="center">
+                                                    <template slot-scope="scope">
+                                                        <yu-button size="small" type="danger"
+                                                            @click="deleteConBtn(scope.row)">删除</yu-button>
+                                                    </template>
+                                                </yu-xtable-column>
+                                            </yu-xtable>
+                                        </div>
+                                    </yu-col>
+                                </yu-row>
+                                <div style="padding-top:20px;text-align: center;">
+                                    <yu-button icon="yx-floppy-disk" type="primary" @click="sellasthandleClick">上一步
+                                    </yu-button>
+                                    <yu-button icon="yx-floppy-disk" type="primary" @click="selsavaFinishBtn">完成
+                                    </yu-button>
+                                </div>
+                            </yu-tab-pane>
+                            <yu-tab-pane v-if="sqlTabShow" label="SQL信息" name="sqlInfo" :disabled="sqlDisable">
+                                <yu-input type="textarea" :autosize="{ minRows: 10}" v-model="sqltextarea"></yu-input>
+                                <div style="padding-top:20px;text-align: center;">
+                                    <yu-button icon="yx-floppy-disk" type="primary" @click="lasthandleClick">上一步
+                                    </yu-button>
+                                    <yu-button icon="yx-floppy-disk" type="primary" @click="savaFinishBtn">完成
+                                    </yu-button>
+                                </div>
+                            </yu-tab-pane>
+                        </yu-tabs>
+                    </template>
+                </yu-xdialog>
+                <!--详情页面-->
+                <yu-xdialog title="详情" :visible.sync="infoIndexDialogVisible" width="1024px"
+                    :before-close="handleDialogClose">
+                    <template>
+                        <yu-tabs v-model="activeName">
+                            <yu-tab-pane label="指标信息" name="indexBaseInfo" disabled="true">
+                                <yu-xform ref="refIndexBasegForm1" label-width="150px" v-model="indexInfoFormData1"
+                                    disabled="true">
+                                    <yu-collapse v-model="activeNames" class="myCollapse">
+                                        <yu-collapse-item title="基础信息" name="1" disabled="true">
+                                            <yu-xform-group :column="2">
+                                                <yu-xform-item label="指标编号" name="indexId" ctype="input"
+                                                    disabled="true">
+                                                </yu-xform-item>
+                                                <yu-xform-item label="目录名称" name="indexCatalogId" ctype="select" :options="cateData"
+                                                    disabled="true">
+                                                </yu-xform-item>
+                                                <yu-xform-item label="指标业务类型" name="indexBusinessType" data-code="INDEX_YW_TYPE"
+                                                    ctype="select" disabled="true">
+                                                </yu-xform-item>
+                                                <yu-xform-item label="指标类型" name="indexType" data-code="LOGIC_TYPE"
+                                                    ctype="select" disabled="true">
+                                                </yu-xform-item>
+                                                <yu-xform-item label="指标名称" name="indexName" ctype="input">
+                                                </yu-xform-item>
+                                            </yu-xform-group>
+                                        </yu-collapse-item>
+                                        <yu-collapse-item title="维度信息" name="2" disabled="true">
+                                            <yu-xform-group :column="2">
+                                                <yu-xform-item label="考核对象" name="obj" data-code="OBJ" multiple
+                                                    ctype="select" disabled="true"></yu-xform-item>
+                                                <yu-xform-item label="应用类型" name="applyTypeId" multiple
+                                                    data-code="INDEX_APPLY_TYPE" ctype="select" disabled="true">
+                                                </yu-xform-item>
+                                                <yu-xform-item label="余额类型" name="yeType" multiple data-code="YE_TYPE"
+                                                    ctype="select" disabled="true"></yu-xform-item>
+                                                <yu-xform-item label="币种" name="currency" data-code="CURRENCY_TYPE"
+                                                    ctype="select" disabled="true">
+                                                </yu-xform-item>
+                                            </yu-xform-group>
+                                        </yu-collapse-item>
+                                    </yu-collapse>
+                                    <div style="padding-top:20px;text-align: center;">
+                                        <yu-button icon="yx-floppy-disk" type="primary" @click="closeInfoBtn">关闭
+                                        </yu-button>
+                                    </div>
+                                </yu-xform>
+                            </yu-tab-pane>
+                            <yu-tab-pane v-if="selTabShow" label="筛选信息" name="selInfo" :disabled="selDisable">
+                                <yu-row>
+                                    <yu-col :span="6">
+                                        <div class="grid-content bg-purple">
+                                            <yu-xtable ref="refColumnTable" :data="columnData"
+                                                :highlight-current-row="true" stripe="true" :pageable="false"
+                                                :height="400" @cell-dblclick="columninfoFn">
+                                                <yu-xtable-column label="字段名称" prop="columnName" align="center">
+                                                </yu-xtable-column>
+                                                <yu-xtable-column label="注释" prop="comments" align="center">
+                                                </yu-xtable-column>
+                                            </yu-xtable>
+                                        </div>
+                                    </yu-col>
+                                    <yu-col :span="18">
+                                        <div class="grid-content bg-purple-light">
+                                            <yu-xtable ref="refConditionTable" :data="conditionData"
+                                                :highlight-current-row="true" stripe="true" :pageable="false">
+                                                <yu-xtable-column label="条件类型" prop="cdtType" sortable align="center"
+                                                    data-code="CONDITION_TYPE"></yu-xtable-column>
+                                                <yu-xtable-column label="条件字段" prop="cdtColumn" sortable align="center">
+                                                </yu-xtable-column>
+                                                <yu-xtable-column label="条件值" prop="cdtValue" sortable align="center">
+                                                </yu-xtable-column>
+                                                <yu-xtable-column label="操作" align="center">
+                                                    <template slot-scope="scope">
+                                                        <yu-button size="small" type="danger"
+                                                            @click="deleteConBtn(scope.row)">删除</yu-button>
+                                                    </template>
+                                                </yu-xtable-column>
+                                            </yu-xtable>
+                                        </div>
+                                    </yu-col>
+                                </yu-row>
+                                <div style="padding-top:20px;text-align: center;">
+                                    <yu-button icon="yx-floppy-disk" type="primary" @click="sellasthandleClick">上一步
+                                    </yu-button>
+                                    <yu-button icon="yx-floppy-disk" type="primary" @click="selsavaFinishBtn">完成
+                                    </yu-button>
+                                </div>
+                            </yu-tab-pane>
+                            <yu-tab-pane v-if="sqlTabShow" label="SQL信息" name="sqlInfo" :disabled="sqlDisable">
+                                <yu-input type="textarea" :autosize="{ minRows: 10}" v-model="sqltextarea"></yu-input>
+                                <div style="padding-top:20px;text-align: center;">
+                                    <yu-button icon="yx-floppy-disk" type="primary" @click="lasthandleClick">上一步
+                                    </yu-button>
+                                    <yu-button icon="yx-floppy-disk" type="primary" @click="savaFinishBtn">完成
+                                    </yu-button>
+                                </div>
+                            </yu-tab-pane>
+                        </yu-tabs>
+                    </template>
+                </yu-xdialog>
+                <yu-xdialog title="新增筛选条件" :visible.sync="indexSelDialogVisible" width="512px"
+                    :before-close="handleindexselDialogClose">
+                    <yu-xform ref="refSelConditionForm" label-width="150px" v-model="selConditionFormdata"
+                        :disabled="selformDisabled">
+                        <yu-collapse v-model="activeSelNames" class="myCollapse">
+                            <yu-collapse-item title="字段信息" name="1" disabled="true">
+                                <yu-xform-group :column="1">
+                                    <yu-xform-item label="字段名称" name="columnName" ctype="input" disabled="true">
+                                    </yu-xform-item>
+                                    <yu-xform-item label="注释" name="comments" ctype="input" disabled="true">
+                                    </yu-xform-item>
+                                </yu-xform-group>
+                            </yu-collapse-item>
+                            <yu-collapse-item title="条件信息" name="2" disabled="true">
+                                <yu-xform-group :column="1">
+                                    <yu-xform-item label="条件类型" name="cdtType" ctype="select" data-code="CONDITION_TYPE"
+                                        @change="condiChange" disabled="true"></yu-xform-item>
+                                    <yu-xform-item label="条件方向" name="cdtDirType" ctype="select" data-code="CON_DIRE"
+                                        :hidden="condirShow"></yu-xform-item>
+                                    <yu-xform-item label="码值" name="lookup" :hidden="lookupShow" :options="optionsA"
+                                        ctype="yu-xselect" @change="lookUpChange" disabled="true"></yu-xform-item>
+                                    <yu-xform-item label="条件值" name="cdtValueName" :hidden="conditionComboShow"
+                                        :options="optionsB" multiple ctype="yu-xselect"></yu-xform-item>
+                                    <yu-xform-item label="条件值" name="cdtValue" :hidden="conditionShow" ctype="textarea">
+                                    </yu-xform-item>
+                                </yu-xform-group>
+                            </yu-collapse-item>
+                        </yu-collapse>
+                        <div style="padding-top:20px;text-align: center;">
+                            <yu-button icon="yx-floppy-disk" type="primary" @click="saveConditionClick">保存</yu-button>
+                            <yu-button icon="yx-floppy-disk" type="primary" @click="cacleSel">取消</yu-button>
+                        </div>
+                    </yu-xform>
+                </yu-xdialog>
+            </div>
+        </yu-col>
+    </yu-row>
+
+</div>

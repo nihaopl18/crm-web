@@ -1,0 +1,577 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-09-14 17:45:04
+ * @update by: 
+ * @description: 活动量监测
+-->
+<div class="active-level-monitor">
+    <div class="option-btn">
+        <span>数据更新时间: {{yufp.util.dateFormat(new Date(), '{y}-{m}-{d}')}}</span>
+        <yu-dropdown @command="handleExportCommand">
+            <yu-button>
+                导出<i class="el-icon-arrow-down el-icon--right"></i>
+            </yu-button>
+            <yu-dropdown-menu slot="dropdown">
+                <yu-dropdown-item command="1">PDF报告</yu-dropdown-item>
+                <yu-dropdown-item command="2">EXCEL报告</yu-dropdown-item>
+            </yu-dropdown-menu>
+        </yu-dropdown>
+    </div>
+
+    <div class="export-container" style="background-color: #eee;">
+        <div class="card-box" style="padding:0 0;background-color: white; margin: 16px 0px;">
+            <yu-row :gutter="22">
+                <yu-col :span="24%cardList.length==0?24/cardList.length:index==4?4:5" v-for="(item,index) in cardList" :key="item.key">
+                    <div class="card-item">
+                        <p>
+                            {{item.label}}
+                            <el-tooltip class="tooltip" :hide-after="0" effect="light" :content="item.contents" placement="bottom-start">
+                                <i class="el-icon-warning-outline" style="position: relative;"></i>
+                            </el-tooltip>
+                        </p>
+                        <p>{{item.count}}</p>
+                        <p>
+                            <span>环比</span>
+                            <span>
+                                <i :class="item.hb >= 0? 'el-icon-caret-top ':'el-icon-caret-bottom'">{{Math.abs(item.hb)}} %</i>
+                                <!-- <i class="el-icon-caret-top">{{item.hb}} %</i> -->
+                            </span>
+                        </p>
+                    </div>
+                </yu-col>
+            </yu-row>
+        </div>
+
+        <div class="data-chart" v-if="code != 'R002' && code != 'R003' && code != '15'" style="margin-bottom: 16px; background-color: white;">
+            <yu-row :gutter="22">
+                <yu-col :span="6" style="padding-left: 0;padding-right: 0;">
+                    <div>
+                        <p>客户经理概览</p>
+                        <div class="content-item" v-if="custmanageroverview.all">
+                            <div style="font-size: 14px;color: #909399;">全行客户经理数
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="content">总行/分行行长用户可见，对应展开“分行/支行名称”，展示各分行/支行管户数</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p>{{custmanageroverviewObj.all || 0}}</p>
+                        </div>
+                        <div class="content-item" v-if="custmanageroverview.loan">
+                            <div style="font-size: 14px;color: #909399;">个贷客户经理数
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="content">总行/分行行长、个贷主管用户可见。对应展开“分行/支行名称”，展示各分行/支行个贷管户数</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p>{{custmanageroverviewObj.loan || 0}}</p>
+                        </div>
+                        <div class="content-item" v-if="custmanageroverview.financing">
+                            <div style="font-size: 14px;color: #909399;">理财客户经理数
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="content">总行/分行行长、理财主管用户可见。对应展开“分行/支行名称”，展示各分行/支行理财管户数</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p>{{custmanageroverviewObj.financing || 0}}</p>
+                        </div>
+                        <div class="content-item" v-if="custmanageroverview.team">
+                            <div style="font-size: 14px;color: #909399;">下辖客户经理数
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="content">该团队下客户经理人数</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p>{{custmanageroverviewObj.team || 0}}</p>
+                        </div>
+                    </div>
+                </yu-col>
+                <yu-col :span="18" style="padding-left: 0;padding-right: 0; overflow-x: scroll;">
+                    <div>
+                        <p>管户概览</p>
+                        <yu-echarts ref="custChart" :option="custOption" width="1400px" height="370px"></yu-echarts>
+                    </div>
+                </yu-col>
+            </yu-row>
+        </div>
+
+        <div class="date-rang" style="margin-top: 0px; margin-bottom: 16px;">
+            <span>统计范围：</span>
+            <yu-date-picker v-model="dateRange" type="daterange" start-placeholder="选择开始日期" end-placeholder="选择结束日期" @change="handleDateRangeChange" value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '23:59:59']"></yu-date-picker>
+        </div>
+        <div class="cust-toutch" style="margin-top: 0px; margin-bottom: 16px;">
+            <!-- <p>客户接触情况</p> -->
+            <div class="box-title">
+                <div class="opendiatitle">客户接触情况</div>
+                <div class="more" @click="totalDetail('touch')">查看汇总详情 ></div>
+            </div>
+            <yu-row>
+                <yu-col :span="6" v-for="(item, index) in custTouchList" :key="item.id">
+                    <div class="item">
+                        <div style="font-size: 14px;color: #909399;">{{ item.title }}
+                            <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                <div slot="content">
+                                    <p class="content">{{ item.content }}</p>
+                                </div>
+                                <i class="el-icon-warning-outline"></i>
+                            </el-tooltip>
+                        </div>
+
+                        <p>{{item.count}}</p>
+                        <p>
+                            <span>环比</span>
+                            <span>
+                                <i :class="item.hb >= 0? 'el-icon-caret-top colorRed':'el-icon-caret-bottom color-green'">{{Math.abs(item.hb)}} %</i>
+
+                                <!-- <i :class="yufp.util.returnUpOrDownClass(item.hb)">{{item.hb}}</i> -->
+                            </span>
+                        </p>
+                    </div>
+                    <el-divider v-if="index != custTouchList.length-1" direction="vertical" style="height: 40px;">
+                    </el-divider>
+                </yu-col>
+            </yu-row>
+            <yu-echarts ref="custChart" :option="custTouchOption" width="100%" height="300px"></yu-echarts>
+        </div>
+        <div class="change-notice" style="margin-top: 0px; margin-bottom: 16px;">
+            <!-- <p style="margin-bottom: 24px">异动提醒情况</p> -->
+            <div class="box-title">
+                <div class="opendiatitle">异动提醒情况</div>
+                <div class="more" @click="totalDetail('remind')">查看汇总详情 ></div>
+            </div>
+            <yu-row class="notice-card">
+                <yu-col :span="6">
+                    <div style="font-size: 14px;color: #909399;">触发异动数
+                        <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                            <div slot="content">
+                                <p class="content">统计期间内触发的异动数量</p>
+                            </div>
+                            <i class="el-icon-warning-outline"></i>
+                        </el-tooltip>
+                    </div>
+
+                    <p>{{changeRemindObj.total}}</p>
+                </yu-col>
+                <yu-col :span="6">
+                    <div style="font-size: 14px;color: #909399;">已处理异动数
+                        <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                            <div slot="content">
+                                <p class="content">统计期间内，状态为“已处理”的异动提醒数量</p>
+                            </div>
+                            <i class="el-icon-warning-outline"></i>
+                        </el-tooltip>
+                    </div>
+                    <p>{{changeRemindObj.already}}</p>
+                </yu-col>
+                <yu-col :span="6">
+                    <div style="font-size: 14px;color: #909399;">待处理异动数
+                        <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                            <div slot="content">
+                                <p class="content">统计期间内，状态为“待处理”的异动提醒数量</p>
+                            </div>
+                            <i class="el-icon-warning-outline"></i>
+                        </el-tooltip>
+                    </div>
+                    <p>{{changeRemindObj.wait}}</p>
+                </yu-col>
+                <yu-col :span="6">
+                    <div style="font-size: 14px;color: #909399;">平均处理时效
+                        <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                            <div slot="content">
+                                <p class="content">以小时为单位，需注明“平均处理时效=（系统记录的已处理时点-异动触发时点）/处理次数”</p>
+                            </div>
+                            <i class="el-icon-warning-outline"></i>
+                        </el-tooltip>
+                    </div>
+                    <p>{{changeRemindObj.aging}} <span>分钟/次</span></p>
+                </yu-col>
+            </yu-row>
+            <div class="chart">
+                <yu-row>
+                    <yu-col :span="12">
+                        <yu-echarts height="300px" width="100%" :option="noticePieOption"></yu-echarts>
+                    </yu-col>
+                    <yu-col :span="12">
+                        <yu-echarts ref="noticeBar" height="300px" width="100%" :option="noticeBarOption"></yu-echarts>
+                    </yu-col>
+                </yu-row>
+            </div>
+        </div>
+        <div class="waitdo-notice" style="margin-top: 0px;height: 500px; margin-bottom: 16px;">
+            <!-- <p style="margin-bottom: 24px">待办提醒情况</p> -->
+            <div class="box-title">
+                <div class="opendiatitle">待办事项情况</div>
+                <div class="more" @click="totalDetail('todoWork')">查看汇总详情 ></div>
+            </div>
+            <yu-row>
+                <yu-col :span="14">
+                    <yu-row class="notice-card">
+                        <yu-col :span="8">
+                            <div style="font-size: 14px;color: #909399;">新增待办数
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="content">新增包括待跟进待办数和已跟进待办数</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p>{{waitdoObj.new}}</p>
+                        </yu-col>
+                        <yu-col :span="8">
+                            <div style="font-size: 14px;color: #909399;">待跟进待办数
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="content">待跟进待办数</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p>{{waitdoObj.wait}}</p>
+                        </yu-col>
+                        <yu-col :span="8">
+                            <div style="font-size: 14px;color: #909399;">已跟进待办数
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="content">已跟进待办数</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p>{{waitdoObj.already}}</p>
+                        </yu-col>
+                    </yu-row>
+                    <div class="chart">
+                        <yu-row>
+                            <yu-col :span="8">
+                                <yu-echarts height="300px" width="100%" :option="waitdoPieOption"></yu-echarts>
+                            </yu-col>
+                            <yu-col :span="16">
+                                <yu-echarts height="300px" width="100%" :option="waitdoBarOption"></yu-echarts>
+                            </yu-col>
+                        </yu-row>
+                    </div>
+                </yu-col>
+                <yu-col :span="10">
+                    <div class="table-title">待办跟进率
+                        <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                            <div slot="content">
+                                <p class="content">统计区间内已跟进待办/所有新增待办</p>
+                            </div>
+                            <i class="el-icon-warning-outline"></i>
+                        </el-tooltip>
+                    </div>
+                    <yu-xtable :data="waitdoTableData" :border="false" :pageable="false" :max-height="300" style="width: 100%">
+                        <yu-xtable-column prop="rank" label="名次" width="50px"></yu-xtable-column>
+                        <yu-xtable-column prop="name" :label="this.tableOrgname">
+                            <template slot-scope="scope">
+                                <el-link type="primary" @click="toBankDetail(scope.row)">{{scope.row.name}}</el-link>
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="taskRate" label="下发任务跟进率" sortable>
+                            <template slot-scope="scope">
+                                {{scope.row.taskRate}}%
+                            </template>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="rate" :label="this.todoroal" width="100px">
+                            <template slot-scope="scope">
+                                {{scope.row.rate}}%
+                            </template>
+                        </yu-xtable-column>
+                        <tr slot="append" style="text-align:center; line-height:50px; width: 100%; position: relative;" @click="loadMoreDataFn"><a href="javascript:;" style="min-width: 84px; position: absolute; left: 50%; margin-left: -42px;">点击加载更多</a>
+                        </tr>
+                    </yu-xtable>
+                </yu-col>
+            </yu-row>
+        </div>
+        <div class="report-situation" style="margin-top:0px">
+            <!-- <p>工作报告情况</p> -->
+            <div class="box-title">
+                <div class="opendiatitle">工作报告情况</div>
+                <div class="more" @click="totalDetail('workReport')">查看汇总详情 ></div>
+            </div>
+            <yu-row style="display: flex;align-items: center;">
+                <yu-col :span="12">
+                    <yu-row class="notice-card">
+                        <yu-col :span="8">
+                            <div style="font-size: 14px;color: #909399;">工作日报新增数
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="content">工作日报新增数</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p>{{workReportObj[1] || 0}}</p>
+                        </yu-col>
+                        <yu-col :span="8">
+                            <div style="font-size: 14px;color: #909399;">工作周报新增数
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="content">工作周报新增数</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p>{{workReportObj[2] || 0}}</p>
+                        </yu-col>
+                        <yu-col :span="8">
+                            <div style="font-size: 14px;color: #909399;">工作月报新增数
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="content">工作月报新增数</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p>{{workReportObj[3] || 0 }}</p>
+                        </yu-col>
+                    </yu-row>
+                </yu-col>
+                <yu-col :span="12">
+                    <yu-echarts height="300px" width="100%" :option="reportPieOption"></yu-echarts>
+                </yu-col>
+            </yu-row>
+        </div>
+    </div>
+
+    <yu-dialog title="待办明细" append-to-body :visible.sync="detailVisible" class="detailBox" min-width="920" :before-close="handleClose">
+        <yu-xtable ref="detailTable" :data-url="dataUrl" :default-load="false" base-params="" style="width: 100%" max-height="550">
+            <yu-xtable-column prop="todoWorkId" label="编号"></yu-xtable-column>
+            <yu-xtable-column prop="todoWorkType" label="待办类型" data-code="DY0002"></yu-xtable-column>
+            <yu-xtable-column prop="createDate" label="创建日期"></yu-xtable-column>
+            <yu-xtable-column prop="startDate" label="截止日期"></yu-xtable-column>
+            <yu-xtable-column label="状态">
+                <template slot-scope="scope">
+                    <span>{{scope.row.todoWorkState === '1' ? '待处理' : '已处理'}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="todoWorkContent" label="详情"></yu-xtable-column>
+            <yu-xtable-column prop="creatorName" label="客户经理"></yu-xtable-column>
+        </yu-xtable>
+    </yu-dialog>
+
+    <yu-dialog :title="title" append-to-body :visible.sync="touchVisible" class="detailBox" min-width="920" :before-close="handleClose">
+        <yu-xtable ref="touchTable" :data-url="dataUrlTouch" style="width: 100%" :base-params="baseParams" max-height="550">
+            <yu-xtable-column prop="upOrgName" label="上级机构" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="orgName" label="本机构" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="creatorName" label="客户经理名称" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="number" label="本期接触客户人数数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column prop="lastNumber" label="环比接触客户人数数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="环比接触客户人数比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.numberQoq.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="time" label="本期接触客户次数数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column prop="lastTime" label="环比接触客户次数数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="环比接触客户次数比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.timeQoq.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="count2" label="本期线下拜访次数数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column prop="lastCount2" label="环比线下拜访次数数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="环比线下拜访次数比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.count2Qoq.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="count1" label="本期拨通电话数数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column prop="lastCount1" label="环比拨通电话数数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="环比拨通电话数比例()" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.count1Qoq.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+        </yu-xtable>
+    </yu-dialog>
+
+    <yu-dialog :title="title" append-to-body :visible.sync="todoWorkVisible" class="detailBox" min-width="920" :before-close="handleClose">
+        <yu-xtable ref="todoWorkTable" :data-url="dataUrlTodoWork" :base-params="baseParams" style="width: 100%" max-height="550">
+            <yu-xtable-column prop="upOrgName" label="上级机构" width="180"></yu-xtable-column>
+            <yu-xtable-column prop="orgName" label="本机构" width="180"></yu-xtable-column>
+            <yu-xtable-column prop="creatorName" label="客户经理名称" width="180"></yu-xtable-column>
+            <yu-xtable-column prop="countOfStateTotal" label="新增待办数" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column prop="countOfState1" label="待跟进待办数" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="待跟进待办比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfState1Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countOfState2" label="已跟进待办数" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已跟进待办比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfState2Proportion.toFixed(2)}}</span>
+                </template></yu-xtable-column>
+            <yu-xtable-column prop="countOfType8" label="已跟进培训/会议待办事项数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已跟进培训/会议待办事项比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfType8Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countOfType3" label="待跟进培训/会议待办事项数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="待跟进培训/会议待办事项比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfType3Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countOfType6" label="已跟进商机待办事项数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已跟进商机待办事项比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfType6Proportion.toFixed(2)}}</span>
+                </template></yu-xtable-column>
+            <yu-xtable-column prop="countOfType1" label="待跟进商机待办事项数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="待跟进商机待办事项比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfType1Proportion.toFixed(2)}}</span>
+                </template></yu-xtable-column>
+            <yu-xtable-column prop="countOfType7" label="已跟进外访待办事项数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已跟进外访待办事项比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfType7Proportion.toFixed(2)}}</span>
+                </template></yu-xtable-column>
+            <yu-xtable-column prop="countOfType2" label="待跟进外访待办事项数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="待跟进外访待办事项比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfType2Proportion.toFixed(2)}}</span>
+                </template></yu-xtable-column>
+            <yu-xtable-column prop="countOfType10" label="已跟进客户跟进待办事项数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已跟进客户跟进待办事项比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfType10Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countOfType5" label="待跟进客户跟进待办事项数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="待跟进客户跟进待办事项比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfType5Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countOfType9" label="已跟进材料整理待办事项数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已跟进材料整理待办事项比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfType9Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countOfType4" label="待跟进材料整理待办事项数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="待跟进材料整理待办事项比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfType4Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="rank" label="名次" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="下发任务跟进率" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.taskRate.toFixed(2)}}%</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column label="待办跟进率" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.rate.toFixed(2)}}%</span>
+                </template>
+            </yu-xtable-column>
+        </yu-xtable>
+    </yu-dialog>
+
+    <yu-dialog :title="title" append-to-body :visible.sync="remindVisible" class="detailBox" min-width="920" :before-close="handleClose">
+        <yu-xtable ref="remindTable" :data-url="dataUrlRemind" style="width: 100%" :base-params="baseParams" max-height="550">
+            <yu-xtable-column prop="custName" label="客户名称" width="150"></yu-xtable-column>
+            <yu-xtable-column prop="finaningMgrUserName" label="理财客户经理" width="150"></yu-xtable-column>
+            <yu-xtable-column prop="loanMgrUserName" label="个贷客户经理" width="150"></yu-xtable-column>
+            <yu-xtable-column prop="countOfStateTotal" label="触发异动数" :formatter="formJE" width="150"></yu-xtable-column>
+            <yu-xtable-column prop="countOfState0" label="已处理异动数" :formatter="formJE" width="150"></yu-xtable-column>
+            <yu-xtable-column prop="countOfState1" label="待处理异动数" :formatter="formJE" width="150"></yu-xtable-column>
+            <yu-xtable-column prop="aging" label="平均处理时效" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已处理异动比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfState0Proportion.toFixed(2)}}</span>
+                </template></yu-xtable-column>
+            <yu-xtable-column label="待处理异动比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOfState1Proportion.toFixed(2)}}</span>
+                </template></yu-xtable-column>
+            <yu-xtable-column prop="countMT0" label="已处理到期类异动数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已处理到期类异动比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countMT0Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countMT1" label="待处理到期类异动数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="待处理到期类异动比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countMT1Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countTX0" label="已处理交易类异动数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已处理交易类异动比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countTX0Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countTX1" label="待处理交易类异动数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="待处理交易类异动比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countTX1Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countOD0" label="已处理逾期类异动数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已处理逾期类异动比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOD0Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countOD1" label="待处理逾期类异动数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="待处理逾期类异动比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countOD1Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countUD0" label="已处理升降级类异动数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="已处理升降级类异动比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countUD0Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="countUD1" label="待处理升降级类异动数值" :formatter="formJE" width="180"></yu-xtable-column>
+            <yu-xtable-column label="待处理升降级类异动比例(%)" width="180">
+                <template slot-scope="scope">
+                    <span>{{scope.row.countUD1Proportion.toFixed(2)}}</span>
+                </template>
+            </yu-xtable-column>
+
+            <!-- <yu-xtable-column prop="endDate" label="已处理重要日期异动数值"></yu-xtable-column>
+            <yu-xtable-column prop="endDate" label="已处理重要日期异动比例"></yu-xtable-column>
+            <yu-xtable-column prop="endDate" label="待处理重要日期异动数值"></yu-xtable-column>
+            <yu-xtable-column prop="endDate" label="待处理重要日期异动比例"></yu-xtable-column>
+    
+            <yu-xtable-column prop="endDate" label="已处理其他异动数值"></yu-xtable-column>
+            <yu-xtable-column prop="endDate" label="已处理其他异动比例"></yu-xtable-column>
+            <yu-xtable-column prop="endDate" label="待处理其他异动数值"></yu-xtable-column>
+            <yu-xtable-column prop="endDate" label="待处理其他异动比例"></yu-xtable-column> -->
+        </yu-xtable>
+    </yu-dialog>
+
+    <yu-dialog :title="title" append-to-body :visible.sync="workReportVisible" class="detailBox" min-width="920" :before-close="handleClose">
+        <yu-xtable ref="workReportTable" :data-url="dataUrlWorkReport" :base-params="baseParams" style="width: 100%" max-height="550">
+            <yu-xtable-column prop="upOrgName" label="上级机构" width="150"></yu-xtable-column>
+            <yu-xtable-column prop="orgName" label="本机构" width="150"></yu-xtable-column>
+            <yu-xtable-column prop="creatorName" label="客户经理名称" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="count1" label="工作日报新增数" :formatter="formJE" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="count2" label="工作周报新增数" :formatter="formJE" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="count3" label="工作月报新增数" :formatter="formJE" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="count4" label="新增培训/会议工作日报数量" :formatter="formJE" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="count5" label="新增商机工作日报数量" :formatter="formJE" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="count6" label="新增外访工作日报数量" :formatter="formJE" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="count7" label="新增客户跟进工作日报数量" :formatter="formJE" width="170"></yu-xtable-column>
+            <yu-xtable-column prop="count8" label="新增材料整理工作日报数量" :formatter="formJE" width="170"></yu-xtable-column>
+        </yu-xtable>
+    </yu-dialog>
+</div>
+<link href="./pages/dy/activityLevelsManage/activeLevelMonitor/activeLevelMonitor.css" rel="stylesheet" type="text/css">

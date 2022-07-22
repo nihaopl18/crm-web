@@ -1,0 +1,27 @@
+.yu-scoreView .el-tabs__header{
+	border-bottom: none;
+}
+.yu-scoreView .el-tabs__nav-wrap{
+	display: inline-block;
+    border-radius: 5px;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.yu-scoreView .el-tabs__item{
+    border-right: 1px solid #d5d5d5;
+    height: 36px;
+    line-height: 36px;
+    color: #666;
+}
+.yu-scoreView .el-tabs__nav{
+	border-radius: 5px;
+    border: 1px solid #d5d5d5;
+    border-right: none;
+}
+.yu-scoreView .el-tabs__item.is-active{
+	background-color:#20A0FF ;
+	color: #fff;
+}
+#pane-custBaseInfo, #pane-iScoreInfo{
+    margin-top:20px;
+}

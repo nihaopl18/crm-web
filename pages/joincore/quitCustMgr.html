@@ -1,0 +1,16 @@
+<!-- 
+  @Created by luhy1 luhy1@yusys.com.cn on 2019-2-28 15:28:24.
+  @updated by
+  @description 退出客户经理
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+  </yu-xform>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+    <yu-xtable-column label="客户经理编号" prop="custManagerId"></yu-xtable-column>
+    <yu-xtable-column label="客户经理名称" prop="custManagerName"></yu-xtable-column>
+    <yu-xtable-column label="退出申请时间" prop="quitDate"></yu-xtable-column>
+    <yu-xtable-column label="退出理由" prop="quitReason"></yu-xtable-column>
+  </yu-xtable>
+</div>

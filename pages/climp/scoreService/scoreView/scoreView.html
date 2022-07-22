@@ -1,0 +1,192 @@
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2019-1-2 15:06:28.
+  @updated by
+  @description 客户积分视图
+-->
+<div class="yu-scoreView">
+  <yu-tabs v-model="tabName">
+    <yu-tab-pane label="客户基本信息" name="custBaseInfo">
+      <!-- 客户基本信息表单 -->
+      <yu-xform label-width="120px" ref="refCustBaseForm" v-model="custBaseFormData" disabled>
+        <yu-xform-group>
+          <yu-xform-item label="客户号" ctype="input" name="custId"></yu-xform-item>
+          <yu-xform-item label="客户姓名" ctype="input" name="custName"></yu-xform-item>
+          <yu-xform-item label="证件类型" ctype="select" name="identType" data-code="CD0011"></yu-xform-item>
+          <yu-xform-item label="证件号码" ctype="input" name="identNo"></yu-xform-item>
+          <yu-xform-item label="出生日期" ctype="datepicker" name="birthDate"></yu-xform-item>
+          <yu-xform-item label="性别" ctype="radio" name="sex" data-code="CD0007"></yu-xform-item>
+          <yu-xform-item label="职业类型" ctype="select" name="professType" data-code="CD0010"></yu-xform-item>
+          <yu-xform-item label="职务" ctype="select" name="postInfo" data-code="CD0033"></yu-xform-item>
+          <yu-xform-item label="工作单位" ctype="input" name="workUnit"></yu-xform-item>
+          <yu-xform-item label="手机" ctype="input" name="handphone"></yu-xform-item>
+          <yu-xform-item label="邮箱" ctype="input" name="email"></yu-xform-item>
+          <yu-xform-item label="联系人名称" ctype="input" name="linkmanName"></yu-xform-item>
+          <yu-xform-item label="联系人称谓" ctype="input" name="linkmanAppel"></yu-xform-item>
+          <yu-xform-item label="邮政编码" ctype="input" name="postCode"></yu-xform-item>
+          <yu-xform-item label="传真" ctype="input" name="faxCode"></yu-xform-item>
+          <yu-xform-item label="联系电话" ctype="input" name="linkmanTel"></yu-xform-item>
+          <yu-xform-item label="详细地址" ctype="input" name="addressInfo"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+    </yu-tab-pane>
+    <yu-tab-pane label="综合积分信息" name="iScoreInfo">
+      <!-- 综合积分信息表单 -->
+      <yu-xform ref="refScoreForm" label-width="120px" v-model="iScoreFormData" disabled>
+        <yu-xform-group>
+          <yu-xform-item label="综合积分" name="totalNum"></yu-xform-item>
+          <yu-xform-item label="可用积分" name="scoreNum"></yu-xform-item>
+          <yu-xform-item label="过期积分数" name="nunaccNum"></yu-xform-item>
+          <yu-xform-item label="冻结积分" name="freezeNum"></yu-xform-item>
+          <yu-xform-item label="消费积分" name="costNum"></yu-xform-item>
+          <yu-xform-item label="本月已消费积分" name="nextInvalidNum"></yu-xform-item>
+          <yu-xform-item label="本月已失效积分" name="nextInvalidNum"></yu-xform-item>
+          <yu-xform-item label="本月末失效积分" name="nextInvalidNum"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+    </yu-tab-pane>
+    <yu-tab-pane label="积分账户信息" name="scoreAccoutInfo">
+      <!-- 积分账户搜索表单 -->
+      <yu-xform related-table-name="refScoreAccoutTable" class="yu-customer-query" form-type="search">
+        <yu-xform-group :column="4">
+          <yu-xform-item placeholder="账户编号" name="accountNo" ctype="input" :maxlength="30"></yu-xform-item>
+          <yu-xform-item placeholder="账户名称" name="accountName" ctype="input" :maxlength="200"></yu-xform-item>
+          <yu-xform-item placeholder="综合积分(起)" name="totalNumStart" ctype="num" :maxlength="16"></yu-xform-item>
+          <yu-xform-item placeholder="综合积分(止)" name="totalNumEnd" ctype="num" :maxlength="16"></yu-xform-item>
+          <yu-xform-item placeholder="可用积分(起)" name="scoreNumStart" ctype="num" :maxlength="16"></yu-xform-item>
+          <yu-xform-item placeholder="可用积分(止)" name="scoreNumEnd" ctype="num" :maxlength="16"></yu-xform-item>
+          <yu-xform-item placeholder="冻结积分(起)" name="freezeNumStart" ctype="num" :maxlength="16"></yu-xform-item>
+          <yu-xform-item placeholder="冻结积分(止)" name="freezeNumEnd" ctype="num" :maxlength="16"></yu-xform-item>
+          <yu-xform-item placeholder="消费积分(起)" name="costNumStart" ctype="num" :maxlength="16"></yu-xform-item>
+          <yu-xform-item placeholder="消费积分(止)" name="costNumEnd" ctype="num" :maxlength="16"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <!-- 积分账户工具按钮 -->
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="document" @click="accountListFn">账户明细</yu-button>
+        </yu-button-group>
+      </div>
+      <!-- 积分账户信息表格-->
+      <yu-xtable ref="refScoreAccoutTable" row-number :data-url="scoreAccoutDataUrl" selection-type="radio" :base-params="params">
+        <yu-xtable-column prop="accountNo" label="账户编号"></yu-xtable-column>
+        <yu-xtable-column prop="accountName" label="账户名称"></yu-xtable-column>
+        <yu-xtable-column prop="totalNum" label="综合积分"></yu-xtable-column>
+        <yu-xtable-column prop="scoreNum" label="可用积分"></yu-xtable-column>
+        <!-- <yu-xtable-column prop="nunaccNum" label="过期积分数"></yu-xtable-column> -->
+        <yu-xtable-column prop="freezeNum" label="冻结积分"></yu-xtable-column>
+        <yu-xtable-column prop="costNum" label="消费积分"></yu-xtable-column>
+      </yu-xtable>
+      <!--账户详情弹出框 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+             width="650px" height="380px" -->
+      <yu-xdialog title="账户明细详情" :visible.sync="scoreAccoutDialogVisible" width="1000px">
+        <yu-xtable ref="refAccountDetailTable" row-number :data-url="accountDetailDataUrl" :base-params="params">
+          <yu-xtable-column label="账户编号" prop="accountNo"></yu-xtable-column>
+          <yu-xtable-column label="账户名称" prop="accountName"></yu-xtable-column>
+          <yu-xtable-column label="积分值" prop="balance"></yu-xtable-column>
+          <yu-xtable-column label="可用积分" prop="scoreNum"></yu-xtable-column>
+          <yu-xtable-column label="冻结积分" prop="freezeNum"></yu-xtable-column>
+          <yu-xtable-column label="有效期" prop="valid"></yu-xtable-column>
+          <yu-xtable-column label="入账状态" prop="transState" data-code="TRANS_STATE"></yu-xtable-column>
+          <yu-xtable-column label="交易日期" prop="jyDate"></yu-xtable-column>
+        </yu-xtable>
+      </yu-xdialog>
+    </yu-tab-pane>
+    <yu-tab-pane label="积分明细信息" name="addScoreInfo">
+      <!-- 加分明细搜索表单 -->
+      <yu-xform related-table-name="refAddScoreTable" form-type="search" v-model="addScoreFormData" class="yu-customer-query">
+        <yu-xform-group :column="8">
+          <yu-xform-item placeholder="账户编号" name="accountNo" ctype="input" :maxlength="30"></yu-xform-item>
+          <yu-xform-item placeholder="账户名称" name="accountName" ctype="input" :maxlength="200"></yu-xform-item>
+          <yu-xform-item placeholder="交易代码" name="exSerial" ctype="select" :maxlength="200" data-code="TRAN_CODE"></yu-xform-item>
+          <yu-xform-item placeholder="交易日期开始" name="jyDateStart" ctype="datepicker" :picker-options="addPickerOptionsStart"></yu-xform-item>
+          <yu-xform-item placeholder="交易日期结束" name="jyDateEnd" ctype="datepicker" :picker-options="addPickerOptionsEnd"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <!-- 加分明细信息表格 -->
+      <yu-xtable ref="refAddScoreTable" row-number :data-url="addScoreDataUrl" selection-type="radio" :base-params="params" style="margin-top: 10px;">
+        <yu-xtable-column prop="accountNo" label="账户编号"></yu-xtable-column>
+        <yu-xtable-column prop="accountName" label="账户名称"></yu-xtable-column>
+        <yu-xtable-column prop="balance" label="变动积分数"></yu-xtable-column>
+        <yu-xtable-column prop="exSerial" label="交易代码" data-code="TRAN_CODE"></yu-xtable-column>
+        <yu-xtable-column prop="jyDate" label="交易日期"></yu-xtable-column>
+        <yu-xtable-column prop="valid" label="有效期"></yu-xtable-column>
+        <yu-xtable-column prop="transState" label="入账状态" data-code="TRANS_STATE"></yu-xtable-column>
+      </yu-xtable>
+    </yu-tab-pane>
+    <!-- 减分明细搜索表单 -->
+    <!--<yu-tab-pane label="减分明细信息" name="subtractScoreInfo">
+      <yu-xform related-table-name="refSubtractScoreTable" form-type="search" v-model="subtractScoreFormData" class="yu-customer-query"
+        :base-params="params">
+        <yu-xform-group :column="4">
+          <yu-xform-item placeholder="账户编号" name="accountNo" ctype="input" :maxlength="30"></yu-xform-item>
+          <yu-xform-item placeholder="账户名称" name="accountName" ctype="input" :maxlength="200"></yu-xform-item>
+          <yu-xform-item placeholder="交易日期开始" name="jyDateStart" ctype="datepicker" :picker-options="subtractPickerOptionsStart"></yu-xform-item>
+          <yu-xform-item placeholder="交易日期结束" name="jyDateEnd" ctype="datepicker" :picker-options="subtractPickerOptionsEnd"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <yu-xtable ref="refSubtractScoreTable" row-number :data-url="subtractScoreDataUrl" selection-type="radio" :base-params="params"
+        style="margin-top: 10px;">
+        <yu-xtable-column prop="accountNo" label="账户编号"></yu-xtable-column>
+        <yu-xtable-column prop="accountName" label="账户名称"></yu-xtable-column>
+        <yu-xtable-column prop="balance" label="扣减积分数"></yu-xtable-column>
+        <yu-xtable-column prop="exSerial" label="减分类型" data-code="TRAN_CODE"></yu-xtable-column>
+        <yu-xtable-column prop="jyDate" label="交易日期"></yu-xtable-column>
+        <yu-xtable-column prop="valid" label="有效期"></yu-xtable-column>
+        <yu-xtable-column prop="transState" label="入账状态" data-code="TRANS_STATE"></yu-xtable-column>
+      </yu-xtable>
+    </yu-tab-pane>-->
+    <!-- 原始交易信息搜索表单 -->
+    <!--<yu-tab-pane label="原始交易信息" name="origTradeInfo">
+      <yu-xform related-table-name="refOrigTradeTable" form-type="search" label-width="80px" v-model="origTradeFormData" class="yu-customer-query">
+        <yu-xform-group :column="4">
+          <yu-xform-item placeholder="账户编号" name="accountNo" ctype="input" :maxlength="30"></yu-xform-item>
+          <yu-xform-item placeholder="账户名称" name="accountName" ctype="input" :maxlength="200"></yu-xform-item>
+          <yu-xform-item placeholder="交易日期开始" name="jyDateStart" ctype="datepicker" :picker-options="origTradePickerOptionsStart"></yu-xform-item>
+          <yu-xform-item placeholder="交易日期结束" name="jyDateEnd" ctype="datepicker" :picker-options="origTradePickerOptionsEnd"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="document" @click="origTradeinfoFn">交易详情</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="reforigtradetable" row-number :data-url="origtradedataurl" selection-type="radio" :base-params="params">
+        <yu-xtable-column label="账户编号" prop="accountno"></yu-xtable-column>
+        <yu-xtable-column label="账户名称" prop="accountname"></yu-xtable-column>
+        <yu-xtable-column label="操作分值" prop="balance"></yu-xtable-column>
+        <yu-xtable-column label="加分活动名称" prop="activityname"></yu-xtable-column>
+        <yu-xtable-column label="加分规程名称" prop="activityname"></yu-xtable-column>
+        <yu-xtable-column label="交易日期" prop="jydate"></yu-xtable-column>
+        <yu-xtable-column label="入账状态" prop="transstate" data-code="trans_state"></yu-xtable-column>
+        <!-- <yu-xtable-column label="原表主键id" prop="consumerseqno"></yu-xtable-column>
+        <yu-xtable-column label="来源表" prop="sourcetable"></yu-xtable-column> 
+      </yu-xtable>
+      <yu-xdialog title="交易详情" :visible.sync="tradedetaildialogvisible" width="1050px">
+        <yu-collapse v-model="activenames">
+          <yu-collapse-item :title="waittitle" name="1">
+            <yu-xform label-width="120px" ref="refquerytableform" v-model="querytableformdata" disabled>
+              <yu-xform-group>
+                <yu-xform-item v-for="item in formitems" :label="item.label" :name="item.name" ctype="input"></yu-xform-item>
+              </yu-xform-group>
+            </yu-xform>
+          </yu-collapse-item>
+          <yu-collapse-item title="命中规则情况" name="2">
+            <yu-xform label-width="120px" v-model="hitrulesformdata" ref="refruleform" disabled>
+              <yu-xform-group>
+                <yu-xform-item label="账户号" ctype="input" name="accountno"></yu-xform-item>
+                <yu-xform-item label="账户名称" ctype="input" name="accountname"></yu-xform-item>
+                <yu-xform-item label="操作分值" ctype="input" name="balance"></yu-xform-item>
+                <yu-xform-item label="参与活动名称" ctype="input" name="activityname"></yu-xform-item>
+                <yu-xform-item label="参与规则名称" ctype="input" name="rulename"></yu-xform-item>
+              </yu-xform-group>
+            </yu-xform>
+          </yu-collapse-item>
+        </yu-collapse>
+        <div class="yu-grpbutton">
+          <yu-button icon="yx-undo2" type="primary" @click="cancelfn">取消</yu-button>
+        </div>
+      </yu-xdialog>
+    </yu-tab-pane>-->
+  </yu-tabs>
+</div>

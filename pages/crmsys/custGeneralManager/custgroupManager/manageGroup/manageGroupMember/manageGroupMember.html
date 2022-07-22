@@ -1,0 +1,41 @@
+<!--
+  @created by hyx on 2018/7/13.
+  @updated by
+  @description 客户群成员管理——加入客户群成员
+-->
+
+<div>
+	<el-row :gutter="10">
+		<!--平分两列显示不同角色信息-->
+		<el-col :span="12">
+			<el-form-q title="未入群客户查询" ref="nojoinform" :field-data="queryFieldsnojion" :columns="3" :buttons="queryButtonsnojion"></el-form-q>
+			<div class="yu-toolBar">
+				<h2>待加入客户</h2>
+				<el-button-group>
+					<el-button icon="plus" @click="clientjoin">归入客户群</el-button>
+				</el-button-group>
+			</div>
+			<el-table-x ref="nojoin" class="permitSelect" @contextmenu.prevent.stop.native :data-url="noJoinUrl" :table-columns="clientsView" :checkbox="true" :base-params="nojoinBaseParams" height="360"></el-table-x>
+		</el-col>
+		<el-col :span="12">
+			<!-- <el-form-q title="群客户查询" ref="joinform" :field-data="queryFieldsjoin" :columns="3" :buttons="queryButtonsjoin"></el-form-q> -->
+			<div class="yu-toolBar">
+				<h2>客户群成员列表</h2>
+				<el-button-group>
+					<el-button icon="yx-bin" @click="clientremove">移除群成员</el-button>
+				</el-button-group>
+			</div>
+			<el-table-x ref="join" :data-url="joinUrl" class="permitSelect" @contextmenu.prevent.stop.native :table-columns="joinclientsView" :checkbox="true" :base-params="baseParams" height="360"></el-table-x>
+		</el-col>
+	</el-row>
+</div>
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

@@ -1,0 +1,188 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2019-1-23 15:09:19.
+  @updated by
+  @description 信息提醒
+-->
+<div>
+    <yu-xform style="padding:20px 20px;" ref="refForm" related-table-name="refTable" form-type="search">
+        <yu-xform-group :column="4">
+            <!-- <yu-xform-item placeholder="规则类别" ctype="yufp-org-tree" name="typeId" 
+        :params="treeParams"></yu-xform-item> -->
+            <yu-xform-item placeholder="异动类型" ctype="select" name="typeId" data-code="DY0009"></yu-xform-item>
+            <yu-xform-item placeholder="客户等级" ctype="select" name="custGrade" data-code="CUST_GRADE"></yu-xform-item>
+            <!-- <yu-xform-item placeholder="客户服务等级" ctype="select" name="servLev" data-code="CD0032" :multiple="true"></yu-xform-item> -->
+            <!-- <yu-xform-item placeholder="是否已读" ctype="select" name="isRead" data-code="CD0238"></yu-xform-item> -->
+            <!-- <yu-xform-item placeholder="提醒到期日期" ctype="datepicker" name="remindExpireDate" :editable="false"></yu-xform-item> -->
+            <yu-xform-item start-placeholder="触发开始时间" end-placeholder="触发结束时间" value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '23:59:59']" ctype="datepicker" name="rangeDate" type="daterange">
+            </yu-xform-item>
+            <yu-xform-item placeholder="状态" ctype="select" name="state" data-code="DY0007"></yu-xform-item>
+            <!-- <yu-xform-item placeholder="剩余天数" ctype="input" name="remainDays" :rules="rule[1]"></yu-xform-item> -->
+        </yu-xform-group>
+    </yu-xform>
+    <div class="yu-toolBar" style="padding:0px 20px">
+        <yu-button-group>
+            <!-- <yu-button icon="yx-book" @click="readFn" v-if="readButton">设为已读</yu-button> -->
+            <yu-button icon="document" @click="changeCustomerStateMul('1')" v-if="viewButton">无需跟进</yu-button>
+            <yu-button icon="document" @click="changeCustomerStateMul('2')" v-if="viewButton">已处理</yu-button>
+            <yu-button icon="yx-folder-upload" @click='exportMulFn'>导出</yu-button>
+            <!-- <yu-button icon="yx-compass" @click="mesSendFn" v-if="sendButton">信息发送</yu-button> -->
+        </yu-button-group>
+    </div>
+    <yu-xtable ref="refTable" :data-url="dataUrl" :base-params="baseParams" :border="false" selection-type="checkbox" style="padding:20px 20px">
+        <!-- <yu-xtable-column label="事件编号" prop="infoId" width="150"></yu-xtable-column> -->
+        <yu-xtable-column label="事件名称" prop="ruleName" width="100">
+            <template slot-scope="scope">
+        {{scope.row.ruleName}}
+        <yu-tooltip v-if="scope.row.ruleName === '客户AUM等级降级提醒'" class="item" effect="light" content="当月末，客户分层降级提醒" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '客户AUM等级升级提醒'" class="item" effect="light" content="当月末，客户分层升级提醒" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '理财风险评估到期'" class="item" effect="light" content="风险评估到期提前10天提醒，持续提醒11天" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '还款日提醒'" class="item" effect="light" content="贷款到期提前15天提醒，持续提醒16天" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '定期到期'" class="item" effect="light" content="定期存款到期提前10天提醒，持续提醒11天" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '理财产品到期'" class="item" effect="light" content="理财产品到期提前10天提醒，持续提醒11天" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '客户超过一个月未登录手机银行'" class="item" effect="light" content="客户超过一个月未登录手机银行当天提醒，持续提醒30天" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '账户余额变动（转出）'" class="item" effect="light" content="账户转入超过5万，当天提出提醒，持续提醒10天" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '账户余额变动（转入）'" class="item" effect="light" content="账户转入超过5万，当天提出提醒，持续提醒10天" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '贷款逾期'" class="item" effect="light" content="贷款逾期当天提醒，持续提醒11天" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '贷款还款账户余额不足'" class="item" effect="light" content="有签约还款账户且还款账户余额当期贷款还款额，提前5天，连续提醒6天" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+        <yu-tooltip v-if="scope.row.ruleName === '客户生日提醒'" class="item" effect="light" content="客户生日的提前10天开始提醒，一直持续提醒11天" placement="bottom-start">
+            <i class="el-icon-warning-outline"></i>
+        </yu-tooltip>
+      </template>
+        </yu-xtable-column>
+        <yu-xtable-column label="事件类型" prop="typeName" width="150"></yu-xtable-column>
+        <!-- <yu-xtable-column label="数额(万元)" prop="amt" width="100" sortable></yu-xtable-column> -->
+        <yu-xtable-column prop="amt" label="数额" sortable :sort-method="custSort">
+            <template slot-scope="scope">
+        <span v-if="scope.row.amt != '-'">{{ yufp.util.moneyFormatter(scope.row.amt || 0, 2)}}</span>
+        <span v-if="scope.row.amt == '-'">-</span>
+      </template>
+        </yu-xtable-column>
+        <yu-xtable-column prop="importDate" label="重要日期" width="100"></yu-xtable-column>
+        <yu-xtable-column prop="otherContent" label="其它内容"></yu-xtable-column>
+        <yu-xtable-column label="触发时间" prop="remindCreateDate" :formatter="formJE" width="130"></yu-xtable-column>
+        <yu-xtable-column prop="custName" label="客户姓名">
+            <template slot-scope="scope">
+        <el-link type="primary" @click="toCustomer360View(scope.row)">{{ scope.row.custName }} - {{ scope.row.custId }}</el-link>
+      </template>
+        </yu-xtable-column>
+        <yu-xtable-column label="状态" prop="state" width="170" data-code="DY0007"></yu-xtable-column>
+        <el-table-column label="操作" width="200">
+            <template slot-scope="scope">
+        <yu-button type="text" style="padding: 0" v-if="scope.row.state == '2'" @click="changeCustomerState(scope.row,'1')">
+            无需跟进</yu-button>
+        <yu-button type="text" style="padding: 0" v-if="scope.row.state == '2'" @click="changeCustomerState(scope.row,'2')">
+            已处理
+        </yu-button>
+        <yu-button type="text" style="padding: 0" disabled="true" v-if="scope.row.state != '2' && scope.row.operation == '1'">无需跟进</yu-button>
+        <yu-button type="text" style="padding: 0" disabled="true" v-if="scope.row.state != '2' && scope.row.operation == '2'">已处理</yu-button>
+        <!-- <el-dropdown trigger="click" @command="handleOptionSelect"
+          @visible-change="handleOptionVisibleChange(scope.row)" v-if="scope.row.state == '2'">
+          <span class="el-icon-more"></span>
+          <el-dropdown-menu slot="dropdown"> -->
+        <!-- <el-dropdown-item command="alreadyRead"><i class="el-icon-view"></i> 已阅知</el-dropdown-item> -->
+        <!-- <el-dropdown-item command="noTrack"><i class="el-icon-document-delete"></i> 无需跟进</el-dropdown-item> -->
+        <!-- <el-dropdown-item command="messageSend"><i class="el-icon-chat-line-square"></i> 去执行</el-dropdown-item> -->
+        <!-- <el-dropdown-item command="alreadyDeal"><i class="el-icon-document-checked"></i> 已处理</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown> -->
+      </template>
+        </el-table-column>
+    </yu-xtable>
+
+    <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="80%">
+        <yu-xform ref="refForm" label-width="150px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group :column="3">
+                <yu-xform-item label="规则类别" ctype="input" name="typeName"></yu-xform-item>
+                <yu-xform-item label="客户名称" ctype="input" name="custName"></yu-xform-item>
+                <yu-xform-item label="提醒到期日期" ctype="input" name="remindExpireDate"></yu-xform-item>
+                <yu-xform-item label="剩余天数" ctype="input" name="remainDays"></yu-xform-item>
+                <yu-xform-item label="可发送渠道" ctype="input" name="sendChannel"></yu-xform-item>
+                <yu-xform-item label="是否已发送短信" ctype="select" name="haveSend" data-code="CD0238"></yu-xform-item>
+                <yu-xform-item label="发送时间" ctype="input" name="sendTime"></yu-xform-item>
+                <yu-xform-item label="接收号码" ctype="input" name="receNum"></yu-xform-item>
+                <yu-xform-item label="提醒内容" ctype="textarea" name="remindInfo" :rows="3" :colspan="24"></yu-xform-item>
+                <yu-xform-item label="短信发送内容" ctype="textarea" name="messageInfo" :rows="5" :colspan="24"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+    <yu-xdialog title="信息发送" :visible.sync="mesDialogVisible" width="60%">
+        <yu-steps :active="active" finish-status="success" :align-center="true" :center="true" style="width: 70%;margin: auto;">
+            <yu-step title="选择联系方式" icon="yx-address-book"></yu-step>
+            <yu-step title="确认" icon="check"></yu-step>
+        </yu-steps>
+        <div style="margin: auto;padding: 20px 0px 0px 0px;">
+            <yu-xform ref="refFormTwo" label-width="150px" :hidden="formTwoHide">
+                <yu-xtable ref="telTable" row-number :data-url="telDataUrl" selection-type="radio">
+                    <!--<yu-xtable-column label="客户编号" prop="custId" width="150"></yu-xtable-column>
+          <yu-xtable-column label="客户类型" prop="custType" width="100" data-code="CD0016"></yu-xtable-column>
+          <yu-xtable-column label="联系人" prop="contName" width="180"></yu-xtable-column> -->
+                    <yu-xtable-column label="联系方式类型" prop="contType" width="130" data-code="CD0258"></yu-xtable-column>
+                    <yu-xtable-column label="联系方式" prop="contMeth"></yu-xtable-column>
+                </yu-xtable>
+                <div class="yu-grpButton">
+                    <yu-button icon="yx-arrow-right" type="primary" @click="nextFn">下一步</yu-button>
+                </div>
+            </yu-xform>
+            <yu-xform ref="refFormThree" label-width="150px" v-model="finishFormData" :hidden="formThreeHide">
+                <yu-xform-group :column="2">
+                    <yu-xform-item label="发送渠道" ctype="input" name="sendChlName" :disabled="true"></yu-xform-item>
+                    <yu-xform-item label="接收号码" ctype="input" name="rcvNum" :disabled="true"></yu-xform-item>
+                    <yu-xform-item label="发送日期" ctype="datepicker" name="sendDate" rules="required" :editable="false">
+                    </yu-xform-item>
+                    <yu-xform-item label="发送时间" name="sendTime" ctype="timepicker" rules="required" :disabled="false">
+                    </yu-xform-item>
+                    <yu-xform-item label="发送内容" ctype="textarea" name="sendContent" :rows="5" :colspan="24" :disabled="true">
+                    </yu-xform-item>
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                    <yu-button icon="yx-arrow-left" type="primary" @click="backFn">上一步</yu-button>
+                    <yu-button icon="check" type="primary" @click="finishFn">发送</yu-button>
+                </div>
+            </yu-xform>
+        </div>
+    </yu-xdialog>
+    <yu-xdialog title="发送短信" width="600px" :visible.sync="connectVisible" :before-close="handleConnectClose">
+        <div style="padding: 0 70px">
+            <yu-xform ref="refFormFour" label-width="120px" label-position="top" v-model="tableEditFormdata">
+                <yu-xform-group>
+                    <yu-xform-item label="客户" ctype="input" required name="custName" colspan="24" readonly></yu-xform-item>
+                    <yu-xform-item label="电话号码" ctype="input" name="phone" placeholder="请输入号码" readonly colspan="24">
+                    </yu-xform-item>
+                    <yu-xform-item label="异动类型" ctype="input" name="ruleName" readonly colspan="24" placeholder="请选择类型">
+                    </yu-xform-item>
+                    <!-- <yu-xform-item label="" ctype="textarea" name="custom" colspan="24" readonly></yu-xform-item> -->
+                </yu-xform-group>
+                </yu-row>
+            </yu-xform>
+            <span slot="footer" class="dialog-footer" style="text-align: center;display: block">
+        <yu-button @click="handleConnectClose">取 消</yu-button>
+        <yu-button type="primary" @click="handleConnectClose">确 定</yu-button>
+      </span>
+        </div>
+    </yu-xdialog>
+</div>

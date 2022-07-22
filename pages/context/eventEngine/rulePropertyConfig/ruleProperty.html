@@ -1,0 +1,223 @@
+<!--
+	作者：chenlin2@yusys.com.cn
+	时间：2018-08-24
+	描述：规则属性配置
+-->
+<div>
+	<el-row :gutter="10">
+		<el-col :span="5">
+			<el-tree-x ref="tableTypeTree" data-id="typeId" data-label="typeName"
+						:data-url="treeUrl" @node-click="nodeClickFn"
+	  			data-pid="typeParentId" data-root="P000" :root-visible="false" :height="height-300">
+			</el-tree-x>
+			<div class="yu-toolBar">
+		    <el-button-group>
+		      <el-button icon="plus" @click="addTableType" title="新增"></el-button>
+		      <el-button icon="edit" @click="updateTableType" title="修改"></el-button>
+		      <el-button icon="yx-bin" @click="deleteTableType" title="删除"></el-button>
+		    </el-button-group>
+		  </div>
+  		<el-form-x ref="reform"
+	        :group-fields="updateFields" :buttons="updateButtons"
+	            :disabled="formDisabled" label-width="80px">
+  		</el-form-x>	
+		</el-col>
+		<el-col :span="19">
+			
+				<div class="yu-toolBar" style="float: left;width: 35%;">
+					<el-button-group>
+						<el-button icon="plus" @click="addTableFn">新增</el-button>
+						<!-- <el-button icon="edit" @click="deleteTabFn">删除</el-button> -->
+						<el-button icon="check" @click="saveTabFn">保存</el-button>
+						<el-button icon="search" @click="queryFieldsFn">查看属性</el-button>
+					</el-button-group>
+				</div>
+				<div style="float: left;margin-top: 10px;">
+					<font color="red"> 注：新增、编辑操作后必须点击“保存”按钮,操作才能生效!!!</font>
+				</div>
+    <!-- 表新增dialog-->
+			<el-dialog-x :title="viewTitle" :visible.sync="tableDialogVisible" height="200px" width="600px" >
+        <el-form ref="form" :model="form" label-width="80px">
+          <el-form-item label="交易类型">
+            <el-select placeholder="请选择" v-model="objectType" @change="changeType($event)">
+              <el-option v-for="item in tableTypeOptions" :key="item.key" :label="item.value"
+                  :value="item.key">
+                <span>{{ item.value }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="交易名称">
+            <el-select placeholder="请选择" v-model="transactionCode" @change="selectTab($event)">
+              <el-option v-for="item in tranCodeOptions" :key="item.key" :label="item.value"
+                  :value="item.key">
+                <span>{{ item.value }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+			</el-dialog-x>
+			<!--可编辑列表-->
+      <el-table ref="mytable_u" :data="tableGrid.data" v-loading="tableGrid.loading"  height="205"
+        		@row-dblclick="getFieldsFn" 
+            @row-click="rowClickFn"
+        		stripe border fit highlight-current-row element-loading-text="加载中...">
+				<el-table-column label="主键id" width="150" v-if="false">
+					<template scope="scope">
+						<el-input v-show="scope.row.edit" size="small" v-model="scope.row.tableId"></el-input>
+						<span v-show="!scope.row.edit">{{ scope.row.tableId }}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="表英文名" width="180">
+					<template scope="scope">
+						<span>{{ scope.row.tableEName }}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="表中文名" width="140">
+					<template scope="scope">
+						<el-input v-show="scope.row.edit" size="small" v-model="scope.row.tableCName"></el-input>
+						<span v-show="!scope.row.edit" @click="handleEdit(scope.$index,scope.row)">{{ scope.row.tableCName }}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="描述" width="140">
+					<template scope="scope">
+						<el-input v-show="scope.row.edit" size="small" v-model="scope.row.remark"></el-input>
+						<span v-show="!scope.row.edit">{{ scope.row.remark }}</span>
+					</template>
+        </el-table-column>
+        <el-table-column label="交易类型code" width="150" v-if="false">
+            <template scope="scope">
+              <el-input size="small" v-model="scope.row.objectType"></el-input>
+            </template>
+        </el-table-column>
+        <el-table-column label="交易类型" width="80">
+            <template scope="scope">
+                <span>{{ scope.row.objectName }}</span>
+            </template>
+        </el-table-column>
+				<el-table-column label="交易名称code" width="150" v-if="false">
+					<template scope="scope">
+						<el-input v-show="scope.row.edit" size="small" v-model="scope.row.transactionCode"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="交易名称" width="120">
+					<template scope="scope">
+							<span>{{ scope.row.transactionName }}</span>
+					</template>
+				</el-table-column>
+        <el-table-column label="表类别id" width="150" v-if="false">
+					<template scope="scope">
+						<el-input v-show="scope.row.edit" size="small" v-model="scope.row.typeId"></el-input>
+					</template>
+				</el-table-column>
+				<el-table-column label="表类别" width="80">
+					<template scope="scope">
+						<span>{{ scope.row.typeName }}</span>
+					</template>
+				</el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="small"
+              type="danger"
+              @click="deleteTabFn(scope.$index, scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+			</el-table>
+			<!--
+		    	作者：chenlin2@yusys.com.cn
+		    	时间：2018-08-27
+		    	描述：字段列表
+		    -->
+			<div class="yu-toolBar" style="width: 12%;float: left;">
+		      <el-button-group>
+		        <el-button icon="check" @click="saveFieldFn">保存</el-button>
+		      </el-button-group>
+			</div>
+			<div style="width: 88%;float: left;">
+				<font style="float: left;margin-top: 10px;" color="red"> 注：编辑操作后必须点击“保存”按钮,操作才能生效!!!</font>
+				<h3 style="float: left;margin-left: 10px;margin-top: 10px;">{{transName}}</h3>
+			</div>
+			<!--可编辑列表-->
+      <el-table ref="mytable_f" :data="filedGrid.data" v-loading="filedGrid.loading"  height="250"
+        		stripe border fit highlight-current-row element-loading-text="加载中...">
+				<el-table-column label="主键id" width="150" v-if="false">
+					<template scope="scope">
+						<el-input v-show="scope.row.edit" size="small" v-model="scope.row.fieldId"></el-input>
+						<span v-show="!scope.row.edit">{{ scope.row.fieldId }}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="字段英文名" width="120">
+					<template scope="scope">
+						<span>{{ scope.row.fieldEName }}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="字段中文名" width="160">
+					<template scope="scope">
+						<el-input size="small" v-model="scope.row.fieldCName"></el-input>
+						<!-- <span v-show="!scope.row.edit">{{ scope.row.fieldCName }}</span> -->
+					</template>
+				</el-table-column>
+				<el-table-column label="描述" width="160">
+					<template scope="scope">
+						<el-input size="small" v-model="scope.row.remark"></el-input>
+						<!-- <span v-show="!scope.row.edit">{{ scope.row.remark }}</span> -->
+					</template>
+				</el-table-column>
+				<el-table-column label="规则化" width="60">
+					<template scope="scope">
+            <el-checkbox v-model="scope.row.isDisplay"></el-checkbox>
+          </template>
+				</el-table-column>
+				<el-table-column label="字段类型" width="120">
+					<template scope="scope">
+						<el-select placeholder="请选择" v-model="scope.row.fieldType" @visible-change="fieldTypeChange(scope.$index,scope.row)">
+							<el-option v-for="item in fieldTypeOptions" :key="item.key" :label="item.value"
+					        	:value="item.key">
+					      <span>{{ item.value }}</span>
+					   	</el-option>
+						</el-select>
+						<!--<el-input v-show="scope.row.edit" size="small" v-model="scope.row.fieldType"></el-input>-->
+						<!-- <el-select v-show="!scope.row.edit" placeholder="请选择" v-model="scope.row.fieldType">
+							<el-option v-for="item in fieldTypeOptions" :key="item.key" :label="item.value"
+					        	:value="item.key">
+					      <span>{{ item.value }}</span>
+					   	</el-option>
+						</el-select> -->
+					</template>
+				</el-table-column>
+				<el-table-column label="字段选项" width="150">
+					<template scope="scope">
+						<el-select v-show="scope.row.edit" filterable placeholder="请选择" v-model="scope.row.fname" @visible-change="showHidden(scope.$index,scope.row)">
+							<el-option v-for="item in mappingOptions" :key="item.key" :label="item.value"
+					        	:value="item.key">
+					        <span>{{ item.value }}</span>
+					   	</el-option>
+						</el-select>
+						<el-select v-show="!scope.row.edit" disabled filterable placeholder="请选择" v-model="scope.row.fname">
+							<el-option v-for="item in mappingOptions" :key="item.key" :label="item.value"
+					        	:value="item.key">
+					        <span>{{ item.value }}</span>
+					   	</el-option>
+						</el-select>
+					</template>
+				</el-table-column>
+				<el-table-column label="放大镜" width="150">
+					<template scope="scope">
+						<el-select v-show="scope.row.magnifierEdit" placeholder="请选择" v-model="scope.row.magnifier" @visible-change="showHidden(scope.$index,scope.row)">
+							<el-option v-for="item in magnifierOptions" :key="item.key" :label="item.value"
+					        	:value="item.key">
+					        <span>{{ item.value }}</span>
+					   	</el-option>
+						</el-select>
+						<el-select v-show="!scope.row.magnifierEdit" disabled placeholder="请选择" v-model="scope.row.magnifier">
+							<el-option v-for="item in magnifierOptions" :key="item.key" :label="item.value"
+					        	:value="item.key">
+					        <span>{{ item.value }}</span>
+					   	</el-option>
+						</el-select>
+					</template>
+				</el-table-column>
+			</el-table>
+		</el-col>
+	</el-row>
+</div>

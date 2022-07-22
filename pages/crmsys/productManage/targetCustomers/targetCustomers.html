@@ -1,0 +1,51 @@
+<!-- 
+  @Created by 闫天一 yanty1@yusys.com.cn on 2019-2-11 15:05:04.
+  @updated by
+  @description 产品视图-目标客户
+-->
+<div>
+  <yu-row>
+      <yu-xform related-table-name="refTable" v-model="searchformData" :rules="rules" form-type="search">
+        <yu-xform-group :column="4">
+          <yu-xform-item placeholder="客户类型" name="catlType" ctype="select" data-code="CD0016" rules="required"></yu-xform-item>
+          <yu-xform-item placeholder="客户号" name="custId"></yu-xform-item>
+          <yu-xform-item placeholder="客户名称" name="custName"></yu-xform-item>
+          <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="searchformData.catlType != '1'" data-code="CD0348"></yu-xform-item>
+      <!-- 对公证件类型 -->
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="searchformData.catlType != '2'" data-code="CD0349"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="searchformData.catlType != ''" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="searchformData.catlType != undefined" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item placeholder="证件号码" name="identNo" :rules="numRule"></yu-xform-item>
+           <!-- 个人价值等级 -->
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="searchformData.catlType != '1'" data-code="CD0350"></yu-xform-item>
+      <!-- 对公价值等级 -->
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="searchformData.catlType != '2'" data-code="CD0351"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="searchformData.catlType != ''" data-code="CD0243"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="searchformData.catlType != undefined" data-code="CD0243"></yu-xform-item>
+      <yu-xform-item placeholder="服务等级" name="servLev" ctype="select" data-code="CD0032"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+
+      <yu-xtable ref="refTable" row-number class="permitSelect" @contextmenu.prevent.stop.native :data-url="dataUrl" :highlight-current-row="true" :stripe="true" :base-params="baseParams" :default-load="false">
+        <yu-xtable-column label="客户类型" prop="catlType" width="120" data-code="CD0016"></yu-xtable-column>
+        <yu-xtable-column label="客户号" prop="custId" width="120"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="证件类型" prop="identType" width="120" data-code="CD0011"></yu-xtable-column>
+        <yu-xtable-column label="证件号码" prop="identNo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="主办机构" prop="belongMgr" width="120"></yu-xtable-column>
+        <yu-xtable-column label="主办客户经理" prop="belongOrg" width="120"></yu-xtable-column>
+        <yu-xtable-column label="价值等级" prop="valueLev" width="120" data-code="CD0243"></yu-xtable-column>
+        <yu-xtable-column label="服务等级" prop="servLev" width="120" data-code="CD0032"></yu-xtable-column>
+      </yu-xtable>
+  </yu-row>
+</div>
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

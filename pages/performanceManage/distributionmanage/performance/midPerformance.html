@@ -1,0 +1,59 @@
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="客户号" name="customerNumber" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="customerName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="交易流水号" name="transactionMark" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="业务类型" name="bussType" ctype="select" data-code="CD0501"></yu-xform-item>
+      <yu-xform-item placeholder="交易机构" name="orgId" ctype="yufp-org-tree"></yu-xform-item>
+      <yu-xform-item start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss" :default-time="['00:00:00', '23:59:59']" ctype="datepicker" name="rangeDate" type="daterange"></yu-xform-item>
+      <yu-xform-item placeholder="分配状态" name="dstrSts" ctype="select"></yu-xform-item>
+      <yu-xform-item placeholder="审批状态" name="applySts" ctype="select"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="edit" @click="singleRegionDistribute">单区间分配</yu-button>
+      <yu-button icon="document" >单区间分配详情</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number selection-type="checkbox" :data-url="dataUrl" style="padding-left: 0px;" :highlight-current-row="true" @row-dblclick="rowDblclickFn" :stripe="true">
+    <yu-xtable-column label="交易流水号" prop="transactionMark"></yu-xtable-column>
+    <yu-xtable-column label="客户号" prop="customerNumber"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="customerName"></yu-xtable-column>
+    <yu-xtable-column label="交易日期" prop="transactionDate" data-code="CD0327" :formatter="formatter"></yu-xtable-column>
+    <yu-xtable-column label="业务类型" prop="bussType" data-code="CD0501"></yu-xtable-column>
+    <yu-xtable-column label="产品代码" prop="productNumber"></yu-xtable-column>
+    <yu-xtable-column label="产品名称" prop="productName"></yu-xtable-column>
+    <yu-xtable-column label="交易金额" prop="transactionAmount" data-code="CD0430"></yu-xtable-column>
+    <yu-xtable-column label="手续费" prop="serviceCharge"></yu-xtable-column>
+    <yu-xtable-column label="交易机构号" prop="orgId"></yu-xtable-column>
+    <yu-xtable-column label="交易机构名称" prop="orgName"></yu-xtable-column>
+    <yu-xtable-column label="审批状态" prop="applySts"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+  width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle" :visible.sync="dialogVisible" width="600px" height="400px">
+    <yu-col :span="24">
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="edit" @click="singleRegionDistribute">新增分配</yu-button>
+          <yu-button icon="document" >分配详情</yu-button>
+          <yu-button icon="detail" >删除</yu-button>
+        </yu-button-group>
+      </div>
+      <!--<yu-button-group>
+        <yu-button icon="edit" @click="singleRegionDistribute">新增分配</yu-button>
+        <yu-button icon="document" >分配详情</yu-button>
+        <yu-button icon="detail" >删除</yu-button>
+      </yu-button-group>-->
+      <!--<yu-xtable style="padding-left: 20px;" :borde="false" ref="multipleTable" :data="sectionTableData" selection-type="checkbox" :pageable="false">-->
+      <yu-xtable ref="refTableattr" row-number selection-type="checkbox" :data="sectionTableData">
+        <yu-xtable-column prop="attrName" label="分配范围日期" width="160px"></yu-xtable-column>></yu-xtable-column>
+        <yu-xtable-column prop="attrDesc" label="分配人" width="120px"></yu-xtable-column>
+        <yu-xtable-column prop="attrCode" label="分配日期" width="120px"></yu-xtable-column>
+      </yu-xtable>
+    </yu-col>
+  </yu-xdialog>
+  <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" :common-params="wfCommonParams" />
+</div>

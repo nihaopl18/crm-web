@@ -1,0 +1,25 @@
+<!--
+  @created by hyx on 2018/07/18.
+  @updated by
+  @description 贡献度信息
+ -->
+ <div id="exampleEdit">
+             <div class="yu-toolBar">
+               <el-button-group>
+                 <el-button icon="document" @click="infoFn">详情</el-button>
+             </div>
+             <el-table-x ref="reftable" 
+                 :row-index="true"
+              :table-columns="tableColumns" :data-url="contributionUrl"  :base-params="baseParam">
+             </el-table-x>
+             <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+                width="650px" height="380px" -->
+             <el-dialog-x :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="750px" top="5%" >
+                <el-table-x ref="contributionRef" 
+                :default-load="false"
+                :row-index="true"
+                :table-columns="contributionDetails" :data-url="contributionInfoUrl"  >
+            </el-table-x>
+             </el-dialog-x>
+           </div>
+        

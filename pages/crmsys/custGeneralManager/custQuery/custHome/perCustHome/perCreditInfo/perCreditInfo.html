@@ -1,0 +1,18 @@
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-2-16 11:43:29.
+  @updated by
+  @description 客户信用
+-->
+<div>
+  
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+      <yu-xtable-column label="信贷信用等级" prop="creditLev" width="120" data-code="CD0422"></yu-xtable-column>
+      <yu-xtable-column label="信贷信用等级评定日期" prop="creditEvalDate" width="200"></yu-xtable-column>
+      <yu-xtable-column label="信贷信用评定到期日期" prop="creditDueDate" width="200"></yu-xtable-column>
+      <yu-xtable-column label="手工调整信贷信用等级" prop="manuAdjLev" width="200"  data-code="CD0422"></yu-xtable-column>
+      <yu-xtable-column label="手工调整生效日期" prop="adjEffectDate" width="200"></yu-xtable-column>
+      <yu-xtable-column label="手工调整发起机构" prop="adjBrchNo" width="200"></yu-xtable-column>
+
+  </yu-xtable>
+
+</div>

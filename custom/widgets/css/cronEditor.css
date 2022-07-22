@@ -1,0 +1,32 @@
+#cronEditorDemo .radiogroup{width:100%;margin-top: 10px;}
+.el-radio {
+    color: #1f2d3d;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-right: 20px;
+    width:100%;
+    float: left;
+    height: 35px;
+    line-height: 35px;
+    margin-left: 10px;
+}
+.timeList{padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: calc(50% - 40px);
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 0 6px rgba(0,0,0,.04);
+    margin-top: 10px;
+    margin-left: 10px;
+    }
+.timeList .el-checkbox{width: 55px;}
+.radiogroup .el-radio__inner{
+    width: 14px;
+    height: 14px;
+}
+.exForm{
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin: 10px;
+    padding: 10px;
+}

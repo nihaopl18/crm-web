@@ -1,0 +1,28 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-2 16:52:42.
+  @updated by
+  @description 客户移交
+-->
+<div>
+ 
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" :base-params="baseParams">
+    <yu-xtable-column label="客户编号" prop="custId" width="120"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="证件类型" prop="certType" width="90" data-code="CD0011"></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="certNo" width="150"></yu-xtable-column>
+    <!-- <yu-xtable-column label="客户类型" prop="custType" width="80" data-code="CD0016"></yu-xtable-column>
+    <yu-xtable-column label="客户状态" prop="custStatus" width="80" data-code="CD0019"></yu-xtable-column> -->
+    <yu-xtable-column label="原归属机构" prop="institutionName" width="100"></yu-xtable-column>
+    <yu-xtable-column label="原客户经理" prop="mgrName" width="100"></yu-xtable-column>
+    <yu-xtable-column label="客户经理主协办类型" prop="mainType" width="130" data-code="CD0241"></yu-xtable-column>
+    <yu-xtable-column label="机构主协办类型" prop="mainTypeNew" width="120" data-code="CD0241"></yu-xtable-column>
+    <yu-xtable-column label="接收机构" prop="tOrgName" width="100"></yu-xtable-column>
+    <yu-xtable-column label="接收客户经理" prop="tMgrName" ></yu-xtable-column>
+  </yu-xtable>
+  <el-collapse value="1">
+    <el-collapse-item title="附件列表" name="1">
+      <yufp-upload-table ref="fileTable" :data-params="initFilesParams" :data ="fileUpLoadBusNo" :multiple="false"
+        :upload-visible="false" :download-visible="true" :delete-visible="false"></yufp-upload-table>
+    </el-collapse-item>
+  </el-collapse>
+</div>

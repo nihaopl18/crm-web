@@ -1,0 +1,60 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by luhy1 luhy1@yusys.com.cn on 2019-2-13 10:12:53.
+  @updated by
+  @description 客户经理团队管理
+-->
+<div>
+    <yu-xform related-table-name="refTable" form-type="search">
+        <yu-xform-group :column="4">
+            <yu-xform-item placeholder="团队名称" name="mktTeamName" ctype="input"></yu-xform-item>
+            <yu-xform-item placeholder="归属机构" name="orgId" ctype="yufp-org-tree"></yu-xform-item>
+            <yu-xform-item placeholder="团队类型" name="teamType" ctype="select" data-code="CD0338"></yu-xform-item>
+            <yu-xform-item placeholder="团队负责人" name="teamLeaderId" ctype="yufp-user-selector"></yu-xform-item>
+            <yu-xform-item placeholder="客户经理" name="custManagerName" ctype="yufp-mgr-selector"></yu-xform-item>
+            <yu-xform-item placeholder="用户机构"  name="orgIdAuth"  v-show="false"  v-model="this.orgIdAuth"></yu-xform-item>
+
+        </yu-xform-group>
+    </yu-xform>
+    <div class="yu-toolBar" style="padding-top: 10px;padding-left: 0px;">
+        <yu-button-group>
+            <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button>
+            <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button>
+            <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>
+            <yu-button icon="yx-newspaper" @click="openview" v-if="viewBtn">客户经理团队视图</el-button>
+        </yu-button-group>
+    </div>
+    <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true" :default-load="false" @row-dblclick="rowDblClick">
+        <yu-xtable-column label="团队名称" prop="mktTeamName" width="220"></yu-xtable-column>
+        <yu-xtable-column label="归属机构" prop="orgName" width="140"></yu-xtable-column>
+        <yu-xtable-column label="团队类型" prop="teamType" width="120" data-code="CD0338"></yu-xtable-column>
+        <yu-xtable-column label="团队人数" prop="teamMemberNum" width="120"></yu-xtable-column>
+        <yu-xtable-column label="团队客户数" prop="teamCustNum" width="120"></yu-xtable-column>
+        <yu-xtable-column label="团队负责人" prop="teamLeader" width="140"></yu-xtable-column>
+        <yu-xtable-column label="创建人" prop="createUserName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="创建时间" prop="createDate" width="120"></yu-xtable-column>
+        <yu-xtable-column label="最后维护时间" prop="lastChgDt"></yu-xtable-column>
+    </yu-xtable>
+    <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+    <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="850px">
+        <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+                <yu-xform-item label="团队编号" name="mktTeamId" ctype="input" :hidden="true"></yu-xform-item>
+                <yu-xform-item label="团队名称" name="mktTeamName" ctype="input" :rules="rule.mktTeamName"></yu-xform-item>
+                <yu-xform-item label="归属机构" name="orgId" ctype="yufp-org-tree" @select-fn="orgSelectFn" :rules="rule.orgId"></yu-xform-item>
+                <yu-xform-item label="团队类型" name="teamType" ctype="select" data-code="CD0338" :rules="rule.teamType"></yu-xform-item>
+                <yu-xform-item label="团队负责人" name="teamLeaderId" ctype="yufp-user-selector" @select-fn="userSelectFn" :rules="rule.teamLeaderId" :params="teamParam"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+</div>

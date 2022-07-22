@@ -1,0 +1,64 @@
+<div>
+  <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="true" style="margin-top:20px">
+    <!-- 商户审批页面 -->
+    <yu-xform-group>
+      <yu-xform-item ctype="custom" label="门店logo" colspan="24" name="merchantLogo">
+        <yu-upload
+          class="avatar-uploader"
+          :action="uploadAction"
+          :show-file-list="false" disabled>
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </yu-upload>
+      </yu-xform-item>
+      <yu-xform-item label="商户名称" name="merchantName" colspan="12" ctype="input"></yu-xform-item>
+      <yu-xform-item label="工商名称" name="merIacName" ctype="input"  colspan="12"></yu-xform-item>
+      <yu-xform-item label="门店名称" name="merStroeName" ctype="input"  colspan="12"></yu-xform-item>
+      <yu-xform-item label="法人名称" name="legalPersonNm" ctype="input" ></yu-xform-item>
+      <yu-xform-item label="店长名称" name="shopownerNm" ctype="input" ></yu-xform-item>
+      <yu-xform-item label="金融机构" name="instuCde" ctype="select"  :options="instuOptions" ></yu-xform-item>
+      <yu-xform-item label="归属机构" name="belongOrg" ctype="yufp-org-tree"></yu-xform-item>
+      <yu-xform-item label="证件类型" name="certType" ctype="select" data-code="IDENT_TYPE"></yu-xform-item>
+      <yu-xform-item label="证件号" name="certNo"  ctype="input"></yu-xform-item>
+      <yu-xform-item label="经营一级类目" name="manageAType" ctype="select" data-code="MANAGE_A_TYPE"></yu-xform-item>
+      <yu-xform-item label="经营二级类目" name="manageBType" ctype="select" data-code="MANAGE_B_TYPE"></yu-xform-item>
+      <yu-xform-item label="营业时间" name="buseHours" ctype="textarea" :rows="2" :colspan="24" ></yu-xform-item>
+      <yu-xform-item label="商户介绍" name="merRemark" ctype="textarea" :rows="3" :colspan="24"></yu-xform-item>
+      <yu-xform-item label="经营内容介绍" name="manageContent" ctype="textarea" :rows="3" :colspan="24" ></yu-xform-item>
+      <yu-xform-item label="创建人" name="createUserName" ctype="input" ></yu-xform-item>
+      <yu-xform-item label="创建日期" name="createDate" ctype="datepicker" :formatter="dateFormatterSimple"></yu-xform-item>
+      <yu-xform-item label="创建机构" name="createOrgName" ctype="input" ></yu-xform-item>
+      <yu-xform-item label="最近修改人" name="updateUserName" ctype="input" ></yu-xform-item>
+      <yu-xform-item label="最近修改日期" name="updateDate" ctype="datepicker" :formatter="dateFormatterSimple"></yu-xform-item>
+      <yu-xform-item label="最近修改机构" name="updateOrgName" ctype="input" ></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <el-tabs v-model="tabName" >
+    <el-tab-pane label="联系信息" name="contact">
+        <yu-xtable ref="contactTable" row-number selection-type="checkbox" :data-url="contactUrl" :default-load="false" :base-params="contactParams">
+            <yu-xtable-column label="是否首选" prop="ifFirst" width="120" data-code="IF_FLAG"></yu-xtable-column>
+            <yu-xtable-column label="联系方式类型" prop="contactType" width="150" data-code="CONTACT_TYPE"></yu-xtable-column>
+            <yu-xtable-column label="联系方式内容" prop="contactInfo" width="150"></yu-xtable-column>
+            <yu-xtable-column label="联系顺序" prop="contactOrader" width="150"></yu-xtable-column>
+            <yu-xtable-column label="最近更新人" prop="updateUserName" width="150"></yu-xtable-column>
+            <yu-xtable-column label="最近修改日期" prop="updateDate" :formatter="dateFormatterSimple"></yu-xtable-column>
+        </yu-xtable>
+    </el-tab-pane>
+    <el-tab-pane label="地址信息" name="address">
+        <yu-xtable ref="addressTable" row-number selection-type="checkbox" :data-url="addressUrl" :default-load="false" :base-params="addressParams">
+            <yu-xtable-column label="地址类型" prop="addressType" width="120" data-code="ADDRESS_TYPE"></yu-xtable-column>
+            <yu-xtable-column label="是否首选项" prop="ifFirst" width="120" data-code="IF_FLAG"></yu-xtable-column>
+            <yu-xtable-column label="国家" prop="country" width="120" data-code="DEM0100011"></yu-xtable-column>
+            <yu-xtable-column label="省份" prop="rpovince" width="120" data-code="XD000037"></yu-xtable-column>
+            <yu-xtable-column label="城市" prop="cityName" width="120" data-code="MANAGE_A_TYPE"></yu-xtable-column>
+            <yu-xtable-column label="区县" prop="countyArea" width="120" data-code="MANAGE_A_TYPE"></yu-xtable-column>
+            <yu-xtable-column label="乡镇" prop="township" width="120" data-code="IDENT_TYPE"></yu-xtable-column>
+            <yu-xtable-column label="街道" prop="street" width="120"></yu-xtable-column>
+            <yu-xtable-column label="详细地址" prop="addressInfo" width="200" ></yu-xtable-column> -->
+            <yu-xtable-column label="邮编" prop="postNo" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="最近修改人" prop="updateUserName" width="120" :hidden="true"></yu-xtable-column>
+            <yu-xtable-column label="最近修改日期" prop="updateDate" width="120" :formatter="dateFormatterSimple" ></yu-xtable-column>
+          </yu-xtable>
+    </el-tab-pane>
+</el-tabs>
+</div>

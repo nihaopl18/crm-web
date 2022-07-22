@@ -1,0 +1,16 @@
+.asses-plan-menu-list ul {
+    border: 1px solid #dfe6ec;
+    background-color: #eef1f6;
+}
+
+.asses-plan-menu-list .el-button--text{
+    font-size: 12px;
+    color: #111;
+}
+.el-table__body-wrapper {
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+}
+
+

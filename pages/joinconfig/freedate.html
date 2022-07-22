@@ -1,0 +1,25 @@
+<!-- 必须全局拥有唯一的id -->
+<div id="echainfreedate">
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span>工作日历设置</span>
+        </div>
+        <Calendar ref="Calendar" :mark-array="freeDays" @changemonth="changeMonth" @choseday="selectDay"></Calendar>
+    </el-card>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span>日历初始化</span>
+        </div>
+        <el-row>
+            <el-col :span="8">
+                &nbsp;
+            </el-col>
+            <el-col :span="8">
+                <el-input v-model="initYear" placeholder="请输入年份(yyyy)"></el-input>
+            </el-col>
+            <el-col :span="8">
+                    &nbsp;&nbsp;<el-button type="primary" @click="initFreeDate">初始化</el-button>
+            </el-col>
+        </el-row>
+    </el-card>
+</div>

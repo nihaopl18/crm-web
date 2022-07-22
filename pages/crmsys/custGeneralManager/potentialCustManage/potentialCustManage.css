@@ -1,0 +1,5 @@
+.potentialCustManage .yu-toolBar>.el-button-group>.select-cust-btn .el-button{
+ border-radius: 4px;
+ border-top-left-radius: 0;
+ border-bottom-left-radius: 0;
+}

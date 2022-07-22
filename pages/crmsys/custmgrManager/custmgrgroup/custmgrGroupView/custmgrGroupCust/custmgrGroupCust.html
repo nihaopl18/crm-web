@@ -1,0 +1,41 @@
+<!-- 
+  @Created by luhy1 luhy1@yusys.com.cn on 2019-2-15 13:50:13.
+  @updated by
+  @description 客户经理团队客户信息
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search" v-model="queryModel">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016" rules="required"></yu-xform-item>
+      <yu-xform-item placeholder="客户编号" name="custId" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" data-code="CD0348" :hidden="queryModel.custType!='1'"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" data-code="CD0349" :hidden="queryModel.custType=='1'"></yu-xform-item>
+      <yu-xform-item placeholder="证件号码" name="certNo" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" data-code="CD0350" :hidden="queryModel.custType!='1'"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" data-code="CD0351" :hidden="queryModel.custType=='1'"></yu-xform-item>
+      <yu-xform-item placeholder="客户服务等级" name="servLev" ctype="select" data-code="CD0032"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <yu-xtable ref="refTable" class="permitSelect" @contextmenu.prevent.stop.native row-number :data-url="dataUrl" style="padding-top: 10px;padding-left: 0px;" :stripe="true" :default-load="false">
+    <yu-xtable-column label="客户编号" prop="custId" width="100"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" width="180"></yu-xtable-column>
+    <yu-xtable-column label="客户类型" prop="custType" data-code="CD0016" width="80"></yu-xtable-column>
+    <yu-xtable-column label="证件类型" prop="certType" data-code="CD0011" width="100"></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="certNo" width="150"></yu-xtable-column>
+    <yu-xtable-column label="客户价值等级" prop="valueLev" data-code="CD0243" width="140"></yu-xtable-column>
+    <yu-xtable-column label="客户服务等级" prop="servLev" data-code="CD0032" width="100"></yu-xtable-column>
+    <yu-xtable-column label="所属机构" prop="orgName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="所属客户经理" prop="userName" width="150"></yu-xtable-column>
+  </yu-xtable>
+</div>
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

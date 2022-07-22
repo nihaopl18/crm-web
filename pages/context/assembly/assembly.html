@@ -1,0 +1,166 @@
+<!-- 查询+树模板自动生成代码 -->
+<!-- 必须全局拥有唯一的id -->
+<!--
+  @created by chenlin on 2018/06/20.
+  @description 查询+树模板
+-->
+<div>
+	<link rel="stylesheet" type="text/css" href="pages/context/flowTempDesign/flowTempDesign.css" />
+	<link rel="stylesheet" type="text/css" href="themes/default/font_project/iconfont.css" />
+	<yufp-node-cmp ref="ncmpRef" :title="flowNode.title" :design-body="flowNode.designBody"></yufp-node-cmp>
+	<el-row :gutter="10">
+		<el-col :span="5" v-bind:style="{height:(height - 20)+'px'}" >
+			<div style="margin-top: 10px;">
+			</div>
+			<div class="assembly_tree path_viewleft" style="width: 100%;">
+				<div class="pathitem" style="font-size: 14px;height: 42px;">营销组件</div>
+				<el-collapse v-model="activeNames" accordion @change="handleChange" v-bind:style="{height:(height - 62)+'px'}" >
+					<div v-for="(obj,index) in classList" @click="eidtClassFn($event,obj)">
+						<el-collapse-item :name="obj.classId">
+							<template slot="title">
+								<i :class="obj.classIcon"></i>{{obj.className}}
+								<i class="el-icon-plus"  @click="addAssemblyFn($event,obj)"></i>
+								<!-- <i class="el-icon-delete2" @click="deleteClassFn($event,obj)"></i> -->
+							</template>
+							<div v-for="assembly in assemblyList" @click="eidtAssemblyFn($event,assembly)">
+								<div :class="[obj.classColor,obj.classStyle]" :iconcolor="obj.classColor" :id="assembly.assemblyId" draggable="true" 
+										@dragstart="drag($event)"><i :class="assembly.assemblyStyle"></i>
+									<!-- <i class="el-icon-circle-close" @click="deleteAssemblyFn($event,assembly)"></i> -->
+									<p>{{assembly.assemblyName}}</p>
+								</div>
+							</div>
+						</el-collapse-item>
+					</div>
+				</el-collapse>
+			</div>
+		</el-col>
+		<el-col :span="19" v-bind:style="{height:(height - 20)+'px'}" style="overflow: auto;">
+			<el-tabs v-model="tab_activeName" @tab-click="handleClick" type="border-card" class="assemblytab">
+				<el-tab-pane label="组件维护" name="first" :disabled="ifDisabledTabAs">
+					<el-form label-width="80px" class="myselect" :rules="addiconrules" ref="assform" :model="assform">
+						<el-row :gutter="10">
+							<el-col :span="12">
+								<el-form-item label="图标" prop="assemblyStyle"  class="iconinput">
+									<i :class="activeicon"></i>
+									<span @click="handleIconClick">请选择图标</span>
+									<el-dialog-x class="icondialog" title="图标" width="365px" height="280px" :visible.sync="icondialogVisible" :before-close="handleClose">
+										<div>
+											<span v-for="(item,index) in iconarray" v-bind:class="[{ iconselectbg: istrue==index }, item.id]" @click="hangeicon(item,index)"></span>
+										</div>
+										<span slot="footer" class="dialog-footer">
+										    <el-button @click="icondialogVisible = false">取 消</el-button>
+										    <el-button type="primary" @click="icondialogVisible = false">确 定</el-button>
+										  </span>
+									</el-dialog-x>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="组件名称" prop="assemblyName">
+									<el-input v-model="assform.assemblyName"></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row :gutter='10'>
+							<el-col :span="12">
+								<el-form-item label="组件类型" prop="assemblyType">
+									<el-select placeholder="请选择" v-model="assform.assemblyType">
+										<el-option v-for="item in assemblyTypeOptions" :key="item.key" :label="item.value" :value="item.key">
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="解析方式" prop="assemblyAnaMethod">
+									<el-select placeholder="请选择" v-model="assform.assemblyAnaMethod">
+										<el-option v-for="item in assemblyAnaMethodOptions" :key="item.key" :label="item.value" :value="item.key">
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row :gutter='10'> 
+							<el-col :span='12'>
+								<el-form-item label="数据类型" prop="dataType">
+									<el-select placeholder="请选择" v-model="assform.dataType">
+										<el-option v-for="item in dataTypeOptions" :key="item.key" :label="item.value" :value="item.key">
+										</el-option>
+									</el-select>
+								</el-form-item>
+							</el-col>
+							<el-col :span='12'>
+								<el-form-item label="适用场景" prop="suitScene">
+									<yu-select placeholder="请选择" v-model="assform.suitScene" multiple>
+										<el-option v-for="item in suitSceneOptions" :key="item.key" :label="item.value" :value="item.key">
+										</el-option>
+									</yu-select>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-row :gutter='10'> 
+							<el-col :span='24'>
+								<el-form-item label="展现表单" prop="showForm">
+									<el-input type="textarea" :rows="2" :account="true" placeholder="请输入内容" v-model="assform.showForm">
+									</el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-form-item>
+							<el-button icon='yx-undo2'  @click="preview('assform')">预览</el-button>
+							<el-button type="primary"  v-if="ifUpdateItem=='true'" @click="submitForm('assform')">保存</el-button>
+							<el-button type="primary"  v-if="ifUpdateItem=='false'" @click="addForm('assform')">保存</el-button>
+						</el-form-item>
+					</el-form>
+				</el-tab-pane>
+				<el-tab-pane label="分类维护" name="second" :disabled="ifDisabledTabCl">
+					<el-form label-width="100px" class="myselect" :rules="addrules" ref="classTemp" :model="classTemp">
+						<el-row :gutter='10'>
+							<el-col :span="12">
+								<el-form-item label="形状" prop="classIcon">
+									<el-input v-model="classTemp.classIcon" v-show="falseshow"></el-input>
+									<div class="shape">
+										<span :class="[{selecticon:istrue==index},item.icons]" v-for="(item,index) in shapearray"  @click="istrue=index;classTemp.classIcon=item.icons">
+										</span>
+									</div>
+								</el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="颜色" prop="classColor">
+									<el-input v-model="classTemp.classColor" v-show="falseshow"></el-input>
+									<div class="color">
+										<span :class="[{selecticon:coloristrue==index},item.icons,coloricon]" v-for="(item,index) in colorarray"  @click="coloristrue=index;classTemp.classColor=item.icons">
+										</span>
+									</div>
+								</el-form-item>
+							</el-col>
+							<el-col :span="24">
+								<el-form-item label="分类名称" prop="className">
+									<el-input v-model="classTemp.className"></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+						<el-form-item>
+							<el-button type="primary" v-show="ifUpdateClass=='true'" @click="submitForm('classTemp')">保存</el-button>
+							<!-- <el-button  @click="resetForm('classTemp')">重置</el-button> -->
+						</el-form-item>
+					</el-form>
+				</el-tab-pane>
+			</el-tabs>
+			<!-- <div v-if="paramVisible">
+				<div class="yu-toolBar">
+					<el-button-group>
+						<el-button icon="plus" @click="addItemFn">新增</el-button>
+						<el-button icon="edit" @click="itemsEditFn">修改</el-button>
+						<el-button icon="document" @click="detailinfoFn">详情</el-button>
+						<el-button icon="yx-bin" @click="deleteItemFn">删除</el-button>
+					</el-button-group>
+				</div>
+				<el-table-x ref="reftable" :checkbox="true" :default-load="false" :table-columns="tableColumns" data-url="/api/asseibly/getiteminoutinfo">
+				</el-table-x>
+			</div> -->
+			<el-dialog-x :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="800px" height="450px">
+				<el-form-x ref="refform" :group-fields="updateFields" :buttons="updateButtons" :disabled="formDisabled" label-width="120px">
+				</el-form-x>
+			</el-dialog-x>
+		</el-col>
+	</el-row>
+</div>

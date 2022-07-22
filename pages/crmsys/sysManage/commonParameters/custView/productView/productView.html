@@ -1,0 +1,21 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-29
+  @updated by
+  @description 产品视图
+-->
+<div>
+  <yu-row>
+    <yu-col :span="5">
+      <yufp-ext-tree ref="refTree" :height="height - 20" @node-click="nodeClickFn" :data-url="viewUrl" data-id="id" data-label="name"
+        data-pid="parentId" :data-async="async" :data-params="param" :highlight-current="true"
+        style="margin:10px 10px 0 0;" @gened-tree-data="treeDataLoadFn" :filter-node-method="filterFn" v-show="showTree">
+      </yufp-ext-tree>
+    </yu-col>
+    <yu-col :span="19">
+      <!-- 右侧为具体视图项页面 -->
+      <div :id="viewPageId">
+        
+      </div>
+    </yu-col>
+  </yu-row>
+</div>

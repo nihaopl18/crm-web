@@ -1,0 +1,68 @@
+<!--
+  @Created by 闫天一 yanty1@yusys.com.cn on 2019-3-5 10:27:02.
+  @description 产品准入限制
+-->
+<div id="accessRestrictions">
+	<link rel="stylesheet" type="text/css" href="./pages/crmsys/custGeneralManager/custQuery/custFlexyQuery/custFlexyQuery.css"	/>
+	<el-row :gutter="10">
+		<el-col :span="6">
+			<yufp-ext-tree ref="flexytree" :height="height - 20" v-bind:style="{height: (height-114) + 'px' }" draggable :allow-drop="allowDroprow"
+			 @node-drag-start="handleDragStart" data-url="/api/ocrmfsyssscol/prepare" data-id="id" data-label="colNameC" data-pid="parentId"
+			 node-key="id" :root-visible="true" data-root="0" style="margin:10px 0 0 0;" @load-all-data='getdata'>
+			</yufp-ext-tree>
+		</el-col>
+		<el-col :span="15" class="custFlexytab">
+			<template>
+				<el-tabs v-model="activeName" @tab-click="handleClick">
+					<el-tab-pane label="产品准入限制" name="first">
+						<div id="queryCon" v-bind:style="{height: (height-104) + 'px' }" style="background-color:#FAFAFA" @drop="allowDrop($event)"
+						 @dragover='allowDropover($event)'>
+							<div class="ys-stGroup" v-for="(item,index) in list" :key="index">
+								<el-form label-width="80px" ref="item.index" :model="dataSqlTemp[item.index]">
+									<el-row class="conDisable">
+										<el-col :span="6">
+											<el-radio-group v-model="dataSqlTemp[item.index].radio2" v-show="radioshow">
+												<el-radio :label="item.and"></el-radio>
+												<el-radio :label="item.or"></el-radio>
+											</el-radio-group>
+										</el-col>
+									</el-row>
+									<div @drop='childrenallowDrop($event,index)' @dragover='Dragover($event)'>
+										<div class="formrow">
+											<el-row>
+												<el-col :span="7">
+													<el-form-item label="属性" >
+														<el-input :placeholder="item.name" v-model="dataSqlTemp[item.index].proPer" :disabled="true"></el-input>
+													</el-form-item>
+												</el-col>
+												<el-col :span="7">
+															<el-form-item label="操作符" prop="childSignOp">
+																	<yu-xform-item-part v-model="dataSqlTemp[item.index].signOp" rules="required" :ctype="item.section.ctype" :options="item.section.options"></yu-xform-item-part>
+															</el-form-item>
+														</el-col>	
+												<el-col :span="7">
+													<el-form-item label="属性值">
+														<!--<el-input placeholder='请填写' v-model="dataSqlTemp[item.id].signVal" ></el-input>-->
+														<yu-xform-item-part v-model="dataSqlTemp[item.index].signVal" :unit="item.items.unit" :ctype="item.items.ctype" :type="item.items.type"
+														 :options="item.items.options"></yu-xform-item-part>
+													</el-form-item>
+												</el-col>
+												<el-col :span="3">
+													<i class="el-icon-yx-cross" @click="queryCondelTableRow(index,list)"></i>
+												</el-col>
+											</el-row>
+										</div>
+									</div>
+								</el-form>
+							</div>
+						</div>
+					</el-tab-pane>
+				</el-tabs>
+			</template>
+			<div class="yu-grpButton">
+				<yu-button icon="check" type="primary" @click="savecol">保存</yu-button>
+				<yu-button icon="check" type="primary" @click="resetconditionFn">重置</yu-button>
+		</div>
+		</el-col>
+	</el-row>
+	</div>

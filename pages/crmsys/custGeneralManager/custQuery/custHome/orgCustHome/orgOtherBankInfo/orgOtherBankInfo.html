@@ -1,0 +1,65 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-2-15 10:12:38.
+  @updated by
+  @description 他行信息
+-->
+<div>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="plus" @click="addDepFn">新增</yu-button> 
+          <yu-button icon="edit" @click="modifyDepFn">修改</yu-button>
+          <yu-button icon="edit" @click="detilDepFn">详情</yu-button>
+          <yu-button icon="edit" @click="delDepFn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="depTable" row-number :data-url="depUrl">
+        <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+        <yu-xtable-column label="开户机构名称" prop="orgId" width="120"></yu-xtable-column>
+        <yu-xtable-column label="是否基本开户行" prop="baseBankFlg" width="120" data-code="CD0242"></yu-xtable-column>
+        <yu-xtable-column label="合作年限（年）" prop="corpYear" width="120"></yu-xtable-column>
+        <yu-xtable-column label="产品使用情况" prop="prodUsage" width="150"></yu-xtable-column>
+        <yu-xtable-column label="活期时点（万元）" prop="cdepBal" width="150"></yu-xtable-column>
+        <yu-xtable-column label="定期时点（万元）" prop="tdepBal" width="120"></yu-xtable-column>
+        <yu-xtable-column label="贷款余额时点（万元）" prop="loanBal" width="140"></yu-xtable-column>
+        <yu-xtable-column label="贷款利率" prop="loanRate" width="120"></yu-xtable-column>
+        <yu-xtable-column label="抵押物" prop="mortgageeNo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="质押物" prop="pledgeNo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="还款方式" prop="repayWay" width="120" data-code="CD0358"></yu-xtable-column>
+        <yu-xtable-column label="授信总额（万元）" prop="creditLimit" width="120"></yu-xtable-column>
+        <yu-xtable-column label="授信期限" prop="creditTerm" width="120"></yu-xtable-column>
+        <yu-xtable-column label="备注" prop="remark" width="120"></yu-xtable-column>
+      </yu-xtable>
+      <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+        width="800px" height="380px" -->
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="depDialogVisible" width="700px">
+        <yu-xform ref="depForm" label-width="150px" :disabled="formDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="id" name="id" ctype="input" hidden></yu-xform-item>
+            <yu-xform-item label="开户机构名称" name="orgId" ctype="input"></yu-xform-item>
+            <yu-xform-item label="合作年限（年）" name="corpYear" ctype="input" :rules="rule.deptBal"></yu-xform-item>
+            <yu-xform-item label="产品使用情况" name="prodUsage" ctype="input"></yu-xform-item>
+            <yu-xform-item label="活期时点（万元）" name="cdepBal" ctype="input" :rules="rule.deptBal"></yu-xform-item>
+            <yu-xform-item label="定期时点（万元）" name="tdepBal" ctype="input" :rules="rule.deptBal"></yu-xform-item>
+            <yu-xform-item label="贷款余额时点（万元）" name="loanBal" ctype="input" :rules="rule.deptBal"></yu-xform-item>
+            <yu-xform-item label="贷款利率" name="loanRate" ctype="input" :rules="rule.deptBal"></yu-xform-item>
+            <yu-xform-item label="抵押物" name="mortgageeNo" ctype="input"></yu-xform-item>
+            <yu-xform-item label="质押物" name="pledgeNo" ctype="input"></yu-xform-item>
+            <yu-xform-item label="还款方式" name="repayWay" ctype="select" data-code="CD0358"></yu-xform-item>
+            <yu-xform-item label="授信总额（万元）" name="creditLimit" ctype="input" :rules="rule.deptBal"></yu-xform-item>
+            <yu-xform-item label="授信期限" name="creditTerm" ctype="input" ></yu-xform-item>
+            <yu-xform-item label="是否基本开户行" name="baseBankFlg" ctype="select" data-code="CD0242"></yu-xform-item>
+            <yu-xform-item label="备注" name="remark" ctype="input" ></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="depCancelFn">取消</yu-button>
+            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveDepFn">保存</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+</div>

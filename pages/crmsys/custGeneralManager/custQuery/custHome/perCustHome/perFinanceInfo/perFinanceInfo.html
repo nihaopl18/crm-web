@@ -1,0 +1,654 @@
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-2-13 18:01:12.
+  @updated by
+  @description 财务信息
+-->
+<div>
+  <yu-collapse v-model="expandCollapseName">
+    <yu-collapse-item title="财务信息" name="finance">
+      <div class="yu-toolBar">
+        <yu-button-group>
+           <yu-button icon="plus" @click="addfyFn" v-if="addBtn">新增</yu-button> 
+           <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button>
+           <yu-button icon="edit" @click="delfyFn" v-if="deleteBtn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="financeTable" row-number :data-url="dataUrl">
+        <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+        <yu-xtable-column label="退休计划" prop="petirePlan" width="120"></yu-xtable-column>
+        <yu-xtable-column label="购房计划" prop="housePurPlan" width="120" data-code="CD0069"></yu-xtable-column>
+        <yu-xtable-column label="子女教育计划" prop="childEduPlan" width="120"></yu-xtable-column>
+        <yu-xtable-column label="资产总值(不含房产)" prop="assetTotalVal" width="150"></yu-xtable-column>
+        <yu-xtable-column label="国内金融信息(他行)" prop="internFinInfo" width="150"></yu-xtable-column>
+        <yu-xtable-column label="是否按揭" prop="mortgageFlg" width="120" data-code="CD0242"></yu-xtable-column>
+        <yu-xtable-column label="房产信息" prop="houseInfo" width="120" ></yu-xtable-column>
+        <yu-xtable-column label="海外资产情况" prop="oversAsset" width="120"></yu-xtable-column>
+      </yu-xtable>
+      <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+        width="800px" height="380px" -->
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="800px">
+        <yu-xform ref="financeForm" label-width="180px" :disabled="formDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="id" name="id"  ctype="input" hidden></yu-xform-item>
+            <yu-xform-item label="退休计划" name="petirePlan"  ctype="textarea":colspan="24" :rules="rule.petirePlan"></yu-xform-item>
+            <yu-xform-item label="购房计划" name="housePurPlan"  ctype="textarea" :colspan="24" :rules="rule.housePurPlan"></yu-xform-item>
+            <yu-xform-item label="子女教育计划" name="childEduPlan"  ctype="textarea" :colspan="24" :rules="rule.childEduPlan"></yu-xform-item>
+            <yu-xform-item label="资产总值(不含房产)" name="assetTotalVal"  ctype="input" :rules="rule.assetTotalVal"></yu-xform-item>
+            <yu-xform-item label="国内金融信息(他行)" name="internFinInfo" ctype="input" :rules="rule.internFinInfo"></yu-xform-item>
+            <yu-xform-item label="是否按揭" name="mortgageFlg" ctype="select" data-code="CD0242"></yu-xform-item>
+            <yu-xform-item label="房产信息" name="houseInfo" ctype="input" :rules="rule.houseInfo"></yu-xform-item>
+            <yu-xform-item label="海外资产情况" name="oversAsset" ctype="input" :rules="rule.oversAsset"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveResumeFn">保存</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+    </yu-collapse-item>
+    <!-- <yu-collapse-item title="财务信息" name="finance">
+      <yu-xform  ref="finrefForm" label-width="150px"  v-model="financeformdata">
+        <yu-xform-group>
+            <yu-xform-item label="id" name="id"  ctype="input" hidden></yu-xform-item>
+            <yu-xform-item label="退休计划" name="petirePlan"  ctype="textarea":colspan="24" :rules="rule.petirePlan"></yu-xform-item>
+            <yu-xform-item label="购房计划" name="housePurPlan"  ctype="textarea" :colspan="24" :rules="rule.housePurPlan"></yu-xform-item>
+            <yu-xform-item label="子女教育计划" name="childEduPlan"  ctype="textarea" :colspan="24" :rules="rule.childEduPlan"></yu-xform-item>
+            <yu-xform-item label="资产总值(不含房产)" name="assetTotalVal"  ctype="input" :rules="rule.assetTotalVal"></yu-xform-item>
+            <yu-xform-item label="国内金融信息(他行)" name="internFinInfo" ctype="input" :rules="rule.internFinInfo"></yu-xform-item>
+            <yu-xform-item label="是否按揭" name="mortgageFlg" ctype="select" data-code="CD0242"></yu-xform-item>
+            <yu-xform-item label="房产信息" name="houseInfo" ctype="input" :rules="rule.houseInfo"></yu-xform-item>
+            <yu-xform-item label="海外资产情况" name="oversAsset" ctype="input" :rules="rule.oversAsset"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+    </yu-collapse-item> -->
+    <yu-collapse-item title="信贷客户投资信息" name="invest">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addInvestrefFn" v-if="addBtn2">新增</yu-button> 
+                <yu-button icon="edit" @click="modifyInvestrefFn" v-if="editBtn2">修改</yu-button>
+                <yu-button icon="edit" @click="delInvestrefFn" v-if="deleteBtn2">删除</yu-button>
+            </yu-button-group>
+        </div>
+        <yu-xtable ref="investrefTable" row-number :data-url="investrefUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="被投资单位名称全称" prop="invName" width="150"></yu-xtable-column>
+            <yu-xtable-column label="投资性质" prop="invType" width="120" data-code="CD0381" ></yu-xtable-column>
+            <yu-xtable-column label="被投资单位中征码" prop="invCode" width="120"></yu-xtable-column>
+            <yu-xtable-column label="被投资企业法人代表" prop="invLegal" width="140"></yu-xtable-column>
+            <yu-xtable-column label="币种" prop="currCd" width="120" data-code="CD0071"></yu-xtable-column>
+            <yu-xtable-column label="投资金额元" prop="invAmt" width="120"></yu-xtable-column>
+            <yu-xtable-column label="出资方式" prop="payType" width="120" data-code="CD0289"></yu-xtable-column>
+            <yu-xtable-column label="所占比例" prop="invPerc" width="120"></yu-xtable-column>
+            <yu-xtable-column label="占股权比例" prop="stockPerc" width="120"></yu-xtable-column>
+            <yu-xtable-column label="出资说明" prop="invDesc" width="120"></yu-xtable-column>
+            <yu-xtable-column label="投资时间" prop="invDate" width="120"></yu-xtable-column>
+            <yu-xtable-column label="投资项目_企业情况说明" prop="invPrjDesc" width="180"></yu-xtable-column>
+            <yu-xtable-column label="目前办公地址" prop="workAddr" width="120"></yu-xtable-column>
+            <yu-xtable-column label="经营范围" prop="workRange" width="120"></yu-xtable-column>
+            <yu-xtable-column label="备注" prop="remarks" width="120"></yu-xtable-column>
+        </yu-xtable>
+        <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="investrefVisible" width="800px">
+            <yu-xform ref="investrefForm" label-width="180px" :disabled="formDisabled">
+                <yu-xform-group>
+                    <yu-xform-item label="id" name="id" hidden></yu-xform-item>
+                    <yu-xform-item label="被投资单位名称全称" name="invName" ctype="input" placeholder="被投资单位名称全称"  :rules="rule.invName"></yu-xform-item> 
+                    <yu-xform-item label="投资性质" name="invType" ctype="select" placeholder="投资性质" data-code="CD0374" :rules="rule.invType"></yu-xform-item> 
+                    <yu-xform-item label="被投资单位中征码" name="invCode" ctype="input" placeholder="被投资单位中征码" :rules="rule.invCode"></yu-xform-item> 
+                    <yu-xform-item label="被投资企业法人代表" name="invLegal" ctype="input" placeholder="被投资企业法人代表"  :rules="rule.invLegal"></yu-xform-item> 
+                    <yu-xform-item label="币种" name="currCd" ctype="select" placeholder="币种" data-code="CD0071"></yu-xform-item> 
+                    <yu-xform-item label="投资金额元" name="invAmt" ctype="input" placeholder="投资金额元" :rules="rule.invAmt"></yu-xform-item> 
+                    <yu-xform-item label="出资方式" name="payType" ctype="select" placeholder="出资方式" data-code="CD0289"></yu-xform-item> 
+                    <yu-xform-item label="所占比例" name="invPerc" ctype="input" placeholder="所占比例" :rules="rule.invPerc"></yu-xform-item> 
+                    <yu-xform-item label="占股权比例" name="stockPerc" ctype="input" placeholder="占股权比例" :rules="rule.stockPerc"></yu-xform-item> 
+                    <yu-xform-item label="出资说明"  name="invDesc" ctype="input" placeholder="出资说明" :rules="rule.invDesc"></yu-xform-item> 
+                    <yu-xform-item label="投资时间" name="invDate" ctype="datepicker" placeholder="投资时间" ></yu-xform-item> 
+                    <yu-xform-item label="投资项目_企业情况说明"  name="invPrjDesc" ctype="input" placeholder="投资项目_企业情况说明" :rules="rule.invPrjDesc"></yu-xform-item> 
+                    <yu-xform-item label="目前办公地址" name="workAddr" ctype="input" placeholder="目前办公地址" :rules="rule.workAddr"></yu-xform-item> 
+                    <yu-xform-item label="经营范围"  name="workRange" ctype="input" placeholder="经营范围" :rules="rule.workRange"></yu-xform-item> 
+                    <yu-xform-item label="备注" name="remarks" ctype="textarea" :colspan="24" placeholder="备注" :rules="rule.remarks"></yu-xform-item> 
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="investrefCancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="investrefSaveFn">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+        <!-- <yu-xform ref="investrefForm" label-width="170px"  v-model="investformdata" class="yu-form-gap">
+            <yu-xform-group>
+                <yu-xform-item label="被投资单位名称全称" name="invName" ctype="input" placeholder="被投资单位名称全称"  :rules="rule.invName"></yu-xform-item> 
+                <yu-xform-item label="投资性质" name="invType" ctype="input" placeholder="投资性质"  :rules="rule.invType"></yu-xform-item> 
+                <yu-xform-item label="被投资单位中征码" name="invCode" ctype="input" placeholder="被投资单位中征码" :rules="rule.invCode"></yu-xform-item> 
+                <yu-xform-item label="被投资企业法人代表" name="invLegal" ctype="input" placeholder="被投资企业法人代表"  :rules="rule.invLegal"></yu-xform-item> 
+                <yu-xform-item label="币种" name="currCd" ctype="select" placeholder="币种" data-code="CD0071"></yu-xform-item> 
+                <yu-xform-item label="投资金额元" name="invAmt" ctype="input" placeholder="投资金额元" :rules="rule.invAmt"></yu-xform-item> 
+                <yu-xform-item label="出资方式" name="payType" ctype="select" placeholder="出资方式" data-code="CD0289"></yu-xform-item> 
+                <yu-xform-item label="所占比例" name="invPerc" ctype="input" placeholder="所占比例" :rules="rule.invPerc"></yu-xform-item> 
+                <yu-xform-item label="占股权比例" name="stockPerc" ctype="input" placeholder="占股权比例" :rules="rule.stockPerc"></yu-xform-item> 
+                <yu-xform-item label="出资说明"  name="invDesc" ctype="input" placeholder="出资说明" :rules="rule.invDesc"></yu-xform-item> 
+                <yu-xform-item label="投资时间" name="invDate" ctype="datepicker" placeholder="投资时间" ></yu-xform-item> 
+                <yu-xform-item label="投资项目_企业情况说明"  name="invPrjDesc" ctype="input" placeholder="投资项目_企业情况说明" :rules="rule.invPrjDesc"></yu-xform-item> 
+                <yu-xform-item label="目前办公地址" name="workAddr" ctype="input" placeholder="目前办公地址" :rules="rule.workAddr"></yu-xform-item> 
+                <yu-xform-item label="经营范围"  name="workRange" ctype="input" placeholder="经营范围" :rules="rule.workRange"></yu-xform-item> 
+                <yu-xform-item label="备注" name="remarks" ctype="input" placeholder="备注" :rules="rule.remarks"></yu-xform-item> 
+            </yu-xform-group>
+          </yu-xform> -->
+    </yu-collapse-item>
+    <yu-collapse-item title="收入信息" name="income">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addIncomeFn" v-if="addBtn3">新增</yu-button> 
+                <yu-button icon="edit" @click="modifyIncomeFn" v-if="editBtn3">修改</yu-button>
+                <yu-button icon="edit" @click="delIncomeFn" v-if="deleteBtn3">删除</yu-button>
+            </yu-button-group>
+        </div>
+        <yu-xtable ref="incomeTable" row-number :data-url="incomeUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="调查年份" prop="surYear" width="100"></yu-xtable-column>
+            <yu-xtable-column label="收入来源" prop="incomeSrc" width="120" data-code="CD0376"></yu-xtable-column>
+            <yu-xtable-column label="年收入" prop="incomeY" width="120"></yu-xtable-column>
+            <yu-xtable-column label="工资账户开户行" prop="salAcctBank" width="120"></yu-xtable-column>
+            <yu-xtable-column label="备注" prop="remarks" ></yu-xtable-column>
+        </yu-xtable>
+        <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="incomeVisible" width="800px">
+            <yu-xform ref="incomeForm" label-width="180px" :disabled="formDisabled">
+                <yu-xform-group>
+                        <yu-xform-item label="id" name="id"  ctype="input" placeholder="id" hidden></yu-xform-item>
+                        <yu-xform-item label="调查年份" name="surYear" ctype="input" placeholder="调查年份"></yu-xform-item> 
+                        <yu-xform-item label="收入来源" name="incomeSrc" ctype="input" placeholder="收入来源" data-code="CD0376"></yu-xform-item> 
+                        <yu-xform-item label="年收入" name="incomeY" ctype="input" placeholder="年收入"></yu-xform-item> 
+                        <yu-xform-item label="工资账户开户行" name="salAcctBank" ctype="input" placeholder="工资账户开户行"></yu-xform-item> 
+                        <yu-xform-item label="备注"  name="remarks" ctype="textarea" :colspan="24" placeholder="备注"></yu-xform-item> 
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="incomeCancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="incomeSaveFn">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+        <!-- <yu-xform ref="incomerefForm" label-width="120px"  v-model="incomeformdata" class="yu-form-gap">
+            <yu-xform-group>
+                <yu-xform-item label="调查年份" name="surYear" ctype="input" placeholder="调查年份" :rules="rule.surYear"></yu-xform-item> 
+                <yu-xform-item label="收入来源" name="incomeSrc" ctype="input" placeholder="收入来源" ></yu-xform-item> 
+                <yu-xform-item label="年收入" name="incomeY" ctype="input" placeholder="年收入" :rules="rule.incomeY"></yu-xform-item> 
+                <yu-xform-item label="工资账户开户行" name="salAcctBank" ctype="input" placeholder="工资账户开户行" :rules="rule.salAcctBank"></yu-xform-item> 
+                <yu-xform-item label="备注"  name="remarks" ctype="input" placeholder="备注" :rules="rule.remarks1"></yu-xform-item> 
+            </yu-xform-group>
+          </yu-xform> -->
+    </yu-collapse-item>
+    <yu-collapse-item title="家庭收支信息" name="familyinc">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addFamilyincFn" v-if="addBtn4">新增</yu-button> 
+                <yu-button icon="edit" @click="modifyFamilyincFn" v-if="editBtn4">修改</yu-button>
+                <yu-button icon="edit" @click="delFamilyincFn" v-if="deleteBtn4">删除</yu-button>
+            </yu-button-group>
+        </div>
+        <yu-xtable ref="familyincTable" row-number :data-url="familyincUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="调查年份" prop="surYear" width="120"></yu-xtable-column>
+            <yu-xtable-column label="家庭年收入(元)" prop="yearIncome" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="家庭年可支配收入" prop="annIncome" width="120"></yu-xtable-column>
+            <yu-xtable-column label="家庭人数" prop="popuNum" width="120"></yu-xtable-column>
+            <yu-xtable-column label="其中劳动力人口" prop="laborNum" width="120" data-code="CD0071"></yu-xtable-column>
+            <yu-xtable-column label="家庭人均年收入" prop="famPerIncome" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="家庭年支出情况" prop="famExpenDesc" width="120"></yu-xtable-column>
+            <yu-xtable-column label="家庭年支出金额" prop="famExpenAmt" width="120"></yu-xtable-column>
+            <yu-xtable-column label="资产总额" prop="assetTotal" width="120"></yu-xtable-column>
+            <yu-xtable-column label="负债总额" prop="debtTotal" width="120"></yu-xtable-column>>
+            <yu-xtable-column label="净资产" prop="netAsset" width="120"></yu-xtable-column>
+            <yu-xtable-column label="备注" prop="remark" width="120"></yu-xtable-column>
+        </yu-xtable>
+        <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="familyincVisible" width="800px">
+            <yu-xform ref="familyincForm" label-width="180px" :disabled="formDisabled">
+                <yu-xform-group>
+                    <yu-xform-item label="id" name="id" ctype="input" placeholder="id" hidden></yu-xform-item>
+                    <yu-xform-item label="调查年份" name="surYear" ctype="input" placeholder="调查年份" :rules="rule.surYear1"></yu-xform-item> 
+                    <yu-xform-item label="家庭年收入(元)" name="yearIncome" ctype="input" placeholder="家庭年收入(元)" :rules="rule.yearIncome"></yu-xform-item> 
+                    <yu-xform-item label="家庭年可支配收入" name="annIncome" ctype="input" placeholder="家庭年可支配收入" :rules="rule.annIncome"></yu-xform-item> 
+                    <yu-xform-item label="家庭人数" name="popuNum" ctype="input" placeholder="家庭人数" :rules="rule.popuNum"></yu-xform-item> 
+                    <yu-xform-item label="其中劳动力人口" name="laborNum" ctype="input" placeholder="其中劳动力人口" :rules="rule.laborNum"></yu-xform-item> 
+                    <yu-xform-item label="家庭人均年收入" name="famPerIncome" ctype="input" placeholder="家庭人均年收入" :rules="rule.famPerIncome"></yu-xform-item> 
+                    <yu-xform-item label="家庭年支出情况" name="famExpenDesc" ctype="input" placeholder="家庭年支出情况" :rules="rule.famExpenDesc"></yu-xform-item> 
+                    <yu-xform-item label="家庭年支出金额" name="famExpenAmt" ctype="input" placeholder="家庭年支出金额" :rules="rule.famExpenAmt"></yu-xform-item> 
+                    <yu-xform-item label="资产总额" name="assetTotal" ctype="input" placeholder="资产总额" :rules="rule.assetTotal"></yu-xform-item> 
+                    <yu-xform-item label="负债总额" name="debtTotal" ctype="input" placeholder="负债总额" :rules="rule.debtTotal"></yu-xform-item> 
+                    <yu-xform-item label="净资产" name="netAsset" ctype="input" placeholder="净资产" :rules="rule.netAsset"></yu-xform-item> 
+                    <yu-xform-item label="备注" name="remark" ctype="textarea" :colspan="24" placeholder="备注" :rules="rule.remark"></yu-xform-item> 
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="familyincCancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="familyincSaveFn">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+
+        <!-- <yu-xform ref="famrefForm" label-width="150px"  v-model="famformdata" class="yu-form-gap">
+            <yu-xform-group>
+        
+                <yu-xform-item label="调查年份" name="surYear" ctype="input" placeholder="调查年份" :rules="rule.surYear1"></yu-xform-item> 
+                <yu-xform-item label="家庭年收入(元)" name="yearIncome" ctype="input" placeholder="家庭年收入(元)" :rules="rule.yearIncome"></yu-xform-item> 
+                <yu-xform-item label="家庭年可支配收入" name="annIncome" ctype="input" placeholder="家庭年可支配收入" :rules="rule.annIncome"></yu-xform-item> 
+                <yu-xform-item label="家庭人数" name="popuNum" ctype="input" placeholder="家庭人数" :rules="rule.popuNum"></yu-xform-item> 
+                <yu-xform-item label="其中劳动力人口" name="laborNum" ctype="input" placeholder="其中劳动力人口" :rules="rule.laborNum"></yu-xform-item> 
+                <yu-xform-item label="家庭人均年收入" name="famPerIncome" ctype="input" placeholder="家庭人均年收入" :rules="rule.famPerIncome"></yu-xform-item> 
+                <yu-xform-item label="家庭年支出情况" name="famExpenDesc" ctype="input" placeholder="家庭年支出情况" :rules="rule.famExpenDesc"></yu-xform-item> 
+                <yu-xform-item label="家庭年支出金额" name="famExpenAmt" ctype="input" placeholder="家庭年支出金额" :rules="rule.famExpenAmt"></yu-xform-item> 
+                <yu-xform-item label="资产总额" name="assetTotal" ctype="input" placeholder="资产总额" :rules="rule.assetTotal"></yu-xform-item> 
+                <yu-xform-item label="负债总额" name="debtTotal" ctype="input" placeholder="负债总额" :rules="rule.debtTotal"></yu-xform-item> 
+                <yu-xform-item label="净资产" name="netAsset" ctype="input" placeholder="净资产" :rules="rule.netAsset"></yu-xform-item> 
+                <yu-xform-item label="备注" name="remark" ctype="input" placeholder="备注" :rules="rule.remark"></yu-xform-item> 
+            </yu-xform-group>
+            -->
+          </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="资产信息" name="assets">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addAssetsFn" v-if="addBtn5">新增</yu-button> 
+                <yu-button icon="edit" @click="modifyAssetsFn" v-if="editBtn5">修改</yu-button>
+                <yu-button icon="edit" @click="delAssetsFn" v-if="deleteBtn5">删除</yu-button>
+            </yu-button-group>
+        </div>
+        <yu-xtable ref="assetsTable" row-number :data-url="assetsUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="资产名称" prop="assetName" width="120"></yu-xtable-column>
+            <yu-xtable-column label="资产单位" prop="assetUnit" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="资产数量" prop="assetNum" width="120"></yu-xtable-column>
+            <yu-xtable-column label="资产估价" prop="assetEval" width="120"></yu-xtable-column>
+            <yu-xtable-column label="估价日期" prop="evalDate" width="100" data-code="CD0071"></yu-xtable-column>
+            <yu-xtable-column label="资产描述" prop="assetDesc" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="资产购置日期" prop="assetPurDate" width="100"></yu-xtable-column>
+            <yu-xtable-column label="资产购置原价元" prop="assetPurPrice" width="120"></yu-xtable-column>
+            <yu-xtable-column label="抵押状况" prop="mortgageStat" width="120" data-code="CD0377"></yu-xtable-column>
+            <yu-xtable-column label="备注" prop="remarks" width="120"></yu-xtable-column>>
+        </yu-xtable>
+        <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="assetsVisible" width="800px">
+            <yu-xform ref="assetsForm" label-width="180px" :disabled="formDisabled">
+                <yu-xform-group>
+                    <yu-xform-item label="id" name="id" ctype="input" placeholder="id" hidden></yu-xform-item>
+                    <yu-xform-item label="资产名称" name="assetName" ctype="input" placeholder="资产名称" ></yu-xform-item> 
+                    <yu-xform-item label="资产单位" name="assetUnit" ctype="input" placeholder="资产单位" :rules="rule.assetUnit"></yu-xform-item> 
+                    <yu-xform-item label="资产数量" name="assetNum" ctype="input" placeholder="资产数量" :rules="rule.assetNum"></yu-xform-item> 
+                    <yu-xform-item label="资产估价" name="assetEval" ctype="input" placeholder="资产估价" :rules="rule.assetEval"></yu-xform-item> 
+                    <yu-xform-item label="估价日期" name="evalDate" ctype="datepicker" placeholder="估价日期"></yu-xform-item> 
+                    <yu-xform-item label="资产描述" name="assetDesc" ctype="input" placeholder="资产描述" :rules="rule.assetDesc"></yu-xform-item> 
+                    <yu-xform-item label="资产购置日期" name="assetPurDate" ctype="datepicker" placeholder="资产购置日期"></yu-xform-item> 
+                    <yu-xform-item label="资产购置原价元" name="assetPurPrice" ctype="input" placeholder="资产购置原价元" :rules="rule.assetPurPrice"></yu-xform-item> 
+                    <yu-xform-item label="抵押状况" name="mortgageStat" ctype="input" placeholder="抵押状况" data-code="CD0377"></yu-xform-item> 
+                    <yu-xform-item label="备注" name="remarks" ctype="textarea" :colspan="24" placeholder="备注" :rules="rule.remarks2"></yu-xform-item> 
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="assetsCancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="assetsSaveFn">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+        
+        <!-- <yu-xform ref="assrefForm" label-width="120px"  v-model="assformdata" class="yu-form-gap">
+            <yu-xform-group>
+                <yu-xform-item label="资产名称" name="assetName" ctype="select" placeholder="资产名称" ></yu-xform-item> 
+                <yu-xform-item label="资产单位" name="assetUnit" ctype="input" placeholder="资产单位" :rules="rule.assetUnit"></yu-xform-item> 
+                <yu-xform-item label="资产数量" name="assetNum" ctype="input" placeholder="资产数量" :rules="rule.assetNum"></yu-xform-item> 
+                <yu-xform-item label="资产估价" name="assetEval" ctype="input" placeholder="资产估价" :rules="rule.assetEval"></yu-xform-item> 
+                <yu-xform-item label="估价日期" name="evalDate" ctype="datepicker" placeholder="估价日期"></yu-xform-item> 
+                <yu-xform-item label="资产描述" name="assetDesc" ctype="input" placeholder="资产描述" :rules="rule.assetDesc"></yu-xform-item> 
+                <yu-xform-item label="资产购置日期" name="assetPurDate" ctype="datepicker" placeholder="资产购置日期"></yu-xform-item> 
+                <yu-xform-item label="资产购置原价元" name="assetPurPrice" ctype="input" placeholder="资产购置原价元" :rules="rule.assetPurPrice"></yu-xform-item> 
+                <yu-xform-item label="抵押状况" name="mortgageStat" ctype="select" placeholder="抵押状况"></yu-xform-item> 
+                <yu-xform-item label="备注" name="remarks" ctype="input" placeholder="备注" :rules="rule.remarks2"></yu-xform-item> 
+        
+            </yu-xform-group>
+            
+          </yu-xform> -->
+    </yu-collapse-item>
+    <yu-collapse-item title="负债信息" name="liabi">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addLiabiFn" v-if="addBtn6">新增</yu-button> 
+                <yu-button icon="edit" @click="modifyLiabiFn" v-if="editBtn6">修改</yu-button>
+                <yu-button icon="edit" @click="delLiabiFn" v-if="deleteBtn6">删除</yu-button>
+            </yu-button-group>
+        </div>
+        <yu-xtable ref="liabiTable" row-number :data-url="liabiUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="负债类型" prop="liabType" width="100" data-code="CD0378"></yu-xtable-column>
+            <yu-xtable-column label="负债描述" prop="liabDesc" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="债权人" prop="creditor" width="120"></yu-xtable-column>
+            <yu-xtable-column label="负债币种" prop="liabCurrCd" width="120" data-code="CD0071"></yu-xtable-column>
+            <yu-xtable-column label="负债金额" prop="liabAmt" width="120"></yu-xtable-column>
+            <yu-xtable-column label="债务开始时间" prop="liabStartDate" width="100" ></yu-xtable-column>
+            <yu-xtable-column label="债务结束时间" prop="liabEndDate" width="100"></yu-xtable-column>
+            <yu-xtable-column label="月收入担保信用卡张数" prop="credCrdNum" width="150"></yu-xtable-column>
+            <yu-xtable-column label="为他人担保贷款余额" prop="loanGuarBal" width="150"></yu-xtable-column>
+            <yu-xtable-column label="备注" prop="remarks" width="120"></yu-xtable-column>>
+        </yu-xtable>
+        <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="liabiVisible" width="800px">
+            <yu-xform ref="liabiForm" label-width="180px" :disabled="formDisabled">
+                <yu-xform-group>
+                    <yu-xform-item label="id" name="id" ctype="input" placeholder="id" hidden></yu-xform-item>
+                    <yu-xform-item label="负债类型" name="liabType" ctype="select" placeholder="负债类型" data-code="CD0378"></yu-xform-item> 
+                    <yu-xform-item label="负债描述" name="liabDesc" ctype="input" placeholder="负债描述" :rules="rule.liabDesc"></yu-xform-item> 
+                    <yu-xform-item label="债权人" name="creditor" ctype="input" placeholder="债权人" :rules="rule.creditor"></yu-xform-item> 
+                    <yu-xform-item label="负债币种" name="liabCurrCd" ctype="select" placeholder="负债币种" data-code="CD0071"></yu-xform-item> 
+                    <yu-xform-item label="负债金额" name="liabAmt" ctype="input" placeholder="负债金额" :rules="rule.liabAmt"></yu-xform-item> 
+                    <yu-xform-item label="债务开始时间" name="liabStartDate" ctype="datepicker" placeholder="债务开始时间"></yu-xform-item> 
+                    <yu-xform-item label="债务结束时间" name="liabEndDate" ctype="datepicker" placeholder="债务结束时间"></yu-xform-item> 
+                    <yu-xform-item label="月收入担保信用卡张数" name="credCrdNum" ctype="input" placeholder="月收入担保信用卡张数" :rules="rule.credCrdNum"></yu-xform-item> 
+                    <yu-xform-item label="为他人担保贷款余额" name="loanGuarBal" ctype="input" placeholder="为他人担保贷款余额" :rules="rule.loanGuarBal"></yu-xform-item> 
+                    <yu-xform-item label="备注" name="remarks" ctype="textarea" :colspan="24" placeholder="备注" :rules="rule.remarks3"></yu-xform-item> 
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="liabiCancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="liabiSaveFn">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+
+        <!-- <yu-xform ref="liabirefForm" label-width="150px"  v-model="liabiformdata" class="yu-form-gap">
+            <yu-xform-group>
+                <yu-xform-item label="负债类型" name="liabType" ctype="select" placeholder="负债类型" ></yu-xform-item> 
+                <yu-xform-item label="负债描述" name="liabDesc" ctype="input" placeholder="负债描述" :rules="rule.liabDesc"></yu-xform-item> 
+                <yu-xform-item label="债权人" name="creditor" ctype="input" placeholder="债权人" :rules="rule.creditor"></yu-xform-item> 
+                <yu-xform-item label="负债币种" name="liabCurrCd" ctype="select" placeholder="负债币种" data-code="CD0071"></yu-xform-item> 
+                <yu-xform-item label="负债金额" name="liabAmt" ctype="input" placeholder="负债金额" :rules="rule.liabAmt"></yu-xform-item> 
+                <yu-xform-item label="债务开始时间" name="liabStartDate" ctype="datepicker" placeholder="债务开始时间"></yu-xform-item> 
+                <yu-xform-item label="债务结束时间" name="liabEndDate" ctype="datepicker" placeholder="债务结束时间"></yu-xform-item> 
+                <yu-xform-item label="月收入担保信用卡张数" name="credCrdNum" ctype="input" placeholder="月收入担保信用卡张数" :rules="rule.credCrdNum"></yu-xform-item> 
+                <yu-xform-item label="为他人担保贷款余额" name="loanGuarBal" ctype="input" placeholder="为他人担保贷款余额" :rules="rule.loanGuarBal"></yu-xform-item> 
+                <yu-xform-item label="备注" name="remarks" ctype="input" placeholder="备注" :rules="rule.remarks3"></yu-xform-item> 
+            </yu-xform-group>
+          </yu-xform> -->
+    </yu-collapse-item>
+    <yu-collapse-item title="保险信息" name="insur">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addInsurFn" v-if="addBtn7">新增</yu-button> 
+                <yu-button icon="edit" @click="modifyInsurFn" v-if="editBtn7">修改</yu-button>
+                <yu-button icon="edit" @click="delInsurFn" v-if="deleteBtn7">删除</yu-button>
+            </yu-button-group>
+        </div>
+        <yu-xtable ref="insurTable" row-number :data-url="insurUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="保险编号" prop="insurNo" width="120"></yu-xtable-column>
+            <yu-xtable-column label="保险名称(险种)" prop="insurName" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="保险公司" prop="insurCom" width="120"></yu-xtable-column>
+            <yu-xtable-column label="保险种类" prop="insurType" width="120" data-code="CD0126"></yu-xtable-column>
+            <yu-xtable-column label="投保人" prop="insured" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="受益人" prop="bfcyMan" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="保险标的" prop="insurTar" width="120"></yu-xtable-column>
+            <yu-xtable-column label="保单现有价值元" prop="insurVal" width="120"></yu-xtable-column>
+            <yu-xtable-column label="已缴保费元" prop="insurFee" width="120"></yu-xtable-column>
+            <yu-xtable-column label="应缴保费总额元" prop="insurTotAmt" width="120"></yu-xtable-column>>
+            <yu-xtable-column label="投保日期" prop="insurStartDate" width="100"></yu-xtable-column>
+            <yu-xtable-column label="到期日期" prop="insurEndDate" width="100"></yu-xtable-column>
+            <yu-xtable-column label="保险金额" prop="insurAmt" width="120"></yu-xtable-column>
+            <yu-xtable-column label="抵押状况" prop="mortgageStat" width="120" data-code="CD0126"></yu-xtable-column>
+            <yu-xtable-column label="备注" prop="remarks" width="120"></yu-xtable-column>
+        </yu-xtable>
+        <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="insurVisible" width="800px">
+            <yu-xform ref="insurForm" label-width="180px" :disabled="formDisabled">
+                <yu-xform-group>
+                    <yu-xform-item label="id" name="id" ctype="input" placeholder="id" hidden></yu-xform-item>
+                    <yu-xform-item label="保险编号" name="insurNo" ctype="input" placeholder="保险编号"  :rules="rule.insurNo"></yu-xform-item> 
+                    <yu-xform-item label="保险名称(险种)" name="insurName" ctype="input" placeholder="保险名称(险种)" data-code="CD0126" :rules="rule.insurName"></yu-xform-item> 
+                    <yu-xform-item label="保险公司" name="insurCom" ctype="input" placeholder="保险公司" :rules="rule.insurCom"></yu-xform-item> 
+                    <yu-xform-item label="保险种类" name="insurType" ctype="select" placeholder="保险种类" data-code="CD0126"></yu-xform-item> 
+                    <yu-xform-item label="投保人" name="insured" ctype="input" placeholder="投保人" :rules="rule.insured"></yu-xform-item> 
+                    <yu-xform-item label="受益人" name="bfcyMan" ctype="input" placeholder="受益人" :rules="rule.bfcyMan"></yu-xform-item> 
+                    <yu-xform-item label="保险标的" name="insurTar" ctype="input" placeholder="保险标的" :rules="rule.insurTar"></yu-xform-item> 
+                    <yu-xform-item label="保单现有价值元" name="insurVal" ctype="input" placeholder="保单现有价值元" :rules="rule.insurVal"></yu-xform-item> 
+                    <yu-xform-item label="已缴保费元" name="insurFee" ctype="input" placeholder="已缴保费元" :rules="rule.insurFee"></yu-xform-item> 
+                    <yu-xform-item label="应缴保费总额元" name="insurTotAmt" ctype="input" placeholder="应缴保费总额元" :rules="rule.insurTotAmt"></yu-xform-item> 
+                    <yu-xform-item label="投保日期" name="insurStartDate" ctype="datepicker" placeholder="投保日期"></yu-xform-item> 
+                    <yu-xform-item label="到期日期" name="insurEndDate" ctype="datepicker" placeholder="到期日期"></yu-xform-item> 
+                    <yu-xform-item label="保险金额" name="insurAmt" ctype="input" placeholder="保险金额" :rules="rule.insurAmt"></yu-xform-item> 
+                    <yu-xform-item label="抵押状况" name="mortgageStat" ctype="select" placeholder="抵押状况" data-code="CD0126"></yu-xform-item> 
+                    <yu-xform-item label="备注"  name="remarks" ctype="textarea" :colspan="24" placeholder="备注" :rules="rule.remarks4"></yu-xform-item>
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="insurCancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="insurSaveFn">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+
+        <!-- <yu-xform ref="insurrefForm" label-width="180px"  v-model="insurformdata" class="yu-form-gap">
+            <yu-xform-group>
+                <yu-xform-item label="保险编号" name="insurNo" ctype="input" placeholder="保险编号"  :rules="rule.insurNo"></yu-xform-item> 
+                <yu-xform-item label="保险名称(险种)" name="insurName" ctype="input" placeholder="保险名称(险种)" :rules="rule.insurName"></yu-xform-item> 
+                <yu-xform-item label="保险公司" name="insurCom" ctype="input" placeholder="保险公司" :rules="rule.insurCom"></yu-xform-item> 
+                <yu-xform-item label="保险种类" name="insurType" ctype="select" placeholder="保险种类" ></yu-xform-item> 
+                <yu-xform-item label="投保人" name="insured" ctype="input" placeholder="投保人" :rules="rule.insured"></yu-xform-item> 
+                <yu-xform-item label="受益人" name="bfcyMan" ctype="input" placeholder="受益人" :rules="rule.bfcyMan"></yu-xform-item> 
+                <yu-xform-item label="保险标的" name="insurTar" ctype="input" placeholder="保险标的" :rules="rule.insurTar"></yu-xform-item> 
+                <yu-xform-item label="保单现有价值元" name="insurVal" ctype="input" placeholder="保单现有价值元" :rules="rule.insurVal"></yu-xform-item> 
+                <yu-xform-item label="已缴保费元" name="insurFee" ctype="input" placeholder="已缴保费元" :rules="rule.insurFee"></yu-xform-item> 
+                <yu-xform-item label="应缴保费总额元" name="insurTotAmt" ctype="input" placeholder="应缴保费总额元" :rules="rule.insurTotAmt"></yu-xform-item> 
+                <yu-xform-item label="投保日期" name="insurStartDate" ctype="datepicker" placeholder="投保日期"></yu-xform-item> 
+                <yu-xform-item label="到期日期" name="insurEndDate" ctype="datepicker" placeholder="到期日期"></yu-xform-item> 
+                <yu-xform-item label="保险金额" name="insurAmt" ctype="input" placeholder="保险金额" :rules="rule.insurAmt"></yu-xform-item> 
+                <yu-xform-item label="抵押状况" name="mortgageStat" ctype="select" placeholder="抵押状况"></yu-xform-item> 
+                <yu-xform-item label="备注"  name="remarks" ctype="input" placeholder="备注" :rules="rule.remarks4"></yu-xform-item> 
+               </yu-xform-group>
+           
+          </yu-xform> -->
+   </yu-collapse-item>
+   <yu-collapse-item title="纳税信息" name="pay">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addPayFn" v-if="addBtn8">新增</yu-button> 
+                <yu-button icon="edit" @click="modifyPayFn" v-if="editBtn8">修改</yu-button>
+                <yu-button icon="edit" @click="delPayFn" v-if="deleteBtn8">删除</yu-button>
+            </yu-button-group>
+        </div>
+        <yu-xtable ref="payTable" row-number :data-url="payUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="登记流水号" prop="regSeqNo" width="120"></yu-xtable-column>
+            <yu-xtable-column label="纳税编号" prop="taxNo" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="调查年份" prop="surYear" width="120"></yu-xtable-column>
+            <yu-xtable-column label="税种" prop="taxes" width="120" data-code="CD0379"></yu-xtable-column>
+            <yu-xtable-column label="应纳税金额" prop="taxAmt" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="已缴纳_支付金额" prop="taxPayAmt" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="纳税日期" prop="taxDate" width="100"></yu-xtable-column>
+            <yu-xtable-column label="是否正常缴纳" prop="normalFlg" width="120" data-code="CD0242"></yu-xtable-column>
+            <yu-xtable-column label="备注" prop="remarks" width="120"></yu-xtable-column>
+        </yu-xtable>
+         <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="payVisible" width="800px">
+            <yu-xform ref="payForm" label-width="180px" :disabled="formDisabled">
+                <yu-xform-group>
+                    <yu-xform-item label="id" name="id" ctype="input" placeholder="id" hidden></yu-xform-item>
+                    <yu-xform-item label="登记流水号" name="regSeqNo" ctype="input" placeholder="登记流水号" :rules="rule.regSeqNo"></yu-xform-item> 
+                    <yu-xform-item label="纳税编号" name="taxNo" ctype="input" placeholder="纳税编号" :rules="rule.taxNo"></yu-xform-item> 
+                    <yu-xform-item label="调查年份" name="surYear" ctype="input" placeholder="调查年份" :rules="rule.surYear2"></yu-xform-item> 
+                    <yu-xform-item label="税种" name="taxes" ctype="select" placeholder="税种" data-code="CD0379"></yu-xform-item> 
+                    <yu-xform-item label="应纳税金额" name="taxAmt" ctype="input" placeholder="应纳税金额" :rules="rule.taxAmt"></yu-xform-item> 
+                    <yu-xform-item label="已缴纳_支付金额" name="taxPayAmt" ctype="input" placeholder="已缴纳_支付金额" :rules="rule.taxPayAmt"></yu-xform-item> 
+                    <yu-xform-item label="纳税日期" name="taxDate" ctype="datepicker" placeholder="纳税日期"></yu-xform-item> 
+                    <yu-xform-item label="是否正常缴纳" name="normalFlg" ctype="select" placeholder="是否正常缴纳" data-code="CD0242"></yu-xform-item> 
+                    <yu-xform-item label="备注" name="remarks" ctype="textarea" :colspan="24" placeholder="备注" :rules="rule.remarks5"></yu-xform-item> 
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="payCancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="paySaveFn">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+
+      <!-- <yu-xform ref="payrefForm" label-width="120px"  v-model="payformdata" class="yu-form-gap">
+          <yu-xform-group>
+              <yu-xform-item label="登记流水号" name="regSeqNo" ctype="input" placeholder="登记流水号" :rules="rule.regSeqNo"></yu-xform-item> 
+              <yu-xform-item label="纳税编号" name="taxNo" ctype="input" placeholder="纳税编号" :rules="rule.taxNo"></yu-xform-item> 
+              <yu-xform-item label="调查年份" name="surYear" ctype="input" placeholder="调查年份" :rules="rule.surYear2"></yu-xform-item> 
+              <yu-xform-item label="税种" name="taxes" ctype="select" placeholder="税种" ></yu-xform-item> 
+              <yu-xform-item label="应纳税金额" name="taxAmt" ctype="input" placeholder="应纳税金额" :rules="rule.taxAmt"></yu-xform-item> 
+              <yu-xform-item label="已缴纳_支付金额" name="taxPayAmt" ctype="input" placeholder="已缴纳_支付金额" :rules="rule.taxPayAmt"></yu-xform-item> 
+              <yu-xform-item label="纳税日期" name="taxDate" ctype="datepicker" placeholder="纳税日期"></yu-xform-item> 
+              <yu-xform-item label="是否正常缴纳" name="normalFlg" ctype="select" placeholder="是否正常缴纳" data-code="CD0242"></yu-xform-item> 
+              <yu-xform-item label="备注" name="remarks" ctype="input" placeholder="备注" :rules="rule.remarks5"></yu-xform-item> 
+          </yu-xform-group>
+        </yu-xform> -->
+    </yu-collapse-item>
+    <yu-collapse-item title="经营信息" name="oper">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addOperFn" v-if="addBtn9">新增</yu-button> 
+                <yu-button icon="edit" @click="modifyOperFn" v-if="editBtn9">修改</yu-button>
+                <yu-button icon="edit" @click="delOperFn" v-if="deleteBtn9">删除</yu-button>
+            </yu-button-group>
+        </div>
+        <yu-xtable ref="operTable" row-number :data-url="operUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="经营实体名称" prop="busiName" width="120"></yu-xtable-column>
+            <yu-xtable-column label="经营实体客户号" prop="busiCustId" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="负责人" prop="principal" width="120"></yu-xtable-column>
+            <yu-xtable-column label="负责人联系电话" prop="prinTelNo" width="120"></yu-xtable-column>
+            <yu-xtable-column label="经营单位类型" prop="comType" width="120" data-code="CD0071"></yu-xtable-column>
+            <yu-xtable-column label="经营企业规模" prop="comScale" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="产值" prop="comVal" width="120"></yu-xtable-column>
+            <yu-xtable-column label="注册币种" prop="regCurrCd" width="120" data-code="CD0071"></yu-xtable-column>
+            <yu-xtable-column label="股东或合伙人数" prop="partnerNum" width="120"></yu-xtable-column>
+            <yu-xtable-column label="职工人数" prop="empNum" width="120"></yu-xtable-column>
+            <yu-xtable-column label="开业时间" prop="openDate" width="120"></yu-xtable-column>
+            <yu-xtable-column label="主营范围" prop="mainRange" width="120"></yu-xtable-column>
+            <yu-xtable-column label="兼营范围" prop="partRange" width="120"></yu-xtable-column>
+            <yu-xtable-column label="单位地址" prop="unitAddr" width="120"></yu-xtable-column>
+            <yu-xtable-column label="联系人" prop="contName" width="120"></yu-xtable-column>
+            <yu-xtable-column label="联系人联系电话" prop="contTelNo" width="120"></yu-xtable-column>
+            <yu-xtable-column label="客户职位" prop="custPosi" width="120"></yu-xtable-column>
+            <yu-xtable-column label="客户股份占比" prop="custStockPert" width="120"></yu-xtable-column>
+            <yu-xtable-column label="备注" prop="remarks" width="120"></yu-xtable-column>
+        </yu-xtable>
+         <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="operVisible" width="800px">
+            <yu-xform ref="operForm" label-width="180px" :disabled="formDisabled">
+                <yu-xform-group>
+                    <yu-xform-item label="id" name="id" ctype="input" placeholder="id" hidden></yu-xform-item>
+                    <yu-xform-item label="经营实体名称" name="busiName" ctype="input" placeholder="经营实体名称" :rules="rule.busiName"></yu-xform-item> 
+                    <yu-xform-item label="经营实体客户号" name="busiCustId" ctype="input" placeholder="经营实体客户号" :rules="rule.busiCustId" ></yu-xform-item> 
+                    <yu-xform-item label="负责人" name="principal" ctype="input" placeholder="负责人" :rules="rule.principal"></yu-xform-item> 
+                    <yu-xform-item label="负责人联系电话" name="prinTelNo" ctype="input" placeholder="负责人联系电话" :rules="rule.prinTelNo"></yu-xform-item> 
+                    <yu-xform-item label="经营单位类型" name="comType" ctype="input" placeholder="经营单位类型" :rules="rule.comType"></yu-xform-item> 
+                    <yu-xform-item label="经营企业规模" name="comScale" ctype="input" placeholder="经营企业规模" :rules="rule.comScale"></yu-xform-item> 
+                    <yu-xform-item label="产值" name="comVal" ctype="input" placeholder="产值" :rules="rule.comVal"></yu-xform-item> 
+                    <yu-xform-item label="注册币种" name="regCurrCd" ctype="select" placeholder="注册币种" data-code="CD0071"></yu-xform-item> 
+                    <yu-xform-item label="注册资金" name="regAmt" ctype="input" placeholder="注册资金" :rules="rule.regAmt"></yu-xform-item> 
+                    <yu-xform-item label="股东或合伙人数" name="partnerNum" ctype="input" placeholder="股东或合伙人数" :rules="rule.partnerNum"></yu-xform-item> 
+                    <yu-xform-item label="职工人数" name="empNum" ctype="input" placeholder="员工人数" :rules="rule.empNum"></yu-xform-item> 
+                    <yu-xform-item label="开业时间" name="openDate" ctype="datepicker" placeholder="开业时间"></yu-xform-item> 
+                    <yu-xform-item label="主营范围"  name="mainRange" ctype="input" placeholder="主营范围" :rules="rule.mainRange"></yu-xform-item> 
+                    <yu-xform-item label="兼营范围" name="partRange" ctype="input" placeholder="兼营范围" :rules="rule.partRange"></yu-xform-item> 
+                    <yu-xform-item label="单位地址" name="unitAddr" ctype="input" placeholder="单位地址" :rules="rule.unitAddr"></yu-xform-item> 
+                    <yu-xform-item label="联系人" name="contName" ctype="input" placeholder="联系人" :rules="rule.contName"></yu-xform-item> 
+                    <yu-xform-item label="联系人联系电话" name="contTelNo" ctype="input" placeholder="联系人联系电话" :rules="rule.contTelNo"></yu-xform-item> 
+                    <yu-xform-item label="客户职位" name="custPosi" ctype="input" placeholder="客户职位" :rules="rule.custPosi"></yu-xform-item> 
+                    <yu-xform-item label="客户股份占比" name="custStockPert" ctype="input" placeholder="客户股份占比" :rules="rule.custStockPert"></yu-xform-item> 
+                    <yu-xform-item label="备注"  name="remarks" ctype="textarea" :colspan="24" placeholder="备注" :rules="rule.remarks6"></yu-xform-item> 
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="operCancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="operSaveFn">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+
+        <!-- <yu-xform ref="operrefForm" label-width="120px"  v-model="operformdata" class="yu-form-gap">
+            <yu-xform-group>
+                <yu-xform-item label="经营实体名称" name="busiName" ctype="input" placeholder="经营实体名称" :rules="rule.busiName"></yu-xform-item> 
+                <yu-xform-item label="经营实体客户号" name="busiCustId" ctype="input" placeholder="经营实体客户号" :rules="rule.busiCustId" ></yu-xform-item> 
+                <yu-xform-item label="负责人" name="principal" ctype="input" placeholder="负责人" :rules="rule.principal"></yu-xform-item> 
+                <yu-xform-item label="负责人联系电话" name="prinTelNo" ctype="input" placeholder="负责人联系电话" :rules="rule.prinTelNo"></yu-xform-item> 
+                <yu-xform-item label="经营单位类型" name="comType" ctype="input" placeholder="经营单位类型" :rules="rule.comType"></yu-xform-item> 
+                <yu-xform-item label="经营企业规模" name="comScale" ctype="input" placeholder="经营企业规模" :rules="rule.comScale"></yu-xform-item> 
+                <yu-xform-item label="产值" name="comVal" ctype="input" placeholder="产值" :rules="rule.comVal"></yu-xform-item> 
+                <yu-xform-item label="注册币种" name="regCurrCd" ctype="select" placeholder="注册币种" data-code="CD0071"></yu-xform-item> 
+                <yu-xform-item label="注册资金" name="regAmt" ctype="input" placeholder="注册资金" :rules="rule.regAmt"></yu-xform-item> 
+                <yu-xform-item label="股东或合伙人数" name="partnerNum" ctype="input" placeholder="股东或合伙人数" :rules="rule.partnerNum"></yu-xform-item> 
+                <yu-xform-item label="职工人数" name="empNum" ctype="input" placeholder="员工人数" :rules="rule.empNum"></yu-xform-item> 
+                <yu-xform-item label="开业时间" name="openDate" ctype="datepicker" placeholder="开业时间"></yu-xform-item> 
+                <yu-xform-item label="主营范围"  name="mainRange" ctype="input" placeholder="主营范围" :rules="rule.mainRange"></yu-xform-item> 
+                <yu-xform-item label="兼营范围" name="partRange" ctype="input" placeholder="兼营范围" :rules="rule.partRange"></yu-xform-item> 
+                <yu-xform-item label="单位地址" name="unitAddr" ctype="input" placeholder="单位地址" :rules="rule.unitAddr"></yu-xform-item> 
+                <yu-xform-item label="联系人" name="contName" ctype="input" placeholder="联系人" :rules="rule.contName"></yu-xform-item> 
+                <yu-xform-item label="联系人联系电话" name="contTelNo" ctype="input" placeholder="联系人联系电话" :rules="rule.contTelNo"></yu-xform-item> 
+                <yu-xform-item label="客户职位" name="custPosi" ctype="input" placeholder="客户职位" :rules="rule.custPosi"></yu-xform-item> 
+                <yu-xform-item label="客户股份占比" name="custStockPert" ctype="input" placeholder="客户股份占比" :rules="rule.custStockPert"></yu-xform-item> 
+                <yu-xform-item label="备注"  name="remarks" ctype="input" placeholder="备注" :rules="rule.remarks6"></yu-xform-item> 
+            </yu-xform-group>
+          </yu-xform> -->
+    </yu-collapse-item>
+    <yu-collapse-item title="农户生产情况" name="farmer">
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addFarmerFn" v-if="addBtn0">新增</yu-button> 
+                <yu-button icon="edit" @click="modifyFarmerrFn" v-if="editBtn0">修改</yu-button>
+                <yu-button icon="edit" @click="delFarmerFn" v-if="deleteBtn0">删除</yu-button>
+            </yu-button-group>
+        </div>
+        <yu-xtable ref="farmerTable" row-number :data-url="farmerUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="登记流水号" prop="regSeqNo" width="120"></yu-xtable-column>
+            <yu-xtable-column label="调查年份" prop="surYear" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="生产经营类型" prop="prodBusiType" width="120" data-code="CD0380"></yu-xtable-column>
+            <yu-xtable-column label="生产经营项目名称" prop="prodBusiName" width="120"></yu-xtable-column>
+            <yu-xtable-column label="单位" prop="units" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="数量" prop="num" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="年收入" prop="incomeY" width="120"></yu-xtable-column>
+            <yu-xtable-column label="备注" prop="remarks" width="120"></yu-xtable-column>
+        </yu-xtable>
+         <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="farmerVisible" width="800px">
+            <yu-xform ref="farmerForm" label-width="180px" :disabled="formDisabled">
+                <yu-xform-group>
+                    <yu-xform-item label="id" name="id" ctype="input" placeholder="登记流水号" hidden></yu-xform-item>
+                    <yu-xform-item label="登记流水号" name="regSeqNo" ctype="input" placeholder="登记流水号" :rules="rule.regSeqNo1"></yu-xform-item> 
+                    <yu-xform-item label="调查年份" name="surYear" ctype="input" placeholder="调查年份" :rules="rule.surYear3"></yu-xform-item> 
+                    <yu-xform-item label="生产经营类型" name="prodBusiType" ctype="select" placeholder="生产经营类型" data-code="CD0380"></yu-xform-item> 
+                    <yu-xform-item label="生产经营项目名称" name="prodBusiName" ctype="input" placeholder="生产经营项目名称" :rules="rule.prodBusiName"></yu-xform-item> 
+                    <yu-xform-item label="单位"  name="units" ctype="input" placeholder="单位" :rules="rule.units"></yu-xform-item> 
+                    <yu-xform-item label="数量" name="num" ctype="input" placeholder="数量" :rules="rule.num"></yu-xform-item> 
+                    <yu-xform-item label="年收入" name="incomeY" ctype="input" placeholder="年收入" :rules="rule.incomeY1"></yu-xform-item> 
+                    <yu-xform-item label="备注"  name="remarks" ctype="textarea" :colspan="24" placeholder="备注" :rules="rule.remarks7"></yu-xform-item> 
+                </yu-xform-group>
+                <div class="yu-grpButton">
+                  <yu-button icon="yx-undo2" type="primary" @click="farmerCancelFn">取消</yu-button>
+                    <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="farmerSaveFn">保存</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+
+        <!-- <yu-xform ref="farmerrefForm" label-width="120px"  v-model="farmerformdata" class="yu-form-gap">
+            <yu-xform-group>
+                <yu-xform-item label="登记流水号" name="regSeqNo" ctype="input" placeholder="登记流水号" :rules="rule.regSeqNo1"></yu-xform-item> 
+                <yu-xform-item label="调查年份" name="surYear" ctype="input" placeholder="调查年份" :rules="rule.surYear3"></yu-xform-item> 
+                <yu-xform-item label="生产经营类型" name="prodBusiType" ctype="select" placeholder="生产经营类型" ></yu-xform-item> 
+                <yu-xform-item label="生产经营项目名称" name="prodBusiName" ctype="input" placeholder="生产经营项目名称" :rules="rule.prodBusiName"></yu-xform-item> 
+                <yu-xform-item label="单位"  name="units" ctype="input" placeholder="单位" :rules="rule.units"></yu-xform-item> 
+                <yu-xform-item label="数量" name="num" ctype="input" placeholder="数量" :rules="rule.num"></yu-xform-item> 
+                <yu-xform-item label="年收入" name="incomeY" ctype="input" placeholder="年收入" :rules="rule.incomeY1"></yu-xform-item> 
+                <yu-xform-item label="备注"  name="remarks" ctype="input" placeholder="备注" :rules="rule.remarks7"></yu-xform-item> 
+            </yu-xform-group>
+          </yu-xform> -->
+    </yu-collapse-item>
+   
+  </yu-collapse>
+  <!-- <div class="yu-grpButton">
+      <yu-button icon="check" type="primary" @click="saveFn" v-if="saveBtn">保存</yu-button>
+    
+    </div> -->
+</div>

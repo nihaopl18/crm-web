@@ -1,0 +1,89 @@
+<!-- 
+  @Created by mabintao on 2022-02-19
+  @updated by
+  @description 信息报表1-3 存款明细报表
+-->
+<div id="infoTable4">
+    <!-- test  allCustomerSearch -->
+    <link href="./pages/dy/infoTable4/infoTable4.css" rel="stylesheet" type="text/css">
+    <div>
+        <div class="mt20 bgWhite" style="padding: 0px 20px;">
+            <yu-row :gutter="20">
+                <yu-col :span="23" :offset="1">
+                    <yu-xform size="small" v-model="queryParams" label-width="140px" ref="queryParams" related-table-name="yutable1" responsive>
+                        <yu-xform-group :column="2">
+                            <yu-quarter ref="quarterRef" :quar-params="fourOrOne"></yu-quarter>
+                            <yu-xform-item label="AUM月日均" ctype="custom">
+                                <yu-col :sm="11" :xs="24">
+                                    <yu-input v-model="queryParams.aumAvgBalanceStart" placeholder="请输入" maxlength="10"></yu-input>
+                                </yu-col>
+                                <yu-col class="line" :span="2" style="text-align: center">→</yu-col>
+                                <yu-col :sm="11" :xs="24">
+                                    <yu-input v-model="queryParams.aumAvgBalanceEnd" placeholder="请输入" maxlength="10"></yu-input>
+                                </yu-col>
+                            </yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-group :column="2">
+                            <yu-xform-item label="持有产品" ctype="input" placeholder="请输入客户持有产品名称或产品编号" name="prodName" id="prodnameid" clearable @change="custTpChangeFn()"></yu-xform-item>
+                            <yu-xform-item placeholder="请选择" label="客户经理/机构" name="mktRespPerson"  ctype="per-mgr-selector" :params="selectCustParams"></yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-item ctype="custom" style="text-align: right;">
+                            <yu-button @click="resetFormFn('queryParams')">重置</yu-button>
+                            <yu-button type="primary" @click="searchFn('queryParams')">查询</yu-button>
+                            <yu-button type="primary" @click="exportFn()">导出</yu-button>
+                        </yu-xform-item>
+                    </yu-xform>
+                </yu-col>
+            </yu-row>
+        </div>
+
+        <div class="bgWhite" style="padding: 0px 20px;">
+            <yu-xtable :pageable="false" v-loading="loading4" border :select-on-indeterminate="false" :data="tableData" ref="multipleTable" :base-params="baseParams" class="mt20" :default-load="false"  style="width: 100%" height="55vh">
+                <yu-xtable-column prop="mgrId" label="客户经理编号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="mgrName" label="客户经理名称" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="mgrType" label="客户经理类型" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="branchName" label="所属分行" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="ndsCustNo" label="NDS客户号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="custName" label="客户名称" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="ecifCustNo" label="ECIF客户号" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="prodCode" label="产品编号" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="prodName" label="产品名称" width="200px"></yu-xtable-column>
+                <yu-xtable-column prop="monthSimulateIncome" label="当月模拟收入" width="200px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.monthSimulateIncome || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="quarterSimulateIncome" label="当季模拟收入" width="200px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.quarterSimulateIncome || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="yearSimulateIncome" label="当年模拟收入" width="200px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.yearSimulateIncome || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="aumAvgBalance" label="AUM月日均" width="200px">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.aumAvgBalance || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+            </yu-xtable>
+            <yu-pagination :total="pageData.total" :current-page.sync="pageData.page" :page-size="pageData.size" @size-change="mgrsizeChangeFn"
+            @current-change="mgrpageChangeFn" small :layout="pageData.layout">
+            </yu-pagination>
+            <!-- <template>
+                <div class="table-pagination">
+                <div class="demonstration">
+                    如果不勾选涉及民生，则在优慧客户数和显卓客户数的页面显示减掉民生数
+                </div>
+                </div>
+            </template> -->
+        </div>
+        <ul id="ulid" v-show="showor" style="background-color: white;width:490px;height: 300px;transform-origin: center top;z-index: 2006;position: absolute;left: 200px;top: 125px">
+            <li v-for="item in custResults" :key="item.prodId" @click="handleCustomerSelect(item)" style="height: 30px;padding-left: 20px;">
+                {{ item.prodName }} -- {{item.prodId}}
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2020-6-1 14:14:11.
+  @updated by
+  @description 我的考核方案结果
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="考核方案名称" ctype="input" name="schemeName"></yu-xform-item>
+      <yu-xform-item placeholder="数据日期" ctype="datepicker" name="etlDate" format="yyyyMMdd" value-format="yyyyMMdd" 
+        :editable="false" :picker-options="datePickerOptions"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-msg-4" @click="preResultFn">查看</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" >
+    <yu-xtable-column label="考核方案ID" prop="schemeId"></yu-xtable-column>
+    <yu-xtable-column label="考核方案名称" prop="schemeName"></yu-xtable-column>
+    <yu-xtable-column label="数据日期" prop="etlDate"></yu-xtable-column>
+    <yu-xtable-column label="方案类型" prop="templateType" data-code="SCHEME_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="考核对象类型" prop="evlObjType" data-code="OBJ"></yu-xtable-column>
+  </yu-xtable>
+  <yu-xdialog :title="dialogTitle" :visible.sync="dialogVisible" width="98%" top="2%">
+    <div class="yu-toolBar">
+      <yu-button-group>
+        <yu-button icon="yx-download" @click="exportExcelFn">导出excel</yu-button>
+      </yu-button-group>
+    </div>
+    <yufp-scheme-excel ref="schemeExcel" :scheme-id="schemeId" :template-type="templateType" :evl-obj-type="evlObjType" 
+      :params="schemeExcelParams" v-if="dialogVisible"></yufp-scheme-excel>
+  </yu-xdialog>
+</div>

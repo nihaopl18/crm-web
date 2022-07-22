@@ -1,0 +1,63 @@
+<!-- 
+  @Created by 闫天一 yanty1@yusys.com.cn on 2019-1-30 17:30:20.
+  @updated by
+  @description 产品视图-产品首页
+-->
+<div>
+    <h2 class="yu-formTitle" style="margin-top: 10px;">产品首页</h2>
+    <yu-collapse v-model="activeNames">
+      <yu-collapse-item title="基本信息" name="1">
+      <yu-xform ref="refForm" label-width="100px"  v-model="formdata" class="yu-form-gap">
+        <yu-xform-group>
+          <yu-xform-item label="产品编号" name="productId" ctype="input" :disabled="true"></yu-xform-item>
+          <yu-xform-item label="产品名称" name="prodName" ctype="input" :disabled="true"></yu-xform-item>
+          <yu-xform-item label="是否在售" name="prodState" ctype="select" data-code="CD0242" :disabled="true"></yu-xform-item>
+          <yu-xform-item label="利率" name="rate" ctype="input" :disabled="true"></yu-xform-item>
+          <yu-xform-item label="风险等级" name="riskLevel" ctype="select" data-code="CD0201" :disabled="true"></yu-xform-item>
+          <yu-xform-item label="币种" name="cuyyenType" ctype="select" data-code="CD0071" :disabled="true"></yu-xform-item>
+          <yu-xform-item label="产品发布日期" name="prodStartDate" ctype="input" :disabled="true"></yu-xform-item>
+          <yu-xform-item label="产品截止日期" name="prodEndDate" ctype="input" :disabled="true"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="产品准入" name="2">
+      <yu-xtable ref="refTable" row-number :data-url="admittanceDataUrl" :base-params="admittance">
+        <yu-xtable-column label="属性名称" prop="colNameC" width="210"></yu-xtable-column>
+        <yu-xtable-column label="操作符" prop="ssColOp" width="120" data-code="CONDITION_FUNC"></yu-xtable-column>
+        <yu-xtable-column label="属性值" prop="ssColValue" width="150"></yu-xtable-column>
+        <yu-xtable-column label="条件关系" prop="ssColGjoinNm" width="210"></yu-xtable-column>
+      </yu-xtable>
+    </yu-collapse-item>
+    <yu-collapse-item title="产品营销特征" name="3">
+      <yu-xtable ref="refTable" row-number :data-url="featuresDataUrl" :base-params="features">
+        <yu-xtable-column label="属性名称" prop="colNameC" width="210"></yu-xtable-column>
+        <yu-xtable-column label="操作符" prop="ssColOp" width="120" data-code="CONDITION_FUNC"></yu-xtable-column>
+        <yu-xtable-column label="属性值" prop="ssColValue" width="150"></yu-xtable-column>
+        <yu-xtable-column label="条件关系" prop="ssColGjoinNm" width="210"></yu-xtable-column>
+      </yu-xtable>
+    </yu-collapse-item>
+    <yu-collapse-item title="持有产品客户数量趋势" name="4">
+      <el-col :span="24">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            持有产品客户数量趋势
+          </div>
+          <div>
+            <yu-echarts :option="option1" width="1000px" height="400px"></yu-echarts>
+          </div>
+        </div>
+      </el-col>
+    </yu-collapse-item>
+    <yu-collapse-item title="产品销售规模趋势" name="5">
+      <el-col :span="24">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+              产品销售规模趋势
+          </div>
+          <div>
+            <yu-echarts :option="option2" width="1000px" height="400px"></yu-echarts>
+          </div>
+        </div>
+      </el-col>
+    </yu-collapse-item>
+</div>

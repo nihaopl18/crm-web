@@ -1,0 +1,45 @@
+<!--
+  @created by 张成龙 on 2019-1-26 20:44:49
+  @updated by
+  @description 年金计算器
+-->
+<div>
+  <yu-row>
+      <yu-col :span="23">
+       <div class="yu-gridRightPanel" >
+<yu-xform ref="searchFrom" v-model="searchformdata" label-width="160px" :height="grpFormHeight" >
+    <h1 style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;font-size:16px;margin-bottom: 20px;" borderStyle="border:0;">年金计算器(仅供参考)</h1>
+    <yu-xform-group :column="2">
+        <yu-xform-item label="年金类型" placeholder="年金类型"   ctype="radio" name="param1" value="1" @change="setResultMoney" :rules="rules.allowBlank" :options="options" ></yu-xform-item>                  
+        <yu-xform-item label="收益率(%)" placeholder="收益率(%)" ctype="num"  name="param2" :rules="rules.all"></yu-xform-item>                            
+        <yu-xform-item label="期数(期)" placeholder="期数(期)"  ctype="num" name="param3" :rules="rules.all"></yu-xform-item>   
+        <yu-xform-item label="年金值(元)" placeholder="年金值(元)" ctype="input"  name="param4"  :rules="rules.all" ></yu-xform-item> 
+      </yu-xform-group>
+  <div class="yu-grpButton">                                                                                      
+    <yu-button-group>                                                                                                
+      <yu-button icon="check" type="primary" @click="calculate">计算</yu-button>                                                        
+      <yu-button icon="yx-undo2" type="" @click="restSeacher">重置</yu-button>                                                  
+    </yu-button-group>                                                                                               
+  </div>               
+</yu-xform>
+</div>
+</yu-col>
+  <yu-col :span="23">
+    <div class="yu-gridRightPanel" :style="{ 'height': (height - 200) + 'px' }">
+      <h1>计算结果</h1>
+      <yu-xform ref="refForm" label-width="140px" :height="grpFormHeight" v-model="formdata" :disabled="formDisabled">
+        <yu-xform-group :column="2">
+            <yu-xform-item :label="resultMoney1" ctype="num" name="resultMoney1" :readonly="readFlag"></yu-xform-item> 
+        </yu-xform-group>
+      </yu-xform>
+    </div>
+      <div property="footer"style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;" borderStyle="border:0;">
+          <br/>
+          <p style="font-size: 14px;color: #D83C3B">普通年金终值=年金值*(1+收益率)的期数次方/收益率;</p>                          
+          <p style="font-size: 14px;color: #D83C3B">普通年金现值=年金值*(1-(1+收益率)的负的期数次方)/收益率;</p>                                        
+          <br/>
+          <p style="font-size: 14px;color: #D83C3B">本计算器结果仅供参考!</p>
+        </div>
+  </yu-col>
+</yu-row>
+</div>

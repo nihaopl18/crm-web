@@ -1,0 +1,39 @@
+<!--
+  @created by houyx3 on 2019/05/13.
+  @description 实时数据
+-->
+<div id="temp">
+	<link rel="stylesheet" href="pages/context/effectAnalysis/performanceStatistics/temp.css">
+	<div class="title">
+		<h2>绩效统计</h2>
+	</div>
+	<div id="content">
+		<yu-button type="primary">绩效统计详情导出</yu-button>
+		<div id="contentMenu">
+			<yu-tabs @tab-click="handleClick" v-model="activeName">
+				<yu-tab-pane label="个人绩效统计" name="first"></yu-tab-pane>
+				<yu-tab-pane label="机构绩效统计" name="second"></yu-tab-pane>
+				<yu-tab-pane label="三方渠道绩效统计" name="third"></yu-tab-pane>
+			</yu-tabs>
+
+			<!-- <div style="width: 80%;margin-left:auto; margin-right:auto; height: 40px;">
+          <div style="width: 33% ; height: 100%;border-right-style: solid;border-right-color: #e4d1d1; float: left; background-color: #ece5e5">
+                <p style="font-size: 16px; margin-top: 10px; margin-left: 5%;cursor: pointer" @click="personStatisticsFn">
+                  个人绩效统计
+                </p>
+          </div>
+          <div style="width: 33% ; height: 100%;border-right-style: solid;border-right-color: #e4d1d1; float: left; background-color: #ece5e5">
+                <p style="font-size: 16px; margin-top: 10px; margin-left: 5%;cursor: pointer" @click="orgStatisticsFn">
+                      机构绩效统计
+                </p>
+          </div>
+          <div style="width: 33% ; height: 100%; float: left; background-color: #ece5e5">
+                <p style="font-size: 16px; margin-top: 10px; margin-left: 5%;cursor: pointer" @click="channelStatisticsFn">
+                      三方渠道绩效统计
+                </p>
+          </div>
+     </div> -->
+		</div>
+		<div :id="Div"></div>
+	</div>
+</div>

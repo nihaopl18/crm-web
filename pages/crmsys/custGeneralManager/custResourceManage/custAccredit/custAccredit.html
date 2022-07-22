@@ -1,0 +1,186 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-4 11:51:03.
+  @updated by
+  @description 客户授权
+-->
+<div>
+    <yu-xform ref="custforSearchForm" v-model="forqueryFormdata" form-type="search" class="hide-form-search-btn" :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn">
+        <yu-xform-group :column="8">
+          <yu-xform-item placeholder="客户类型" name="custType" ctype="select" rules="required" data-code="CD0016"></yu-xform-item>
+          <yu-xform-item placeholder="授权状态" name="grantStutas" ctype="select" data-code="GRANT_STUTAS"></yu-xform-item>
+          <!-- <yu-xform-item placeholder="客户状态" name="custStatus" ctype="select" data-code="CD0019"></yu-xform-item> -->
+          <yu-xform-item placeholder="客户号" name="custId" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+    <!-- 对公证件类型 -->
+    <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+    <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+    <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="forqueryFormdata.custType != undefined" data-code="CD0011"></yu-xform-item>
+          <yu-xform-item placeholder="证件号" name="certNo" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="机构号" name="oneOrg" ctype="input" hidden = "true"></yu-xform-item>
+        </yu-xform-group>
+        <!-- <div class="yu-grpButton" style="text-align: right;">
+          <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+          <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+        </div> -->
+      </yu-xform>
+      <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="yx-point-right" @click="grantFn" :disabled="forqueryFormdata.grantStutas == '2'">客户授权</yu-button>
+            <yu-button icon="yx-point-right" @click="grantCustFn">已授权客户</yu-button>
+          </yu-button-group>
+        </div>
+      <yu-xtable ref="forrefTable" row-number :data-url="dataUrl" :default-load="false" selection-type="checkbox">
+        <yu-xtable-column label="客户类型" prop="custType" width="90" data-code="CD0016"></yu-xtable-column>
+        <yu-xtable-column label="客户状态" prop="custStatus" width="90" data-code="CD0019"></yu-xtable-column>
+        <yu-xtable-column label="客户号" prop="custId" width="100"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="200"></yu-xtable-column>
+        <yu-xtable-column label="证件类型" prop="certType" width="100" data-code="CD0011"></yu-xtable-column>
+        <yu-xtable-column label="证件号码" prop="certNo" width="180"></yu-xtable-column>
+        <yu-xtable-column label="主办机构" prop="orgName" width="150"></yu-xtable-column>
+        <yu-xtable-column label="主办客户经理" prop="mgrName" width="160"></yu-xtable-column>
+        <yu-xtable-column label="客户价值等级" prop="valueLev" width="150" data-code="CD0243"></yu-xtable-column>
+        <yu-xtable-column label="客户服务等级" prop="servLev" width="110" data-code="CD0032"></yu-xtable-column>
+      </yu-xtable>
+  <!-- <yu-xform related-table-name="refTable" form-type="search" class="search-form-layout">
+    <yu-xform-group :column="6">
+      <yu-xform-item placeholder="授权状态" name="grantStat" ctype="select" data-code="AUTH_TY"></yu-xform-item>
+      <yu-xform-item placeholder="客户编号" name="custId" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item placeholder="证件号码" name="certNo" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016"></yu-xform-item>
+      <yu-xform-item placeholder="授权客户经理" name="mgrId" ctype="yufp-mgr-selector"></yu-xform-item>
+      <yu-xform-item placeholder="被授权客户经理" name="grantMgrId" ctype="yufp-mgr-selector"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-user-check" @click="accreditFn">授权</yu-button>
+      <yu-button icon="yx-undo2" @click="recycleAccreditFn">回收授权</yu-button>
+      <yu-button icon="yx-profile" @click="accreditCustListFn">授权客户清单</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="checkbox" :default-load="false">
+    <yu-xtable-column label="授权状态" prop="grantStat" data-code="AUTH_TY"></yu-xtable-column>
+    <yu-xtable-column label="客户数" prop="custNum"></yu-xtable-column>
+    <yu-xtable-column label="授权客户经理" prop="mgrName"></yu-xtable-column>
+    <yu-xtable-column label="被授权客户经理" prop="grantMgrName"></yu-xtable-column>
+    <yu-xtable-column label="有效期" prop="deadLine" :formatter="dateFormatter"></yu-xtable-column>
+    <yu-xtable-column label="授权日期" prop="setDate" :formatter="dateFormatter"></yu-xtable-column>
+  </yu-xtable> -->
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog title="客户授权" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="100px" v-model="formdata">
+      <yu-xform-group>
+        <!-- 被授权人即 授权客户经理 -->
+        <yu-xform-item label="被授权人" name="grantMgrId" ctype="yufp-mgr-selector" rules="required" :params="custManagerParams" @select-fn="mgrSelectFn"></yu-xform-item>
+        <yu-xform-item label="授权有效期" name="deadLine" ctype="datepicker" rules="required"></yu-xform-item>
+        <yu-xform-item label="授权理由" name="grantReason" ctype="textarea" :colspan="24" rules="required"></yu-xform-item>
+        <yu-xform-item label="客户类型" name="custType" ctype="select" data-code="CD0016" rules="required"></yu-xform-item>
+        <!-- 客户类型决定展示何种类型的视图树 -->
+        <yu-xform-item ref="perrefTree" label="零售客户视图树" name="grantViewItem" rules="required" :hidden="formdata.custType != '1'" ctype="yufp-view-tree" :params="retaiCustViewParams" 
+        :filter-node-method="filterPerFn" @tree-data-loaded="pertreeLodedFn"></yu-xform-item>
+        <yu-xform-item ref="orgrefTree" label="客户视图树" name="grantViewItem" rules="required" :hidden="formdata.custType != '2'" ctype="yufp-view-tree" :params="retaiCustViewParams"
+        :filter-node-method="filterOrgFn" @tree-data-loaded="orgtreeLodedFn"></yu-xform-item>
+      </yu-xform-group>
+      <!-- <div class="yu-toolBar">
+        <yu-button-group>
+          <yufp-governed-cust-selector ref="selectCust" class="select-cust-btn"  @select-fn="custSeletFn" :params="selectCustParams">
+            <template slot="trigerEl">
+              <yu-button icon="plus" @click="addCustFn">新增</yu-button>
+            </template>
+          </yufp-governed-cust-selector>
+          <yu-button icon="yx-bin" @click="deleteCustFn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="refCustTable" row-number :data="custAccreditData" :pageable="false">
+        <yu-xtable-column label="客户类型" prop="custType" width="120" data-code="CD0011"></yu-xtable-column>
+        <yu-xtable-column label="客户状态" prop="custStatus" width="120" data-code="CD0019"></yu-xtable-column>
+        <yu-xtable-column label="客户号" prop="custId" width="120"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="价值等级" prop="valueLev" width="120" data-code="CD0243"></yu-xtable-column>
+        <yu-xtable-column label="服务等级" prop="servLev" width="120" data-code="CD0032"></yu-xtable-column>
+      </yu-xtable> -->
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yu-xdialog title="历史授权客户清单" :visible.sync="histroyAccreditdialogVisible" width="650px">
+    <yu-xtable ref="refCustHistoryTable" row-number :data-url="historyDataUrl">
+      <yu-xtable-column label="客户类型" prop="custType" width="120" data-code="CD0016"></yu-xtable-column>
+      <yu-xtable-column label="客户状态" prop="custStatus" width="120" data-code="CD0019"></yu-xtable-column>
+      <yu-xtable-column label="客户号" prop="custId" width="120"></yu-xtable-column>
+      <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="证件类型" prop="certType" width="120" data-code="CD0011"></yu-xtable-column>
+      <yu-xtable-column label="证件号码" prop="certNo" width="120"></yu-xtable-column>
+      <yu-xtable-column label="授权状态" prop="grantStat" width="120" data-code="ACCREDIT_TYPE"></yu-xtable-column>
+    </yu-xtable>
+    <div class="yu-grpButton">
+      <yu-button icon="yx-undo2" type="primary" @click="histroyAccreditdialogVisible = false">取消</yu-button>
+    </div>
+  </yu-xdialog>
+  <yu-xdialog title="授权客户信息" :visible.sync="grantCustVisible" width="70%">
+      <yu-xtable ref="grantCustTable" default-load="false"  row-number :data-url="grantCustUrl" :base-params="grantCustParams">
+        <yu-xtable-column label="客户类型" prop="custType" width="80" data-code="CD0016"></yu-xtable-column>
+        <yu-xtable-column label="客户状态" prop="custStatus" width="120" data-code="CD0019"></yu-xtable-column>
+        <yu-xtable-column label="客户号" prop="custId" width="120"></yu-xtable-column>
+        <yu-xtable-column label="客户名称" prop="custName" ></yu-xtable-column>
+        <yu-xtable-column label="授权客户经理" prop="grantMgrName" ></yu-xtable-column>
+        <yu-xtable-column label="授权到期日" prop="deadLine"  :formatter="dateFormatter"></yu-xtable-column>
+        <yu-xtable-column label="证件类型" prop="certType" width="80" data-code="CD0011"></yu-xtable-column>
+        <yu-xtable-column label="证件号码" prop="certNo" width="180"></yu-xtable-column>
+        <yu-xtable-column label="授权状态" prop="grantStat" data-code="ACCREDIT_TYPE"></yu-xtable-column>
+      </yu-xtable>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="grantCustVisible = false">取消</yu-button>
+      </div>
+    </yu-xdialog>
+
+
+    <!-- 授权中列表 -->
+    <yu-xdialog title="授权中列表" :visible.sync="grantListVisible" width="70%">
+        <yu-xform ref="grantListSearchForm" v-model="grantListFormdata" form-type="search" class="hide-form-search-btn">
+            <yu-xform-group :column="8">
+                <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016"></yu-xform-item>
+                <yu-xform-item placeholder="授权客户经理" name="trustMgrId" ctype="yufp-mgr-selector" :params="custManagerParams"></yu-xform-item>
+                <yu-xform-item placeholder="客户状态" name="custStatus" ctype="select" data-code="CD0019"></yu-xform-item>
+                <yu-xform-item placeholder="客户号" name="custId" ctype="input"></yu-xform-item>
+                <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+                <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="grantListFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+                <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="grantListFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+                <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="grantListFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+                <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="grantListFormdata.custType != undefined" data-code="CD0011"></yu-xform-item>
+                <yu-xform-item placeholder="证件号" name="certNo" ctype="input"></yu-xform-item>
+              </yu-xform-group>
+              <div class="yu-grpButton" style="text-align: right;">
+                <yu-button icon="search" type="primary" @click="grantListSearchFn">查询</yu-button>
+                <yu-button icon="yx-loop2" type="primary" @click="grantListResetFn">重置</yu-button>
+              </div>
+        </yu-xform>
+          <yu-button-group>
+               <yu-button icon="yx-undo2" @click="recycleGranteFn">回收授权</yu-button> 
+               <yu-button icon="yx-undo2" @click="grantListInfoFn">授权详情</yu-button>
+            </yu-button-group>
+            <yu-xtable ref="grantListrefTable" row-number :data-url="grantListdataUrl" selection-type="checkbox" :base-params="grantCustParams">
+                <yu-xtable-column label="客户数" prop="custNum" ></yu-xtable-column>
+                <yu-xtable-column label="客户经理" prop="mgrName" ></yu-xtable-column>
+                <yu-xtable-column label="授权状态" prop="grantStat"  data-code="ACCREDIT_TYPE"></yu-xtable-column>
+                <yu-xtable-column label="授权客户经理" prop="grantMgrName" ></yu-xtable-column>
+                <yu-xtable-column label="授权日期" prop="setDate" :formatter="timeFormatter"></yu-xtable-column>
+                <yu-xtable-column label="授权有效期" prop="deadLine" :formatter="dateFormatter"></yu-xtable-column>
+              </yu-xtable> 
+        <div class="yu-grpButton">
+          <yu-button icon="yx-undo2" type="primary" @click="grantListVisible = false">取消</yu-button>
+        </div>
+      </yu-xdialog>
+</div>

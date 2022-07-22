@@ -1,0 +1,127 @@
+<!--
+  @created by taoting1 on 2019-1-14
+  @updated by
+  @description 所辖客户查询
+-->
+<div>
+  <link rel="stylesheet" type="text/css" href="pages/crmsys/custGeneralManager/custQuery/jurisdictionCustQuery/custTagQuery.css"
+  />
+  <!-- <yu-form-q :field-data="queryFields" :buttons="queryButtons"></yu-form-q> -->
+  <yu-xform v-model="queryFormdata" ref="custSearchForm" form-type="search" class="hide-form-search-btn" :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn"> 
+    <yu-xform-group :column="8">
+      <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016" rules="required" @change="custTpChangeFn"></yu-xform-item>
+      <yu-xform-item placeholder="是否准入" name="isAdmitEnter"  rules="required" ctype="select" data-code="YES_NO_ADMIT"></yu-xform-item>
+      <yu-xform-item placeholder="客户状态" name="custStatus" ctype="select" data-code="CD0019"></yu-xform-item>
+      <yu-xform-item placeholder="客户编号" name="custId" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+      <!-- 个人证件类型 -->
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+      <!-- 对公证件类型 -->
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != undefined" data-code="CD0011"></yu-xform-item>      
+      <yu-xform-item placeholder="证件号码" name="certNo" ctype="input"></yu-xform-item>
+      <!-- 个人价值等级 -->
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != '1'" data-code="CD0350"></yu-xform-item>
+      <!-- 对公价值等级 -->
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != '2'" data-code="CD0351"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != ''" data-code="CD0243"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != undefined" data-code="CD0243"></yu-xform-item>
+      <yu-xform-item placeholder="客户服务等级" name="servLev" ctype="select" data-code="CD0032"></yu-xform-item>
+      <!-- <yu-xform-item placeholder="是否涉农客户" name="wheAgrRelCus" ctype="select" data-code="CD0238"></yu-xform-item>
+      <yu-xform-item placeholder="客户分配状态" name="custAssignStat" ctype="select" data-code="CD0342"></yu-xform-item> -->
+      <yu-xform-item placeholder="归属机构" name="belongBrch" ctype="yufp-org-tree"></yu-xform-item>
+      <yu-xform-item placeholder="所属客户经理" name="belongMgr" ctype="yufp-mgr-selector"></yu-xform-item>
+      <yu-xform-item placeholder="AUM时点开始" name="aumBalLow" ctype="input"></yu-xform-item> 
+      <yu-xform-item placeholder="AUM时点结束" name="aumBalHigh" ctype="input"></yu-xform-item>
+      <!-- <div slot="custom">
+        <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+        <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+      </div> -->
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 主页面表格工具栏 -->
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-menu-1" @click="opencustViewFn" v-if="opencustViewBtn">客户视图</yu-button>
+      <yu-button icon="yx-users" @click="joinGroup" v-if="joinGroupBtn">加入客户群</yu-button>
+      <yu-button icon="yx-star-empty" @click="setMyAttentionCustFn" v-if="setMyAttentionCustBtn">设为我的关注客户</yu-button>
+    </yu-button-group>
+  </div>
+  <div class="div1" id='div1'>
+  <yu-xtable ref="reftable" :data-url="url" row-number @contextmenu.prevent.stop.native @row-dblclick="rowDblclickFn" selection-type="checkbox" :default-load="false" align="center" class='permitSelect'>
+    <yu-xtable-column label="客户类型" prop="custType" width="80" :resizable="true" data-code="CD0016"></yu-xtable-column>
+    <yu-xtable-column label="客户状态" prop="custStatus" width="80" :resizable="true" data-code="CD0019"></yu-xtable-column>
+    <yu-xtable-column label="客户编号" prop="custId" width="120" :resizable="true"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" :width="custWidth" :resizable="true"></yu-xtable-column>
+    <yu-xtable-column label="证件类型" prop="certType" width="100" :resizable="true" data-code="CD0011"></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="certNo" width="160" :resizable="true"></yu-xtable-column>
+    <yu-xtable-column label="是否涉农" prop="wheAgrRelCus" width="80" :resizable="true" data-code="CD0238"></yu-xtable-column>
+    <yu-xtable-column label="主办机构" prop="orgName" :resizable="true" width="130"></yu-xtable-column>
+    <yu-xtable-column label="主办客户经理" prop="userName" width="140" :resizable="true"></yu-xtable-column>
+    <yu-xtable-column label="AUM时点" prop="aumBal" width="120" :resizable="true" align="right"></yu-xtable-column>
+    <yu-xtable-column label="贷款余额时点" prop="loanBal" width="120" :resizable="true" align="right"></yu-xtable-column>
+    <yu-xtable-column label="存款余额时点" prop="dpsBal" width="120" :resizable="true" align="right"></yu-xtable-column>
+    <yu-xtable-column label="存款年日均" prop="dpsYAvgBal" width="120" :resizable="true" align="right"></yu-xtable-column>
+    <yu-xtable-column label="贷款年日均" prop="loanYAvgBal" width="120" :resizable="true" align="right"></yu-xtable-column>
+    <yu-xtable-column label="综合贡献度" prop="reportSumNumber" width="100" :resizable="true" align="right"></yu-xtable-column>
+    <yu-xtable-column label="客户价值等级" prop="valueLev" width="150" :resizable="true" data-code="CD0243"></yu-xtable-column>
+    <yu-xtable-column label="客户服务等级" prop="servLev" width="100" :resizable="true" data-code="CD0032"></yu-xtable-column>
+  </yu-xtable>
+</div>
+  <!-- 关注类型选择 -->
+  <yu-xdialog title="关注类型选择" :visible.sync="attentTypevisible" width="540px">
+    <!-- <yu-form-x ref="custgroupref" :group-fields="custgroupFields" :buttons="custgroupButtons"></yu-form-x> -->
+    <yu-xform ref="attentFormRef" v-model="attentFormdata">
+      <yu-xform-group :column="1">
+        <yu-xform-item label="选择关注类型" name="attentType" ctype="select" data-code="ATTENT_TYP_TST"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button type="primary" @click="saveMyAttentionCustFn">确定</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+	 width="650px" height="380px" -->
+  <yu-xdialog title="加入客户群" :visible.sync="custgroupvisible" width="650px">
+    <yu-xform ref="refForm" label-width="100px" v-model="formdata" :hidden-rule="true" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="加入方式" name="addType" ctype="select" data-code="ADD_GROUP_TYPE"  rules="required"></yu-xform-item>
+        <yu-xform-item label="选择客户群" :hidden="!status" name="custGroupId" ctype="yufp-cust-group" rules="required" @select-fn="selectGroupFn"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button icon="check" type="primary" @click="saveFn">确定</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 新建客户群 -->
+  <yu-xdialog title="新建客户群" :visible.sync="addCustGroupDialogVisible" width="750px">
+    <yu-xform ref="addCustGrouprefForm" label-width="130px" v-model="custGroupformdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="客户群名称" name="custGroupName" ctype="input" rules="required"></yu-xform-item>
+        <yu-xform-item label="共享范围"  name="shareScope" ctype="select" data-code="CD0337"  rules="required"></yu-xform-item>
+        <yu-xform-item label="客户群分类"  name="custGroupType" ctype="select" data-code="KHQLX" rules="required" :readonly="true"></yu-xform-item>
+        <yu-xform-item label="客户来源"  name="custOrigin" ctype="select" data-code="CD0340" rules="required" :disabled="true"></yu-xform-item>
+        <yu-xform-item label="群成员类型"  name="groupMemberType" ctype="select" data-code="CD0339"  rules="required"></yu-xform-item>
+        <yu-xform-item label="客户描述"  name="remark" ctype="textarea" :colspan="24"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="custGroupCancelFn">取消</yu-button>
+      <yu-button icon="check" type="primary" @click="custGroupSaveFn">保存</yu-button>
+    </div>
+    </yu-xform>
+    
+  </yu-xdialog>
+  </div>
+
+  <style type="text/css">
+    .permitSelect {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+  </style>

@@ -1,0 +1,69 @@
+
+<div id="custAccount">
+
+    <el-form-q form="query" :field-data="mainGrid.queryFields" :buttons="mainGrid.queryButtons"></el-form-q>
+    <div class="yu-toolBar">
+        <el-button-group>
+            <el-button icon="plus" @click="openCreateFn">开户</el-button>
+            <el-button icon="edit" @click="handleModify('edit')">修改</el-button>
+            <el-button icon="edit" @click="handleModify('consumer')">消费</el-button>
+        </el-button-group>
+    </div>
+
+    <el-table-x ref="mytable"
+                :radiobox='true' :max-height="mainGrid.height"
+                :data-url="mainGrid.dataUrl" :data-params="mainGrid.dataParams" :table-columns="mainGrid.tableColumns"
+                @row-click="rowClickFn">
+    </el-table-x>
+
+    <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+                <el-form-x ref="myform"
+                           :group-fields="updateFields"
+                           :disabled="formDisabled" label-width="120px"></el-form-x>
+        <div slot="footer" class="dialog-footer" align="center">
+            <el-button icon="yx-undo2"  type="primary" @click="dialogFormVisible = false">关闭</el-button>
+            <el-button v-if="dialogStatus=='create'" icon="check"  type="primary" @click="saveCreateFn()">保存</el-button>
+            <el-button v-if="dialogStatus=='update'" icon="check"  type="primary" @click="saveEditFn()">保存</el-button>
+        </div>
+    </el-dialog-x>
+
+
+    <el-dialog-x :title="textMap[dialogStatus]" :visible.sync="consumer.visible" width="1000px">
+        <!--<el-form-q ref="myformConsumer" :field-data="consumer.upFileds" :buttons="consumer.upButtons"></el-form-q> -->
+        <el-form  :model="consumer.formdata" ref="myformConsumer" label="left" label-width="120px" style="margin-right: 10px;">
+            <el-row :gutter="10">
+                <el-col :span="12">
+                    <el-form-item label="客户编号" prop="custId">
+                        <el-input v-model="consumer.formdata.custId" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="余额" prop="moneyAmount">
+                        <el-input v-model="consumer.formdata.moneyAmount" disabled></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="客户名称" prop="custName">
+                        <el-input v-model="consumer.formdata.custName" disabled></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="总积分" prop="scoreAmount">
+                        <el-input v-model="consumer.formdata.scoreAmount" disabled></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="消费金额" prop="amount">
+                        <el-input v-model="consumer.formdata.amount"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
+        <div  class="dialog-footer" align="center">
+            <el-button type="primary" @click="postConsumer()">提交</el-button>
+            <el-button type="primary" @click="queryScoreTrans('')">刷新</el-button>
+        </div>
+        <el-table-x ref="mytableConsumer" :pageable="false"
+                    :checkbox="true" :max-height="consumer.height"
+                    :data-url="consumer.dataUrl" :data-params="consumer.dataParams" :table-columns="consumer.tableColumns"
+                    @row-click="rowClickFn">
+        </el-table-x>
+    </el-dialog-x>
+</div>

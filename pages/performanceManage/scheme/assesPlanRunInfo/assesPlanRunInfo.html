@@ -1,0 +1,65 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2020-5-26 14:27:30.
+  @updated by
+  @description 考核方案运行结果
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <!-- <yu-xform-item placeholder="考核方案编号" ctype="input" name="schemeId"></yu-xform-item> -->
+      <yu-xform-item placeholder="考核方案名称" ctype="input" name="schemeName"></yu-xform-item>
+      <yu-xform-item placeholder="数据日期" ctype="datepicker" name="etlDate" format="yyyyMMdd" value-format="yyyyMMdd" 
+        :editable="false" :picker-options="datePickerOptions"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="yx-msg-4" @click="preRunResultFn">查看/发布</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+    <yu-xtable-column label="考核方案ID" prop="schemeId"></yu-xtable-column>
+    <yu-xtable-column label="考核方案名称" prop="schemeName"></yu-xtable-column>
+    <yu-xtable-column label="数据日期" prop="etlDate"></yu-xtable-column>
+    <yu-xtable-column label="运行开始时间" prop="runStartTime"></yu-xtable-column>
+    <yu-xtable-column label="运行结束时间" prop="runEndTime"></yu-xtable-column>
+    <yu-xtable-column label="运行状态" prop="runStatus" data-code="EXCEL_RUN_STATUS"></yu-xtable-column>
+    <yu-xtable-column label="发布状态" prop="pubStatus" data-code="EXCEL_PUB_STATUS"></yu-xtable-column>
+    <yu-xtable-column label="运行人" prop="createUserName"></yu-xtable-column>
+    <yu-xtable-column label="错误信息" prop="errMsg"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 方案运行结果查询 -->
+  <yu-xdialog title="方案运行结果查询" :visible.sync="runResultFormDialogVisible" width="40%">
+    <yu-xform ref="runResultRefForm" label-width="130px" v-model="runResultFormData">
+      <yu-xform-group column="1">
+        <yu-xform-item label="考核方案名称" ctype="input" name="schemeName" :disabled="true"></yu-xform-item>
+        <yu-xform-item label="数据日期" ctype="input" name="etlDate" :required="true" :disabled="true"></yu-xform-item>
+        <!-- 考核对象放大镜 -->
+        <yu-xform-item label="考核对象" ctype="yufp-schemeobj-selector" :params="runResultSchemeObjParams" 
+          @select-fn="runResultSchemeObjSel" name="evlObjId" 
+          v-show="runResultFormEvlObjShow" :required="runResultFormEvlObjShow"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button type="primary" @click="runResultFn">查看运行结果</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yu-xdialog :title="runResultDialogTitle" :visible.sync="runResultDialogVisible" width="98%" top="2%">
+    <yu-xform ref="hideRefForm" label-width="130px" v-model="hideFormData">
+      <yu-xform-group column="1">
+        <yu-xform-item label="已隐藏行" ctype="input" name="hideRows" :disabled="true"></yu-xform-item>
+        <!-- 显示列名称，即ABC -->
+        <yu-xform-item label="已隐藏列" ctype="input" name="hideCols" :disabled="true"></yu-xform-item>
+        <!-- 保存列索引，即012 -->
+        <yu-xform-item label="已隐藏列索引" ctype="input" name="hideColsIndex" v-show="false" :disabled="true"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton" style="padding: 0px;">
+        <yu-button icon="yx-download" @click="exportExcelFn">导出excel</yu-button>
+        <yu-button type="primary" @click="pubSchemeFn">发布考核方案</yu-button>
+      </div>
+    </yu-xform>
+    <yufp-scheme-excel ref="runResultSchemeExcel" :scheme-id="schemeId" :template-type="templateType" :evl-obj-type="evlObjType" 
+      :params="schemeExcelParams" @hide-or-show-row-cols="hideOrShowRowCols" v-if="runResultDialogVisible"></yufp-scheme-excel>
+  </yu-xdialog>
+</div>

@@ -1,0 +1,50 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:37
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 闫天一 yanty1@yusys.com.cn on 2019-2-11 16:50:25.
+  @updated by
+  @description 产品视图-Q&A
+-->
+<div>
+  <yu-row>
+      <yu-xform related-table-name="refTable" form-type="search">
+        <yu-xform-group :column="2">
+          <yu-xform-item placeholder="关键字" name="questionContent"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="plus" @click="addFn" v-if="addBtn">提问</yu-button>
+          <yu-button icon="edit" @click="modifyFn" v-if="answnerBtn">答复</yu-button>
+          <!-- <yu-button icon="delete" @click="deleteFn">删除</yu-button>   -->
+        </yu-button-group>
+      </div>
+
+      <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+        <yu-xtable-column label="问" prop="questionContent" width="210"></yu-xtable-column>
+        <yu-xtable-column label="提出人" prop="questionMan" width="120"></yu-xtable-column>
+        <yu-xtable-column label="提出日期" prop="questionDate" width="150"></yu-xtable-column>
+        <yu-xtable-column label="答" prop="questionContent2" width="210"></yu-xtable-column>
+        <yu-xtable-column label="答复人" prop="questionMan2" width="120"></yu-xtable-column>
+        <yu-xtable-column label="答复时间" prop="questionDate2" width="150"></yu-xtable-column>
+      </yu-xtable>
+
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1050px">
+        <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-item label="提问ID" name="questionId" ctype="input" :hidden="true"></yu-xform-item>
+            <yu-xform-item label="问题内容" name="questionContent2" ctype="textarea" :hidden="wen" colspan="24"></yu-xform-item>
+            <yu-xform-item label="答复内容" name="questionContent2" ctype="textarea" :hidden="da" colspan="24"></yu-xform-item>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+
+  </yu-row>
+</div>

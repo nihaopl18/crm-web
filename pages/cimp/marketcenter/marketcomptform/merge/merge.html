@@ -1,0 +1,41 @@
+<!--
+  @created by zhuly6 on 2018/11/16.
+  @description 营销组件FORM表单-流程组件-合并
+-->
+<div>
+	<el-collapse v-model="activeNames">
+		<el-collapse-item title="输入" name="1">
+				<!-- <el-button type="primary" icon="plus" @click="addFn">增加</el-button> -->
+				<yu-button icon="plus"  @click="addFn">新增</yu-button>
+				<yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+				<!-- <el-table-x ref="reftable" 
+		        :row-index="true"
+                :checkbox="true"
+                
+				:table-columns="tableColumns" :table-data="datadata"
+				>
+			</el-table-x> -->
+			<yu-xtable ref="reftable" row-number :data="datadata" >
+				<yu-xtable-column label= "客户群编号" prop= "custGroupId"></yu-xtable-column>
+				<yu-xtable-column label= "客户群名称" prop= "custGroupName"></yu-xtable-column>
+				<yu-xtable-column label= "客户来源" prop= "custOrigin"  data-code= "CLIENT_ORIGIN"></yu-xtable-column>
+				<yu-xtable-column label= "成员数" prop= "custNum"></yu-xtable-column>
+			  </yu-xtable>
+			<el-dialog-x title="客户群选择" :visible.sync="custgroupvisible" width="540px" height="330px">
+				<el-form-x ref="custgroupRef" :group-fields="custgroupFields" :buttons="custgroupButtons"></el-form-x>
+			</el-dialog-x>
+		</el-collapse-item>
+		<el-collapse-item title="操作" name="2">
+                <el-form-x ref="refformAdd" :group-fields="editFields" :buttons="addButtons"  label-width="100px" ></el-form-x>
+		</el-collapse-item>
+		<el-collapse-item title="输出" name="3">
+                <el-table-x ref="reftableout" 
+		        :row-index="true"
+				:checkbox="true"
+				:table-columns="tableColumnsout" :data-url="Url"
+                :default-load="false"
+                @loaded = "loaded"  >
+		    </el-table-x>
+		</el-collapse-item>
+    </el-collapse>
+</div>

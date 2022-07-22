@@ -1,0 +1,24 @@
+<!--
+  @created by hyx on 2018/7/13.
+  @updated by
+  @description 客户群成员管理
+-->
+
+<div>
+    <el-row :gutter="10">
+                <el-form-q title="群客户查询" :field-data="queryFields" search-table="mytable"></el-form-q>
+            <div class="yu-toolBar">
+                <h2>客户群成员列表</h2>
+                    <el-button-group>
+                        <el-button icon="yx-menu-4" @click="opencustViewFn">客户视图</el-button>
+                        <el-button icon="yx-menu-4" @click="custAdd">添加客户</el-button>
+                        <el-button icon="document" @click="updPro">修改营销产品</el-button>
+                    </el-button-group>
+            </div>
+            <el-table-x ref="mytable" :data-url="joinUrl" :table-columns="clientsView" :checkbox="true"
+            :base-params = "baseParams" height= 420></el-table-x>
+</el-row>
+<el-dialog-x title="营销产品选择" :visible.sync="provisibleupd" width="540px" height="330px">
+    <el-form-x ref="productref" :group-fields="productFieldsupd" :buttons="productButtonsupd"></el-form-x>
+</el-dialog-x>
+</div> 

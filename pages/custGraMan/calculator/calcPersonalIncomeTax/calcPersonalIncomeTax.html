@@ -1,0 +1,49 @@
+<!--
+  @created by 张成龙 on 2019-1-26 13:07:24
+  @updated by
+  @description 个人所得税计算器
+-->
+<div>
+  <yu-row>
+      <yu-col :span="23">
+       <div class="yu-gridRightPanel" >
+<yu-xform ref="searchFrom" v-model="searchformdata" label-width="160px" :height="grpFormHeight" >
+    <h1 style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;font-size:16px;margin-bottom: 20px;" borderStyle="border:0;">个人所得税计算器(仅供参考)</h1>
+    <yu-xform-group :column="2">
+        <yu-xform-item label="收入类型" placeholder="收入类型" ctype="select" name="param1" :options="incomeType" :rules="rules.allowBlank" @change="setParam5" ></yu-xform-item>                  
+        <yu-xform-item label="税前工资(元)" placeholder="税前工资(元)" ctype="num"  name="param2"   :rules="rules.all"></yu-xform-item>                            
+        <yu-xform-item label="各项社会保险费(元)" placeholder="各项社会保险费(元)"  ctype="num" name="param3" v-if="param3" ></yu-xform-item>   
+        <yu-xform-item label="起征点(元)" placeholder="起征点(元)" ctype="num" name="param4" value="5000" v-if="param4"   ></yu-xform-item>                  
+        <yu-xform-item label="当月工资(元)" placeholder="当月工资(元)" ctype="num" name="param5" v-if="param5"   ></yu-xform-item>                  
+
+      </yu-xform-group>
+  <div class="yu-grpButton">                                                                                      
+    <yu-button-group>                                                                                                
+      <yu-button icon="check" type="primary" @click="calculate">计算</yu-button>                                                        
+      <yu-button icon="yx-undo2" type="" @click="restSeacher">重置</yu-button>                                                  
+    </yu-button-group>                                                                                               
+  </div>               
+</yu-xform>
+</div>
+</yu-col>
+  <yu-col :span="23">
+    <div class="yu-gridRightPanel" :style="{ 'height': (height - 200) + 'px' }">
+      <h1>计算结果</h1>
+      <yu-xform ref="refForm" label-width="140px" :height="grpFormHeight" v-model="formdata" :disabled="formDisabled">
+        <yu-xform-group :column="2">
+            <yu-xform-item label="应纳税所得额(元)" ctype="num" name="resultMoney1" :readonly="readFlag"></yu-xform-item> 
+            <yu-xform-item label="应缴税款(元)" ctype="input" name="resultMoney2" :readonly="readFlag"></yu-xform-item> 
+            <yu-xform-item label="实发所得(元)" ctype="input" name="resultMoney3" :readonly="readFlag"></yu-xform-item> 
+          </yu-xform-group>
+      </yu-xform>
+    </div>
+      <div property="footer"style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;" borderStyle="border:0;">
+          <br/>
+          <p style="font-size: 14px;color: #D83C3B">应纳税所得额 = 工资收入金额－各项社会保险费－起征点;</p>                          
+          <p style="font-size: 14px;color: #D83C3B">应纳税额 = 应纳税所得额 x 税率－速算扣除数;</p>                                        
+          <br/>
+          <p style="font-size: 14px;color: #D83C3B">本计算器结果仅供参考!</p>
+        </div>
+  </yu-col>
+</yu-row>
+</div>

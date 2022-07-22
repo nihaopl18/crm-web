@@ -1,0 +1,192 @@
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2018-12-28 17:06:48.
+  @updated by chenlin
+  @description 积分活动中的规则配置
+-->
+<div class="yu-activity">
+	<yu-row :gutter="10">
+		<yu-col :span="7">
+			<h3>规则列表</h3>
+			<!-- 积分规则表的工具条 -->
+			<div class="yu-toolBar">
+				<yu-button-group>
+					<yu-button  @click="addFn" size="small" v-show="ruleFlag">新建</yu-button>
+					<yu-button  @click="deleteFn" size="small" v-show="ruleFlag">删除</yu-button>
+					<yu-button  @click="modifyFn" size="small" v-show="ruleFlag">修改</yu-button>
+					<yu-button  @click="infoFn" size="small">查看</yu-button>
+					<yu-button  @click="ruleCheckFn" size="small">规则校验</yu-button>
+				</yu-button-group>
+			</div>
+			<!-- 积分规则表 -->
+			<yu-xtable ref="refTable" row-number :data-url="tableDataUrl" :pageable="false" :base-params="baseParams" selection-type="radio"
+			 :height="height-168">
+				<yu-xtable-column label="规则名称" prop="ruleName" show-overflow-tooltip></yu-xtable-column>
+				<!-- <yu-xtable-column label="规则描述" prop="ruleDesc"></yu-xtable-column> -->
+			</yu-xtable>
+		</yu-col>
+		<yu-col :span="17">
+			<!-- 折叠面板 新增、修改、查看时显示 -->
+			<yu-collapse v-model="expandCollapseName" v-show="isCollapseShow" v-bind:style="{height:(height-95) + 'px'}" style="overflow: auto;">
+				<yu-collapse-item title="规则信息" name="ruleInfo">
+					<!-- 规则信息表单 -->
+					<yu-xform ref="refRuleInfoForm" label-width="120px" v-model="ruleInfoFormdata">
+						<yu-xform-group :column=2>
+							<yu-xform-item label="主键ID" ctype="num" name="id" hidden>
+							</yu-xform-item>
+							<yu-xform-item label="规则名称" ctype="input" name="ruleName" rules="required" :maxlength="200">
+							</yu-xform-item>
+							<yu-xform-item label="成本归属类型" ctype="select" name="costOrgType" hidden>
+							</yu-xform-item>
+							<yu-xform-item label="处理顺序" ctype="num" name="processOrder" :maxlength="4">
+							</yu-xform-item>
+							<yu-xform-item label="规则描述" ctype="textarea" :maxlength="200" :rows="3" :colspan="24" name="ruleDesc" rules="required" :maxlength="256">
+							</yu-xform-item>
+							<yu-xform-item label="开始时间" ctype="input" name="beginDate" hidden>
+							</yu-xform-item>
+							<yu-xform-item label="结束时间" ctype="input" name="endDate" hidden>
+							</yu-xform-item>
+							<yu-xform-item label="积分池" ctype="input" name="poolNo" hidden>
+							</yu-xform-item>
+							<yu-xform-item label="交易代码" ctype="input" name="transactionCode" hidden>
+							</yu-xform-item>
+						</yu-xform-group>
+					</yu-xform>
+				</yu-collapse-item>
+				<!-- 积分条件表单 -->
+				<yu-xdynamic-form ref="conditionForm" :sort="false" :template-data="conditionTemplateData">
+
+				</yu-xdynamic-form>
+				<yu-xdynamic-form ref="referenceParamForm" :sort="false" :template-data="referenceParamTemplateData">
+
+				</yu-xdynamic-form>
+				<yu-collapse-item title="计算方式" name="formulaWay">
+					<!-- 计算方式表单 -->
+					<yu-xform ref="refFormulaWayForm" label-width="120px" v-model="formulaWayFormdata">
+						<yu-xform-group>
+							<yu-xform-item label="计算方式" :colspan="24" ctype="radio" name="formulaWay" data-code="FORMULA_WAY" @change="formulaWayChangeFn">
+							</yu-xform-item>
+							<yu-xform-item label="固定分值" :colspan="14" ctype="num" name="fixedValue" :rules="fixedRule" :hidden="isHiddenByFixedScore">
+							</yu-xform-item>
+							<yu-xform-item label="属性" :colspan="12" ctype="select" :props="props" placeholder="请选择" name="perField" :data-url="fieldSelectDataUrl"
+							 :data-params="fieldSelectBaseParams" :rules="accountRule" :hidden="isHiddenByAccount">
+							</yu-xform-item>
+							<yu-xform-item label-width="12px" :colspan="6" ctype="input" name="perValue" unit="分/" :rules="accountRule" :hidden="isHiddenByAccount">
+							</yu-xform-item>
+							<yu-xform-item label-width="12px" :colspan="6" ctype="input" name="denoValue" unit="元" :rules="accountRule" :hidden="isHiddenByAccount">
+							</yu-xform-item>
+							<yu-xform-item label="区间属性" :colspan="8" ctype="select" :props="props" placeholder="请选择" name="betweenField" :data-url="fieldSelectDataUrl"
+							 :rules="sectionRule" :hidden="isHiddenBySection" :data-params="fieldSelectBaseParams">
+							</yu-xform-item>
+							<yu-xform-item label-width="12px" :colspan="8" ctype="select" placeholder="请选择" name="scoreType" data-code="SCORE_TYPE" :rules="sectionRule"
+							 :hidden="isHiddenBySection">
+							</yu-xform-item>
+							<yu-xform-item label-width="12px" name=""  :colspan="8" ctype="custom" :hidden="isHiddenBySection">
+								<!-- 增加区间按钮 -->
+								<yu-button type="primary" @click="addSectionFn">增加区间</yu-button>
+							</yu-xform-item>
+							<yu-xform-item label="封顶值类型" :colspan="12" ctype="select" placeholder="请选择" name="maxScoreType" data-code="MAXSCORE_TYPE"></yu-xform-item>
+							<yu-xform-item label="封顶值(分/客户)" :colspan="12" ctype="num" name="maxScore"></yu-xform-item>
+							<!-- <yu-xform-item label="权重系数" :colspan="12" ctype="input" name="weightCoefficient"></yu-xform-item> -->
+							<yu-xform-item label="公式解释" :colspan="16" ctype="textarea" name="formulaEditorValMean" :rows="2" :colspan="24" :rules="formulaWayRule"
+							 readonly :hidden="isHiddenByFormula">
+							</yu-xform-item>
+							<yu-xform-item label="公式" :colspan="16" ctype="textarea" name="formulaEditorVal" :rows="2" :colspan="24" :rules="formulaWayRule"
+							 readonly :hidden="isHiddenByFormula">
+							</yu-xform-item>
+						</yu-xform-group>
+						<!-- 计算器按钮 -->
+						<div class="yu-btn-group" v-for="(items,index) in buttonList" :key="index" :hidden="isHiddenByFormula">
+							<yu-button type="primary" v-for="item in items" :key="item" @click="onClick(item)">{{item}}</yu-button>
+						</div>
+						<!-- 增加区间表格 -->
+						<yu-xtable ref="refSectionTable" row-number :data="sectionTableData" selection-type="checkbox" :pageable="false" :hidden="isHiddenBySection"
+						 max-height="200">
+							<yu-xtable-column label="区间下限" prop="scoreLow" ctype="input" :rules="sectionTableRule"></yu-xtable-column>
+							<yu-xtable-column label="分值" prop="scoreValue" ctype="input" :rules="sectionTableRule"></yu-xtable-column>
+							<yu-xtable-column label="操作">
+								<template slot-scope="scope">
+									<yu-button @click.native.prevent="deleteRow(scope.$index, sectionTableData)" type="text" size="small">
+										取消
+									</yu-button>
+								</template>
+							</yu-xtable-column>
+						</yu-xtable>
+					</yu-xform>
+				</yu-collapse-item>
+				<yu-collapse-item title="动作配置" name="actionConfig">
+					<!-- 动作配置表单 -->
+					<yu-xform ref="refActionConfigForm" label-width="140px" v-model="actionConfigFormdata">
+						<yu-xform-group :column=2>
+							<yu-xform-item label="积分内部账户归属" ctype="select" placeholder="请选择" name="accountNo" rules="required" :data-url="accountNoDataUrl"
+							 :data-params="accountNoDataParams">
+							</yu-xform-item>
+						 <yu-xform-item label="有效期限（月）" name="validDate" :data-params="accountNoDataParams">
+						</yu-xform-item>
+						</yu-xform-group>
+					</yu-xform>
+				</yu-collapse-item>
+			</yu-collapse>
+		</yu-col>
+	</yu-row>
+	<yu-row style="margin-top: 20px">
+		<!-- <yu-col :span="6">
+			<div style="width: 90px; margin: 0 auto;">
+				<yu-button type="primary" @click="activityCheckFn">活动校验</yu-button>
+			</div>
+		</yu-col> -->
+		<yu-col :span="24">
+			<div style="width: 220px; margin: 0 auto;">
+				<yu-button v-show="notCheckFlag" type="primary" @click="saveFn" :disabled="isSaveBtnDisabled">保存</yu-button>
+				<yu-button type="primary" @click="backFn">返回</yu-button>
+			</div>
+		</yu-col>
+	</yu-row>
+	<!--活动校验弹出框 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+				width="650px" height="380px" -->
+	<yu-xdialog title="积分活动冲突校验" :visible.sync="scoreCheckDialogVisible" width="750px">
+		<yu-xtable ref="refScoreCheckTable" row-number :data-url="scoreCheckDataUrl" :base-params="actyBaseParams" selection-type="checkbox"
+		 :pageable="false" :height="450">
+			<yu-xtable-column label="活动名称" prop="activityName" width="100"></yu-xtable-column>
+			<yu-xtable-column label="交易类型" prop="transactionCode" :formatter="selectFormatter" width="150"></yu-xtable-column>
+			<yu-xtable-column label="所属项目" prop="projectName" width="100"> </yu-xtable-column>
+			<yu-xtable-column label="优先级" prop="activityPriority" width="80"> </yu-xtable-column>
+			<yu-xtable-column label="开始日期" prop="beginDate" :formatter="dateFormatter" width="100"> </yu-xtable-column>
+			<yu-xtable-column label="结束日期" prop="endDate" :formatter="dateFormatter" width="100"> </yu-xtable-column>
+			<yu-xtable-column label="活动积分池" prop="poolNo" width="100"> </yu-xtable-column>
+			<yu-xtable-column label="备注" prop="remark" width="100"> </yu-xtable-column>
+			<yu-xtable-column label="创建日期" prop="createDate" :formatter="dateFormatter" width="100"> </yu-xtable-column>
+		</yu-xtable>
+		<div class="yu-grpButton">
+			<yu-button icon="yx-undo2" type="primary" @click="scoreCheckCloseFn">关闭</yu-button>
+		</div>
+	</yu-xdialog>
+	<!-- 规则校验弹框 -->
+	<yu-xdialog title="积分规则冲突校验" :visible.sync="ruleCheckDialogVisible" width="750px">
+		<div class="yu-toolBar">
+			<yu-button-group>
+				<yu-button icon="document" @click="ruleCheckInfoFn">查看</yu-button>
+			</yu-button-group>
+		</div>
+		<yu-xtable ref="refRuleCheckTable" row-number :data="ruleCheckTableData" :pageable="false" :height="360" selection-type="checkbox">
+			<yu-xtable-column label="冲突类型" prop="conflictType" data-code="CONFLICT_TYPE"></yu-xtable-column>
+			<yu-xtable-column label="规则名称" prop="conflictRuleName"></yu-xtable-column>
+			<yu-xtable-column label="活动名称" prop="conflictActivityName"> </yu-xtable-column>
+		</yu-xtable>
+		<div class="yu-grpButton">
+			<yu-button icon="yx-undo2" type="primary" @click="ruleCheckCloseFn">关闭</yu-button>
+		</div>
+	</yu-xdialog>
+	<!-- 选择字段弹框 -->
+	<yu-xdialog title="选择字段或者引用参数" :visible.sync="fieldSelectDialogVisible">
+		<div class="yu-toolBar">
+			<yu-button-group>
+				<yu-button icon="circle-check" @click="checkFn">选择</yu-button>
+				<yu-button icon="close" @click="closeFn">关闭</yu-button>
+			</yu-button-group>
+		</div>
+		<yu-xtable ref="refFieldSelectTable" row-number :data-url="fieldSelectDataUrl" :base-params="fieldSelectBaseParams">
+			<yu-xtable-column label="字段英文名" prop="fieldEName"></yu-xtable-column>
+			<yu-xtable-column label="字段中文名" prop="fieldCName"></yu-xtable-column>
+		</yu-xtable>
+	</yu-xdialog>
+</div>

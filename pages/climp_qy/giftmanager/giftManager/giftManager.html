@@ -1,0 +1,440 @@
+<!-- 
+  @Created by  yangxiao2 on 2019-7-19 16:24:32.
+  @updated by
+  @description 礼品管理
+-->
+<div>
+    <yu-row>
+        <yu-col :span="5">
+            <yu-row>
+                <!-- 金融机构选择下拉框sta -->
+                <!-- <yu-xselect v-model="instuValue" :options="instuOption" @change="changeInstu" placeholder="请选择金融机构" style="margin:10px 10px 0 0;"></yu-xselect> -->
+                <!-- 金融机构选择下拉框end -->
+            </yu-row>
+            <yu-row>
+                <!-- 礼品类别管理sta -->
+                <yu-button-group style="margin:10px 10px 0 0;">
+                    <yu-button :disabled="cateBtnDisabled" icon="plus" @click="addCateFn"></yu-button>
+                    <yu-button :disabled="cateBtnDisabled" icon="edit" @click="editCateFn"></yu-button>
+                    <yu-button :disabled="cateBtnDisabled" icon="document" @click="infoCateFn"></yu-button>
+                    <yu-button :disabled="cateBtnDisabled" icon="delete" @click="delCateFn"></yu-button>
+                </yu-button-group>
+                <!-- 礼品类别管理end -->
+            </yu-row>
+            <yu-row>
+                <!-- 礼品类别树sta -->
+                <yufp-ext-tree ref="refTree" :height="height - 150" @node-click="nodeClickFn" data-url="/api/loyqycommoditycategory/categorytree" data-id="categoryCode" data-label="categoryName" data-pid="parentCategoryCode" :data-async="async" data-root="0000" style="margin:10px 10px 0 0;">
+                </yufp-ext-tree>
+                <!-- 礼品类别树end -->
+            </yu-row>
+        </yu-col>
+        <yu-col :span="19">
+            <!-- 礼品查询表单sta -->
+            <yu-xform related-table-name="refTable" form-type="search">
+                <yu-xform-group :column="4">
+                    <yu-xform-item placeholder="礼品编号" name="commodityCode" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="礼品名称" name="commodityName" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="上下架状态" name="upDownState" ctype="select" data-code="UP_DOWN_STATE"></yu-xform-item>
+                    <yu-xform-item placeholder="来源商户" name="belongMerchant" ctype="yufp-merchant"></yu-xform-item>
+                    <yu-xform-item placeholder="库存数量" name="commodityStgNumBegin" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="至" name="commodityStgNumEnd" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="积分价值" name="commodityLvalueBegin" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="至" name="commodityLvalueEnd" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="现金价值" name="commodityMvalueBegin" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="至" name="commodityMvalueEnd" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="适用机构" name="suitOrgId" ctype="yufp-org-tree"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+            <!-- 礼品查询表单end -->
+
+            <!-- 礼品管理sta -->
+            <div class="yu-toolBar">
+                <yu-button-group>
+                    <yu-button icon="plus" @click="addFn">新增</yu-button>
+                    <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+                    <yu-button icon="document" @click="infoFn">详情</yu-button>
+                    <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+                    <yu-button icon="setting" @click="modelEditFn">礼品规格</yu-button>
+                    <yu-button icon="picture" @click="pictureEditFn">礼品图片</yu-button>
+                    <!-- <yu-button icon="menu" @click="stgEditFn">库存维护</yu-button> -->
+                    <yu-button icon="arrow-up" @click="onShelFn">上架</yu-button>
+                    <yu-button icon="arrow-down" @click="downShelFn">下架</yu-button>
+                    <yu-button icon="check" @click="submitFn">提交</yu-button>
+                </yu-button-group>
+            </div>
+            <!-- 礼品管理end -->
+
+            <!-- 礼品列表sta -->
+            <yu-xtable ref="refTable" row-number selection-type="checkbox" :data-url="dataUrl" :base-params="tableParam" :default-load="false" height="350px">
+                <yu-xtable-column label="审批状态" prop="wfApprSts" width="100" data-code="YX_WF_APP_STATUS"></yu-xtable-column>
+                <yu-xtable-column label="商品编号" prop="commodityCode" width="140"></yu-xtable-column>
+                <yu-xtable-column label="商品类型" prop="commodityType" width="80" data-code="COMMODITY_TYPE"></yu-xtable-column>
+                <yu-xtable-column label="商品名称" prop="commodityName" width="120"></yu-xtable-column>
+                <yu-xtable-column label="商品积分价值" prop="commodityLValue" width="100"></yu-xtable-column>
+                <yu-xtable-column label="商品现金价值" prop="commodityMValue" width="100"></yu-xtable-column>
+                <yu-xtable-column label="商品库存数量" prop="commodityStgNum" width="100"></yu-xtable-column>
+                <yu-xtable-column label="上下架状态" prop="upDownState" width="120" data-code="UP_DOWN_STATE"></yu-xtable-column>
+                <yu-xtable-column label="上架生效开始日期" prop="onShelfBegin" width="120"></yu-xtable-column>
+                <yu-xtable-column label="上架生效结束日期" prop="onShelfEnd" width="120"></yu-xtable-column>
+                <yu-xtable-column label="商品已售数量" prop="commoditySalNum" width="100"></yu-xtable-column>
+                <yu-xtable-column label="库存预警" prop="stgAlarm" width="100"></yu-xtable-column>
+                <yu-xtable-column label="来源商户" prop="merchantName" width="100"></yu-xtable-column>
+                <yu-xtable-column label="最近修改人" prop="updateUserName" width="120"></yu-xtable-column>
+                <yu-xtable-column label="最近修改时间" prop="updateDate" width="120" :formatter="dateFormatter"></yu-xtable-column>
+            </yu-xtable>
+            <!-- 礼品列表end -->
+
+            <!-- 礼品编辑表单sta -->
+            <yu-dialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" size="large">
+
+                <div id="pointExch">
+                    <yu-row>
+                        <h3 class="titleo">礼品基本信息</h3>
+                        <yu-xform label-width="180px" ref="refForm" v-model="formdata" :disabled="formDisabled">
+                            <yu-xform-group>
+                                <yu-xform-item label="商品编号" name="commodityCode" rules="required" ctype="input"></yu-xform-item>
+                                <yu-xform-item label="商品名称" name="commodityName" rules="required" ctype="input"></yu-xform-item>
+                                <yu-xform-item label="是否推荐兑换" name="ifRcd" rules="required" ctype="select" data-code="IF_CANCEL"></yu-xform-item>
+                                <yu-xform-item label="商品状态" name="upDownState" rules="required" ctype="select" data-code="COMM_STATUS"></yu-xform-item>
+                                <yu-xform-item label="商品可供兑换渠道" name="excgChannel" rules="required" ctype="select" data-code="EXCG_CHANNEL" :multiple="true"></yu-xform-item>
+                                <yu-xform-item label="商品兑换方式" name="commodityVFlag" rules="required" ctype="select" data-code="EXCG_TYPE"></yu-xform-item>
+                                <yu-xform-item label="商品种类" name="commodityType" rules="required" ctype="select" data-code="COMM_CLASS"></yu-xform-item>
+                                <yu-xform-item label="实物商品提取类型" name="commodityRGetType" rules="required" ctype="select" data-code="RGET_TYPE"></yu-xform-item>
+                                <yu-xform-item label="同一客户可兑换频率" name="changeFeq" rules="required" ctype="select" data-code="EXCG_FEQ"></yu-xform-item>
+                                <yu-xform-item label="适用客户评级类型" name="suitObjType" rules="required" ctype="select" data-code="SUIT_OBJ_TYPE"></yu-xform-item>
+                                <yu-xform-item label="适用客户评级级别" name="suitCustGrade" ctype="input"></yu-xform-item>
+                                <yu-xform-item label="限制内容" name="limitContent" ctype="select" data-code="LIMIT"></yu-xform-item>
+                                <yu-xform-item label="有效期-起期" name="onShelfBegin" rules="required" ctype="datepicker"></yu-xform-item>
+                                <yu-xform-item label="有效期-止期" name="onShelfEnd" rules="required" ctype="datepicker"></yu-xform-item>
+                                <yu-xform-item label="是否可撤销订单" name="ifCancel" ctype="select" data-code="IF_CANCEL"></yu-xform-item>
+                                <yu-xform-item label="兑换所需积分" name="commodityLValue" rules="required" ctype="num"></yu-xform-item>
+                                <yu-xform-item label="单次成本费用" name="commodityMValue" rules="required" ctype="num"></yu-xform-item>
+                                <yu-xform-item label="客户单次可兑换数量" name="changeTimes" rules="required" ctype="num"></yu-xform-item>
+                                <yu-xform-item label="合作商户" name="belongMerchant" rules="required" ctype="yufp-merchant"></yu-xform-item>
+                                <yu-xform-item label="封面简介" name="coverSummary" :rows="3" :colspan="24" ctype="textarea"></yu-xform-item>
+                                <yu-xform-item label="商品备注" name="commodityRemark" :rows="3" :colspan="24" ctype="textarea"></yu-xform-item>
+                                <yu-xform-item label="商品说明" name="commodityDesc" :rows="3" :colspan="24" ctype="textarea"></yu-xform-item>
+                                <yu-xform-item label="商品使用说明模板" name="commodityDescTemp" :rows="3" :colspan="24" ctype="textarea"></yu-xform-item>
+                            </yu-xform-group>
+
+                        </yu-xform>
+                    </yu-row>
+                    <yu-row>
+
+                        <h3 class="titleo">扩展属性</h3>
+                        <div style="margin-left: 20px;margin-bottom: 5px;">
+                            <yu-button type="primary" @click="attraddFn">新增</yu-button>
+                            <yu-button type="primary" @click="attrdeleteFn">删除</yu-button>
+                        </div>
+                        <yu-xtable style="padding-left: 20px;" :borde="false" ref="multipleTable" reserve-selection row-key="attrId" :data="sectionTableData" selection-type="checkbox" :pageable="false">
+                            <yu-xtable-column prop="attrName" label="扩展属性名称" width="160px"></yu-xtable-column>
+                            <yu-xtable-column prop="attrDesc" label="属性详情" width="160px"></yu-xtable-column>
+                            <yu-xtable-column prop="attrType" label="扩展属性类别" width="160px" data-code="ATTR_TYPE"></yu-xtable-column>
+                            <yu-xtable-column prop="attrCode" label="扩展属性编号" width="160px"></yu-xtable-column>
+                            <yu-xtable-column prop="attrLength" label="属性长度" width="160px"></yu-xtable-column>
+                            <yu-xtable-column prop="attrKind" label="属性类型" width="160px"></yu-xtable-column>
+                            <yu-xtable-column prop="attrRemark" label="备注" width="160px"></yu-xtable-column>
+                        </yu-xtable>
+                    </yu-row>
+                    <yu-row>
+                        <div class="yu-grpButton">
+                            <yu-button v-show="cancelBtnShow" icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+                        </div>
+                    </yu-row>
+                </div>
+            </yu-dialog>
+
+
+            <!-- 礼品编辑表单sta -->
+            <yu-dialog :title="viewTitle[viewType]" :visible.sync="dialogVisibledetail" size="large">
+
+                <div id="pointExch">
+                    <yu-row>
+                        <h3 class="titleo">礼品照片</h3>
+                        <div id="container" v-for="(item, index) in sysmineInfo">
+                            <div class="lablename">图{{item.pictureName}}：</div>
+                            <img class="lable" :src="item.picturePath" />
+                        </div>
+                    </yu-row>
+                    <h3 class="titleo">礼品基本信息</h3>
+
+                    <yu-xform label-width="180px" ref="refForm" v-model="formdata" :disabled="formDisabled">
+                        <yu-xform-group>
+                            <yu-xform-item label="商品编号" name="commodityCode" rules="required" ctype="input"></yu-xform-item>
+                            <yu-xform-item label="商品名称" name="commodityName" rules="required" ctype="input"></yu-xform-item>
+                            <yu-xform-item label="是否推荐兑换" name="ifRcd" rules="required" ctype="select" data-code="IF_CANCEL"></yu-xform-item>
+                            <yu-xform-item label="商品状态" name="upDownState" rules="required" ctype="select" data-code="COMM_STATUS"></yu-xform-item>
+                            <yu-xform-item label="商品可供兑换渠道" name="excgChannel" rules="required" ctype="select" data-code="EXCG_CHANNEL" :multiple="true"></yu-xform-item>
+                            <yu-xform-item label="商品兑换方式" name="commodityVFlag" rules="required" ctype="select" data-code="EXCG_TYPE"></yu-xform-item>
+                            <yu-xform-item label="商品种类" name="commodityType" rules="required" ctype="select" data-code="COMM_CLASS"></yu-xform-item>
+                            <yu-xform-item label="实物商品提取类型" name="commodityRGetType" rules="required" ctype="select" data-code="RGET_TYPE"></yu-xform-item>
+                            <yu-xform-item label="同一客户可兑换频率" name="changeFeq" rules="required" ctype="select" data-code="EXCG_FEQ"></yu-xform-item>
+                            <yu-xform-item label="适用客户评级类型" name="suitObjType" rules="required" ctype="select" data-code="SUIT_OBJ_TYPE"></yu-xform-item>
+                            <yu-xform-item label="适用客户评级级别" name="suitCustGrade" ctype="input"></yu-xform-item>
+                            <yu-xform-item label="限制内容" name="limitContent" ctype="select" data-code="LIMIT"></yu-xform-item>
+                            <yu-xform-item label="有效期-起期" name="onShelfBegin" rules="required" ctype="datepicker"></yu-xform-item>
+                            <yu-xform-item label="有效期-止期" name="onShelfEnd" rules="required" ctype="datepicker"></yu-xform-item>
+                            <yu-xform-item label="是否可撤销订单" name="ifCancel" ctype="select" data-code="IF_CANCEL"></yu-xform-item>
+                            <yu-xform-item label="兑换所需积分" name="commodityLValue" rules="required" ctype="num"></yu-xform-item>
+                            <yu-xform-item label="单次成本费用" name="commodityMValue" rules="required" ctype="num"></yu-xform-item>
+                            <yu-xform-item label="客户单次可兑换数量" name="changeTimes" rules="required" ctype="num"></yu-xform-item>
+                            <yu-xform-item label="合作商户" name="belongMerchant" rules="required" ctype="yufp-merchant"></yu-xform-item>
+                            <yu-xform-item label="封面简介" name="coverSummary" :rows="3" :colspan="24" ctype="textarea"></yu-xform-item>
+                            <yu-xform-item label="商品备注" name="commodityRemark" :rows="3" :colspan="24" ctype="textarea"></yu-xform-item>
+                            <yu-xform-item label="商品说明" name="commodityDesc" :rows="3" :colspan="24" ctype="textarea"></yu-xform-item>
+                            <yu-xform-item label="商品使用说明模板" name="commodityDescTemp" :rows="3" :colspan="24" ctype="textarea"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+    </yu-row>
+    <yu-row>
+        <!-- <yu-xtable ref="refSectionTable" row-number :data="sectionTableData" selection-type="checkbox" :pageable="false" :hidden="isHiddenBySection"
+                        max-height="200"> -->
+        <h3 class="titleo">扩展属性</h3>
+
+        <yu-xtable style="padding-left: 20px;" :borde="false" ref="multipleTable" :data="sectionTableData" selection-type="checkbox" :pageable="false">
+            <yu-xtable-column prop="attrName" label="扩展属性名称" width="160px"></yu-xtable-column>></yu-xtable-column>
+            <yu-xtable-column prop="attrDesc" label="属性详情" width="160px"></yu-xtable-column>
+            <yu-xtable-column prop="attrType" label="扩展属性类别" width="160px" data-code="ATTR_TYPE"></yu-xtable-column>
+            <yu-xtable-column prop="attrCode" label="扩展属性编号" width="160px"></yu-xtable-column>
+            <yu-xtable-column prop="attrLength" label="属性长度" width="160px"></yu-xtable-column>
+            <yu-xtable-column prop="attrKind" label="属性类型" width="160px"></yu-xtable-column>
+            <yu-xtable-column prop="attrRemark" label="备注" width="160px"></yu-xtable-column>
+        </yu-xtable>
+    </yu-row>
+
+
+    <yu-row>
+        <div class="yu-grpButton">
+            <yu-button v-show="cancelBtnShow" icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        </div>
+    </yu-row>
+    </div>
+    </yu-dialog>
+
+    <!-- 礼品类别编辑表单sta -->
+    <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisibleCategory" width="650px">
+        <yu-xform ref="refFormCategory" label-width="130px" v-model="formdataCategory" :disabled="formDisabledCategory">
+            <yu-xform-group :column="2">
+                <yu-xform-item label="目录名称" name="categoryName" rules="required" ctype="input"></yu-xform-item>
+                <yu-xform-item label="目录顺序" name="categorySeq" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="目录状态" name="categoryStatus" rules="required" ctype="radio" data-code="USE_FLAG"></yu-xform-item>
+                <yu-xform-item :colspan="24" label="目录类型" name="categoryType" rules="required" ctype="radio" data-code="CATEGORY_TYPE"></yu-xform-item>
+                <yu-xform-item label="上级目录编号" name="parentCategoryCode" rules="required" disabled ctype="input"></yu-xform-item>
+                <yu-xform-item label="上级目录名称" name="parentCategoryName" rules="required" disabled ctype="input"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveCategoryFn">保存</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+    <!-- 礼品类别编辑表单end -->
+
+    <yu-xdialog title="礼品规格" :visible.sync="dialogVisibleModelTable" width="650px">
+        <!-- 礼品规格管理sta -->
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addModelFn" :disabled="addModelbutton">添加规格</yu-button>
+                <yu-button icon="edit" @click="modifyModelFn" :disabled="modifyModelbutton">修改规格</yu-button>
+                <yu-button icon="yx-bin" @click="deleteModelFn" :disabled="deleteModelbutton">删除规格</yu-button>
+                <yu-button icon="yx-bin" @click="stcokFn">库存维护</yu-button>
+
+            </yu-button-group>
+        </div>
+        <!-- 礼品规格管理end -->
+
+        <!-- 礼品规格列表sta -->
+        <yu-xtable ref="refTableModel" row-number data-url="/api/loyqycommmodel/modellist" :base-params="modelParam" :pageable="false" highlight-current-row>
+            <yu-xtable-column label="规格描述" prop="modelParam"></yu-xtable-column>
+            <yu-xtable-column label="规格库存数量" prop="modelStgNum" width="100"></yu-xtable-column>
+            <yu-xtable-column label="已售数量" prop="modelSalNum" width="100"></yu-xtable-column>
+            <yu-xtable-column label="预警库存" prop="stgAlarm" width="100"></yu-xtable-column>
+        </yu-xtable>
+        <!-- 礼品规格列表end -->
+    </yu-xdialog>
+
+    <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisibleModel" width="700px">
+        <!-- 礼品规格编辑表单sta -->
+        <yu-xform ref="refFormModel" label-width="130px" v-model="formdataModel" :disabled="formDisabledModel">
+            <yu-xform-group :column="2">
+                <yu-xform-item label="规格描述" name="modelParam" rules="required" ctype="textarea" :rows="1" :colspan="24"></yu-xform-item>
+                <yu-xform-item label="规格库存数量" name="modelStgNum" rules="required" ctype="num" :disabled="editnum"></yu-xform-item>
+                <yu-xform-item label="预警库存" name="stgAlarm" rules="required" ctype="num"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveModelFn">保存</yu-button>
+            </div>
+        </yu-xform>
+        <!-- 礼品规格编辑表单end -->
+    </yu-xdialog>
+    <yu-xdialog title="库存维护" :visible.sync="dialogVisibleStock" width="700px">
+        <!-- 礼品规格编辑表单sta -->
+        <yu-xform ref="refFormStock" label-width="130px" v-model="formdataStock">
+            <yu-xform-group :column="2">
+                <yu-xform-item label="操作方向" name="storageMgType" rules="required" ctype="select" :options="stockOption"></yu-xform-item>
+                <yu-xform-item label="变更值" name="mgCount" rules="required" ctype="num"></yu-xform-item>
+                <yu-xform-item label="变更原因" name="remark" ctype="textarea" :colspan="24" :row="2"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelStockFn">取消</yu-button>
+                <yu-button icon="check" type="primary" @click="saveStockFn">保存</yu-button>
+            </div>
+        </yu-xform>
+        <!-- 礼品规格编辑表单end -->
+    </yu-xdialog>
+
+    <yu-xdialog title="礼品图片" :visible.sync="dialogVisiblePicTable" width="650px" @close="picclose">
+        <!-- 礼品图片管理sta -->
+        <div class="yu-toolBar">
+            <yu-button-group>
+                <yu-button icon="plus" @click="addPicFn">添加图片</yu-button>
+                <!-- <yu-button icon="edit" @click="modifyPicFn">修改图片</yu-button> -->
+                <yu-button icon="yx-bin" @click="deletePicFn">删除图片</yu-button>
+            </yu-button-group>
+        </div>
+        <!-- 礼品图片管理end -->
+
+        <!-- 礼品图片列表sta -->
+        <yu-xtable ref="refTablePic" row-number data-url="/api/loyqycommpicture/piclist" :base-params="picParam" :pageable="false" highlight-current-row>
+            <yu-xtable-column label="图片名称" prop="pictureName" width="100"></yu-xtable-column>
+            <yu-xtable-column label="图片类型" prop="pictureType" width="100" data-code="PIC_TYPE"></yu-xtable-column>
+            <yu-xtable-column label="图片顺序" prop="pictureOrder" width="80"></yu-xtable-column>
+            <yu-xtable-column label="图片路径" prop="picturePath"></yu-xtable-column>
+            <yu-xtable-column label="操作" prop="picturePath" width="80">
+                <template slot-scope="scope">
+                    <yu-button style="padding: 0" type="text" size="small"  @click="overlook(scope.row)"> 预览 </yu-button>
+                </template>
+            </yu-xtable-column>
+        </yu-xtable>
+        <!-- 礼品图片列表end -->
+    </yu-xdialog>
+
+    <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisiblePic" width="700px">
+        <!-- 礼品图片编辑表单sta -->
+        <yu-xform ref="refFormPic" label-width="130px" v-model="formdataPic" :disabled="formDisabledPic">
+            <yu-xform-group :column="2">
+                <yu-xform-item label="图片名称" name="pictureName" rules="required" ctype="input"></yu-xform-item>
+                <yu-xform-item label="图片顺序" name="pictureOrder" rules="required" ctype="input"></yu-xform-item>
+                <yu-xform-item label="图片类型" name="pictureType" rules="required" ctype="radio" :colspan="24" data-code="PIC_TYPE" :disabled="picradio"></yu-xform-item>
+                <yu-xform-item label="图片路径" name="picturePath" rules="required" ctype="textarea" :colspan="24" :row="1" disabled></yu-xform-item>
+                <yu-xform-item ctype="custom" label="图片上传" colspan="24" name="uploadPic">
+                    <yu-upload ref="upload" :action="uploadAction" :show-file-list=true :file-list="fileList" list-type="picture-card" :on-success="handleAvatarSuccess" :on-remove="removeAvatarUpload" :before-upload="beforeAvatarUpload">
+                        <i class="el-icon-plus "></i>
+                    </yu-upload>
+                </yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="savePicFn">保存</yu-button>
+            </div>
+        </yu-xform>
+        <!-- 礼品图片编辑表单end -->
+    </yu-xdialog>
+
+    <!-- 库存维护弹窗sta -->
+    <yu-xdialog title="库存维护" top="5%" :visible.sync="dialogVisibleStg" width="650px">
+        <yu-tabs v-model="stgModel" @tab-click="tabClick">
+            <!-- 总库存维护sta -->
+            <yu-tab-pane label="总库存维护" name="stg1">
+                <yu-xform ref="stgForm1" label-width="150px" v-model="formdataTotalStg" style="margin-top: 10px;">
+                    <yu-xform-group :column="2">
+                        <yu-xform-item label="商品已售数量" name="commoditySalNum" ctype="input" disabled :colspan="24"></yu-xform-item>
+                        <yu-xform-item label="商品库存" name="commodityStgNum" ctype="input" disabled></yu-xform-item>
+                        <yu-xform-item label="库存预警" name="stgAlarm" ctype="input"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+            </yu-tab-pane>
+            <!-- 总库存维护end -->
+
+            <!-- 库存明细维护sta -->
+            <yu-tab-pane label="库存明细维护" name="stg2">
+                <yu-xform ref="stgForm2" label-width="150px" v-model="formdataDetailStg" style="margin-top: 10px;">
+                    <yu-xform-group :column="2">
+                        <yu-xform-item label="规格描述" name="modelParam" rules="required" ctype="input" disabled></yu-xform-item>
+                        <yu-xform-item label="规格已售" name="modelSalNum" ctype="num" disabled></yu-xform-item>
+                        <yu-xform-item label="规格库存" name="modelStgNum" rules="required" ctype="input"></yu-xform-item>
+                        <yu-xform-item label="库存预警" name="stgAlarm" ctype="input"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+                <yu-xtable ref="modelTable" row-number data-url="/api/loyqycommmodel/modellist" :base-params="modelParam" :pageable="false" highlight-current-row @row-click="modelClick">
+                    <yu-xtable-column label="规格描述" prop="modelParam"></yu-xtable-column>
+                    <yu-xtable-column label="规格库存数量" prop="modelStgNum" width="100"></yu-xtable-column>
+                    <yu-xtable-column label="已售数量" prop="modelSalNum" width="100"></yu-xtable-column>
+                    <yu-xtable-column label="预警库存" prop="stgAlarm" width="100"></yu-xtable-column>
+                </yu-xtable>
+            </yu-tab-pane>
+            <!-- 库存明细维护end -->
+        </yu-tabs>
+        <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+            <yu-button icon="check" type="primary" @click="saveStgFn">保存</yu-button>
+        </div>
+    </yu-xdialog>
+    <!-- 库存维护弹窗end -->
+
+    <!-- 礼品上架sta -->
+    <yu-xdialog title="商品上架" :visible.sync="dialogVisibleShel" width="650px">
+        <yu-xform ref="shelForm" label-width="160px" v-model="formdataShel">
+            <yu-xform-group>
+                <yu-xform-item label="上架生效开始日期" name="onShelfBegin" rules="required" ctype="datepicker"></yu-xform-item>
+                <yu-xform-item label="上架生效结束日期" name="onShelfEnd" rules="required" ctype="datepicker"></yu-xform-item>
+            </yu-xform-group>
+            <div style="margin-left: 20px;margin-bottom: 5px;">
+                <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                <yu-button icon="check" type="primary" @click="saveShelFn">保存</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+    <!-- 礼品上架end -->
+
+
+    <!-- 扩展属性新增列表 -->
+    <yu-xdialog title="商品扩展属性管理" :visible.sync="dialogVisibleAttr" width="1000px">
+        <yu-col :span="24">
+            <!-- 礼品查询表单sta -->
+            <yu-xform related-table-name="refTableattr" form-type="search">
+                <yu-xform-group :column="4">
+                    <yu-xform-item placeholder="扩展属性名称" name="attrName" ctype="input"></yu-xform-item>
+                    <yu-xform-item placeholder="属性类别" name="attrType" ctype="select" data-code="ATTR_TYPE"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+            <!-- 礼品查询表单end -->
+
+            <!-- 礼品管理sta -->
+            <div class="yu-toolBar">
+                <yu-button-group>
+                    <yu-button @click="selectAttr">选定</yu-button>
+                    <yu-button @click="cancelAttr">取消</yu-button>
+
+                </yu-button-group>
+            </div>
+            <!-- 礼品管理end -->
+
+            <!-- 礼品列表sta -->
+            <yu-xtable ref="refTableattr" row-number selection-type="checkbox" :data-url="attrdataUrl" :default-load="true">
+                <yu-xtable-column label="扩展属性类别" prop="attrType" width="160" data-code="ATTR_TYPE"></yu-xtable-column>
+                <yu-xtable-column label="属性编号" prop="attrCode" width="160"></yu-xtable-column>
+                <yu-xtable-column label="属性名称" prop="attrName" width="160"></yu-xtable-column>
+                <yu-xtable-column label="属性详情" prop="attrDesc" width="160"></yu-xtable-column>
+                <yu-xtable-column label="属性长度" prop="attrLength" width="160"></yu-xtable-column>
+                <yu-xtable-column label="属性类型" prop="attrKind" width="160"></yu-xtable-column>
+                <yu-xtable-column label="是否字典" prop="ifDict" width="160" data-code="IF_CANCEL"></yu-xtable-column>
+                <yu-xtable-column label="字典代码" prop="dictCode" width="160"></yu-xtable-column>
+                <yu-xtable-column label="备注" prop="attrRemark" width="160"></yu-xtable-column>
+            </yu-xtable>
+    </yu-xdialog>
+
+    <!-- 图片预览 -->
+    <yu-xdialog title="图片预览" :visible.sync="dialogpic" width="400px" height="400px">
+        <img width="350px" height="350px" :src="overlookpic" />
+    </yu-xdialog>
+
+    <!-- 审批流组件sta -->
+    <yufp-wf-init ref="yufpWfInit" :common-params="wfCommonParams" @afterclose="onAfterClose"></yufp-wf-init>
+    <!-- 审批流组件end -->
+    </yu-col>
+    </yu-row>
+</div>

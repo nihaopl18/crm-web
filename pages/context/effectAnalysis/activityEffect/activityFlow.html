@@ -1,0 +1,134 @@
+<!--
+  @created by houyx3 on 2019/05/13.
+  @description 实时数据
+-->
+<div id="activityflow">
+	<!-- 顶部 -->
+	<div class="topTitle">
+		<div>活动时间
+			<yu-date-picker v-model="value1" type="datetimerange" placeholder="选择日期"></yu-date-picker>
+		</div>
+	</div>
+	<!-- 内容 -->
+	<div>
+		<!-- 内容1 -->
+		<div>
+			<div class="vuebox">
+				<div class="topTitle">
+					<span>流量统计</span>
+					<div>
+						<yu-button type="primary">导出</yu-button>
+					</div>
+				</div>
+				<div class="timedata-table">
+					<div class="timedata-table-box">
+						<div>
+							<p>页面1</p>
+							<p>Uv: 12399213</p>
+							<p>平均访问时长: 15s</p>
+							<p>跳出率: 30%</p>
+						</div>
+						<div>
+							<p>页面1</p>
+							<p>Uv: 12399213</p>
+							<p>平均访问时长: 15s</p>
+							<p>跳出率: 30%</p>
+						</div>
+						<div>
+							<p>页面1</p>
+							<p>Uv: 12399213</p>
+							<p>平均访问时长: 15s</p>
+							<p>跳出率: 30%</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 内容2 -->
+		<div class="topTitle">
+			<span>流量来源</span>
+			<div>
+				<yu-button type="primary">导出</yu-button>
+			</div>
+		</div>
+		<div class="vuebox">
+			<el-row>
+				<el-col :span="12">
+					<div class="visitbox" style="width: 160px;height: 88px;">
+						<h2>活动主页访问量</h2>
+						<span>234 <i>万</i></span>
+					</div>
+					<div class="visithr"><hr /></div>
+					<div class="visitbox1" style="width: 300px;height: 300px;">
+						<el-row>
+							<el-col :span="12">
+								<yu-button>站内引流9.00%</yu-button>
+								<yu-button>搜索引流26.00%</yu-button>
+								<yu-button>推广引流65.00%</yu-button>
+								<yu-button>搜索引流26.00%</yu-button>
+								<yu-button>推广引流65.00%</yu-button>
+								<yu-button>推广引流65.00%</yu-button>
+							</el-col>
+							<el-col :span="12">
+								<yu-button>搜索引流26.00%</yu-button>
+								<yu-button>推广引流65.00%</yu-button>
+							</el-col>
+						</el-row>
+					</div>
+				</el-col>
+				<el-col :span="12">
+					<yu-echarts ref="echartspie" :option="userNumChart" width="100%" height="300px"></yu-echarts>
+				</el-col>
+			</el-row>
+			<el-row>
+				<yu-xtable :data="tableData" :pageable="pageable">
+					<yu-xtable-column prop="channel" label="渠道"></yu-xtable-column>
+				    <yu-xtable-column prop="total-exposure" label="总曝光量"></yu-xtable-column>
+				    <yu-xtable-column prop="total-hits"label="总点击量"></yu-xtable-column>
+				    <yu-xtable-column prop="conversion-rate"label="转化率"></yu-xtable-column>
+				    <yu-xtable-column prop="operation"label="操作">
+				    	    <template slot-scope="scope">
+					        <el-button @click="" type="text" size="small">详情</el-button>
+					    </template>
+				    </yu-xtable-column>
+				</yu-xtable>
+			</el-row>
+		</div>
+		<div class="topTitle">
+			<span>页面访问趋势</span>
+			<div>
+				<yu-button type="primary">导出CSV</yu-button>
+			</div>
+			<div>活动时间
+				<yu-date-picker v-model="value1" type="datetimerange" placeholder="选择日期"></yu-date-picker>
+			</div>
+		</div>
+		<div class="vuebox">
+			<yu-echarts ref="echarts" :option="equityChart" width="100%" height="340px"></yu-echarts>
+		</div>
+		<div class="topTitle">
+			<span>渠道访问趋势</span>
+			<div>
+				<yu-button type="primary">导出CSV</yu-button>
+			</div>
+			<div>活动时间
+				<yu-date-picker v-model="value1" type="datetimerange" placeholder="选择日期"></yu-date-picker>
+			</div>
+		</div>
+		<div class="vuebox">
+			<yu-echarts ref="echarts" :option="equityChart" width="100%" height="340px"></yu-echarts>
+		</div>
+		<div class="topTitle">
+			<span>栏位访问趋势</span>
+			<div>
+				<yu-button type="primary">导出CSV</yu-button>
+			</div>
+			<div>活动时间
+				<yu-date-picker v-model="value1" type="datetimerange" placeholder="选择日期"></yu-date-picker>
+			</div>
+		</div>
+		<div class="vuebox">
+			<yu-echarts ref="echarts" :option="equityChart" width="100%" height="340px"></yu-echarts>
+		</div>
+	</div>
+</div>

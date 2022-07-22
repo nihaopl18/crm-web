@@ -1,0 +1,100 @@
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2018-12-28 17:18:38.
+  @updated by
+  @description 规则属性配置
+-->
+<div>
+  <yu-row>
+    <yu-col :span="6">
+      <!-- 类别树 -->
+      <yu-xtree ref="tableTypeTree" data-id="typeId" data-label="typeName" :data-url="treeUrl" @node-click="nodeClickFn" data-pid="typeParentId"
+        data-root="P000" :root-visible="false" :height="height-300" style="margin:10px 10px 0 0;">
+      </yu-xtree>
+      <!-- 类别树的工具条 -->
+      <div class="yu-toolBar" style="margin-top: 20px;">
+        <yu-button-group>
+          <yu-button icon="plus" @click="addTreeFn">新增</yu-button>
+          <yu-button icon="edit" @click="modifyTreeFn">修改</yu-button>
+          <yu-button icon="delete" @click="deleteTreeFn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <!-- 类别树表单 -->
+      <yu-xform ref="refTreeForm" v-model="treeFormdata" label-width="85px" :disabled="treeFormDisabled">
+        <yu-xform-group>
+          <yu-xform-item label="类别id" :colspan="22" name="typetId" hidden></yu-xform-item>
+          <yu-xform-item label="父类别id" :colspan="22" name="typeParentId" hidden></yu-xform-item>
+          <yu-xform-item label="类别名称" :colspan="22" ctype="input" name="typeName" rules="required" :maxlength="50"></yu-xform-item>
+          <yu-xform-item label="父类别名称" :colspan="22" ctype="input" name="typeParentName" disabled rules="required"></yu-xform-item>
+          <yu-xform-item label="类别序号" :colspan="22" ctype="input" name="typeSeq" :rules="numberRules"></yu-xform-item>
+        </yu-xform-group>
+        <div class="yu-grpButton">
+          <yu-button icon="check" type="primary" @click="addSaveFn" v-show="addSaveBtnShow">保存</yu-button>
+          <yu-button icon="check" type="primary" @click="modifySaveFn" v-show="modifySaveBtnShow">保存</yu-button>
+        </div>
+    </yu-col>
+    <yu-col :span="18">
+      <!-- 表名列表 -->
+      <h4>表名列表</h4>
+      <div class="yu-toolBar" style="float: left;width: 50%;">
+        <yu-button-group>
+          <yu-button icon="plus" @click="addTableFn">新增</yu-button>
+          <yu-button icon="yx-floppy-disk" @click="saveTableFn">保存</yu-button>
+          <yu-button icon="delete" @click="deleteTableFn">删除</yu-button>
+          <yu-button icon="document" @click="queryFieldsFn">查看属性</yu-button>
+        </yu-button-group>
+      </div>
+      <div style="float: left;margin-top: 20px;">
+        <font color="red"> 注：新增、编辑操作后必须点击“保存”按钮,操作才能生效!!!</font>
+      </div>
+      <yu-xtable :default-load=false ref="refTable" row-number :data-url="tableDataUrl" :pageable=false @row-dblclick="getFieldsFn" :base-params="baseParams"
+        selection-type="checkbox">
+        <yu-xtable-column label="表英文名" prop="tableEName" width="150"></yu-xtable-column>
+        <yu-xtable-column label="表中文名" prop="tableCName" ctype="input" rules="required" :maxlength="50"> </yu-xtable-column>
+        <yu-xtable-column label="描述" prop="remark" ctype="input" rules="required" :maxlength="80"> </yu-xtable-column>
+        <yu-xtable-column label="交易类型" prop="objectType" data-code="TRANSACTION_TYPE"></yu-xtable-column>
+        <yu-xtable-column label="交易名称" prop="transactionName"></yu-xtable-column>
+        <yu-xtable-column label="交易代码" prop="transactionCode" v-if="false"></yu-xtable-column>
+      </yu-xtable>
+      <!-- 字段列表 -->
+      <h4>字段列表</h4>
+      <div class="yu-toolBar" style="float: left;width: 15%;">
+        <yu-button-group>
+          <yu-button icon="yx-floppy-disk" @click="fieldSaveFn" :disabled="saveDisable">保存</yu-button>
+        </yu-button-group>
+      </div>
+      <div style="float: left;margin-top: 20px;">
+        <font color="red"> 注：编辑操作后必须点击“保存”按钮,操作才能生效!!!</font>
+      </div>
+      <!-- 字段表格列表 -->
+      <yu-xtable  :default-load=false ref="refFieldTable" row-number :data-url="fieldTableDataUrl" :pageable=false :base-params="fieldBaseParams"
+        @loaded="loadFn" @row-click="rowClickFn">
+        <yu-xtable-column label="字段英文名" prop="fieldEName" width="150"></yu-xtable-column>
+        <yu-xtable-column label="字段中文名" prop="fieldCName" ctype="input" rules="required" :maxlength="200" width="120"></yu-xtable-column>
+        <yu-xtable-column label="描述" prop="remark" ctype="input" :maxlength="256"></yu-xtable-column>
+        <yu-xtable-column label="规则化" prop="isDisplay" width="80" :render-header="renderHeaderFn">
+          <template slot-scope="scope">
+            <yu-checkbox v-model="scope.row.isDisplay"></yu-checkbox>
+          </template>
+        </yu-xtable-column>
+        <yu-xtable-column label="字段类型" prop="fieldType" data-code="FIELD_TYPE" ctype="select" rules="required" @change="fieldTypeChangeFn" 
+          width="100"></yu-xtable-column>
+        <yu-xtable-column label="字段选项" prop="fname" filterable :options="fnameOptions" ctype="select" :disabled="isFnameDisabled" width="120"></yu-xtable-column>
+        <yu-xtable-column label="放大镜" prop="magnifier" data-code="FIELD_OPTIONS" ctype="select" :disabled="isMagnifierDisabled" width="120"></yu-xtable-column>
+      </yu-xtable>
+      <!-- 新增弹出框 -->
+      <yu-dialog title="新增" :visible.sync="tableDialogVisible">
+        <yu-xform label-width="100px" ref="refForm" v-model="formdata">
+          <yu-xform-group>
+            <yu-xform-item label="交易类型"  placeholder="请选择" ctype="select" name="objectType" data-code="TRANSACTION_TYPE" @change="changeTypeFn"></yu-xform-item>
+            <yu-xform-item label="交易名称" placeholder="请选择" ref="select" ctype="select" name="transactionCode" :data-url="transactionCodeDataUrl" :data-params="dataParams"
+              ></yu-xform-item>
+              <!-- @change="changeNameFn" -->
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="changeNameFn">确定</yu-button>
+          </div>
+        </yu-xform>
+      </yu-dialog>
+    </yu-col>
+  </yu-row>
+</div>

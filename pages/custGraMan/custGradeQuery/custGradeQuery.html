@@ -1,0 +1,149 @@
+<!-- 
+  @Created by 张成龙 zhangcl3@yusys.com.cn on 2019-1-18 17:15:47.
+  @updated by
+  @description 客户等级查询
+-->
+<div>
+  <yu-xform v-model="queryFormdata" ref="custSearchForm" form-type="search" class="hide-form-search-btn" :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn">
+    <yu-xform-group :column="6">
+      <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016" rules="required"></yu-xform-item>
+      <yu-xform-item placeholder="客户编号" name="custId" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+       <!-- 个人证件类型 -->
+       <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+       <!-- 对公证件类型 -->
+       <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+       <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+       <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != undefined" data-code="CD0011"></yu-xform-item>
+       <yu-xform-item placeholder="证件号码" name="certNo" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != '1'" data-code="CD0350"></yu-xform-item>
+      <!-- 对公价值等级 -->
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != '2'" data-code="CD0351"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != ''" data-code="CD0243"></yu-xform-item>
+      <yu-xform-item placeholder="客户价值等级" name="valueLev" ctype="select" :hidden="queryFormdata.custType != undefined" data-code="CD0243"></yu-xform-item>
+      <yu-xform-item placeholder="服务等级" name="servLev" ctype="select" data-code="CD0032"></yu-xform-item>
+      <yu-xform-item placeholder="归属机构" name="orgId" ctype="yufp-org-tree"></yu-xform-item>
+      <yu-xform-item placeholder="所属客户经理" name="mgrId" ctype="yufp-mgr-selector"></yu-xform-item>
+    </yu-xform-group>
+    <!-- <div class="yu-grpButton" style="text-align: right;">
+      <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+    </div> -->
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="document" @click="detailFn">详情</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" class="permitSelect" @contextmenu.prevent.stop.native row-number :data-url="dataUrl" :default-load="false">
+    <yu-xtable-column label="客户号" prop="custId" width="120px"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" width="180px"></yu-xtable-column>
+    <yu-xtable-column label="证件类型" prop="certType"  data-code="CD0011" width="120px"></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="certNo" width="160px"></yu-xtable-column>
+    <yu-xtable-column label="主办机构" prop="belongBrchName" width="150px"></yu-xtable-column>
+    <yu-xtable-column label="主办客户经理" prop="belongMgrName" width="150px"></yu-xtable-column>
+    <yu-xtable-column label="价值等级" prop="valueLev"  data-code="CD0243" width="100px"></yu-xtable-column>
+    <yu-xtable-column label="服务等级" prop="servLev"  data-code="CD0032" width="80px"></yu-xtable-column>
+    <yu-xtable-column label="服务等级生效日期" prop="evaluateDate" :formatter="formData"></yu-xtable-column>
+  </yu-xtable>
+  <yu-xdialog title="详情" :visible.sync="dialogVisible" width="800px">
+    <yu-xform ref="refForm" label-width="160px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform ref="refForm0" label-width="160px" v-model="formdata0" :disabled="formDisabled">
+        <yu-xform-group>
+            <yu-xform-item label="客户号" name="custId" ctype="input" :hidden="true" ></yu-xform-item>
+            <yu-xform-item label="客户名称" name="custName" ctype="input" :readonly="true" :disabled="true" :rules="rule[0]"></yu-xform-item>
+            <yu-xform-item label="当前价值等级" name="valueLev" ctype="select"  :readonly="true" :disabled="true" data-code="CD0243" :rules="rule[0]" ></yu-xform-item>
+            <yu-xform-item label="当前服务等级" name="servLev" ctype="select"  :readonly="true" :disabled="true" data-code="CD0032" ></yu-xform-item>
+            <yu-xform-item label="剔除风险前服务等级" name="preMinusLevel" ctype="select"  :readonly="true" :disabled="true" data-code="CD0032"></yu-xform-item>
+            <yu-xform-item label="申请服务等级" name="appSerLevel" ctype="select" data-code="CD0032" :rules="rule[0]"></yu-xform-item>
+            <yu-xform-item label="评级日期" name="handEvaluateDate" ctype="datepicker" :editable="false"></yu-xform-item>
+            <yu-xform-item label="服务等级评级方式" name="evaluateType" ctype="select" :editable="false" data-code="CD0421"></yu-xform-item>  
+            <yu-xform-item label="评级有效期" name="ratVal" ctype="datepicker" :editable="false"></yu-xform-item>    
+            <yu-xform-item label="风险影响因子内容" name="gradeMinusContent" :colspan="24" ctype="input"  :readonly="true" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="申请理由" ctype="textarea" name="appRea" :rows="2" :colspan="24" placeholder="600个字符以内" :rules="rule[0]"></yu-xform-item>
+          </yu-xform-group>
+          </yu-xform>
+        <el-collapse  v-model="activeNames">
+    <el-collapse-item name="2" title="价值评级指标项">
+       <yu-xform ref="refForm5" label-width="160px" v-model="formdata5">
+          <yu-xform-group :column="2" v-if="!isCon">
+              <yu-xform-item label="月日均AUM" name="aumMAvg_3" :disabled="true"></yu-xform-item>
+              <yu-xform-item label="评级结果" name="gradeLevel1" ctype="select" :disabled="true" data-code="CD0243"></yu-xform-item>
+            </yu-xform-group>
+         <b><div style="font-size:15px" v-if="isCon">评级标准一</div></b>
+         <yu-xform-group :column="2" v-if="isCon">
+           <yu-xform-item label="近三个月日均AUM" name="aumMAvg_3" :disabled="true"></yu-xform-item>
+           <yu-xform-item label="评级结果" name="gradeLevel1" ctype="select" :disabled="true" data-code="CD0243"></yu-xform-item>
+         </yu-xform-group>
+         <b><div style="font-size:15px" v-if="isCon">评级标准二</div></b>
+          <yu-xform-group :column="2"  v-if="isCon">
+              <yu-xform-item label="近三个月日均总负债" name="debtMAvgBal_3" :disabled="true"></yu-xform-item>
+              <yu-xform-item label="近三个月日均AUM" name="aumMAvg_3" :disabled="true"></yu-xform-item>
+              <yu-xform-item label="评级结果" ctype="select" name="gradeLevel2" :disabled="true" data-code="CD0243"></yu-xform-item>
+          </yu-xform-group>
+          <b><div style="font-size:15px" v-if="isCon">评级标准三</div></b>
+          <yu-xform-group :column="2" v-if="isCon">
+              <yu-xform-item label="近1年中间业务贡献值" name="reportMid_12" :disabled="true"></yu-xform-item>
+              <yu-xform-item label="评级结果" name="gradeLevel3" ctype="select" :disabled="true" data-code="CD0243"></yu-xform-item>
+          </yu-xform-group>
+          <b><div style="font-size:15px" v-if="isCon">评级标准四</div></b>
+          <yu-xform-group :column="2" v-if="isCon">
+              <yu-xform-item label="近1年结算量" name="setVol_12" :disabled="true"></yu-xform-item>
+              <yu-xform-item label="评级结果" name="gradeLevel4" ctype="select" :disabled="true" data-code="CD0243"></yu-xform-item>
+          </yu-xform-group>
+          <b><div style="font-size:15px" v-if="isCon">评级标准五</div></b>
+          <yu-xform-group :column="2" v-if="isCon">
+              <yu-xform-item label="近3个月综合贡献度" name="reportSum_3" :disabled="true"></yu-xform-item>
+              <yu-xform-item label="评级结果" name="gradeLevel5" ctype="select" :disabled="true" data-code="CD0243"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+    </el-collapse-item>
+    <el-collapse-item name="3" title="服务评级指标项">
+      <yu-xform ref="refForm6" label-width="160px" v-model="formdata6">
+        <yu-xform-group :column="2">
+          <yu-xform-item label="近3个月综合贡献度" name="reportSum_3" :disabled="true"></yu-xform-item>
+          <yu-xform-item label="评级结果" name="servLev" ctype="select" :disabled="true" data-code="CD0032"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+    </el-collapse-item>
+    </el-collapse>
+<div class="yu-grpButton">
+  <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+</div>
+</yu-xform-item>
+</yu-xdialog>
+
+
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+ <!-- <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="客户类型" name="custType" ctype="select" data-code="CD0016"></yu-xform-item>
+        <yu-xform-item label="客户号" name="custId" ctype="input"></yu-xform-item>
+        <yu-xform-item label="客户名称" name="custName" ctype="input"></yu-xform-item>
+        <yu-xform-item label="证件类型" name="certType" ctype="select" data-code="CD0011"></yu-xform-item>
+        <yu-xform-item label="证件号码" name="certNo" ctype="input"></yu-xform-item>
+        <yu-xform-item label="主办机构" name="belongBrchName" ctype="input"></yu-xform-item>
+        <yu-xform-item label="主办客户经理" name="belongMgrName" ctype="input"></yu-xform-item>
+        <yu-xform-item label="价值等级" name="valueLev" ctype="select" data-code="CD0243"></yu-xform-item>
+        <yu-xform-item label="服务等级" name="servLev" ctype="select" data-code="CD0032"></yu-xform-item>
+        <yu-xform-item label="服务等级生效日期" name="evaluateDate" ctype="datepicker"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog> -->
+</div>
+
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

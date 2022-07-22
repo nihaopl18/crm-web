@@ -1,0 +1,153 @@
+<!-- 
+  @Created by 万爽 wanshuang@yusys.com.cn on 2020-1-7 17:03:58.
+  @updated by
+  @description 岗位指标参数
+-->
+<div>
+  <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+  <yu-row :gutter="20">
+    <yu-col :span="6">
+      <div class="yu-toolBar" style="padding-top: 10px;padding-left: 0px;">
+         <yu-button-group>
+           <yu-button icon="plus" @click="addNodeFn" :disabled="addNodeBtnDisable">新增</yu-button>
+           <yu-button icon="edit" @click="modifyNodeFn">编辑</yu-button>
+           <yu-button icon="yx-bin" @click="deleteNodeFn" >删除</yu-button>
+         </yu-button-group>
+      </div>
+      <yufp-ext-tree ref="refTree" :show-checkbox="false" :height="height - 112"
+      :data-url="treeUrl"   data-id="id" data-label="dirName" @node-click="nodeClickFn"
+      data-pid="parentDirId"  :highlight-current="true">
+  </yufp-ext-tree>
+  </yufp-ext-tree>
+      <yu-xdialog :title="title" :visible.sync="treeDialogVisible" width="512px" height="150px" :before-close="handlemenuDialogClose">
+          <yu-xform ref="treeForm" label-width="150px" v-model="treeFormdata" :disabled="treeformDisabled" hidden-rule="false">
+              <yu-xform-item label="目录名称" name="dirName" ctype="input" rules="required"></yu-xform-item>  
+              <yu-xform-item label="上级目录名称" name="parentDirName" disabled="true"></yu-xform-item>  
+              <yu-xform-item label="上级目录编号" name="parentDirId" hidden="true"></yu-xform-item> 
+              <div style="padding-top:20px;text-align: center;">
+                  <yu-button icon="check" type="primary" @click="saveTreeFn" v-show="saveTreeBtnShow">保存</yu-button>
+                  <yu-button icon="yx-undo2" type="primary" @click="cancelTreeFn" v-show="saveTreeBtnShow">取消</yu-button>
+              </div>
+          </yu-xform>
+      </yu-xdialog>
+    </yu-col>
+    <yu-col :span="18">
+      <yu-xform related-table-name="refTable" ref="refForm" v-model="queryData"  form-type="search">
+        <yu-xform-group :column="4">
+          <yu-xform-item placeholder="参数编号" ctype="input" name="paramId"></yu-xform-item>
+          <yu-xform-item placeholder="参数名称" ctype="input" name="paramName"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="plus" @click="addFn">新增</yu-button>
+          <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+          <yu-button icon="document" @click="infoFn">详情</yu-button>
+          <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+          <yu-button icon="plus" @click="addOrgFn">录入岗位参数值</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" :base-params="params">
+        <yu-xtable-column label="参数编号" prop="paramId"></yu-xtable-column>
+        <yu-xtable-column label="参数名称" prop="paramName"></yu-xtable-column>
+        <yu-xtable-column label="参数值" prop="paramValue"></yu-xtable-column>
+        <yu-xtable-column label="取值下限" prop="minLimit"></yu-xtable-column>
+        <yu-xtable-column label="取值上限" prop="maxLimit"></yu-xtable-column>
+        <yu-xtable-column label="生效范围" prop="area"  data-code="AREA_TYPE"></yu-xtable-column>
+        <yu-xtable-column label="创建人" prop="userName"></yu-xtable-column>
+        <yu-xtable-column label="创建时间" prop="createDate"></yu-xtable-column>
+        <yu-xtable-column label="修改人" prop="mUserName"></yu-xtable-column>
+        <yu-xtable-column label="修改时间" prop="modifyDate"></yu-xtable-column>
+        <yu-xtable-column label="描述" prop="remark"></yu-xtable-column>
+      </yu-xtable>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible"  width="800px" :before-close="handleparamDialogClose">
+        <yu-xform label-width="100px" ref="refForm" v-model="formdata" :disabled="formDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="参数名称" ctype="input" name="paramName" rules="required" :disabled="requiredDis"></yu-xform-item>
+            <yu-xform-item label="生效范围" ctype="select" name="area" data-code="AREA_TYPE" rules="required"  :disabled="requiredDis"></yu-xform-item>
+            <yu-xform-item label="参数值" ctype="input" name="paramValue" :rules="rule[0]"></yu-xform-item>
+            <yu-xform-item label="取值下限" ctype="input" name="minLimit" :rules="rule[0]"></yu-xform-item>
+            <yu-xform-item label="取值上限" ctype="input" name="maxLimit" :rules="rule[0]"></yu-xform-item>
+            <yu-xform-item label="参数描述" ctype="textarea" name="remark" :rows="3" :colspan="24"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+            <yu-button v-show="cancelBtnShow" icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+    </yu-col>
+  </yu-row>
+  <yu-xdialog title="录入岗位参数值" :visible.sync="dialogTwoVisible"   width="1000px" :before-close="handlepostparamDialogClose">
+      <yu-xform related-table-name="refTableThree" >
+          <yu-xform-group :column="4">
+            <yu-xform-item  ref="refOrgRelateObjIds"  :colspan="8" label="录入岗位"  ctype="yufp-post-tree" :params="orgTreeParams" name="postId" @select-fn="orgSelectFn"></yu-xform-item>
+          </yu-xform-group>
+      </yu-xform>
+      <yu-xtable ref="refTableThree" :pageable="false" :data="paramList" >
+        <yu-xtable-column label="参数名称" prop="paramName" ></yu-xtable-column>
+        <yu-xtable-column label="岗位名称" prop="effectPostName" ></yu-xtable-column>
+        <yu-xtable-column label="参数值" prop="paramValue" >
+            <template slot-scope="scope">
+                <yu-input v-model="scope.row.paramValue" @blur="changeValue(scope.row.paramValue)"></yu-input>
+            </template>
+        </yu-xtable-column>
+        <yu-xtable-column label="取值下限" prop="minLimit" ></yu-xtable-column>
+        <yu-xtable-column label="取值上限" prop="maxLimit" ></yu-xtable-column>
+        <yu-xtable-column label="创建人" prop="creator" ></yu-xtable-column>
+        <yu-xtable-column label="创建时间" prop="createDate" ></yu-xtable-column>
+        <yu-xtable-column label="修改人" prop="modifyUser" ></yu-xtable-column>
+        <yu-xtable-column label="修改时间" prop="modifyDate" ></yu-xtable-column>
+        <yu-xtable-column label="操作" width="200">
+            <template slot-scope="scope">
+              <yu-button
+                size="small"
+                @click="handleFenpei(scope.$index, scope.row)">人员参数</yu-button>
+              <yu-button
+                size="small"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)">删除</yu-button>
+            </template>
+        </yu-xtable-column>
+      </yu-xtable>
+      <yu-collapse v-show="falgOne" v-model="activeNames" class="myCollapse" style="margin-top: 20px;">
+          <yu-collapse-item title="录入人员参数" name="1">
+              <yu-xform related-table-name="refTableThree" >
+                  <yu-xform-group :column="4">
+                    <yu-xform-item label="录入人员" ref="refUserRelateObjIds"  :colspan="8" ctype="yufp-user-selector" :params="orgUserTreeParams" name="userId" @select-fn="userSelectFn"></yu-xform-item>
+                  </yu-xform-group>
+              </yu-xform>
+              <yu-xtable ref="refTableFour" :pageable="false" :data="personData" >
+                  <yu-xtable-column label="参数名称" prop="paramName" ></yu-xtable-column>
+                  <yu-xtable-column label="岗位名称" prop="effectPostName" ></yu-xtable-column>
+                  <yu-xtable-column label="员工编号" prop="userId" ></yu-xtable-column>
+                  <yu-xtable-column label="员工名称" prop="userName" ></yu-xtable-column>
+                  <yu-xtable-column label="参数值" prop="paramValue" >
+                      <template slot-scope="scope">
+                          <yu-input v-model="scope.row.paramValue" @blur="userchangeValue(scope.row.paramValue)"></yu-input>
+                      </template>
+                  </yu-xtable-column>
+                  <yu-xtable-column label="取值下限" prop="minLimit" ></yu-xtable-column>
+                  <yu-xtable-column label="取值上限" prop="maxLimit" ></yu-xtable-column>
+                  <yu-xtable-column label="创建人" prop="creator" ></yu-xtable-column>
+                  <yu-xtable-column label="创建时间" prop="createDate" ></yu-xtable-column>
+                  <yu-xtable-column label="修改人" prop="modifyUser" ></yu-xtable-column>
+                  <yu-xtable-column label="修改时间" prop="modifyDate" ></yu-xtable-column>
+                  <yu-xtable-column label="操作" width="200">
+                    <template slot-scope="scope">
+                      <yu-button
+                        size="small"
+                        type="danger"
+                        @click="userhandleDelete(scope.$index, scope.row)">删除</yu-button>
+                    </template>
+                </yu-xtable-column>
+              </yu-xtable>
+          </yu-collapse-item>
+        </yu-collapse>
+      <div style="padding-top:20px;text-align: center;">
+          <yu-button v-show="falgOne" icon="yx-floppy-disk" type="primary" @click="saveThreeFn">暂存</yu-button>
+          <yu-button v-show="!falgOne" icon="yx-floppy-disk" type="primary" @click="saveTwoFn" >保存</yu-button>
+          <yu-button v-show="!falgOne" icon="yx-undo2" type="primary" @click="clearFn" >取消</yu-button>
+      </div>
+  </yu-xdialog>
+</div>

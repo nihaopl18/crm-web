@@ -1,0 +1,43 @@
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-2-12 19:20:09.
+  @updated by
+  @description 归属信息
+-->
+<div>
+  <yu-collapse v-model="expandCollapseName">
+    <yu-collapse-item title="归属关系" name="belong1">
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+    <yu-xtable-column label="机构主协办类型" prop="orgType" data-code="CD0241" width="120"></yu-xtable-column>
+    <yu-xtable-column label="归属机构号" prop="orgId"  width="90"></yu-xtable-column>
+    <yu-xtable-column label="归属机构" prop="orgName" width="120" ></yu-xtable-column>
+    <yu-xtable-column label="客户经理主协办类型" prop="mgrType" data-code="CD0241" width="140"></yu-xtable-column>
+    <yu-xtable-column label="归属客户经理编号" prop="mgrId"  width="130"></yu-xtable-column>
+    <yu-xtable-column label="归属客户经理" prop="mgrName"  width="150"></yu-xtable-column>
+    <yu-xtable-column label="客户经理联系电话" prop="mgrTel" width="140" ></yu-xtable-column> 
+  </yu-xtable>
+</yu-collapse-item>
+<yu-collapse-item title="所属客户群" name="belong2">
+  <yu-xtable ref="grouprefTable" row-number :data-url="groupdataUrl">
+    <yu-xtable-column label="归属客户群名称" prop="custGroupName" ></yu-xtable-column>
+ 
+  </yu-xtable>
+</yu-collapse-item>
+<yu-collapse-item title="归属关系调整历史" name="belong3">
+  <yu-xtable ref="hisrefTable" row-number :data-url="hisdataUrl">
+      <yu-xtable-column label="客户编号" prop="custId" width="100"></yu-xtable-column>
+      <yu-xtable-column label="客户名称" prop="custName" width="140"></yu-xtable-column>
+    <yu-xtable-column label="调整类型" prop="workTranLevel" data-code="WORK_TRAN_LEVEL" width="80"></yu-xtable-column>
+    <yu-xtable-column label="原归属机构" prop="orgNamePre" width="120"></yu-xtable-column>
+    <yu-xtable-column label="原机构主协办类型" prop="orgTypePre" data-code="CD0241" width="140"></yu-xtable-column>
+    <yu-xtable-column label="新归属机构" prop="orgName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="新机构主协办类型" prop="orgType" data-code="CD0241" width="140"></yu-xtable-column>
+    <yu-xtable-column label="原客户经理" prop="mgrNamePre" width="120"></yu-xtable-column>
+    <yu-xtable-column label="原客户经理主协办类型" prop="mgrTypePre" data-code="CD0241" width="160"></yu-xtable-column>
+    <yu-xtable-column label="新客户经理" prop="mgrName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="新客户经理主协办类型" prop="mgrType" data-code="CD0241" width="160"></yu-xtable-column>
+    <yu-xtable-column label="调整时间" prop="assignDate" width="100" :formatter="dateFormatter"></yu-xtable-column>
+    <yu-xtable-column label="调整人" prop="assignUserName"  width="80" ></yu-xtable-column>
+    <yu-xtable-column label="调整机构" prop="assignOrgName"  width="120"></yu-xtable-column>
+  </yu-xtable>
+</yu-collapse-item>
+</div>

@@ -1,0 +1,186 @@
+<!--
+  @created by lixt1 on 2019-2-9 12:35:03
+  @updated by
+  @description 日程安排
+-->
+<div>
+    <link href="./pages/crmsys/workPlatform/scheduleList/scheduleCalendar.css" rel="stylesheet" type="text/css" />
+    <div class="divleft" :style="{height:heightLeft+'px'}">
+        <schedule-calendar :events="events" :date-item-render="itemRender" @event-dragend="changeDate" :event-bus="EventBus"></schedule-calendar>
+    </div>
+    <div class="divright">
+        <yu-tabs v-model="tabName">
+            <yu-tab-pane label="客户接触" name="1">
+                <yu-xform ref="visitQueryForm" related-table-name="visitTable" form-type="search">
+                    <yu-xform-group :column="4">
+                        <yu-xform-item placeholder="选择日期" format="yyyy-MM-dd" ctype="input" name="reporterDate" rules="required" :disabled="true"></yu-xform-item>
+                        <yu-xform-item placeholder="客户经理" ctype="yufp-mgr-selector" name="reporterName" rules="required" :params="custManagerParams" @select-fn="custMgrSelFn" :value="curMgrName"></yu-xform-item>
+                        <yu-xform-item placeholder="客户经理编号" ctype="input" name="reporterId" :hidden="true"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+                <div class="yu-toolBar">
+                    <yu-button-group>
+                        <yu-button icon="plus" @click="visitAddFn" v-if="addvisitButton">新增</yu-button>
+                        <yu-button icon="yx-bin" @click="visitDeleteFn" v-if="delvisitButton">删除</yu-button>
+                        <yu-button icon="yx-point-up" @click="visitUpFn" v-if="updatevisitButton">反馈</yu-button>
+                        <yu-button icon="yx-point-down" @click="visitDownFn" v-if="downvisitButton">下达</yu-button>
+                    </yu-button-group>
+                </div>
+                <yu-xtable ref="visitTable" row-number :data-url="dataUrl" :border="false" :base-params="visitParams" selection-type="checkbox" :default-load="false" :height="heightTable">
+                    <yu-xtable-column label="接触状态" prop="visitStat" width="90" data-code="CD0331"></yu-xtable-column>
+                    <yu-xtable-column label="客户号" prop="custId" width="100"></yu-xtable-column>
+                    <yu-xtable-column label="客户名称" prop="custName" width="100"></yu-xtable-column>
+                    <yu-xtable-column label="客户类型" prop="custType" width="90" data-code="CD0016"></yu-xtable-column>
+                    <yu-xtable-column label="任务安排人" prop="arangeName" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="接触方式" prop="visitType" width="100" data-code="CD0332"></yu-xtable-column>
+                    <yu-xtable-column label="本次接触目的" prop="visitAims" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="客户联系和接触情况" prop="visitNote" width="130"></yu-xtable-column>
+                    <yu-xtable-column label="本次接触成效" prop="visitEffect" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="接触开始时间" prop="visitStartDate" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="接触结束时间" prop="visitEndDate" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="计划下次接触时间" prop="nextVisitDate" width="120"></yu-xtable-column>
+                    <yu-xtable-column label="计划下次接触方式" prop="nextVisitType" width="120" data-code="CD0332"></yu-xtable-column>
+                    <yu-xtable-column label="联系电话" prop="phone" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="接触人编号" prop="visitorId" :hidden="true" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="接触人" prop="visitorName"></yu-xtable-column>
+                </yu-xtable>
+            </yu-tab-pane>
+            <yu-tab-pane label="工作计划" name="2">
+                <yu-xform ref="planQueryForm" related-table-name="planTable" form-type="search">
+                    <yu-xform-group :column="4">
+                        <yu-xform-item placeholder="选择日期" format="yyyy-MM-dd" ctype="input" name="reporterDate" rules="required" :disabled="true"></yu-xform-item>
+                        <yu-xform-item placeholder="客户经理" ctype="yufp-mgr-selector" name="reporterName" rules="required" :params="custManagerParams" @select-fn="custMgrSelFn" :value="curMgrName"></yu-xform-item>
+                        <yu-xform-item placeholder="客户经理编号" ctype="input" name="reporterId" :hidden="true"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+                <div class="yu-toolBar">
+                    <yu-button-group>
+                        <yu-button icon="plus" @click="planAddFn" v-if="addplanButton">新增</yu-button>
+                        <yu-button icon="yx-bin" @click="planDeleteFn" v-if="delplanButton">删除</yu-button>
+                        <yu-button icon="yx-point-up" @click="planUpFn" v-if="updplanButton">反馈</yu-button>
+                        <!-- <yu-button icon="yx-point-down" @click="planDownFn" v-if="downplanButton">下达</yu-button> -->
+                    </yu-button-group>
+                </div>
+                <yu-xtable ref="planTable" row-number :data-url="dataUrl" :border="false" :base-params="planParams" selection-type="checkbox" :default-load="false" :height="heightTable">
+                    <yu-xtable-column label="计划执行状态" prop="stat" width="110" data-code="CD0334"></yu-xtable-column>
+                    <yu-xtable-column label="客户号" prop="custId" width="100"></yu-xtable-column>
+                    <yu-xtable-column label="客户名称" prop="custName" width="100"></yu-xtable-column>
+                    <yu-xtable-column label="工作计划类型" prop="schType" width="110" data-code="CD0333"></yu-xtable-column>
+
+                    <yu-xtable-column label="任务安排人" prop="arangeName" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="计划完成进度" prop="schedule" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="计划开始时间" prop="schStartTime" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="计划结束时间" prop="schEndTime" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="实际开始时间" prop="actStartTime" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="实际结束时间" prop="actEndTime" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="未按时完成说明" prop="unfinishedRemark" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="工作计划任务内容" prop="schContent" width="120"></yu-xtable-column>
+                    <yu-xtable-column label="备注" prop="remark" width="110"></yu-xtable-column>
+                </yu-xtable>
+            </yu-tab-pane>
+            <yu-tab-pane label="其他日程" name="3">
+                <yu-xform ref="otherQueryForm" related-table-name="otherTable" form-type="search">
+                    <yu-xform-group :column="4">
+                        <yu-xform-item placeholder="选择日期" format="yyyy-MM-dd" ctype="input" name="reporterDate" rules="required" :disabled="true"></yu-xform-item>
+                        <yu-xform-item placeholder="客户经理" ctype="yufp-mgr-selector" name="reporterName" rules="required" :params="custManagerParams" @select-fn="custMgrSelFn" :value="curMgrName"></yu-xform-item>
+                        <yu-xform-item placeholder="客户经理编号" ctype="input" name="reporterId" :hidden="true"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+                <div class="yu-toolBar">
+                    <yu-button-group>
+                        <yu-button icon="plus" @click="otherAddFn" v-if="addotherButton">新增</yu-button>
+                        <yu-button icon="yx-bin" @click="otherDeleteFn" v-if="delotherButton">删除</yu-button>
+                        <yu-button icon="yx-point-up" @click="otherUpFn" v-if="updotherButton">反馈</yu-button>
+                        <!-- <yu-button icon="yx-point-down" @click="otherDownFn" v-if="downotherButton">下达</yu-button> -->
+                    </yu-button-group>
+                </div>
+                <yu-xtable ref="otherTable" :border="false" row-number :data-url="dataUrl" :base-params="otherParams" selection-type="checkbox" :default-load="false" :height="heightTable">
+                    <yu-xtable-column label="完成状态" prop="stat" width="100" data-code="CD0334"></yu-xtable-column>
+                    <yu-xtable-column label="客户号" prop="custId" width="100"></yu-xtable-column>
+                    <yu-xtable-column label="客户名称" prop="custName" width="100"></yu-xtable-column>
+
+                    <yu-xtable-column label="情况说明" prop="othSitRemark" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="完成情况说明" prop="othCompRemark" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="日程任务描述" prop="schDesc" width="110"></yu-xtable-column>
+                    <yu-xtable-column label="任务安排人" prop="arangeName" width="110"></yu-xtable-column>
+                </yu-xtable>
+            </yu-tab-pane>
+        </yu-tabs>
+    </div>
+    <yu-xdialog :title="visitTitle" :visible.sync="visitDialogVisible" width="50%">
+        <yu-xform ref="visitRefForm" label-width="170px" v-model="visitFormdata">
+            <yu-xform-group :column="2">
+                <yu-xform-item label="客户号" ctype="input" name="custId" :hidden="!visitUpHide" :disabled="visitUpHide"></yu-xform-item>
+                <yu-xform-item label="客户名称" ctype="yufp-governed-cust-selector" name="custName" rules="required" :params="selectCustParams" @select-fn="custSelFn" :disabled="visitUpHide"></yu-xform-item>
+                <yu-xform-item label="客户类型" ctype="select" name="custType" rules="required" data-code="CD0016" :disabled="true"></yu-xform-item>
+                <yu-xform-item label="接触方式" ctype="select" name="visitType" rules="required" data-code="CD0332"></yu-xform-item>
+                <yu-xform-item label="联系电话" ctype="input" name="phone"></yu-xform-item>
+                <!-- <yu-xform-item label="接触人ID" ctype="input" name="visitorId" :hidden="true"></yu-xform-item> -->
+                <!-- <yu-xform-item label="接触人" ctype="input" name="visitorName" rules="required" :disabled="true"></yu-xform-item> -->
+                <yu-xform-item label="接触人" ctype="input" name="visitorId" :hidden="!visitUpHide" :disabled="visitUpHide"></yu-xform-item>
+                <yu-xform-item label="接触人姓名" ctype="yufp-mgr-selector" name="visitorName" rules="required" @select-fn="visitorSelFn" :disabled="visitUpHide"></yu-xform-item>
+                <yu-xform-item label="接触开始时间" ctype="datepicker" format="yyyy-MM-dd" name="visitStartDate" :editable="false"></yu-xform-item>
+                <yu-xform-item label="接触结束时间" ctype="datepicker" format="yyyy-MM-dd" name="visitEndDate" :editable="false"></yu-xform-item>
+                <yu-xform-item label="本次接触目的" ctype="input" name="visitAims" :hidden="visitUpHide"></yu-xform-item>
+                <yu-xform-item label="本次接触成效" ctype="input" name="visitEffect" :hidden="visitUpHide"></yu-xform-item>
+                <!-- <yu-xform-item label="接触状态" ctype="select" name="visitStat" data-code="CD0331" :hidden="true"></yu-xform-item> -->
+                <yu-xform-item label="是否提醒" ctype="select" name="isRemind" data-code="CD0238" :hidden="visitUpHide"></yu-xform-item>
+                <yu-xform-item label="提醒日期" ctype="datepicker" format="yyyy-MM-dd" name="remindDate" :editable="false" :hidden="visitUpHide"></yu-xform-item>
+                <yu-xform-item label="计划下次接触时间" ctype="datepicker" format="yyyy-MM-dd" name="nextVisitDate" :editable="false" :hidden="visitUpHide"></yu-xform-item>
+                <yu-xform-item label="计划下次接触方式" ctype="select" name="nextVisitType" data-code="CD0332" :hidden="visitUpHide"></yu-xform-item>
+                <yu-xform-item label="客户联系和接触情况" ctype="textarea" name="visitNote" :rules="ruleMaxLen.visitNote" :rows="3" :colspan="24" placeholder="200个字以内"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="visitCancelFn">取消</yu-button>
+                <yu-button icon="yx-drawer" type="primary" @click="visitSaveFn(1)">保存</yu-button>
+                <yu-button icon="check" type="primary" @click="visitSaveFn(2)" v-if="visitUpHide">完成</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+    <yu-xdialog :title="planTitle" :visible.sync="planDialogVisible" width="50%">
+        <yu-xform ref="planRefForm" label-width="170px" v-model="planFormdata">
+            <yu-xform-group :column="2">
+                <yu-xform-item label="客户号" ctype="input" name="custId" :hidden="!planUpHide" :disabled="planUpHide"></yu-xform-item>
+                <yu-xform-item label="客户经理" ctype="input" name="mgrId" :hidden="true"></yu-xform-item>
+                <yu-xform-item label="客户名称" ctype="yufp-governed-cust-selector" name="custName" rules="required" :params="selectCustParams" @select-fn="custSelFn" :disabled="planUpHide"></yu-xform-item>
+                <yu-xform-item label="工作计划类型" ctype="select" name="schType" rules="required" data-code="CD0333" :disabled="planUpHide"></yu-xform-item>
+                <yu-xform-item label="计划完成进度" ctype="input" name="schedule" :hidden="!planUpHide"></yu-xform-item>
+                <yu-xform-item label="计划开始时间" ctype="datepicker" format="yyyy-MM-dd" name="schStartTime" rules="required" :editable="false" :disabled="planUpHide"></yu-xform-item>
+                <yu-xform-item label="计划结束时间" ctype="datepicker" format="yyyy-MM-dd" name="schEndTime" rules="required" :editable="false" :disabled="planUpHide"></yu-xform-item>
+                <yu-xform-item label="实际开始时间" ctype="datepicker" format="yyyy-MM-dd" name="actStartTime" :editable="false" :hidden="!planUpHide"></yu-xform-item>
+                <yu-xform-item label="实际结束时间" ctype="datepicker" format="yyyy-MM-dd" name="actEndTime" :editable="false" :hidden="!planUpHide"></yu-xform-item>
+                <yu-xform-item label="工作计划任务内容" ctype="input" name="schContent"></yu-xform-item>
+                <!-- <yu-xform-item label="计划执行状态" ctype="select" name="stat" rules="required" data-code="CD0334" :hidden="false"></yu-xform-item> -->
+                <yu-xform-item label="未按时完成说明" ctype="input" name="unfinishedRemark" :hidden="!planUpHide"></yu-xform-item>
+                <yu-xform-item label="是否提醒" ctype="select" name="isRemind" data-code="CD0238" :hidden="planUpHide"></yu-xform-item>
+                <yu-xform-item label="提醒日期" ctype="datepicker" format="yyyy-MM-dd" name="remindDate" :editable="false" :hidden="planUpHide"></yu-xform-item>
+                <yu-xform-item label="备注" ctype="input" name="remark"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="planCancelFn">取消</yu-button>
+                <yu-button icon="yx-drawer" type="primary" @click="planSaveFn(1)">保存</yu-button>
+                <yu-button icon="check" type="primary" @click="planSaveFn(2)" v-if="planUpHide">完成</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+    <yu-xdialog :title="otherTitle" :visible.sync="otherDialogVisible" width="50%">
+        <yu-xform ref="otherRefForm" label-width="170px" v-model="otherFormdata">
+            <yu-xform-group :column="2">
+                <yu-xform-item label="客户号" ctype="input" name="custId" :hidden="true"></yu-xform-item>
+                <yu-xform-item label="客户名称" ctype="yufp-governed-cust-selector" name="custName" rules="required" :params="selectCustParams" @select-fn="custSelFn" :disabled="otherUpHide"></yu-xform-item>
+                <!-- <yu-xform-item label="完成状态" ctype="select" name="stat" data-code="CD0334" :hidden="true"></yu-xform-item> -->
+                <yu-xform-item label="是否提醒" ctype="select" name="isRemind" data-code="CD0238" :hidden="otherUpHide"></yu-xform-item>
+                <yu-xform-item label="提醒日期" ctype="datepicker" format="yyyy-MM-dd" name="remindDate" :editable="false" :hidden="otherUpHide"></yu-xform-item>
+                <yu-xform-item label="备注" ctype="input" name="remark"></yu-xform-item>
+                <yu-xform-item label="情况说明" ctype="textarea" name="othSitRemark" :rows="3" :colspan="24" placeholder="200个字以内" :rules="ruleMaxLen.othSitRemark"></yu-xform-item>
+                <yu-xform-item label="日程任务描述" ctype="textarea" name="schDesc" :rows="3" :colspan="24" placeholder="200个字以内" :rules="ruleMaxLen.schDesc"></yu-xform-item>
+                <yu-xform-item label="完成情况" ctype="textarea" name="othCompRemark" :rows="3" :colspan="24" placeholder="200个字以内" :hidden="!otherUpHide"></yu-xform-item>
+            </yu-xform-group>
+            <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="otherCancelFn">取消</yu-button>
+                <yu-button icon="yx-drawer" type="primary" @click="otherSaveFn(1)">保存</yu-button>
+                <yu-button icon="check" type="primary" @click="otherSaveFn(2)" v-if="otherUpHide">完成</yu-button>
+            </div>
+        </yu-xform>
+    </yu-xdialog>
+</div>

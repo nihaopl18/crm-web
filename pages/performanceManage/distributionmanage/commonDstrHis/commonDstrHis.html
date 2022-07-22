@@ -1,0 +1,75 @@
+<!-- 
+  @Created by 万爽 wanshuang@yusys.com.cn on 2020-1-7 16:34:21.
+  @updated by
+  @description 业绩分配历史
+-->
+<div>
+    <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+    <div style="margin: 10px 0px;">
+      <yu-xform related-table-name="refTable" ref="queryFormRef">
+          <yu-xform-group :column="4">
+            <yu-xform-item v-for="(item, index) in queryList" :key="index" :placeholder="item.name" 
+              :name="item.ename" :ctype="item.type" :data-code="item.dataCode" :rules="item.rule" :dataRoot="item.dataRoot">
+          </yu-xform-group>
+      </yu-xform>
+      <div style="float:right;">
+        <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+        <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+      </div>
+    </div>
+    <div class="yu-toolBar">
+      <yu-button-group>
+        <yu-button icon="document" @click="infoFn">多区间分配详情</yu-button>
+      </yu-button-group>
+    </div>
+    <yu-xtable ref="refTable" :data-url="dataUrlTable" :base-params="params" row-number selection-type="radio"  style="margin-bottom: 20px;" :default-load="false" height="500"  @loaded="loadedHandler">
+      <yu-xtable-column v-for="(item, index) in colunmNamelist" :key="index" :label="item.name" :prop="item.ename" :data-code="item.dataCode">
+      </yu-xtable-column>
+    </yu-xtable>
+    
+    <yu-xdialog title="多区间分配详情" :visible.sync="dialogVisible" width="1000px">
+        <yu-xtable ref="refTableTwo" row-number :data="formDataTwo" :pageable="false">
+          <yu-xtable-column label="起始日期" prop="effectDate" width="100"></yu-xtable-column>
+          <yu-xtable-column label="结束日期" prop="expirateDate" width="100"></yu-xtable-column>
+          <!-- <yu-xtable-column label="所属机构" prop="operOrgName" width="100"></yu-xtable-column> -->
+          <yu-xtable-column label="分配人" prop="operUserName" width="100"></yu-xtable-column>
+          <yu-xtable-column label="分配日期" prop="operTime" width="140"></yu-xtable-column>
+          <yu-xtable-column label="数据来源" prop="dataSrc" data-code="DATA_SRC" width="100"></yu-xtable-column>
+          <yu-xtable-column label="操作时间" prop="operTime" width="140"></yu-xtable-column>
+          <yu-xtable-column label="审批状态" prop="applySts" data-code="APPLY_STS" width="100"></yu-xtable-column>
+          <yu-xtable-column label="操作" >
+            <template slot-scope="scope">                        
+              <yu-button
+                size="small"
+                @click="handleFenpei(scope.$index, scope.row)">分配明细</yu-button>
+            </template>
+          </yu-xtable-column>
+        </yu-xtable>
+        <yu-collapse v-model="activeNames" class="myCollapse" style="margin-top: 20px;">
+            <yu-collapse-item title="分配信息" name="1" disabled="true">
+              <yu-xform ref="refForm" v-model="queryData" >
+                <yu-xform-group :column="4">
+                  <yu-xform-item label="主键" name="id" :hidden="true" disabled="false"></yu-xform-item>
+                  <yu-xform-item label="起始日期" name="effectDate" disabled="false"></yu-xform-item>
+                  <yu-xform-item label="结束日期" name="expirateDate" disabled="false"></yu-xform-item>
+                </yu-xform-group>
+              </yu-xform>
+                <yu-xtable ref="refTableThree" :pageable="false" :data="contactData">
+                  <yu-xtable-column label="客户经理编号" prop="managerId" >
+                  </yu-xtable-column>
+                  <yu-xtable-column label="客户经理名称" prop="managerName" >
+                  </yu-xtable-column>
+                  <yu-xtable-column label="起始金额" prop="startAmt" v-if="flagOne">
+                  </yu-xtable-column>
+                  <yu-xtable-column label="结束金额" prop="endAmt" v-if="flagOne">
+                  </yu-xtable-column>
+                  <yu-xtable-column label="员工分配比例(%)" prop="distrRate">
+                  </yu-xtable-column>
+                </yu-xtable>
+            </yu-collapse-item>
+          </yu-collapse>
+          <div style="padding-top:20px;text-align: center;">
+              <yu-button icon="yx-undo2" type="primary" @click="cancelFn" >取消</yu-button>
+          </div>
+      </yu-xdialog>
+</div>

@@ -1,0 +1,61 @@
+<!-- 
+  @Created by xujiawei xujy3@yusys.com.cn on 2020-1-2 16:28:00.
+  @updated by
+  @description 业绩预约
+-->
+<div>
+  <div style="margin: 10px 0px;">
+    <yu-xform related-table-name="refTable" ref="refQuery">
+      <yu-xform-group :column="4">
+        <yu-xform-item placeholder="预约机构编号" ctype="yufp-org-tree-app" name="applyOrgId"></yu-xform-item>
+        <yu-xform-item placeholder="证件类型" ctype="select" name="cardType" data-code="CARD_TYPE"></yu-xform-item>
+        <yu-xform-item placeholder="证件号码" ctype="input" name="cardId"></yu-xform-item>
+        <yu-xform-item placeholder="手机号码" ctype="input" name="appointPhone"></yu-xform-item>
+        <yu-xform-item placeholder="业务种类" ctype="select" name="busType" data-code="BUS_TYPE"></yu-xform-item>
+        <yu-xform-item placeholder="客户名称" ctype="input" name="custName"></yu-xform-item>
+        <yu-xform-item placeholder="是否命中" ctype="select" name="etlRes" data-code="ETL_RES"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <div style="float:right;">
+      <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+    </div>
+  </div>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="checkbox" height="500" @loaded="loadedHandler">
+    <yu-xtable-column label="申请时间" prop="applyTime" width="110" sortable></yu-xtable-column>
+    <yu-xtable-column label="预约机构编号" prop="appointOrgId" width="110" ></yu-xtable-column>
+    <yu-xtable-column label="预约机构" prop="orgName" width="200"></yu-xtable-column>
+    <yu-xtable-column label="证件类型" prop="cardType" width="120" data-code="CARD_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="cardId" width="180"></yu-xtable-column>
+    <yu-xtable-column label="手机号码" prop="appointPhone" width="150"></yu-xtable-column>
+    <yu-xtable-column label="业务预约时间段" prop="exsisTime" width="180"></yu-xtable-column>
+    <yu-xtable-column label="业务种类" prop="busType" width="100" data-code="BUS_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" width="180"></yu-xtable-column>
+    <yu-xtable-column label="金额" prop="amt" width="180" sortable></yu-xtable-column>
+    <yu-xtable-column label="是否命中" prop="etlRes" width="100" data-code="ETL_RES"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="800px">
+    <yu-xform ref="refForm" label-width="150px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="预约机构编号" ctype="yufp-org-tree-app" name="appointOrgId" :rules="rule[0]"></yu-xform-item>
+        <yu-xform-item label="业务种类" data-code="BUS_TYPE" ctype="select" name="busType" :options="options" :rules="rule[0]" @change="lookUpChange"></yu-xform-item>
+        <yu-xform-item v-for="(item, index) in colunmNamelist" :key="index" :label="item.name" 
+        :name="item.ename" :ctype="item.type" :data-code="item.dataCode" :rules="item.rule" :disabled="item.disabled">
+        </yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

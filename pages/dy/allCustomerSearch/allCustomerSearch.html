@@ -1,0 +1,80 @@
+<div id="allCustomerSearch">
+    <!-- test  allCustomerSearch -->
+    <link href="./pages/dy/allCustomerSearch/allCustomerSearch.css" rel="stylesheet" type="text/css">
+    <div>
+        <div class="mt20 bgWhite pd20">
+            <yu-row :gutter="20">
+                <yu-col :span="23" :offset="1">
+                    <yu-xform size="small" v-model="allQueryFormParams" label-width="140px" ref="allQueryForm" related-table-name="yutable1" responsive>
+                        <yu-xform-group :column="2">
+                            <yu-xform-item label="客户名称" ctype="input" placeholder="请输入" name="custName" clearable></yu-xform-item>
+                            <yu-xform-item label="ECIF" ctype="input" placeholder="请输入" name="custId" clearable></yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-group :column="2">
+                            <yu-xform-item label="证件类型" ctype="select" placeholder="请选择" name="custType" :rules="IDTypeRule" data-code="CD0348" clearable></yu-xform-item>
+                            <yu-xform-item label="证件号码" ctype="input" placeholder="请输入" name="certNo" :rules="certNoRule" clearable></yu-xform-item>
+                        </yu-xform-group>
+                        <yu-xform-group :column="2">
+                            <yu-xform-item label="NDS号" ctype="input" placeholder="请输入" name="ndsCustNo" clearable></yu-xform-item>
+                            <yu-xform-item ctype="custom" style="text-align: right;">
+                                <yu-button @click="resetForm('allQueryForm')">重置</yu-button>
+                                <yu-button type="primary" @click="allQueryFormFn('allQueryFormParams')">查询</yu-button>
+                            </yu-xform-item>
+                        </yu-xform-group>
+
+                    </yu-xform>
+                </yu-col>
+            </yu-row>
+        </div>
+
+        <div class="bgWhite pd20">
+            <div style="text-align:right;">
+                <!-- <el-button icon="el-icon-document" type="primary" @click="saveFn">保存客群</el-button> -->
+            </div>
+            <yu-xtable :borde="false" :select-on-indeterminate="false" ref="multipleTable" data-url="/api/ocrmfcicgbase/wholecustomerList" :base-params="baseParams" class="mt20" :default-load="false" @selection-change="selectChange" clearSelection style="width: 100%">
+                <yu-xtable-column type="selection" width="55"></yu-xtable-column>
+                <yu-xtable-column type="index" label="序号"></yu-xtable-column>
+                <yu-xtable-column label="客户中文姓名" width="160px">
+                    <template slot-scope="scope">
+                        <a style="color:#2877FF ;cursor:pointer" @click="onTableRowMerchantNameClickFtn(scope.row)">
+                            {{ scope.row.custName }}
+                        </a>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="custEngName" label="客户英文姓名" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="custId" label="客户号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="ndsCustNo" label="NDS号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="orgName" label="开户机构" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="mgrNameOne" label="理财客户经理" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="mgrNameTwo" label="个贷客户经理" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="managePhoneNo" label="理财客户经理手机号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="personalLoanPhoneNo" label="个贷客户经理手机号" width="160px"></yu-xtable-column>
+                <yu-xtable-column prop="nationality" label="地区" data-code="ORIGION_LIST"></yu-xtable-column>
+                <!-- <yu-xtable-column label="操作">
+                    <template slot-scope="scope">
+                        <yu-button @click.native.prevent="editRow(scope.row)" type="text" style="color: #B96D06;" size="small">
+                            编辑
+                        </yu-button>
+                    </template>
+                </yu-xtable-column> -->
+            </yu-xtable>
+            <template>
+                <div class="table-pagination">
+                <div class="demonstration">
+                    表头多选框为当前页全选，已选择 <span class="selectRows">{{selectRows.length}}</span> 项
+                    <yu-button @click.native.prevent="btnClearDataFn" type="text" size="middle">清空</yu-button>
+                </div>
+                </div>
+            </template>
+            <!-- <yu-dialog title="信息编辑" :visible.sync="applyDialogVisible">
+                <customer-edit ref="customerEdite" :org-id-auth="orgIdAuth" @handleediteclose="closeEditeBox" />
+            </yu-dialog>
+            <yu-dialog title="保存至客群" :visible.sync="saveCustomerDialogVisible">
+                <save-customer-group :filter-data="filterData" :org-id-auth="orgIdAuth" @close-add="closeAdd" />
+            </yu-dialog>
+            <yu-dialog title="高级查询" :visible.sync="advancedQueryDialogVisible" class="bigger-dialog-width">
+                <advanced-query />
+            </yu-dialog> -->
+        </div>
+    </div>
+</div>

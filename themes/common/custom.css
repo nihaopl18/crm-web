@@ -1,0 +1,19 @@
+/**
+ * @created by luhy1 on 2019-12-23 14:12:55
+ * @updated by
+ * @description
+ */
+
+/*collapse屏蔽箭头*/
+.myCollapse .el-collapse-item__header__arrow {
+  display: none;
+}
+/*修改collapse item 背景色*/
+.myCollapse .el-collapse-item__header {
+  background-color: gainsboro
+}
+
+/*修改collapse item 背景色*/
+.myCollapse1 .el-collapse-item__header {
+  background-color: gainsboro
+}

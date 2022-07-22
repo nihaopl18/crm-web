@@ -1,0 +1,264 @@
+<!--
+  * @create by: ranxun@yusys.com.cn
+  * @Date: 2021-08-27 16:57:48
+  * @update by:
+  * @description: 客群列表
+  -->
+<div class="cust-group-list">
+    <div class="dy-tabs">
+        <div class="group-search">
+            <yu-row>
+                <yu-col :span="18">
+                    <yu-input placeholder="请输入客群名称" style="width: 216px" v-model="custGroupName">
+                        <yu-button slot="append" icon="search" @click="searchCustGroup"></yu-button>
+                    </yu-input>
+                </yu-col>
+                <yu-col :span="6" style="text-align: right">
+                    <el-button plain icon="el-icon-delete" @click="deletCustGroup">删除</el-button>
+                    <!-- <el-button plain icon="el-icon-collection-tag">标记为关注</el-button>
+          <el-button plain icon="el-icon-data-line">分析</el-button> -->
+                    <el-button type="primary" icon="el-icon-plus" @click="addCustGroup" :disabled="userSelectRole">添加客群
+                    </el-button>
+                </yu-col>
+            </yu-row>
+        </div>
+        <div class="group-card-list">
+            <el-empty v-if="!custGroupList.length" :image-size="200"></el-empty>
+            <yu-row v-else :gutter="20">
+                <yu-col :span="8" v-for="item in custGroupList" :key="item.custGroupId">
+                    <div class="card-container" @click="handleCardChange(item)">
+                        <div class="card-body">
+                            <div>
+                                <p class="title" @click.stop="toCustGroupDetail(item)">{{item.custGroupName}}</p>
+                                <div class="option-btn">
+                                    <yu-checkbox v-model="item.checked"></yu-checkbox>
+                                    <yu-popover :ref="'popover' + item" placement="bottom" width="130" trigger="click">
+                                        <ul>
+                                            <li @click.stop="dismissCustGroup(item)"><span
+                                                    class="el-icon-delete-solid"></span>解散</li>
+                                        </ul>
+                                        <i slot="reference" class="el-icon-more"></i>
+                                    </yu-popover>
+                                </div>
+                            </div>
+                            <p class="time">{{item.createDate}} 创建</p>
+                            <p class="content">
+                                {{item.custGroupDescribe}}
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <p>
+                                <span class="el-icon-user-solid"></span>
+                                <span>成员数</span>
+                                <span>{{item.initialCout}}</span>
+                                <span><i :class="returnClassName(item)">{{item.floatCustomer}}</i></span>
+                            </p>
+                            <p>
+                                <i :class="[item.isFocus == '01' ? 'el-icon-yx-star-full' : 'el-icon-yx-star-empty', 'focus']"
+                                    @click.stop="handleFocusChange(item)"></i>
+                                <span>{{ item.isFocus == '01' ? '已关注' : '设为关注' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </yu-col>
+            </yu-row>
+            <!-- <yu-pagination v-if="custGroupList.length>9" @current-change="handleCurrentChange" :current-page.sync="page" :page-size="9" layout="total, prev, pager, next" :total="total"> -->
+        </div>
+    </div>
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" title="创建客群" :visible.sync="createVisible"
+        min-width="920" class="createBox" :before-close="handleCreateClose">
+        <div class="step-box">
+            <ul>
+                <li v-for="step in steps" :key="step.id"
+                    :class="[step.id == stepIndex ? 'active' : '', step.id < stepIndex ? 'finish' : '']">
+                    {{ step.title }}</li>
+            </ul>
+        </div>
+        <div class="cust-form">
+            <div v-show="stepIndex === 1">
+                <div style="height: 600px;">
+                    <p class="filterBtn">
+                        <!-- <span @click="toTopLevelFilter"><i class="el-icon-s-operation"></i>高级筛选</span> -->
+                        <span @click="highSearch"><i class="el-icon-s-operation"></i>高级筛选</span>
+                    </p>
+                    <!-- <yu-row v-if="isTopLevelFilter">
+            <yu-col :span="6">
+              <yu-button-group>
+                <yu-button v-for="btn in buttons" :key="btn.id" :type="btn.id === btnIndex ? 'primary' : ''" plain @click="changeLabelType(btn.id)">{{ btn.name }}</yu-button>
+              </yu-button-group>
+              <yufp-ext-tree ref="mytree" :height="500" data-url="/api/cimfmmftagGrop/getGroupTree" data-id="groupNo" data-label="groupName" :default-expanded-keys="[0]" node-key="groupNo" data-pid="parentNo" :data-async="async" :data-params="param" data-root="0" style="margin:10px 10px 0 0;">
+              </yufp-ext-tree>
+            </yu-col>
+            <yu-col :span="18">
+              <div class="condition-box">
+                <yu-form v-for="(obj, index) in filterCondition" :inline="true" :model="obj" label-position="top">
+                  <div>
+                    <yu-form-item label="标签">
+                      <yu-input v-model="obj.label" disabled></yu-input>
+                    </yu-form-item>
+                    <yu-form-item label="操作符">
+                      <yu-select v-model="obj.optionSymbol">
+                        <yu-option label="等于" value="1"></yu-option>
+                        <yu-option label="区域二" value="beijing"></yu-option>
+                      </yu-select>
+                    </yu-form-item>
+                    <yu-form-item label="标签内容">
+                      <yu-select v-model="obj.labelContent">
+                        <yu-option label="等于" value="1"></yu-option>
+                        <yu-option label="区域二" value="beijing"></yu-option>
+                      </yu-select>
+                    </yu-form-item>
+                    <yu-form-item label=" ">
+                      <yu-button type="text" class="deleteBtn">删除</yu-button>
+                    </yu-form-item>
+                  </div>
+                  <div v-if="index != filterCondition.length - 1">
+                    <yu-radio-group v-model="obj.relation">
+                      <yu-radio :label="1">并且</yu-radio>
+                      <yu-radio :label="2">或者</yu-radio>
+                    </yu-radio-group>
+                  </div>
+                </yu-form>
+              </div>
+            </yu-col>
+          </yu-row> -->
+                    <yu-row :gutter="20">
+                        <yu-col :span="23" :offset="1">
+                            <yu-xform ref="filterForm" size="small" v-model="filterModel" label-width="140px"
+                                :rules="rules">
+                                <yu-xform-group>
+                                    <yu-xform-item label="AUM余额(万元)" ctype="custom">
+                                        <yu-col :sm="11" :xs="24">
+                                            <yu-xform-item name="aumBalanceStart" ctype="input" placeholder="请输入"
+                                                maxlength="10"></yu-xform-item>
+                                        </yu-col>
+                                        <yu-col class="line" :span="2" style="text-align: center">→</yu-col>
+                                        <yu-col :sm="11" :xs="24">
+                                            <yu-xform-item name="aumBalanceEnd" ctype="input" placeholder="请输入"
+                                                maxlength="10"></yu-xform-item>
+                                        </yu-col>
+                                    </yu-xform-item>
+                                    <yu-xform-item label="年龄区间" ctype="select" placeholder="请选择"
+                                        data-code="YEAR_SECTION_LIST" name="ageGroup"></yu-xform-item>
+                                    <yu-xform-item label="产品类别" ref="custTyped" :quar-params="custTypeRole"
+                                        @select-fn="custParamFn" @select-fn-data="getCustTypeRole" colspan="8"
+                                        ctype="yufp-cust-tree">
+                                    </yu-xform-item>
+                                    <yu-xform-item label="持有产品" colspan="8" :disabled="custdisabled" ctype="input"
+                                        placeholder="请输入客户持有产品名称或产品编号" v-model="prodNameValue" id="prodnameid" clearable
+                                        @change="custTpChangeFn()">
+                                    </yu-xform-item>
+                                    <yu-xform-item label="近一个月到期" colspan="8" ctype="select" placeholder="请选择"
+                                        data-code="EXPIRE_LIST" name="expireNo"></yu-xform-item>
+                                    <yu-xform-item label="客户等级" colspan="24" ctype="checkbox" data-code="CUST_GRADE"
+                                        name="custGrade"></yu-xform-item>
+                                    <yu-xform-item label="客户标签" colspan="24" ctype="yufp-tag-list" ref="tagNo"
+                                        name="tagNo" @tag-change="handleTagChange"></yu-xform-item>
+                                    <yu-xform-item label="地区" colspan="24" ctype="custom" name="countAreaCd">
+                                        <el-radio-group v-model="filterModel.countAreaCd">
+                                            <el-radio v-for="item in ORIGION_LIST" :key="item.key" :label="item.key"
+                                                @click.native.prevent="handleReginClick(item.key)">{{item.value}}
+                                            </el-radio>
+                                        </el-radio-group>
+                                    </yu-xform-item>
+                                </yu-xform-group>
+                            </yu-xform>
+                        </yu-col>
+                    </yu-row>
+                </div>
+            </div>
+            <div v-show="stepIndex === 2">
+                <div style="height: 600px">
+                    <yu-row>
+                        <yu-col :span="18">
+                            <!-- <yu-input placeholder="请输入搜索关键词" style="width: 216px" v-model="keyword">
+                <yu-button slot="append" icon="search" @click="searchCusts"></yu-button>
+              </yu-input> -->
+                        </yu-col>
+                        <!-- <yu-col :span="6" style="text-align: right"> -->
+                        <yu-col :span="6">
+                            <p>
+                                <span>已选择</span>
+                                <span>{{ chooseCount }}</span>
+                                <span style="color:red;margin-left:20px;">注：不选择客户时默认为全选</span>
+                            </p>
+                        </yu-col>
+                    </yu-row>
+                    <yu-xtable selection-type="checkbox" ref="yutable" reserve-selection row-key="custId"
+                        :data-url="custUrl" :default-load="false" :base-params="baseParam"
+                        style="width: 100%;margin-top: 16px" max-height="550" @selection-change="handleCustSelect">
+                        <yu-xtable-column type="index" label="序号"></yu-xtable-column>
+                        <yu-xtable-column prop="custName" label="客户姓名" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="custId" label="ECIF号" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="ndsCustNo" label="NDS号" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="mgrNameOne" label="理财客户经理" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="mgrNameTwo" label="个贷客户经理" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="aumBalanceAvgRmb" label="AUM余额月日均" width="160px" sortable>
+                        </yu-xtable-column>
+                        <yu-xtable-column prop="aumBalance" label="AUM余额" width="160px" sortable></yu-xtable-column>
+                        <yu-xtable-column prop="exchangeFinBalance" label="汇率" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="nonExchangeFinBalance" label="非汇" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="trustBalanceRmb" label="信托" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="rmbFundBalance" label="基金" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="assestManageBalance" label="资管" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="qdiiBalanceRmb" label="QDII净值余额" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="insurranceBalance" label="保险" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="depositBalanceRmb" label="存款" width="160px"></yu-xtable-column>
+                        <yu-xtable-column prop="belongBrch" label="主办分行" width="200px"></yu-xtable-column>
+                        <yu-xtable-column prop="belongBranch" label="主办机构" width="200px"></yu-xtable-column>
+                        <yu-xtable-column prop="nationality" label="地区" data-code="ORIGION_LIST"></yu-xtable-column>
+                    </yu-xtable>
+                </div>
+            </div>
+            <div v-show="stepIndex === 3">
+                <div style="height: 600px">
+                    <yu-xform ref="custGroupForm" label-width="100px" label-position="top" label-suffix=""
+                        v-model="custGroupForm" :rules="custRules">
+                        <yu-xform-group :column="1">
+                            <yu-xform-item label="客群名称" :colspan="8" name="custGroupName" ctype="input"
+                                placeholder="请输入" maxlength="10"></yu-xform-item>
+                            <yu-xform-item label="客群描述" colspan="24" name="custGroupDescribe" ctype="textarea"
+                                placeholder="请输入" maxlength="100"></yu-xform-item>
+                            <yu-xform-item label="添加到我关注的客群" :colspan="8" name="isFocus" ctype="custom">
+                                <yu-switch on-color="#ff4949" off-color="#C0C4CC" on-value="01" off-value="02"
+                                    v-model="custGroupForm.isFocus"></yu-switch>
+                            </yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <p><i class="el-icon-warning"></i>可以稍后在群组详情中添加成员</p>
+                </div>
+            </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <div v-if="stepIndex === 1">
+                <yu-button @click="handleCreateClose">取 消</yu-button>
+                <yu-button type="primary" @click="nextStep(2)">下一步</yu-button>
+            </div>
+            <div v-if="stepIndex === 2">
+                <yu-button @click="prevStep(1)">上一步</yu-button>
+                <yu-button @click="handleCreateClose">取 消</yu-button>
+                <yu-button type="primary" @click="nextStep(3)">下一步</yu-button>
+            </div>
+            <div v-if="stepIndex === 3">
+                <yu-button @click="prevStep(2)">上一步</yu-button>
+                <yu-button @click="handleCreateClose">取 消</yu-button>
+                <yu-button type="primary" @click="saveCustGroup" id="savetj">提 交</yu-button>
+            </div>
+        </span>
+        <ul id="ulid" v-show="showor"
+            style="background-color: white;width:490px;height: 300px;transform-origin: center top;z-index: 2006;position: absolute;left: 36%;top: 300px">
+            <li v-for="item in custResults" :key="item.prodId" @click="handleCustomerSelect(item)"
+                style="height: 30px;padding-left: 20px;">
+                {{ item.prodName }} -- {{item.prodId}}
+            </li>
+        </ul>
+    </yu-dialog>
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" title="创建客群" :visible.sync="highLevelCreateVisible"
+        min-width="920" class="createBox" :before-close="handleHighLevlCreateClose">
+        <yufp-cust-flexy-query ref="flexyQuery" :btndisabled.sync="btnDisabled" :show-btn="true" :query-btn="true"
+            :save-as-cust-btn="true" :save-btn="true" :reset-btn="true" :is-create-group="true"
+            @updateFn="updateGroupList" @createcloseflexy="createcloseserarch">
+        </yufp-cust-flexy-query>
+    </yu-dialog>
+</div>
+<link rel="stylesheet" href="pages/dy/custGroupManage/groupQuery/groupQuery.css">

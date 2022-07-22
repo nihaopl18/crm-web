@@ -1,0 +1,194 @@
+<div id="indexSpliting" class="index-spliting">
+  <el-row :gutter="22">
+    <el-col :span="6"></el-col>
+    <el-col :span="16">
+      <el-form :inline="true" :model="indexState" class="demo-form-inline" ref="ruleForm">
+        <!-- <el-form-item label="审批人">
+        <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+      </el-form-item> -->
+        <!-- <el-form-item label="活动编号" prop="activityId">
+          <el-input v-model="indexState.activityId"></el-input>
+        </el-form-item> -->
+        <el-form-item label="活动名称" prop="activityName">
+          <el-input v-model="indexState.activityName"></el-input>
+        </el-form-item>
+        <el-form-item prop="state">
+          <el-select v-model="indexState.state" placeholder="指标分配状态">
+            <el-option label="未分配" value="0"></el-option>
+            <el-option label="未分配完毕" value="1"></el-option>
+            <el-option label="分配完毕" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+      <el-button icon="document" @click="infoFn" style="margin: 10px;">分配指标</el-button>
+      <el-table ref="activityTable" :data="tableData" border @selection-change="handleSelectionChange"
+        style="width: 100%">
+        <el-table-column type="selection" width="55">
+        </el-table-column>
+        <el-table-column prop="activityId" label="活动编号" width="120">
+        </el-table-column>
+        <el-table-column prop="activityName" label="活动名称">
+        </el-table-column>
+        <!-- <el-table-column prop="activityName" label="" show-overflow-tooltip>
+      </el-table-column> -->
+
+      </el-table>
+      <el-pagination background :current-page.sync="activityPagination.page" :page-sizes="[10,20,30,50,100]"
+        :page-size="activityPagination.size" layout="total, sizes, prev, pager, next, jumper"
+        :total="activityPageInfo.total" @size-change="activitySizeChange" @current-change="activityCurrentChange" />
+      </el-pagination>
+    </el-col>
+  </el-row>
+
+
+  <!-- <el-radio-group :value="indexState.state" @change="changeObjType">
+    <el-radio label="0">未分配</el-radio>
+    <el-radio label="1">未分配完毕</el-radio>
+    <el-radio label="2">分配完毕</el-radio>
+  </el-radio-group> -->
+  <!-- <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button> -->
+  <el-dialog :visible.sync="dialogVisible" size="large" :min-width="400" :title="selectActivity.activityName">
+    <yu-row :gutter="22">
+      <yu-col :span="6">
+        <div class="searchBox">
+          <!-- <yu-select v-model="keyword" filterable remote clearable placeholder="请输入关键词" :remote-method="remoteMethod"
+            @change="choseActiveObj" :loading="loading">
+            <yu-option v-for="item in activityList" :key="item.id" :label="item.label" :value="item.name">
+            </yu-option>
+          </yu-select> -->
+          <ul class="index-ul" v-if="residualIndexList.length>0">
+            <li><span>指标名称</span><span>剩余指标数据</span></li>
+            <li v-for="item in residualIndexList" :key="item.indexId">
+              <span :title="item.indexName">{{ item.indexName }}</span>
+              <span>{{ item.indexRemain }}</span>
+            </li>
+          </ul>
+          <p class='indexTips' v-else>{{indexTips}}</p>
+        </div>
+      </yu-col>
+      <yu-col :span="18">
+        <div class="result-right">
+          <div>
+            <label>对象类型：</label>
+            <!-- <el-radio-group v-model="residualIndex.objType" @change="changeObjType">
+                <el-radio label="01">客户经理</el-radio>
+                <el-radio label="02">机构</el-radio>
+                <el-radio label="03">渠道</el-radio>
+              </el-radio-group> -->
+            <el-radio-group :value="residualIndex.objType" @input="changeObjType">
+              <el-radio label="01">客户经理</el-radio>
+              <el-radio label="02">机构</el-radio>
+              <el-radio label="03">渠道</el-radio>
+            </el-radio-group>
+          </div>
+          <template v-if="residualIndexList.length>0">
+            <el-form-q :field-data="queryFields" :buttons="queryButtons"></el-form-q>
+            <div class="yu-toolBar">
+              <el-button-group>
+                <el-button icon="document" @click="saveFn">保存</el-button>
+              </el-button-group>
+            </div>
+            <el-form :model="formData" ref="formDom">
+              <yu-xtable ref="reftable" class="indexTable" row-number :data="formData.tabdata" selection-type="radio"
+                :default-load="false" @loaded="tabload" @row-click="clickFn" @cell-click="cellClickFun"
+                v-loading="indexLoading" :pageable="false">
+                <yu-xtable-column :label="x.label" :prop="x.prop" :key='x.key' width="110"
+                  v-for="x in formData.tableColumns" :formatter="x.formatter" :ctype='x.ctype' :data-code='x.dataCode'
+                  :render-header="x.renderHeader">
+                  <yu-xtable-column :label="y.label" :prop="y.prop" :key='y.key' width="110" v-for="y in x.children"
+                    :ctype='y.ctype' :disabled="y.disabled" @change="(obj) => changeTarget(obj, y)" :rules="y.rules">
+                  </yu-xtable-column>
+                </yu-xtable-column>
+              </yu-xtable>
+            </el-form>
+            <el-pagination background :current-page.sync="residualIndex.page" :page-sizes="[10,20,30,50,100]"
+              :page-size="residualIndex.size" layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total"
+              @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-pagination>
+          </template>
+          <p class='indexTips' v-else>暂无相关数据</p>
+        </div>
+      </yu-col>
+    </yu-row>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="confirmButton">确 定</el-button>
+    </span>
+  </el-dialog>
+</div>
+<style>
+  .index-spliting {
+    padding: 24px 0;
+  }
+
+  .searchBox,
+  .result-right {
+    padding: 12px;
+  }
+
+  .searchBox {
+    border: 1px solid #d1dbe5;
+    min-height: 500px;
+  }
+
+  .indexTips {
+    font-size: 14px;
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .index-ul {
+    margin-top: 25px;
+    border: 1px solid #d1dbe5;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .index-ul li {
+    line-height: 36px;
+    height: 36px;
+    font-size: 0;
+    color: #444;
+    text-align: center;
+    box-sizing: border-box;
+
+  }
+
+  .index-ul li span {
+    display: inline-block;
+    border-right: 1px solid #d1dbe5;
+    border-bottom: 1px solid #d1dbe5;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .index-ul li span:first-child {
+    /* width: calc(100% - 95px); */
+    width: calc(100% - 97px);
+    /* width: 60px; */
+  }
+
+  .index-ul li span:last-child {
+    /* width: 60px; */
+    width: 95px;
+  }
+
+  .index-ul li:first-child span {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .indexTable .el-table__header {
+    width: 100% !important;
+  }
+
+  .indexTable .el-table__body {
+    width: 100% !important;
+  }
+</style>

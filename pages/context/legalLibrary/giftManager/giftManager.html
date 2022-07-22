@@ -1,0 +1,81 @@
+<!-- 
+  @Created by chenlin chenlin2@yusys.com.cn on 2019-2-18 16:48:32.
+  @updated by
+  @description 礼品管理
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="礼品名称" name="productName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="礼品类别" name="productTypeId" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="上架标识" name="upperFlag" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="审批状态" name="productStatus" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="发布日期从" name="createDateF" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="发布日期至" name="createDateE" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="礼品分值从" name="minScoreValue" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="礼品分值至" name="maxScoreValue" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button> 
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button> 
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+      <yu-button icon="check" @click="submitFn">提交</yu-button>
+      <yu-button icon="check" @click="commodityFn">商品对接</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+    <yu-xtable-column label="礼品编号" prop="productNo" width="130"></yu-xtable-column>
+    <yu-xtable-column label="礼品名称" prop="productName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="礼品类别" prop="productTypeId" width="120"></yu-xtable-column>
+    <yu-xtable-column label="礼品分值" prop="productPrice" width="120"></yu-xtable-column>
+    <yu-xtable-column label="库存数量" prop="productNum" width="120"></yu-xtable-column>
+    <yu-xtable-column label="发布人" prop="createUserName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="发布日期" prop="createDate" width="120"></yu-xtable-column>
+    <yu-xtable-column label="发布机构" prop="createOrgName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="上架标识" prop="upperFlag" width="120"></yu-xtable-column>
+    <yu-xtable-column label="礼品来源" prop="sourceOra" width="120"></yu-xtable-column>
+    <yu-xtable-column label="礼品状态" prop="productStatusOra" width="120"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="礼品名称" name="productName" rules="required" ctype="input"></yu-xform-item>
+        <yu-xform-item label="礼品类别" name="productTypeId" ctype="input"></yu-xform-item>
+        <yu-xform-item label="礼品分值" name="productPrice" rules="required" ctype="input"></yu-xform-item>
+        <yu-xform-item label="库存数量" name="productNum" rules="required" ctype="input"></yu-xform-item>
+        <yu-xform-item label="礼品成本" name="productCost" ctype="input"></yu-xform-item>
+        <yu-xform-item label="备注" name="remark" ctype="textarea" :rows="3" :colspan="24"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yu-xdialog :title="commodityTitle" :visible.sync="commodityVisible" width="850px">
+    <yu-xform related-table-name="commodityTable" form-type="search">
+      <yu-xform-group :column="2">
+        <yu-xform-item placeholder="礼品类别" name="productTypeId" ctype="input"></yu-xform-item>
+        <yu-xform-item placeholder="礼品名称" name="productName" ctype="input"></yu-xform-item>
+        <yu-xform-item placeholder="价格区间从" name="priceBegin" ctype="input"></yu-xform-item>
+        <yu-xform-item placeholder="至" name="priceEnd" ctype="input"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="plus" @click="getcommodity">对接</yu-button> 
+        </yu-button-group>
+      </div>
+    <yu-xtable ref="commodityTable" row-number :data-url="commodityUrl">
+        <yu-xtable-column label="礼品类别" prop="productTypeId" width="150"></yu-xtable-column>
+        <yu-xtable-column label="礼品名称" prop="productName" ></yu-xtable-column>
+        <yu-xtable-column label="礼品价格" prop="productPrice" width="120"></yu-xtable-column>
+        <yu-xtable-column label="上架标识" prop="upperFlag" width="120"></yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+</div>

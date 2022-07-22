@@ -1,0 +1,27 @@
+<!-- 
+  @Created by hujun3@yusys.com.cn on 2019-1-22 09:48:55.
+  @updated by
+  @description 客户累积贡献度查询
+-->
+<div>
+  <!-- 搜索表单 -->
+  <yu-xform related-table-name="refTable" form-type="search" label-width="100px" v-model="formData">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="客户号" name="custId" ctype="input" :maxlength="30"></yu-xform-item>
+      <yu-xform-item placeholder="客户姓名" name="custName" ctype="input" :maxlength="200"></yu-xform-item>
+      <yu-xform-item placeholder="证件号码" name="identNo" ctype="input" :maxlength="200"></yu-xform-item>
+      <yu-xform-item placeholder="累积开始月份" name="busnDateStart" ctype="datepicker" type="month" :picker-options="addPickerOptionsStart" format="yyyy-MM"></yu-xform-item>
+      <yu-xform-item placeholder="累积结束月份" name="busnDateEnd" ctype="datepicker" type="month" :picker-options="addPickerOptionsEnd" format="yyyy-MM"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!--客户积分累积查询表格  -->
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" style="margin-top: 10px;">
+    <!-- <yu-xtable-column label="客户状态" prop="customType" data-code="CERT_TYPE"></yu-xtable-column> -->
+    <yu-xtable-column label="客户号" prop="custId" ></yu-xtable-column>
+    <yu-xtable-column label="客户姓名" prop="custName" ></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="identNo" ></yu-xtable-column>
+    <yu-xtable-column label="积分累积数余额" prop="currSrAccute"></yu-xtable-column>
+    <yu-xtable-column label="累积月份" prop="busnDate"></yu-xtable-column>
+    <yu-xtable-column label="本月积分累积数" prop="thisSumScore"></yu-xtable-column>
+  </yu-xtable>
+</div>

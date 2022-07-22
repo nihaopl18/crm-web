@@ -1,0 +1,28 @@
+<div>
+    <el-row>
+        <el-col :span="4">
+            <div style="margin-top: 10px;"></div>
+            <!-- 产品分类树 -->
+            <el-tree-x ref="mytree" :height="height - 20 - 92" @node-click="nodeClickFn" data-url="/api/cmfrcprodcatl/list" data-id="catlCode"
+                data-label="catlName" :default-expanded-keys="[0]" node-key="catlCode" data-pid="catlParent" :data-async="async"
+                :data-params="param" data-root="0" style="margin:10px 10px 0 0;">
+            </el-tree-x>
+        </el-col>
+        <el-col :span="20">
+            <!-- 产品查询页面 -->
+            <el-form-q :field-data="queryFields" :buttons="queryButtons"></el-form-q>
+            <div class="yu-toolBar">
+                <el-button-group>
+                    <el-button icon="fixed" @click="selectFn">选取</el-button>
+                </el-button-group>
+                <el-table-x ref="reftable" :checkbox="true" data-url="/api/cmfrcproductmanager/list" :table-columns="tableColumns">
+                </el-table-x>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row>
+        <!-- 产品选取页面 -->
+        <el-table-x ref="reftableSelect" :checkbox="false" :table-columns="tableColumnSelect">
+        </el-table-x>
+    </el-row>
+</div>

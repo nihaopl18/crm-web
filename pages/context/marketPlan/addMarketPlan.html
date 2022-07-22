@@ -1,0 +1,20 @@
+<!--
+  @created by zhanghan on 2018-11-15 16:11:30
+  @updated by
+  @description 新增营销活动
+-->
+<div>
+  <el-tabs v-model="tabName" @tab-click="handleClick">
+      <el-tab-pane label="基本信息" name="base">
+          <el-form-x ref="addreform" :group-fields="addFields" :buttons="addButtons" :disabled="formDisabled" label-width="100px">
+          </el-form-x>
+      <!-- <div class="yu-grpButton">
+        <el-button type="primary" icon="check">保存</el-button>
+        <el-button type="primary" icon="yx-loop2">重置</el-button>
+      </div> -->
+    </el-tab-pane>
+    <el-tab-pane label="流程设计" name="asset" :disabled= "sts">
+        <yufp-flow-design :editable="editableornot" v-if="showornot" :flow-id="flowId" :panel-type="panelType"></yufp-flow-design>
+      </el-tab-pane>
+  </el-tabs>
+</div>

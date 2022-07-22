@@ -1,0 +1,48 @@
+<!--
+  @created by luoshun 2019-1-4
+  @updated by 
+  @description 积分价格
+-->
+<div>
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group>
+      <yu-xform-item placeholder="审批状态" ctype="select" :maxlength="40" name="wfApprSts" data-code="WF_APP_STATUS"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 工具按钮 -->
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="minus" @click="commitFn">提交</yu-button>
+    </yu-button-group>
+  </div>
+  <!-- 查询显示表格 -->
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+    <yu-xtable-column label="积分价格比率编号" prop="priceRatioId" width="110" v-if="false"></yu-xtable-column>
+    <yu-xtable-column label="积分价格比率" prop="priceRatio" width="110"></yu-xtable-column>
+    <yu-xtable-column label="审批状态" prop="wfApprSts" width="110" data-code="WF_APP_STATUS"></yu-xtable-column>
+    <yu-xtable-column label="记录状态" prop="status" width="110" data-code="STATUS"></yu-xtable-column>
+    <yu-xtable-column label="创建人" prop="createName" width="110"></yu-xtable-column>
+    <yu-xtable-column label="创建日期" prop="createDate" width="200"></yu-xtable-column>
+    <yu-xtable-column label="最近维护人" prop="updateName" width="110"></yu-xtable-column>
+    <yu-xtable-column label="最近维护日期" prop="updateDate"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 按钮响应弹窗 -->
+  <yu-xdialog :title="viewTitle" :visible.sync="dialogVisible" width="800px">
+    <yu-xform ref="refForm" label-width="120px" v-model="formdata">
+      <yu-xform-group>
+        <yu-xform-item label="积分价格比率" ctype="num" :maxlength="32" name="priceRatio" :rules="rules" :colspan="24"></yu-xform-item>
+      </yu-xform-group>
+      <div style="float: left;margin-top: 5px;margin-left: 20px">
+        <font color="red">每元代表多少积分(如600则代表1元为600积分)</font>
+      </div>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" :common-params="wfCommonParams" />
+</div>

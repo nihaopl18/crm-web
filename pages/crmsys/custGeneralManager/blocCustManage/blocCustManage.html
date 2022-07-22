@@ -1,0 +1,30 @@
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-4 14:59:16.
+  @updated by
+  @description 集团客户管理
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="6">
+        <yu-xform-item placeholder="集团编号" name="groupNo" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="集团客户名称" name="custName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="集团母公司编号" name="groupRootCustId" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="集团母公司名称" name="groupNameMain" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="document" @click="infoFn">集团视图</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" :default-load="false" row-number selection-type="radio" :data-url="dataUrl" @row-dblclick="showCustViewPortFn">
+    <yu-xtable-column label="集团母公司名称" prop="groupNameMain" width="150"></yu-xtable-column>
+    <yu-xtable-column label="集团类型" prop="groupType" width="120" data-code="GROUP_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="成员数量" prop="memberNum" width="120"></yu-xtable-column>
+    <yu-xtable-column label="创建人" prop="createUserName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="创建机构" prop="createOrgName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="创建时间" prop="creataDate" width="120" :formatter="dateFormatterSimple"></yu-xtable-column>
+    <yu-xtable-column label="修改人" prop="updateUserName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="修改时间" prop="updateDate" :formatter="dateFormatterSimple"></yu-xtable-column>
+  </yu-xtable>
+</div>

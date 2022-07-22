@@ -1,0 +1,55 @@
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2018-1-21
+  @updated by
+  @description 统计分析-灵活报表授权
+-->
+<div style="margin-top: 10px">
+  <yu-row>
+    <yu-col :span="4" >
+      <yu-xtable ref="rolesTable" :data-url="rolesDataUrl" :pageable="pageable" @row-click="getTableFn" :height="roleHeight" 	>
+        <yu-xtable-column label="角色名称" prop="roleName"></yu-xtable-column>
+      </yu-xtable>
+    </yu-col>
+    <yu-col :span="9">
+   
+        <div style="color: #1f2d3d; font-size: 12px; font-weight: bold; padding: 10px 0 10px 10px; background-color: #cacacaca;" >未授权列表</div>
+        <yu-xtable ref="notAutTable" row-number :data-url="notAutDataUrl" :pageable=false :base-params="roleCode" :default-load="load"
+          @loaded="getnotAutTabledataFn" selection-type="checkbox" :height="height" :max-height="height">
+          <yu-xtable-column label="报表名称" prop="reportName"></yu-xtable-column>
+        </yu-xtable>
+
+    </yu-col>
+    <yu-col :span="2">
+      <yu-button-group style="margin-top: 100px;margin-left: 45px">
+        <yu-row :span="24" style="margin-top: 10px">
+          <yu-button icon="arrow-left" @click="addLeftFn"  size="large"></yu-button>
+        </yu-row>
+        <yu-row :span="24" style="margin-top: 10px">
+          <yu-button icon="d-arrow-left" @click="addAllLeftFn"  size="large"></yu-button>
+        </yu-row>
+        <yu-row :span="24" style="margin-top: 10px">
+          <yu-button icon="arrow-right" @click="addRightFn"  size="large"></yu-button>
+        </yu-row>
+        <yu-row :span="24" style="margin-top: 10px">
+          <yu-button icon="d-arrow-right" @click="addaAllRightFn"  size="large"></yu-button>
+        </yu-row>
+        <yu-row :span="24" style="margin-top: 10px">
+          <yu-button icon="delete" @click="deleteFn"  size="small">删除</yu-button>
+        </yu-row>
+        <yu-row :span="24" style="margin-top: 10px">
+          <yu-button icon="check" @click="saveFn"  size="small">保存</yu-button>
+        </yu-row>
+      </yu-button-group>
+    </yu-col>
+    <yu-col :span="9">
+
+
+        <div style="color: #1f2d3d; font-size: 12px; font-weight: bold; padding: 10px 0 10px 10px;background-color: #cacacaca;">已授权列表</div>
+        <yu-xtable ref="autTable" row-number :data-url="autDataUrl" :pageable=false :base-params="roleCode" :default-load="load"
+          @loaded="getAutTabledataFn" selection-type="checkbox" :height="height" :max-height="height">
+          <yu-xtable-column label="报表名称" prop="reportName" :base-params="roleCode" ></yu-xtable-column>
+        </yu-xtable>
+
+    </yu-col>
+  </yu-row>
+</div>

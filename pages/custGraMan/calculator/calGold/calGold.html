@@ -1,0 +1,52 @@
+<!--
+  @created by 张成龙 on 2019-1-24 17:37:23
+  @updated by
+  @description 黄金认购计算器
+-->
+<div>
+    <yu-row>
+        <yu-col :span="23">
+         <div class="yu-gridRightPanel" >
+  <yu-xform ref="searchFrom" v-model="searchformdata" label-width="160px" :height="grpFormHeight" >
+      <h1 style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;font-size:16px;margin-bottom: 20px;" borderStyle="border:0;">黄金认购计算器(仅供参考)</h1>
+      <yu-xform-group :column="2">
+          <yu-xform-item label="交易品种" placeholder="交易品种"   ctype="select" name="param1"  :rules="rules.allowBlank" :options="jypz  " ></yu-xform-item>                  
+          <yu-xform-item label="多空单" placeholder="多空单" ctype="select"  name="param2"  :options="dkd" :rules="rules.allowBlank"></yu-xform-item>                            
+          <yu-xform-item label="手续费(万分之)" placeholder="手续费(万分之)"  ctype="num" name="param3" :rules="rules.all"></yu-xform-item>   
+          <yu-xform-item label="认购手数" placeholder="认购手数" ctype="input"  name="param4"  :rules="rules.all" ></yu-xform-item> 
+          <yu-xform-item label="平仓价格" placeholder="平仓价格" ctype="input"  name="param5"  :rules="rules.all" ></yu-xform-item>                            
+          <yu-xform-item label="预计平仓价格" placeholder="预计平仓价格" ctype="input"  name="param6"  :rules="rules.all" ></yu-xform-item>                                 
+        </yu-xform-group>
+    <div class="yu-grpButton">                                                                                      
+      <yu-button-group>                                                                                                
+        <yu-button icon="check" type="primary" @click="calculate">计算</yu-button>                                                        
+        <yu-button icon="yx-undo2" type="" @click="restSeacher">重置</yu-button>                                                  
+      </yu-button-group>                                                                                               
+    </div>               
+  </yu-xform>
+  </div>
+  </yu-col>
+    <yu-col :span="23">
+      <div class="yu-gridRightPanel" :style="{ 'height': (height - 200) + 'px' }">
+        <h1>计算结果</h1>
+        <yu-xform ref="refForm" label-width="140px" :height="grpFormHeight" v-model="formdata" :disabled="formDisabled">
+          <yu-xform-group :column="2">
+              <yu-xform-item label="认购费用(元)" ctype="num" name="resultMoney1" :readonly="readFlag"></yu-xform-item> 
+              <yu-xform-item label="预计盈亏(元)" ctype="input" name="resultMoney2" :readonly="readFlag"></yu-xform-item> 
+          </yu-xform-group>
+        </yu-xform>
+      </div>
+        <div property="footer"style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;" borderStyle="border:0;">
+            <br/>
+            <p style="font-size: 14px;color: #D83C3B">多单情况:</p>                          
+            <p style="font-size: 14px;color: #D83C3B">认购费用= 认购手数*开仓价格*（1+手续费);</p>                         
+            <p style="font-size: 14px;color: #D83C3B">预计盈亏=认购手数*（预计平仓价格-开仓价格;</p>    
+            <p style="font-size: 14px;color: #D83C3B">空单情况:</p>          
+            <p style="font-size: 14px;color: #D83C3B">认购费用=认购手数*预计平仓价格*(1+手续费));</p>       
+            <p style="font-size: 14px;color: #D83C3B">预计盈亏=认购手数*(开仓价格-预计平仓价格);</p>            
+            <br/>
+            <p style="font-size: 14px;color: #D83C3B">本计算器结果仅供参考!</p>
+          </div>
+    </yu-col>
+  </yu-row>
+</div>

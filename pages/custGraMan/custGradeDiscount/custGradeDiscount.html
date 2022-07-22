@@ -1,0 +1,145 @@
+<!-- 
+  @Created by 张成龙 zhangcl3@yusys.com.cn on 2019-2-12 18:17:36.
+  @updated by
+  @description 客户等级优惠方案
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+        <yu-xform-item placeholder="适用范围" ctype="yufp-org-tree" name="preferentOrg"></yu-xform-item>
+        <yu-xform-item placeholder="适用客户" ctype="select" name="useCustType" data-code="CD0016"></yu-xform-item>
+        <yu-xform-item placeholder="服务等级" ctype="select" name="servLev" data-code="CD0032"></yu-xform-item>
+        <yu-xform-item placeholder="方案名称" ctype="input" name="preferentContent"></yu-xform-item>
+        <yu-xform-item placeholder="方案编号" ctype="input" name="preferentId"></yu-xform-item>
+        <yu-xform-item placeholder="是否启用" ctype="select" name="preferentStatus" data-code="CD0238"></yu-xform-item>
+
+      <!-- <yu-xform-item placeholder="标题" ctype="input" name="title"></yu-xform-item>
+      <yu-xform-item placeholder="时间" ctype="datepicker" name="createAt"></yu-xform-item>
+      <yu-xform-item placeholder="类型" ctype="select" name="type" data-code="NATIONALITY"></yu-xform-item> -->
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar"> 
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" @row-dblclick="rowDblClick">
+      <yu-xtable-column label="优惠方案" align="center">
+          <yu-xtable-column label="方案编号" prop="preferentId" width="150"></yu-xtable-column>
+          <yu-xtable-column label="方案内容" prop="preferentContent" width="150"></yu-xtable-column>
+          <yu-xtable-column label="适用客户" prop="useCustType" width="150" data-code="CD0016"></yu-xtable-column>
+          <yu-xtable-column label="实施渠道" prop="useChannl" width="150"></yu-xtable-column>
+        </yu-xtable-column>
+        <yu-xtable-column label="优惠幅度" align="center">
+            <yu-xtable-column label="0星" prop="gradelevel0" width="150"></yu-xtable-column>
+            <yu-xtable-column label="1星" prop="gradelevel1" width="150"></yu-xtable-column>
+            <yu-xtable-column label="2星" prop="gradelevel2" width="150"></yu-xtable-column>
+            <yu-xtable-column label="3星" prop="gradelevel3" width="150"></yu-xtable-column>
+            <yu-xtable-column label="4星" prop="gradelevel4" width="150"></yu-xtable-column>
+            <yu-xtable-column label="5星" prop="gradelevel5" width="150"></yu-xtable-column>
+            <yu-xtable-column label="6星" prop="gradelevel6" width="150"></yu-xtable-column>
+            <yu-xtable-column label="7星" prop="gradelevel7" width="150"></yu-xtable-column>
+          </yu-xtable-column>
+          <yu-xtable-column label="启停用维护" align="center">
+              <yu-xtable-column label="是否启用" prop="preferentStatus" width="150" data-code="CD0238"></yu-xtable-column>
+              <yu-xtable-column label="生效日期" prop="preferentBeginData" width="150" :formatter="formData"></yu-xtable-column>
+              <yu-xtable-column label="失效日期" prop="preferentEndData" width="150" :formatter="formData"></yu-xtable-column>
+              <yu-xtable-column label="维护人" prop="userName" width="150"></yu-xtable-column>
+              <yu-xtable-column label="所属部门" prop="orgName" width="150"></yu-xtable-column>
+              <yu-xtable-column label="最近一次维护日期" prop="lastUpdateDate" width="150" :formatter="formData"></yu-xtable-column>
+            </yu-xtable-column>
+    <!-- <yu-xtable-column label="编码" prop="id" width="150"></yu-xtable-column>
+    <yu-xtable-column label="名称" prop="title" width="200" sortable></yu-xtable-column>
+    <yu-xtable-column label="类型" prop="type" width="150" data-code="NATIONALITY"></yu-xtable-column>
+    <yu-xtable-column label="参与人" align="center">
+      <yu-xtable-column label="作者" prop="author" width="150"></yu-xtable-column>
+      <yu-xtable-column label="审核人" prop="auditor" width="150"></yu-xtable-column>
+    </yu-xtable-column>
+    <yu-xtable-column label="阅读数" prop="pageviews" width="100"></yu-xtable-column>
+    <yu-xtable-column label="状态" prop="status" width="120" data-code="PUBLISH_STATUS"></yu-xtable-column>
+    <yu-xtable-column label="时间" prop="createAt"></yu-xtable-column> -->
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1100px">
+     <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="formDisabled"> <!-- -->
+      <yu-xform-group>
+          <yu-xform-item label="方案编号" ctype="input" name="preferentId"  :hidden="formHidden"></yu-xform-item>
+          <yu-xform-item label="方案内容" ctype="input" name="preferentContent" :rules="rule[0]"></yu-xform-item>
+          <yu-xform-item label="适用客户" ctype="select" name="useCustType" data-code="CD0016" :rules="rule[0]"></yu-xform-item>
+          <yu-xform-item label="实施渠道" ctype="input" name="useChannl" ></yu-xform-item>
+          <yu-xform-item label="是否启用" ctype="select" name="preferentStatus" data-code="CD0238" :rules="rule[0]"></yu-xform-item>
+          <yu-xform-item label="生效日期" ctype="datepicker" :editable="false" name="preferentBeginData" :rules="rule[0]" ></yu-xform-item>
+          <yu-xform-item label="失效日期" ctype="datepicker" :editable="false" name="preferentEndData" :rules="rule[0]"></yu-xform-item>
+          <yu-xform-item label="维护人" ctype="input" name="userName" :hidden="formHidden"></yu-xform-item>
+          <yu-xform-item label="所属部门" ctype="input" name="orgName" :hidden="formHidden"></yu-xform-item>
+          <yu-xform-item label="最近一次维护日期" ctype="datepicker" :editable="false" name="lastUpdateDate" :hidden="formHidden"></yu-xform-item>
+          <yu-xform-item label="优惠内容描述" ctype="textarea" name="remark" :rows="3" :colspan="24" placeholder="500个字符以内" :rules="rule[1]"></yu-xform-item>
+         </yu-xform-group>
+         
+            <el-collapse value="1" >
+              <el-collapse-item name="1" title="优惠幅度列表">
+                  <div class="yu-toolBar">
+                      <yu-button-group> 
+                        <yu-button icon="plus" v-show="saveBtnShow" @click="addGradeFn(gradeValue)">新增</yu-button>
+                        <!-- <yu-button icon="yx-bin" v-show="saveBtnShow" @click="deleteGradeFn">删除</yu-button> -->
+                      </yu-button-group>
+                    </div>
+                    
+                        <!-- <yu-xtable ref="refCustTable" row-number :data="gradeValue"  :pageable="false" :data-url="dataUrlDetail"  >  
+                            <yu-xtable-column label="服务等级" prop="gradeLevel"  :ctype="table.gradeLevel" data-code="CD0032"></yu-xtable-column>
+                            <yu-xtable-column label="优惠折扣" prop="preferentStr" :ctype="table.preferentStr"></yu-xtable-column>
+                          </yu-xtable>  -->
+                    <template >
+                        <el-table border :data="gradeValue" style="width: 100%" >
+                             <el-table-column prop="gradeLevel" label="服务等级" style="width:6vw;" >
+                               <!-- <template scope="scope">
+                                  <el-input size="mini" v-model="scope.row.gradeLevel"  ></el-input>
+                              </template> -->
+                              <template scope="scope">
+                                  <el-select v-model="scope.row.gradeLevel" clearable :disabled="viewType=='DETAIL'"  >
+                                    <el-option
+                                      v-for="item in SERV_LEV"
+                                      :key="item.key"
+                                      :label="item.value"
+                                      :value="item.key">
+                                    </el-option>
+                                  </el-select>
+                              </template>
+                              </el-table-column>
+                           
+                             <el-table-column prop="preferentStr" label="优惠折扣">
+                              <template scope="scope">
+                                          <el-input  v-model="scope.row.preferentStr"  :disabled="viewType=='DETAIL'" ></el-input>
+                              </template>
+                             </el-table-column>
+                            <el-table-column   label="操作">
+                      <template slot-scope="scope">
+                      <el-button v-show="saveBtnShow" @click.native.prevent="deleteRow(scope.$index, gradeValue)" size="small"> 移除 </el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </template>
+              </el-collapse-item>
+            </el-collapse>
+        
+        <!-- <yu-xform-item label="编码" ctype="num" name="id" rules="required" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="名称" ctype="input" name="title" :rules="rule[0]"></yu-xform-item>
+        <yu-xform-item label="时间" ctype="datepicker" name="createAt"></yu-xform-item>
+        <yu-xform-item label="作者" ctype="input" name="author"></yu-xform-item>
+        <yu-xform-item label="审核人" ctype="input" name="auditor"></yu-xform-item>
+        <yu-xform-item label="类型" ctype="select" name="type" data-code="NATIONALITY"></yu-xform-item>
+        <yu-xform-item label="状态" ctype="select" name="status" data-code="PUBLISH_STATUS"></yu-xform-item>
+        <yu-xform-item label="阅读数" ctype="input" name="pageviews" :rules="rule[1]"></yu-xform-item>
+        <yu-xform-item label="自定义" ctype="yufp-demo-selector" name="yourField"></yu-xform-item>
+        <yu-xform-item label="点评" ctype="textarea" name="remark" :rows="3" :colspan="24" placeholder="2000个字符以内"></yu-xform-item> -->
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

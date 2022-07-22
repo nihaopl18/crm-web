@@ -1,0 +1,25 @@
+<!--
+  @created by jiangcheng 2017-11-15
+  @updated by weimei1 2018-09-18 重构为vue
+  @description 登录页
+-->
+<div id="login">
+
+    <div class="yu-loginBox">
+        <!--../../../-->
+        <h1><img src="themes/common/images/Login_Logo@2x.png" alt=""></h1>
+        <h2><img src="themes/common/images/Welcome@2x.png" alt=""></h2>
+        <!-- <p>欢迎来到 <em style="color: #E30A2A">PCRM</em> 新一代客户关系管理系统</p> -->
+        <ul>
+            <li>
+                <template>
+                    <yu-xselect ref="xselect" v-model="selectRole" :options="options" placeholder="请选择登录角色" filterable @change="nextFn"></yu-xselect>
+                    <!-- <div style="margin-top: 20px; text-align: center">
+                      <yu-button @click="nextFn" type="primary">确认</yu-button>
+                      <yu-button @click="cancelFn" type="primary">取消</yu-button>
+                    </div> -->
+                </template>
+            </li>
+        </ul>
+    </div>
+</div>

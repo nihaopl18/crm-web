@@ -1,0 +1,36 @@
+<!-- 
+  @Created by   on 2019-4-23 11:06:47.
+  @updated by
+  @description 成本管理
+-->
+<div>
+    <yu-row>
+        <yu-col :span="6">
+            <yufp-ext-tree ref="refTree" :height="height - 20" @node-click="nodeClickFn" :data-url="treeUrl" data-id="typeId" data-label="typeName" data-pid="typeParentId" data-root="P000" :check-strictly="true" style="margin:10px 10px 0 0;">
+            </yufp-ext-tree>
+        </yu-col>
+        <yu-col :span="18">
+            <h2 class="title">交易名称:{{transactionName}}</h2>
+            <yu-xform ref="refFromTable" v-model="formdata">
+                <yu-xform-group class="form-group">
+                    <yu-xform-item label="分摊模式" colspan="24" name="costType" rules="required" ctype="checkbox" data-code="COST_TYPE" @change="changeFn" class="form-item"></yu-xform-item>
+                    <!-- <yu-xform-item :hidden="orgoptionhide" label="机构" colspan="12" name="org" ctype="radio" :options="orgOptions" class="form-item" @change="changeOrgFn"></yu-xform-item>
+                    <yu-xform-item :hidden="orghide" colspan="12" name="costField" ctype="select" :options="fieldOptions" class="form-item" :disabled="disabledField"></yu-xform-item>
+                    <yu-xform-item :hidden="prodhide" label="产品" colspan="24" name="product" ctype="select" :options="fieldOptions" class="form-item"></yu-xform-item>
+                    <yu-xform-item :hidden="personhide" label="法人" colspan="24" name="legalperson" placeholder="本法人" ctype="input" :disabled=true class="form-item"></yu-xform-item>
+              -->
+                    <yu-xform-item label="机构" colspan="12" name="org" ctype="radio" :options="orgOptions" class="form-item" @change="changeOrgFn"></yu-xform-item>
+                    <yu-xform-item label="分摊领域" colspan="12" name="costField" ctype="select" :options="fieldOptions" class="form-item" :disabled="disabledField"></yu-xform-item>
+                    <yu-xform-item label="产品" colspan="24" name="product" ctype="select" :options="fieldOptions" class="form-item"></yu-xform-item>
+                    <yu-xform-item label="法人" colspan="24" name="legalperson" placeholder="本法人" ctype="input" :disabled=true class="form-item"></yu-xform-item>
+
+                </yu-xform-group>
+                <!-- <span class="legal-person" :hidden="personhide">法人:{{legalperson}}</span> -->
+                <div class="yu-grpButton">
+                    <yu-button icon="check" type="primary" @click="saveFn">保存</yu-button>
+                    <yu-button icon="yx-undo2" type="primary" @click="cancelFn">重置</yu-button>
+                </div>
+            </yu-xform>
+        </yu-col>
+    </yu-row>
+</div>

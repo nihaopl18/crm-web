@@ -1,0 +1,135 @@
+<!-- 
+  @Created by mabintao on 2022-02-19
+  @updated by
+  @description 信息报表1-5  AUM余额报表
+-->
+<div id="infoTable5">
+    <!-- test  allCustomerSearch -->
+    <link href="./pages/dy/infoTable5/infoTable5.css" rel="stylesheet" type="text/css">
+    <div>
+        <div class="mt20 bgWhite" style="padding: 0px 20px;">
+            <yu-row :gutter="20">
+                <yu-col :span="23" :offset="1">
+                    <yu-xform size="small" v-model="queryParams" label-width="140px" ref="queryParams" related-table-name="yutable1" responsive>
+                        <yu-xform-group :column="2">
+                            <yu-quarter ref="quarterRef" :qaur-params="fourOrOne"></yu-quarter>
+                        </yu-xform-group>
+                        <yu-xform-item ctype="custom" style="text-align: right;">
+                            <yu-button @click="resetFormFn('queryParams')">重置</yu-button>
+                            <yu-button type="primary" @click="searchFn('queryParams')">查询</yu-button>
+                            <yu-button type="primary" @click="exportFn()">导出</yu-button>
+                        </yu-xform-item>
+                    </yu-xform>
+                </yu-col>
+            </yu-row>
+        </div>
+        <div class="bgWhite" style="padding: 0px 20px;">
+            <yu-xtable v-loading="loading5" :pageable="false" border :select-on-indeterminate="false" ref="multipleTable" :data="tableData" :base-params="baseParams" class="mt20" :default-load="false" @selection-change="selectChange" style="width: 100%" height="55vh">
+                <!-- <yu-xtable-column type="selection" width="55"></yu-xtable-column> -->
+                <yu-xtable-column prop="nationality" label="区域"></yu-xtable-column>
+                <yu-xtable-column prop="belongBrch" label="机构" width=""></yu-xtable-column>
+                <yu-xtable-column label="AUM余额[万元]" align="center" width="300px">
+                    <yu-xtable-column prop="depositBalanceRmb" label="一般存款" width="160px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.depositBalanceRmb || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="nonExchangeFinBalance" label="非汇率结构性产品" width="160px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.nonExchangeFinBalance || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="exchangeFinBalance" label="汇款结构性产品" width="160px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.exchangeFinBalance || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="qdiiBalanceRmb" label="QDII" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.qdiiBalanceRmb || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="rmbFundBalance" label="国内基金" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.rmbFundBalance || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="trustBalanceRmb" label="代销信托" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.trustBalanceRmb || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="assestManageBalance" label="资管" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.assestManageBalance || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="insurranceBalance" label="银保" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.insurranceBalance || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="balanceTotal" label="合计" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.balanceTotal || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                </yu-xtable-column>
+                <yu-xtable-column label="AUM余额月日均[万元]" align="center" width="300px">
+                    <yu-xtable-column prop="depositMthAvgBalanceRmb" label="存款月日均" width="160px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.depositMthAvgBalanceRmb || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="nonExchangeFinMthAvgBalRmb" label="非汇理财余额月日均" width="160px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.nonExchangeFinMthAvgBalRmb || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="exchangeFinMthAvgBalRmb" label="汇率理财余额月日均" width="160px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.exchangeFinMthAvgBalRmb || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="qdiiMthAvgBalanceRmb" label="QDII余额月日均" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.qdiiMthAvgBalanceRmb || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="rmbFundMthAvgBal" label="人民币基金余额月日均" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.rmbFundMthAvgBal || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="sellTrustMthAvgBalRmb" label="代销信托余额月日均" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.sellTrustMthAvgBalRmb || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="assestManageMthAvgBal" label="资管余额月日均" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.assestManageMthAvgBal || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="insurranceMthAvgBalRmb" label="保险余额月日均" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.insurranceMthAvgBalRmb || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="mthAvgBalanceRmbTotal" label="余额月日均合计" width="200px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.mthAvgBalanceRmbTotal || 0,2) }}
+                        </template>
+                    </yu-xtable-column>
+                </yu-xtable-column>
+            </yu-xtable>
+            <!-- <template>
+                <div class="table-pagination">
+                <div class="demonstration">
+                    如果不勾选涉及民生，则在优慧客户数和显卓客户数的页面显示减掉民生数
+                </div>
+                </div>
+            </template> -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2020-8-6 14:43:53.
+  @updated by
+  @description 支行绩效二次分配
+-->
+<div>
+  <div style="margin: 10px 0px;">
+    <yu-xform related-table-name="refTable" ref="refQuery">
+      <yu-xform-group :column="4">
+        <yu-xform-item placeholder="数据日期" ctype="datepicker" name="statDate" :editable="false"></yu-xform-item>
+        <yu-xform-item placeholder="机构名称" ctype="yufp-org-tree" name="orgId"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <div style="float:right;">
+      <yu-button icon="search" type="primary" @click="searchFn" :loading="loadingFlag">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+    </div>
+  </div>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="document" @click="bonusShareFn">绩效分配</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" @loaded="loadedHandler">
+    <yu-xtable-column label="数据日期" prop="statDate"></yu-xtable-column>
+    <yu-xtable-column label="机构编号" prop="orgId" ></yu-xtable-column>
+    <yu-xtable-column label="机构名称" prop="orgName" ></yu-xtable-column>
+    <yu-xtable-column label="可分配绩效金额" prop="surPoolBonus" ></yu-xtable-column>
+  </yu-xtable>
+  <yu-xdialog title="奖金分配" :visible.sync="dialogVisible" width="70%">
+    <yu-xform ref="refForm" label-width="150px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="机构名称" ctype="input" name="orgName"></yu-xform-item>
+        <yu-xform-item label="奖金池金额" ctype="input" name="poolBonus"></yu-xform-item>
+        <yu-xform-item label="可分配绩效金额" ctype="input" name="surPoolBonus"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <yu-collapse v-model="activeNames">
+      <yu-collapse-item title="已分配人员展示" name="1">
+        <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="plus" @click="addDtlFn">新增分配人员</yu-button>
+            <yu-button icon="yx-bin" @click="deleteDtlFn">删除</yu-button>
+          </yu-button-group>
+        </div>
+        <yu-xtable ref="dtlRefTable" row-number :data-url="dtlDataUrl" selection-type="checkbox" :pageable="false">
+          <yu-xtable-column label="员工编号" prop="evlObjId"></yu-xtable-column>
+          <yu-xtable-column label="员工名称" prop="evlObjName" ></yu-xtable-column>
+          <yu-xtable-column label="所属机构" prop="belongOrgName" ></yu-xtable-column>
+          <yu-xtable-column label="数据日期" prop="statDate" ></yu-xtable-column>
+          <yu-xtable-column label="分配金额" prop="operBonus" ctype="num" 
+            :rules="[{validator: yufp.validator.digit, message: '数字', trigger: 'blur'}]" ></yu-xtable-column>
+        </yu-xtable>
+      </yu-collapse-item>
+    </yu-collapse>
+    <div class="yu-grpButton">
+      <yu-button icon="check" type="primary" @click="saveFn">保存</yu-button>
+      <yu-button icon="yx-undo2" type="primary" @click="dialogVisible = false">取消</yu-button>
+    </div>
+  </yu-xdialog>
+  <yu-xdialog title="人员选择" :visible.sync="userDialogVisible" width="50%">
+    <el-table-x ref="userTable" :checkbox="true" :data-url="userDataUrl" 
+      :base-params="userDataParams" :table-columns="userTableColumns">
+    </el-table-x>
+    <div slot="footer" class="dialog-footer"  align="center">
+      <el-button type="primary" @click="userConfirmFn">确 定</el-button>
+      <el-button @click="userDialogVisible = false">取 消</el-button>
+    </div>
+  </yu-xdialog>
+</div>

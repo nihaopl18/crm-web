@@ -1,0 +1,53 @@
+<!-- 
+  @Created by 张成龙 zhangcl3@yusys.com.cn on 2019-1-23 09:38:23.
+  @updated by
+  @description 活期存款计算器
+-->
+<div>
+    <yu-row>
+        <yu-col :span="23">
+         <div class="yu-gridRightPanel" >
+  <yu-xform ref="searchFrom" v-model="searchformdata" label-width="160px">
+      <h1 style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;font-size:16px;margin-bottom: 20px;" borderStyle="border:0;">活期存款计算器(仅供参考)</h1>
+    <yu-xform-group :column="2">
+      <!-- <yu-xform-item  label="币种" placeholder="币种"       ctype="select" name="curr" data-code="CURR" value="CNY" rules="required" ></yu-xform-item>                   -->
+      <yu-xform-item label="起存日期" placeholder="起存日期"    ctype="datepicker" name="qcrq" value="" :editable="false" rules="required"></yu-xform-item>                            
+      <yu-xform-item label="终止日期" placeholder="终止日期"    ctype="datepicker" name="zzrq" value="" :rules="rules.allowBlank"  :editable="false" ></yu-xform-item>                            
+      <yu-xform-item label="存入本金" placeholder="存入本金"    ctype="num" name="crbj" :rules="rules.all"  ></yu-xform-item>                               
+      <yu-xform-item label="年利率(%)" placeholder="年利率(%)"    ctype="num" name="nlv" :rules="rules.all"  ></yu-xform-item>   
+    </yu-xform-group>
+    <div class="yu-grpButton">                                                                                      
+      <yu-button-group>                                                                                                
+        <yu-button icon="check" type="primary" @click="calculate">计算</yu-button>                                                        
+        <yu-button icon="yx-undo2" type="" @click="restSeacher">重置</yu-button>                                                  
+      </yu-button-group>                                                                                               
+    </div>               
+  </yu-xform>
+  </div>
+</yu-col>
+    <yu-col :span="23">
+      <div class="yu-gridRightPanel" :style="{ 'height': (height - 200) + 'px' }">
+        <h1>计算结果</h1>
+        <yu-xform ref="refForm" label-width="140px" :height="grpFormHeight" v-model="formdata" :disabled="formDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="应得利息" ctype="num" name="resultMoney1" :readonly="readFlag"></yu-xform-item>                                
+            <!-- <yu-xform-item label="应付利息税" ctype="num" name="resultMoney2" :readonly="readFlag"></yu-xform-item>                            -->
+            <!-- <yu-xform-item label="实得利息" ctype="num" name="resultMoney3" :readonly="readFlag"></yu-xform-item>                                -->
+            <yu-xform-item label="本息合计" ctype="num" name="resultMoney4" :readonly="readFlag"></yu-xform-item>  
+          </yu-xform-group>
+        </yu-xform>
+      </div>
+        <div property="footer"style="text-align:left;padding-left:10px;padding-top:5px;padding-bottom:5px;" borderStyle="border:0;">
+          <br/>
+          <p style="font-size: 14px;color: #D83C3B">日利率=年利率/360;</p>                          
+          <p style="font-size: 14px;color: #D83C3B">本金=本金+利息（结息日计算）;</p>                         
+          <p style="font-size: 14px;color: #D83C3B">应得利息=本金*日利率*天数;</p>
+          <p style="font-size: 14px;color: #D83C3B">本息合计=本金+利息;（终止日计算）</p>                  
+          <!-- <p style="font-size: 16px;color: #D83C3B">利息税=利息*利息税率;</p>                
+          <p style="font-size: 16px;color: #D83C3B">实得利息=应得利息-利息税;</p> -->
+         <br/>
+          <p style="font-size: 14px;color: #D83C3B">本计算器结果仅供参考!</p>
+          </div>
+    </yu-col>
+  </yu-row>
+</div>

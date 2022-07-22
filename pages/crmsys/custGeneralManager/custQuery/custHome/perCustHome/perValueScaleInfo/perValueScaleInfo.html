@@ -1,0 +1,18 @@
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-2-16 11:01:33.
+  @updated by
+  @description 价值等级
+-->
+<div>
+ 
+ 
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+
+      <yu-xtable-column label="评级日期" prop="evaluateDate" :formatter="formJE" ></yu-xtable-column>
+      <yu-xtable-column label="剔除风险前的价值等级" prop="preMinusLevel" data-code="CD0032"></yu-xtable-column>
+      <yu-xtable-column label="风险影响因子内容" prop="gradeMinusContent" ></yu-xtable-column>
+      <yu-xtable-column label="价值等级" prop="gradeLevel" data-code="CD0243"></yu-xtable-column>
+  </yu-xtable>
+ 
+
+</div>

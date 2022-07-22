@@ -1,0 +1,428 @@
+<!--
+  @created by 冉珣 on 2021-11-1 14:59:51
+  @updated by
+  @description 业绩查看
+-->
+<div class="performa_view">
+    <!-- 若无个性化样式，请删除本行及下行 -->
+    <link href="./pages/dy/performance/performanceView/performanceView.css" rel="stylesheet" type="text/css">
+    <div class="option-container">
+        <div class="box-title">
+            <div class="title">业绩指标</div>
+            <div style="margin-right: 50px;">
+                <span style="margin-right: 20px;">数据更新时间：{{ dataDateata }}</span>                 <span>存款、手续费更新时间：{{ K016date }}</span>
+            </div>
+        </div>
+        <div class="top-kanban">
+            <div class="top-circle">
+                <div v-for="(item, index) in progressTop" :key="item.title">
+                    <yu-progress type="circle" :percentage="item.percent=='-'?0:item.percent" width="100" :stroke-width="8" color="#EE434C">
+                        <div class="percent">{{ item.percent }}
+                            <span>%</span>
+                        </div>
+                        <div class="desc">完成率</div>
+                    </yu-progress>
+                    <div class="left-content">
+                        <div class="title-detail">
+                            <div>
+                                {{ item.title }}
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="title">{{ item.title }}</p>
+                                        <p class="content">{{ item.content }}</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <yu-link type="warning" :underline="false" v-if="item.triumphId !=='K003'" @click="detailFn(item)">详情</yu-link>
+                        </div>
+                        <p>{{ item.money }}</p>
+                        <div class="compare">
+                            <div>
+                                <span>同比</span>
+                                <span :class="yufp.util.returnUpOrDownClass(item.upOrDownClassTb)">{{ item.tb }} %</span>
+                            </div>
+                            <div style="margin-left: 6px;">
+                                <span>环比</span>
+                                <span :class="yufp.util.returnUpOrDownClass(item.upOrDownClassHb)">{{ item.hb }} %</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-circle">
+                <div v-for="item in progressBottom" :key="item.title">
+                    <yu-progress type="circle" :percentage="item.percent=='-'?0:item.percent" :stroke-width="8" width="100" color="#EE434C" v-if="item.percent!=undefined">
+                        <div class="percent">{{ item.percent }}
+                            <span>%</span>
+                        </div>
+                        <div class="desc">完成率</div>
+                    </yu-progress>
+                    <div class="left-content" v-if="item.title">
+                        <div class="title-detail">
+                            <div>
+                                {{ item.title }}
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="title">{{ item.title }}</p>
+                                        <p class="content">{{ item.content }}</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <yu-link type="warning" :underline="false" v-if="item.triumphId === 'K005'" @click="detailFn(item)">详情</yu-link>
+                        </div>
+                        <p>{{ item.money }}</p>
+                        <div class="compare">
+                            <div>
+                                <span>同比</span>
+                                <span :class="yufp.util.returnUpOrDownClass(item.upOrDownClassTb)">{{ item.tb }} %</span>
+                            </div>
+                            <div style="margin-left: 6px;">
+                                <span>环比</span>
+                                <span :class="yufp.util.returnUpOrDownClass(item.upOrDownClassHb)">{{ item.hb }} %</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="top-kanban">
+            <yu-row>
+                <yu-col :span="8" class="top-circle">
+                    <div>
+                        <yu-progress type="circle" :percentage="ppopData[0].percent" width="100" :stroke-width="8" color="#FFAA32">
+                            <div class="percent">{{ppopData[0].percent}}
+                                <span>%</span>
+                            </div>
+                            <div class="desc">完成率</div>
+                        </yu-progress>
+                        <div class="left-content">
+                            <div class="title-detail" style="justify-content: flex-start">
+                                <div>
+                                    {{ppopData[0].title}}
+                                    <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                        <div slot="content">
+                                            <p class="title">{{ppopData[0].title}}</p>
+                                            <p class="content">{{ppopData[0].content}}</p>
+                                        </div>
+                                        <i class="el-icon-warning-outline"></i>
+                                    </el-tooltip>
+                                </div>
+                                <el-divider direction="vertical"></el-divider>
+                                <span>统计时间 {{ ppopData[0].dataDate}}</span>
+                            </div>
+                            <p>{{ppopData[0].money}}</p>
+                            <div class="compare">
+                                <div>
+                                    <span>同比</span>
+                                    <span :class="yufp.util.returnUpOrDownClass(ppopData[0].upOrDownClassTb)">{{ppopData[0].tb}} %</span>
+                                </div>
+                                <div style="margin-left: 6px;">
+                                    <span>环比</span>
+                                    <span :class="yufp.util.returnUpOrDownClass(ppopData[0].upOrDownClassHb)">{{ppopData[0].hb}} </span>
+                                </div>
+                            </div>
+                            <yu-tag type="warning" style="width: 84px;font-size: 12px">每月更新一次</yu-tag>
+                        </div>
+                    </div>
+
+                </yu-col>
+                <yu-col :span="16" class="echartBox">
+                    <p>模拟PPOP组成</p>
+                    <yu-echarts ref="refEchart" :option="options"></yu-echarts>
+                    <div class="echartsItem">
+                        <p>
+                            <span>个人存款净收入</span>
+                            <yu-tooltip class="item" effect="light" content="统计期内个人存款模拟净收入" placement="bottom-start">
+                                <i class="el-icon-warning-outline"></i>
+                            </yu-tooltip>
+                            <span>{{yufp.util.moneyFormatter(ppopCompose.netIncomeDeposits || 0)}}</span>
+                        </p>
+                        <p>
+                            <span>零售贷款模拟净收入(含抵押贷款)</span>
+                            <yu-tooltip class="item" effect="light" content="零售贷款模拟净收入（含抵押贷款）=Σ（统计期间内个贷放款模拟PPOP+抵押回收贷款模拟净收入）" placement="bottom-start">
+                                <i class="el-icon-warning-outline"></i>
+                            </yu-tooltip>
+                            <span>{{yufp.util.moneyFormatter(ppopCompose.simulatedNetIncome || 0)}}</span>
+                        </p>
+                        <p>
+                            <span>中收模拟收入合计</span>
+                            <yu-tooltip class="item" effect="light" content="中收模拟收入合计=Σ（统计期间内投资产品中间业务模拟收入+银保中间业务模拟收入+结售汇中间业务模拟收入）" placement="bottom-start">
+                                <i class="el-icon-warning-outline"></i>
+                            </yu-tooltip>
+                            <span>{{yufp.util.moneyFormatter(ppopCompose.middleIncomeRevenue || 0)}}</span>
+                        </p>
+                    </div>
+                </yu-col>
+            </yu-row>
+        </div>
+    </div>
+
+    <div class="option-container">
+        <div class="box-title">
+            <div class="title">业绩相关指标</div>
+        </div>
+        <div class="top-kanban">
+            <div class="top-circle">
+                <div v-for="(item, index) in balanceFirst" :key="item.title">
+                    <div class="left-content">
+                        <div class="title-detail">
+                            <div>
+                                {{ item.title }}
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="title">{{ item.title }}</p>
+                                        <p class="content">{{ item.content }}</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <yu-link type="warning" :underline="false" v-if="item.triumphId !== 'K010'" @click="detailFn(item)">详情</yu-link>
+                        </div>
+                        <p>{{ item.money }}</p>
+                        <div class="compare">
+                            <div>
+                                <span>同比</span>
+                                <span :class="yufp.util.returnUpOrDownClass(item.upOrDownClassTb)">{{ item.tb }} %</span>
+                            </div>
+                            <div style="margin-left: 6px;">
+                                <span>环比</span>
+                                <span :class="yufp.util.returnUpOrDownClass(item.upOrDownClassHb)">{{ item.hb }} %</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-circle">
+                <div v-for="item in balanceSecond" :key="item.title">
+                    <div class="left-content">
+                        <div class="title-detail">
+                            <div>
+                                {{ item.title }}
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start" v-if="item.title != '按揭放款笔数' && item.title != '车位贷放款笔数'">
+                                    <div slot="content">
+                                        <p class="title">{{ item.title }}</p>
+                                        <p class="content">{{ item.content }}</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <yu-link type="warning" :underline="false" v-if="item.triumphId === 'K012' || item.triumphId === 'K014'" @click="detailFn(item)">详情</yu-link>
+                        </div>
+                        <p>{{ item.money }}</p>
+                        <div class="compare">
+                            <div>
+                                <span>同比</span>
+                                <span :class="yufp.util.returnUpOrDownClass(item.upOrDownClassTb)">{{ item.tb }} %</span>
+                            </div>
+                            <div style="margin-left: 6px;">
+                                <span>环比</span>
+                                <span :class="yufp.util.returnUpOrDownClass(item.upOrDownClassHb)">{{ item.hb }} %</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-circle">
+                <div v-for="item in balanceThird" :key="item.title">
+                    <div class="left-content">
+                        <div class="title-detail">
+                            <div>
+                                {{ item.title }}
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="title">{{ item.title }}</p>
+                                        <p class="content">{{ item.content }}</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <yu-link type="warning" :underline="false" @click="detailFn(item)">详情</yu-link>
+                        </div>
+                        <p>{{ item.money }}</p>
+                        <div class="compare">
+                            <div>
+                                <span>同比</span>
+                                <span :class="yufp.util.returnUpOrDownClass(item.upOrDownClassTb)">{{ item.tb }} %</span>
+                            </div>
+                            <div style="margin-left: 6px;">
+                                <span>环比</span>
+                                <span :class="yufp.util.returnUpOrDownClass(item.upOrDownClassHb)">{{ item.hb }} %</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 手续费详情 -->
+    <yu-dialog :title="isInnerShow ? dialogTitle + '详情' : dialogTitle" :visible.sync="isFee" class="createBox" min-width="920" :before-close="handleClose">
+        <div style="height: 700px;padding: 22px 24px 0">
+            <yu-xtable ref="detailFeeTable" :data-url="feeDetailUrl" :default-load="false" style="width: 100%" max-height="650">
+                <template>
+                <yu-xtable-column prop="targetName" :label="!isInnerShow ? '客户经理名称' : '客户姓名' ">
+                    <template slot-scope="scope">
+                        <yu-link type="primary" :underline="false" @click="innerDetailFn(scope.row, 'detailFeeTable')" v-show="!isInnerShow">{{scope.row.targetName}}</yu-link>
+                        <span v-show="isInnerShow">{{scope.row.targetName}}</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="targetId" :label="!isInnerShow ? '客户经理编号' : 'ECIF号' "></yu-xtable-column>
+                </template>
+                <!-- <template v-else>
+          <yu-xtable-column prop="targetName" label="客户姓名"></yu-xtable-column>
+          <yu-xtable-column prop="targetId" label="ECIF号"></yu-xtable-column>
+        </template> -->
+                <yu-xtable-column prop="commissionChargeM" label="当月手续费">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.commissionChargeM || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="commissionChargeS" label="当季手续费">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.commissionChargeS || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="commissionChargeY" label="当年手续费">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.commissionChargeY || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+            </yu-xtable>
+        </div>
+        <span slote="footer" v-if="isInnerShow && !isManager">
+        <yu-button type="plain" @click="backFn">返回{{dialogTitle}}</yu-button>
+      </span>
+    </yu-dialog>
+    <!-- 贷款详情 -->
+    <yu-dialog :title="isInnerShow ? dialogTitle + '详情' : dialogTitle" :visible.sync="isLoan" class="createBox" min-width="920" :before-close="handleClose">
+        <div style="height: 700px;padding: 22px 24px 0">
+            <yu-xtable ref="detailLoanTable" :data-url="loanDetailUrl" :default-load="false" style="width: 100%" max-height="650">
+                <template>
+                    <yu-xtable-column prop="targetName" :label="!isInnerShow ? '客户经理名称' : '客户姓名' ">
+                        <template slot-scope="scope">
+                            <yu-link type="primary" :underline="false" @click="innerDetailFn(scope.row, 'detailLoanTable')"  v-show="!isInnerShow">{{scope.row.targetName}}</yu-link>
+                            <span v-show="isInnerShow">{{scope.row.targetName}}</span>
+                        </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="targetId" :label="!isInnerShow ? '客户经理编号' : 'ECIF号' "></yu-xtable-column>
+                </template>
+                <!-- <template v-else>
+                        <yu-xtable-column prop="targetName" label="客户姓名"></yu-xtable-column>
+                        <yu-xtable-column prop="targetId" label="ECIF号"></yu-xtable-column>
+                    </template> -->
+                <yu-xtable-column prop="loanType" label="产品类型">
+                    <template slot-scope="scope">
+                        <!-- {{ scope.row.loanType == '01' ? '按揭贷款' : '车位贷款' }} -->
+                        <span v-show=" scope.row.loanType == '01' ">按揭贷款</span>
+                        <span v-show=" scope.row.loanType == '02' ">车位贷款</span>
+                        <span v-show=" scope.row.loanType == '00' ">贷款</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="loanAmountM" label="当月放款金额">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.loanAmountM || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="loanCountM" label="当月放款笔数"></yu-xtable-column>
+            </yu-xtable>
+        </div>
+        <span slote="footer" v-if="isInnerShow && !isManager">
+        <yu-button type="plain" @click="backFn">返回{{dialogTitle}}</yu-button>
+      </span>
+    </yu-dialog>
+    <!-- AUM详情 -->
+    <yu-dialog :title="dialogTitle" :visible.sync="isAUM" class="createBox" min-width="920" :before-close="handleClose">
+        <div style="height: 700px;padding: 22px 24px 0">
+            <yu-xtable ref="detailAUMTable" :data-url="aumDetailUrl" :default-load="false" style="width: 100%" max-height="650">
+                <yu-xtable-column prop="mgrName" label="客户经理名称" width="140"></yu-xtable-column>
+                <yu-xtable-column prop="mgrId" label="客户经理编号" width="140"></yu-xtable-column>
+                <yu-xtable-column prop="custName" label="客户姓名" width="140"></yu-xtable-column>
+                <yu-xtable-column prop="custId" label="ECIF号" width="140"></yu-xtable-column>
+                <yu-xtable-column prop="financialAum" label="理财AUM余额" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.financialAum || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="financialAumNg" label="理财AUM余额净增" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.financialAumNg || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="insureAum" label="保险AUM余额" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.insureAum || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="insureAumNg" label="保险AUM余额净增" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.insureAumNg || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="depositAum" label="存款AUM余额" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.depositAum || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="depositAumNg" label="存款AUM余额净增" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.depositAumNg || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+            </yu-xtable>
+        </div>
+    </yu-dialog>
+    <!-- 存款详情 -->
+    <yu-dialog :title="isInnerShow ? dialogTitle + '详情' : dialogTitle" :visible.sync="isDesposit" class="createBox" min-width="920" :before-close="handleClose">
+        <div style="height: 700px;padding: 22px 24px 0">
+            <yu-xtable ref="detailDespositTable" v-if="isDesposit" :data-url="despositDetailUrl" :default-load="false" style="width: 100%" max-height="650">
+                <yu-xtable-column prop="targetName" :label="!isInnerShow ? '客户经理名称' : '客户姓名' " width="120">
+                    <template slot-scope="scope">
+                        <yu-link type="primary" :underline="false" @click="innerDetailFn(scope.row, 'detailDespositTable')" v-show="!isInnerShow">{{scope.row.targetName}}</yu-link>
+                        <span v-show="isInnerShow">{{scope.row.targetName}}</span>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="targetId" :label="!isInnerShow ? '客户经理编号' : 'ECIF号' " width="120"></yu-xtable-column>
+                <!-- <template v-else>
+                    <yu-xtable-column prop="targetName" label="客户姓名" width="120"></yu-xtable-column>
+                    <yu-xtable-column prop="targetId" label="ECIF号" width="120"></yu-xtable-column>
+                    </template> -->
+                <yu-xtable-column prop="exchangeRateDeposit" label="汇率存款年日均" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.exchangeRateDeposit || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="exchangeRateDepositNg" label="汇率存款年日均净增" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.exchangeRateDepositNg || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="nonExchangeDeposit" label="非汇存款年日均" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.nonExchangeDeposit || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="nonExchangeDepositNg" label="非汇存款年日均净增" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.nonExchangeDepositNg || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="commonlyDeposit" label="一般存款当年日均" width="140">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.commonlyDeposit || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="commonlyDepositNg" label="一般存款当年日均净增" width="160">
+                    <template slot-scope="scope">
+                        {{ yufp.util.moneyFormatter(scope.row.commonlyDepositNg || 0,2) }}
+                    </template>
+                </yu-xtable-column>
+                <!-- <yu-xtable-column prop="depositAum" label="外汇存款当年日均" width="140"></yu-xtable-column>
+                 <yu-xtable-column prop="depositAumNg" label="外汇存款当年日均净增" width="140"></yu-xtable-column> -->
+            </yu-xtable>
+        </div>
+        <span slote="footer" v-if="isInnerShow && !isManager">
+        <yu-button type="plain" @click="backFn">返回{{dialogTitle}}</yu-button>
+      </span>
+    </yu-dialog>
+</div>

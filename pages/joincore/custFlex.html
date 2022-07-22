@@ -1,0 +1,92 @@
+<!-- <div>
+  <el-card class= "box-card" >
+      <div slot= "header">
+          <span >不脱敏导出申请信息</span>
+      </div>
+      <el-table-x ref="tableList"  :max-height="height" :data-url="urls.dataUrl"  :table-columns="tableColumns" >
+      </el-table-x>
+  </el-card>
+</div> -->
+
+<!-- 
+  @Created by hesha hesha@yusys.com.cn on 2019-3-2 13:45:17.
+  @updated by
+  @description test
+-->
+<div>
+    <yu-collapse v-model="expandCollapseName">
+        <yu-collapse-item title="不脱敏导出申请信息" name="base">
+             <el-form ref= "form" :model= "form" label-width= "80px" >
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label= "流程实例号" >
+                            <el-input v-model= "form.instanceid" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label= "流程批次号" >
+                            <el-input v-model= "form.bizseqno" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+    
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label= "节点ID" >
+                            <el-input v-model= "form.nodeId" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label= "节点名称" >
+                            <el-input v-model= "form.nodeName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label= "流程标识" >
+                            <el-input v-model= "form.wfSign" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label= "流程名称" >
+                            <el-input v-model= "form.wfName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label= "审批节点" >
+                            <el-input v-model= "form.nodeName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label= "审批状态" >
+                                <el-select v-model="form.spstatus" disabled>
+                                        <el-option v-for="item in StatusOptions" :key="item.key" :label="item.value" :value="item.key">
+                                        </el-option>
+                                </el-select>
+                            <!-- <el-input v-model= "form.spstatus"  data-code="CUSTFLEX_SPSTATUS"></el-input> -->
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form> 
+        </yu-collapse-item>
+        <yu-collapse-item title="列表信息" name="2">
+            <div class="yu-toolBar">
+                <yu-button-group>
+                    <yu-button type="primary" @click="exportFn" :disabled="exportDisabled">导出</yu-button>
+                </yu-button-group>
+            </div>
+            <!-- 列表信息根据导出按钮时存的sql查询 -->
+            <!-- <yu-xtable ref="refTable" row-number>
+                <yu-xtable-column label="编码" prop="id" width="110"></yu-xtable-column>
+                <yu-xtable-column label="名称" prop="title" width="200"></yu-xtable-column>
+                <yu-xtable-column label="类型" prop="type" width="110"></yu-xtable-column>
+                <yu-xtable-column label="作者" prop="author"></yu-xtable-column>
+            </yu-xtable> -->
+            <el-table ref="reftable" :data="data" border>
+				<el-table-column v-for="(item, index) in colunmNamelist" :key="index" :label="item.name" :prop="item.ename">
+				</el-table-column>
+			</el-table>
+        </yu-collapse-item>
+    </yu-collapse>
+</div>

@@ -1,0 +1,1336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="82b1a359-c272-4f25-954d-82ab5cf6c63d" name="Default Changelist" comment="fix:审批按钮隐藏" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-396833171">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="31" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.129" value="1" />
+          <entry key="project.open.time.136" value="1" />
+          <entry key="project.open.time.16" value="1" />
+          <entry key="project.open.time.173" value="1" />
+          <entry key="project.open.time.19" value="1" />
+          <entry key="project.open.time.2" value="6" />
+          <entry key="project.open.time.202" value="1" />
+          <entry key="project.open.time.3" value="3" />
+          <entry key="project.open.time.30" value="1" />
+          <entry key="project.open.time.35" value="1" />
+          <entry key="project.open.time.36" value="4" />
+          <entry key="project.open.time.38" value="1" />
+          <entry key="project.open.time.39" value="1" />
+          <entry key="project.open.time.4" value="2" />
+          <entry key="project.open.time.40" value="1" />
+          <entry key="project.open.time.42" value="1" />
+          <entry key="project.open.time.43" value="1" />
+          <entry key="project.open.time.44" value="2" />
+          <entry key="project.open.time.52" value="1" />
+          <entry key="project.open.time.6" value="1" />
+          <entry key="project.open.time.7" value="1" />
+          <entry key="project.open.time.71" value="1" />
+          <entry key="project.open.time.84" value="1" />
+          <entry key="project.open.time.86" value="1" />
+          <entry key="project.opened" value="37" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="html" value="155" />
+          <entry key="js" value="206" />
+          <entry key="map" value="1" />
+          <entry key="ts" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="HTML" value="155" />
+          <entry key="JavaScript" value="206" />
+          <entry key="SourceMap" value="1" />
+          <entry key="TypeScript" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.vcs.git.usages">
+        <counts>
+          <entry key="git.branch.checkout.remote" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="html" value="710" />
+          <entry key="js" value="2846" />
+          <entry key="txt" value="351" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="HTML" value="711" />
+          <entry key="JavaScript" value="2845" />
+          <entry key="PLAIN_TEXT" value="351" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstr.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="312">
+              <caret line="131" column="72" selection-start-line="131" selection-start-column="72" selection-end-line="131" selection-end-column="72" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/custom/config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="43" column="14" lean-forward="true" selection-start-line="43" selection-start-column="14" selection-end-line="43" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceLoans/performanceLoans.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="186">
+              <caret line="672" column="33" selection-start-line="672" selection-start-column="27" selection-end-line="672" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pages/crmsys/sysManage/commonParameters/viewportItemManage/viewportItemManage.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="154">
+              <caret line="664" column="40" lean-forward="true" selection-start-line="664" selection-start-column="40" selection-end-line="664" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/bonusPoolAlt/bonusPoolAlt.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="274">
+              <caret line="173" column="68" selection-start-line="173" selection-start-column="49" selection-end-line="173" selection-end-column="68" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstr.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="16920">
+              <caret line="705" column="40" lean-forward="true" selection-start-line="705" selection-start-column="40" selection-end-line="705" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstrDetail.html">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceHistory/performanceHistory.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1584">
+              <caret line="66" column="89" selection-start-line="66" selection-start-column="89" selection-end-line="66" selection-end-column="89" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstrDetail.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-40">
+              <caret line="23" column="54" selection-start-line="23" selection-start-column="44" selection-end-line="23" selection-end-column="54" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceHistory/performanceHistory.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="6408">
+              <caret line="267" column="51" selection-start-line="267" selection-start-column="51" selection-end-line="267" selection-end-column="51" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>.disabled</find>
+      <find>uploadDisabled</find>
+      <find>switch</find>
+      <find>addTwoFn</find>
+      <find>endAmt</find>
+      <find>flagPeriodDelete</find>
+      <find>初始化分配关系</find>
+      <find>refForm</find>
+      <find>addThreeFn</find>
+      <find>mid</find>
+      <find>分配</find>
+      <find>applySts</find>
+      <find>审批</find>
+      <find>初始化</find>
+      <find>queryDepositHis</find>
+      <find>commitFn</find>
+      <find>if</find>
+      <find>dialogVisibleDetail</find>
+      <find>flagThree</find>
+      <find>flagBtn</find>
+      <find>handleFenpei</find>
+      <find>addFn</find>
+      <find>flagCsh</find>
+      <find>disabled</find>
+      <find>mgrSelectFn</find>
+      <find>删除</find>
+      <find>delete</find>
+      <find>deleteData</find>
+      <find>deleteBonusAltByIds</find>
+      <find>deletebonusaltbyids</find>
+    </findStrings>
+    <replaceStrings>
+      <replace />
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/commonPerfTrans/commonPerfTrans.html" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/commonDstr/commonDstr.html" />
+        <option value="$PROJECT_DIR$/custom/widgets/js/YufpUserSelector.js" />
+        <option value="$PROJECT_DIR$/custom/route-tables/route.view.js" />
+        <option value="$PROJECT_DIR$/custom/widgets/js/yufpOrgTree.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/assessmentResults/orgAssessmentResult.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/statisticalAnalysis/customerManagerAssess/customerManagerAssess.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceLoans/performanceLoansDetail.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceLoans/performanceLoansDetail.html" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstrDetail.html" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/scheme/evlIndex/evlIndex.html" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/scheme/evlIndex/evlIndex.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/scheme/assesPlan/assesPlan.js" />
+        <option value="$PROJECT_DIR$/custom/widgets/js/YufpTeamSelector.js" />
+        <option value="$PROJECT_DIR$/custom/widgets/js/YufpManagerSelector.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceLoans/performanceLoans.html" />
+        <option value="$PROJECT_DIR$/custom/widgets/js/yufpSchemeSelector.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/targetDistribution/targetDistribution.js" />
+        <option value="$PROJECT_DIR$/custom/widgets/js/yufpMktSelectors.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/targetDistribution/targetDistribution.html" />
+        <option value="$PROJECT_DIR$/custom/widgets/js/yufpSchemeTeamSelectorsOrg.js" />
+        <option value="$PROJECT_DIR$/custom/widgets/js/yufpSchemeTeamSelectors.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceHistory/performanceHistory.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceLoans/performanceLoans.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceHistory/performanceHistory.html" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstrDetail.js" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstr.html" />
+        <option value="$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstr.js" />
+        <option value="$PROJECT_DIR$/custom/config.js" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand />
+      <select />
+    </treeState>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/libs/element-ui-1/node_modules" />
+    <handled-path value="$PROJECT_DIR$/libs/yuwp-ui/node_modules" />
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths>
+      <path value="$PROJECT_DIR$/libs/element-ui-1/package.json" />
+      <path value="$PROJECT_DIR$/libs/yuwp-ui/package.json" />
+    </packageJsonPaths>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="260" />
+    <option name="y" value="20" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="custom" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="climp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="climp" type="462c0819:PsiDirectoryNode" />
+              <item name="busnPara" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="climp" type="462c0819:PsiDirectoryNode" />
+              <item name="busnPara" type="462c0819:PsiDirectoryNode" />
+              <item name="blackList" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="context" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="context" type="462c0819:PsiDirectoryNode" />
+              <item name="dataField" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceManage" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceManage" type="462c0819:PsiDirectoryNode" />
+              <item name="distributionmanage" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceManage" type="462c0819:PsiDirectoryNode" />
+              <item name="distributionmanage" type="462c0819:PsiDirectoryNode" />
+              <item name="commonDstr" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceManage" type="462c0819:PsiDirectoryNode" />
+              <item name="distributionmanage" type="462c0819:PsiDirectoryNode" />
+              <item name="performance" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceManage" type="462c0819:PsiDirectoryNode" />
+              <item name="distributionmanage" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceDstr" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceManage" type="462c0819:PsiDirectoryNode" />
+              <item name="distributionmanage" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceHistory" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceManage" type="462c0819:PsiDirectoryNode" />
+              <item name="distributionmanage" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceLoans" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceManage" type="462c0819:PsiDirectoryNode" />
+              <item name="scheme" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceManage" type="462c0819:PsiDirectoryNode" />
+              <item name="scheme" type="462c0819:PsiDirectoryNode" />
+              <item name="assesPlan" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="performanceManage" type="462c0819:PsiDirectoryNode" />
+              <item name="statisticalAnalysis" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="userbench" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="pages" type="462c0819:PsiDirectoryNode" />
+              <item name="workflow" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+              <item name="blueDark" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="crm-web" type="b2602c69:ProjectViewProjectNode" />
+              <item name="crm-web" type="462c0819:PsiDirectoryNode" />
+              <item name="themes" type="462c0819:PsiDirectoryNode" />
+              <item name="default" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="AndroidView" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SearchEverywhereHistoryKey" value="mid&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/distributionmanage/performance/midPerformance.js&#10;yufpSchemeobjSelector&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/custom/widgets/js/yufpSchemeobjSelector.js&#10;indexImport&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/scheme/indexImport/indexImport.html&#10;yufpSchemeOrgSelectors&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/custom/widgets/js/yufpSchemeOrgSelectors.js&#10;yufpSchemeSelector&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/custom/widgets/js/yufpSchemeSelector.js&#10;targetDistribution&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/distributionmanage/targetDistribution/targetDistribution.html&#10;YufpTeamSelector&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/custom/widgets/js/YufpTeamSelector.js&#10;config&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/custom/config.js&#10;YufpManagerSelector&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/custom/widgets/js/YufpManagerSelector.js&#10;mgrAssessmentResult&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/assessmentResults/mgrAssessmentResult.html&#10;assesPlan&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/scheme/assesPlan/assesPlan.html&#10;orgAssessmentResult&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/assessmentResults/orgAssessmentResult.js&#10;performanceManage&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage&#10;toDoWorkList&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/userbench/toDoWorkList.html&#10;yufpOrgTree&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/custom/widgets/js/yufpOrgTree.js&#10;YufpUserSelector&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/custom/widgets/js/YufpUserSelector.js&#10;route&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/custom/route-tables/route.view.js&#10;modelInfo&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/joincore/modelInfo.js&#10;performanceDstrDetail&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/distributionmanage/performanceDstr/performanceDstrDetail.js&#10;YufpWfInit&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/custom/widgets/js/YufpWfInit.js&#10;midPer&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/distributionmanage/performance/midPerformance.html&#10;assesPlan.html&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/scheme/assesPlan/assesPlan.html&#10;commonDstr.html&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/distributionmanage/commonDstr/commonDstr.html&#10;commonDstr&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/distributionmanage/commonDstr/commonDstr.html&#10;commonPerfTrans.html&#9;FILE&#9;file://D:/Bsoft/jwcp26/crm-web/pages/performanceManage/distributionmanage/commonPerfTrans/commonPerfTrans.html" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1656062466382" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="application.passwordSafe" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Bsoft\jwcp26\crm-web\custom\widgets\js" />
+      <recent name="D:\Bsoft\jwcp26\crm-web\pages\performanceManage\distributionmanage\performanceLoans" />
+      <recent name="D:\Bsoft\jwcp26\crm-web\pages\performanceManage\distributionmanage\performanceDstr" />
+      <recent name="D:\Bsoft\jwcp26\crm-web\pages\performanceManage\distributionmanage\performanceHistory" />
+      <recent name="D:\Bsoft\jwcp26\crm-web\pages\performanceManage\distributionmanage\depositDstr" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="82b1a359-c272-4f25-954d-82ab5cf6c63d" name="Default Changelist" comment="" />
+      <created>1651897581660</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1651897581660</updated>
+      <workItem from="1651897584591" duration="598000" />
+      <workItem from="1651903670515" duration="3520000" />
+      <workItem from="1652059724698" duration="620000" />
+      <workItem from="1652063295728" duration="128000" />
+      <workItem from="1652063444452" duration="49347000" />
+      <workItem from="1652319137643" duration="18970000" />
+      <workItem from="1652348755793" duration="408000" />
+      <workItem from="1652350895641" duration="4574000" />
+      <workItem from="1652358840202" duration="2679000" />
+      <workItem from="1652409669223" duration="13882000" />
+      <workItem from="1652665141732" duration="5231000" />
+      <workItem from="1652671805387" duration="9216000" />
+      <workItem from="1652751475800" duration="63597000" />
+      <workItem from="1653010720408" duration="7275000" />
+      <workItem from="1653269925187" duration="32756000" />
+      <workItem from="1653442558872" duration="18141000" />
+      <workItem from="1653874601114" duration="10819000" />
+      <workItem from="1653961512360" duration="6855000" />
+      <workItem from="1654048651700" duration="11172000" />
+      <workItem from="1654134033238" duration="2177000" />
+      <workItem from="1654478841061" duration="2740000" />
+      <workItem from="1654566144954" duration="27292000" />
+      <workItem from="1654739499722" duration="15137000" />
+      <workItem from="1654769694413" duration="561000" />
+      <workItem from="1654826023000" duration="5143000" />
+      <workItem from="1655085723102" duration="12530000" />
+      <workItem from="1655171380568" duration="9235000" />
+      <workItem from="1655257893598" duration="17510000" />
+      <workItem from="1655343861733" duration="10317000" />
+      <workItem from="1655430572491" duration="15202000" />
+      <workItem from="1655689674464" duration="5943000" />
+      <workItem from="1655861048163" duration="19995000" />
+      <workItem from="1656034612433" duration="6082000" />
+      <workItem from="1656293833234" duration="599000" />
+      <workItem from="1656402754290" duration="1256000" />
+      <workItem from="1656900486808" duration="720000" />
+      <workItem from="1657866132111" duration="918000" />
+    </task>
+    <task id="LOCAL-00001" summary="存款业绩分配">
+      <created>1652354740960</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1652354740961</updated>
+    </task>
+    <task id="LOCAL-00002" summary="存款业绩分配_保存">
+      <created>1652425188529</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1652425188529</updated>
+    </task>
+    <task id="LOCAL-00003" summary="handleFenpei">
+      <created>1652436075676</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1652436075676</updated>
+    </task>
+    <task id="LOCAL-00004" summary="fix:贷款业绩分配页面">
+      <created>1652756793798</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1652756793798</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix:业绩分配历史查询页面">
+      <created>1652854610859</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1652854610859</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fix:存款贷款业绩审批">
+      <created>1652953401502</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1652953401502</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fix:业绩分配余额要带到明细中进行判断最大值&#10;分配人，客户经理名称的页面返显问题">
+      <created>1653382090811</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1653382090811</updated>
+    </task>
+    <task id="LOCAL-00008" summary="fix:业绩分配默认虚拟客户经理">
+      <created>1653387279227</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1653387279268</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fix:员工筛选范围确定为全行级别">
+      <created>1653443592844</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1653443592844</updated>
+    </task>
+    <task id="LOCAL-00010" summary="fix:历史查询记录添加比例金额字段不为空的限制">
+      <created>1653446323129</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1653446323129</updated>
+    </task>
+    <task id="LOCAL-00011" summary="fix:历史查询机构设置为全行">
+      <created>1653449573749</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1653449573749</updated>
+    </task>
+    <task id="LOCAL-00012" summary="fix:历史查询中收分配查询修改">
+      <created>1653547312293</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1653547312293</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fix:业绩分配业务修改成策略类入口">
+      <created>1653893289066</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1653893289066</updated>
+    </task>
+    <task id="LOCAL-00014" summary="fix:业绩分配查询权限修改至页面配置">
+      <created>1653904075854</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1653904075854</updated>
+    </task>
+    <task id="LOCAL-00015" summary="fix:存款业绩分配页面删除按钮控制最大值">
+      <created>1653984538076</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1653984538076</updated>
+    </task>
+    <task id="LOCAL-00016" summary="fix:业绩分配金额用千分位">
+      <created>1654054122206</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1654054122206</updated>
+    </task>
+    <task id="LOCAL-00017" summary="fix:衍生指标新增启停服务接口">
+      <created>1654072902576</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1654072902576</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fix:1已启用的派生指标不能进行删除&#10;    2新建派生指标，不能查询停用的基础指标&#10;    3与需求不符，需隐藏该项&#10;    4派生指标列表无全选按钮&#10;    5派生指标，公式编辑选择减法，未输入另一指标，公式校验通过">
+      <created>1654667447122</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1654667447122</updated>
+    </task>
+    <task id="LOCAL-00019" summary="fix:1已停用的派生指标不能再次停用&#10;    2已启用的派生指标不能再次启用&#10;    3已启用的派生指标不能修改&#10;    4选择基础指标，未加提示信息&#10;    5指标公式校验不能除以0&#10;    6引用派生指标，乘法时，校验公式报错">
+      <created>1654681595637</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1654681595637</updated>
+    </task>
+    <task id="LOCAL-00020" summary="fix:余额类型,应用类型,考核对象的key和value根据基础指标管理选择的值进行级联展示">
+      <created>1654756021817</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1654756021817</updated>
+    </task>
+    <task id="LOCAL-00021" summary="fix:派生指标公式不能为空">
+      <created>1654757267651</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1654757267651</updated>
+    </task>
+    <task id="LOCAL-00022" summary="fix:添加指标提示信息">
+      <created>1654762794695</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1654762794695</updated>
+    </task>
+    <task id="LOCAL-00023" summary="fix:考核目标下发页面修改">
+      <created>1654842867290</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1654842867290</updated>
+    </task>
+    <task id="LOCAL-00024" summary="fix:团队选择器修改成团队筛选">
+      <created>1655090137661</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1655090137661</updated>
+    </task>
+    <task id="LOCAL-00025" summary="fix:客户经理选择器页面名称修改">
+      <created>1655090690102</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1655090690102</updated>
+    </task>
+    <task id="LOCAL-00026" summary="fix:无分配状态和审批状态">
+      <created>1655101930897</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1655101930897</updated>
+    </task>
+    <task id="LOCAL-00027" summary="fix:考核目标下发，机构选择和团队选择混乱">
+      <created>1655104221916</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1655104221916</updated>
+    </task>
+    <task id="LOCAL-00028" summary="fix:添加机构选择传参">
+      <created>1655108634089</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1655108634089</updated>
+    </task>
+    <task id="LOCAL-00029" summary="fix:考核目标下发，考核方案已修改，考核目标选取的指标有缓存值">
+      <created>1655190525188</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1655190525188</updated>
+    </task>
+    <task id="LOCAL-00030" summary="fix:考核方案未启用，不能被考核目标查询到">
+      <created>1655195173475</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1655195173475</updated>
+    </task>
+    <task id="LOCAL-00031" summary="fix:考核方案未启用，不能被考核目标查询到">
+      <created>1655195659340</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1655195659340</updated>
+    </task>
+    <task id="LOCAL-00032" summary="fix:业绩历史查询-中收，分配人不显示">
+      <created>1655259061783</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1655259061783</updated>
+    </task>
+    <task id="LOCAL-00033" summary="fix:考核目标下发，选取考核对象为方案中已选取的考核对象中选取">
+      <created>1655282047780</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1655282047780</updated>
+    </task>
+    <task id="LOCAL-00034" summary="fix:考核目标下发，选取考核对象为方案中已选取的考核对象中选取">
+      <created>1655282660554</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1655282660554</updated>
+    </task>
+    <task id="LOCAL-00035" summary="fix:分配后自动审批">
+      <created>1655371161740</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1655371161740</updated>
+    </task>
+    <task id="LOCAL-00036" summary="fix:日期组件添加">
+      <created>1655435877105</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1655435877105</updated>
+    </task>
+    <task id="LOCAL-00037" summary="fix:新增审批通过后再次分配功能">
+      <created>1655983477354</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1655983477354</updated>
+    </task>
+    <task id="LOCAL-00038" summary="fix:审批按钮隐藏">
+      <created>1655983566833</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1655983566834</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="413145000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14978679" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.329718" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" visible="true" weight="0.30911064" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.23861171" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="10" weight="0.22451194" />
+      <window_info anchor="bottom" id="Messages" order="11" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Theme Preview" order="5" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Database" order="7" weight="0.32995737" />
+      <window_info anchor="right" id="Maven Projects" order="8" weight="0.32995737" />
+    </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15884861" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.329718" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.329718" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.329718" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="10" visible="true" weight="0.22451194" />
+      <window_info anchor="bottom" id="Messages" order="11" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Theme Preview" order="5" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Database" order="7" weight="0.32995737" />
+      <window_info anchor="right" id="Maven Projects" order="8" weight="0.32995737" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fix:业绩分配业务修改成策略类入口" />
+    <MESSAGE value="fix:业绩分配查询修改至页面配置" />
+    <MESSAGE value="fix:业绩分配查询权限修改至页面配置" />
+    <MESSAGE value="fix:存款业绩分配页面删除按钮控制最大值" />
+    <MESSAGE value="fix:业绩分配金额用千分位" />
+    <MESSAGE value="fix:衍生指标新增启停服务接口" />
+    <MESSAGE value="fix:1已启用的派生指标不能进行删除&#10;    2新建派生指标，不能查询停用的基础指标&#10;    3与需求不符，需隐藏该项&#10;    4派生指标列表无全选按钮&#10;    5派生指标，公式编辑选择减法，未输入另一指标，公式校验通过" />
+    <MESSAGE value="fix:1已停用的派生指标不能再次停用&#10;    2已启用的派生指标不能再次启用&#10;    3已启用的派生指标不能修改&#10;    4选择基础指标，未加提示信息&#10;    5指标公式校验不能除以0&#10;    6引用派生指标，乘法时，校验公式报错" />
+    <MESSAGE value="fix:余额类型,应用类型,考核对象的key和value根据基础指标管理选择的值进行级联展示" />
+    <MESSAGE value="fix:派生指标公式不能为空" />
+    <MESSAGE value="fix:添加指标提示信息" />
+    <MESSAGE value="fix:考核目标下发页面修改" />
+    <MESSAGE value="fix:团队选择器修改成团队筛选" />
+    <MESSAGE value="fix:客户经理选择器页面名称修改" />
+    <MESSAGE value="fix:无分配状态和审批状态" />
+    <MESSAGE value="fix:考核目标下发，机构选择和团队选择混乱" />
+    <MESSAGE value="fix:添加机构选择传参" />
+    <MESSAGE value="fix:考核目标下发，考核方案已修改，考核目标选取的指标有缓存值" />
+    <MESSAGE value="fix:考核方案未启用，不能被考核目标查询到" />
+    <MESSAGE value="fix:业绩历史查询-中收，分配人不显示" />
+    <MESSAGE value="fix:考核目标下发，选取考核对象为方案中已选取的考核对象中选取" />
+    <MESSAGE value="fix:分配后自动审批" />
+    <MESSAGE value="fix:日期组件添加" />
+    <MESSAGE value="fix:新增审批通过后再次分配功能" />
+    <MESSAGE value="fix:审批按钮隐藏" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix:审批按钮隐藏" />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/commonPerfTrans/commonPerfTrans.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="10" column="97" selection-start-line="10" selection-start-column="78" selection-end-line="10" selection-end-column="97" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/commonDstrHis/commonDstrHis.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="472">
+          <caret line="84" column="75" selection-start-line="84" selection-start-column="66" selection-end-line="84" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/element-ui-1/packages/message/src/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="13" column="12" selection-start-line="13" selection-start-column="12" selection-end-line="13" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/scheme/baseIndex/baseIndexManage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="4" column="3" lean-forward="true" selection-start-line="4" selection-start-column="3" selection-end-line="4" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/commonPerfTrans/commonPerfTrans.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="80" column="26" lean-forward="true" selection-start-line="80" selection-start-column="26" selection-end-line="80" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/scheme/evlIndex/evlIndex.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1512">
+          <caret line="63" column="94" selection-start-line="63" selection-start-column="80" selection-end-line="63" selection-end-column="94" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/scheme/evlIndex/evlIndex.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1968">
+          <caret line="82" column="118" selection-start-line="82" selection-start-column="106" selection-end-line="82" selection-end-column="118" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/widgets/js/YufpManagerSelector.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="73" column="87" lean-forward="true" selection-start-line="73" selection-start-column="87" selection-end-line="73" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/assessmentResults/mgrAssessmentResult.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="42" column="48" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/assessmentResults/mgrAssessmentResult.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="109" column="76" selection-start-line="109" selection-start-column="55" selection-end-line="109" selection-end-column="76" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/assessmentResults/teamAssessmentResult.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="23" column="48" selection-start-line="23" selection-start-column="37" selection-end-line="23" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/assessmentResults/teamAssessmentResult.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="130" column="55" lean-forward="true" selection-start-line="130" selection-start-column="55" selection-end-line="130" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/widgets/js/YufpTeamSelector.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2016">
+          <caret line="84" column="29" selection-start-line="84" selection-start-column="29" selection-end-line="84" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/widgets/js/yufpSchemeSelector.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1344">
+          <caret line="56" column="8" selection-start-line="56" selection-start-column="8" selection-end-line="56" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/scheme/indexImport/indexImport.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="8" column="44" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/scheme/indexImport/indexImport.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="73" column="68" selection-start-line="73" selection-start-column="68" selection-end-line="73" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/scheme/assesPlanExcel/assesPlanExcel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="845">
+          <caret line="174" column="20" selection-start-line="174" selection-start-column="20" selection-end-line="174" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/yuwp-ui/lib/yuwp-ui.common.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="45238" column="4" selection-start-line="45238" selection-start-column="4" selection-end-line="45238" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/widgets/js/yufpSchemeobjSelector.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2455">
+          <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/widgets/js/yufpSchemeOrgSelectors.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3360">
+          <caret line="215" column="18" selection-start-line="215" selection-start-column="18" selection-end-line="215" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/targetDistribution/targetDistribution.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1656">
+          <caret line="69" column="87" selection-start-line="69" selection-start-column="87" selection-end-line="69" selection-end-column="105" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/widgets/js/yufpSchemeTeamSelectorsOrg.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3648">
+          <caret line="152" column="33" selection-start-line="152" selection-start-column="33" selection-end-line="152" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/widgets/js/yufpSchemeTeamSelectors.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3480">
+          <caret line="145" column="59" selection-start-line="145" selection-start-column="59" selection-end-line="145" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/targetDistribution/targetDistribution.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2328">
+          <caret line="97" column="19" selection-start-line="97" selection-start-column="19" selection-end-line="97" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/widgets/js/yufpMktSelectors.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="567">
+          <caret line="233" column="17" lean-forward="true" selection-start-line="233" selection-start-column="17" selection-end-line="233" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/climp_qy/merchantInfoManager/merchantInfoManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="81">
+          <caret line="922" column="16" selection-start-line="922" selection-start-column="16" selection-end-line="922" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performance/performanceDstr.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performance/midPerformance.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="15" column="59" selection-start-line="15" selection-start-column="37" selection-end-line="15" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/widgets/js/YufpUserSelector.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2616">
+          <caret line="109" column="78" selection-start-line="109" selection-start-column="68" selection-end-line="109" selection-end-column="78" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/dy/customer360View/components/tabs/touchHistory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="66" column="75" lean-forward="true" selection-start-line="66" selection-start-column="33" selection-end-line="66" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/scheme/assesPlan/assesPlan.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="125" column="97" selection-start-line="125" selection-start-column="73" selection-end-line="125" selection-end-column="97" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/scheme/assesPlan/assesPlan.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="443" column="41" lean-forward="true" selection-start-line="443" selection-start-column="10" selection-end-line="443" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/context/dataField/dataField.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="19" column="38" selection-start-line="19" selection-start-column="24" selection-end-line="19" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/context/dataField/dataField.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="249" column="37" selection-start-line="249" selection-start-column="23" selection-end-line="249" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/climp/busnPara/blackList/blackList.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/climp/busnPara/blackList/blackList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="325" column="45" lean-forward="true" selection-start-line="325" selection-start-column="45" selection-end-line="325" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/commonDstr/commonDstr.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="74" column="27" lean-forward="true" selection-start-line="74" selection-start-column="10" selection-end-line="74" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performance/midPerformance.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="492">
+          <caret line="47" column="11" selection-start-line="47" selection-start-column="11" selection-end-line="47" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performance/performanceDstr.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="222" column="57" lean-forward="true" selection-start-line="222" selection-start-column="57" selection-end-line="222" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/commonDstr/commonDstr.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="76" column="72" selection-start-line="76" selection-start-column="63" selection-end-line="76" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceLoans/performanceLoans.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="9" column="34" selection-start-line="9" selection-start-column="34" selection-end-line="9" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstrDetail.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceHistory/performanceHistory.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1584">
+          <caret line="66" column="89" selection-start-line="66" selection-start-column="89" selection-end-line="66" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/custom/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="43" column="14" lean-forward="true" selection-start-line="43" selection-start-column="14" selection-end-line="43" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstr.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="131" column="72" selection-start-line="131" selection-start-column="72" selection-end-line="131" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstr.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16920">
+          <caret line="705" column="40" lean-forward="true" selection-start-line="705" selection-start-column="40" selection-end-line="705" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceDstr/performanceDstrDetail.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-40">
+          <caret line="23" column="54" selection-start-line="23" selection-start-column="44" selection-end-line="23" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceHistory/performanceHistory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6408">
+          <caret line="267" column="51" selection-start-line="267" selection-start-column="51" selection-end-line="267" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/performanceLoans/performanceLoans.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="672" column="33" selection-start-line="672" selection-start-column="27" selection-end-line="672" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/crmsys/sysManage/commonParameters/viewportItemManage/viewportItemManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="664" column="40" lean-forward="true" selection-start-line="664" selection-start-column="40" selection-end-line="664" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/performanceManage/distributionmanage/bonusPoolAlt/bonusPoolAlt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="173" column="68" selection-start-line="173" selection-start-column="49" selection-end-line="173" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

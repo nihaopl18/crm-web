@@ -1,0 +1,58 @@
+<!--
+  @created by luoshun 2019-1-4
+  @updated by 
+  @description 积分对账
+-->
+<div>
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="核对月份" ctype="datepicker" type="month" name="checkMonth"></yu-xform-item>
+      <yu-xform-item placeholder="兑换渠道" ctype="select" name="sourceType" data-code="CD0067"></yu-xform-item>
+      <yu-xform-item placeholder="客户号" ctype="input" name="custId"></yu-xform-item>
+      <yu-xform-item placeholder="交易类型" ctype="select" name="txnTypeCd" data-code="TXN_TYPE_CD"></yu-xform-item>
+      <yu-xform-item placeholder="对账结果" ctype="select" name="accResult" data-code="ACC_RESULT"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 查询显示表格 -->
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+    <yu-xtable-column label="核对月份" prop="checkMonth" :formatter="dateStrFormatterMonth" width="80">
+    </yu-xtable-column>
+    <yu-xtable-column label="兑换渠道" prop="sourceType" data-code="CD0067" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="扣减流水号" prop="serialNo" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="客户号" prop="custId" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="订单号" prop="orderNo" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="交易类型" prop="txnTypeCd" data-code="TXN_TYPE_CD" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="积分数量" prop="realBalance" width="110">
+    </yu-xtable-column>
+    <!--<yu-xtable-column label="应扣积分金额" prop="dueBalance" :hidden="true">
+    </yu-xtable-column>-->
+    <!--<yu-xtable-column label="自付现金额[现金扣减记录]" prop="moneyNum" :hidden="true">
+    </yu-xtable-column>-->
+    <yu-xtable-column label="交易状态" prop="transState" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="渠道发起日期" prop="tranDate" :formatter="dateStrFormatter" width="110">
+    </yu-xtable-column>
+    <!--<yu-xtable-column label="渠道发起时间" prop="tranTimestamp" :hidden="true">
+    </yu-xtable-column>
+    <yu-xtable-column label="登记日期" prop="recordDate" :hidden="true">
+    </yu-xtable-column>
+    <yu-xtable-column label="商品编号" prop="giftNum" :hidden="true">
+    </yu-xtable-column>-->
+    <yu-xtable-column label="源交易流水号" prop="consumerSeqNo" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="商户编号" prop="merchantNo" width="110">
+    </yu-xtable-column>
+    <!--<yu-xtable-column label="兑换类型" prop="exchangeType" :hidden="true">
+    </yu-xtable-column>
+    <yu-xtable-column label="消纳积分机构" prop="costAssignOrg" :hidden="true">
+    </yu-xtable-column>-->
+    <yu-xtable-column label="对账结果" prop="accResult" data-code="ACC_RESULT" width="110">
+    </yu-xtable-column>
+  </yu-xtable>
+</div>

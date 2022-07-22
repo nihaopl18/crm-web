@@ -1,0 +1,26 @@
+<!-- 
+  @Created by 张成龙 zhangcl3@yusys.com.cn on 2019-1-22 15:23:44.
+  @updated by
+  @description 存款利率表查询
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="数据日期" name="dataDt" :editable="false" ctype="datepicker"></yu-xform-item>
+      <yu-xform-item placeholder="币种代码" name="ccyCd" ctype="select" data-code="CD0071"></yu-xform-item>
+      <yu-xform-item placeholder="存款名称" name="intRateDesc" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+    <yu-xtable-column label="数据日期" prop="dataDt" width="" :formatter="formDate"></yu-xtable-column>
+    <yu-xtable-column label="币种代码" prop="ccyCd" width="" data-code="CD0071"></yu-xtable-column>
+    <yu-xtable-column label="存款名称" prop="intRateDesc" width=""></yu-xtable-column>
+    <yu-xtable-column label="存期" prop="intRateTypeCd" width="" data-code="INT_RATE_TYPE_CD"></yu-xtable-column>
+    <yu-xtable-column label="年利率(%)" prop="intRateVal" ></yu-xtable-column>
+  </yu-xtable>
+
+</div>

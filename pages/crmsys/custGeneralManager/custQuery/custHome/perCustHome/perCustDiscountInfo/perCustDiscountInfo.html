@@ -1,0 +1,24 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-22 10:18:07.
+  @updated by
+  @description 客户优惠信息
+-->
+<div>
+  <yu-tabs v-model="activeName" @tab-click="handleClick">
+    <yu-tab-pane label="优惠信息" name="discountInfo">
+      <yu-xform related-table-name="refTable" form-type="search">
+        <yu-xform-group :column="4">
+        </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+          <yu-xtable-column label="优惠方案ID" prop="preferentId" width="120"></yu-xtable-column>
+          <yu-xtable-column label="优惠方案名称" prop="preferentContent" width="120"></yu-xtable-column>
+          <yu-xtable-column label="优惠方案内容" prop="preferentStr"></yu-xtable-column>
+      </yu-xtable>
+    </yu-tab-pane>
+  </yu-tabs>
+</div>

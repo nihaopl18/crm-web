@@ -1,0 +1,254 @@
+<!-- 
+  @Created by hujun3 hujun3@yusys.com.cn on 2019-2-27 14:34:05.
+  @updated by
+  @description 积分查询
+-->
+<div>
+    <yu-xform related-table-name="refTable" v-model="formone" ref="refone">
+        <yu-xform-group :column="4">
+            <yu-xform-item placeholder="客户号" name="custId" ctype="input"></yu-xform-item>
+            <yu-xform-item placeholder="中文名" name="custName" ctype="input"></yu-xform-item>
+            <yu-xform-item placeholder="英文名" name="englishName" ctype="input"></yu-xform-item>
+            <yu-xform-item placeholder="发证国家" name="issCountry" ctype="select" data-code="CD0069" :rules="rule.iscountryRule"></yu-xform-item>
+            <yu-xform-item placeholder="证件类型" name="certType" ctype="select" data-code="CD0348" :rules="rule.IDTypeRule"></yu-xform-item>
+            <yu-xform-item placeholder="证件号" name="certNo" ctype="input" :rules="rule.certNoRule"></yu-xform-item>
+        </yu-xform-group>
+        <yu-xform-item ctype="custom" style="text-align: right;">
+            <yu-button type="primary" @click="searchFn">查询</yu-button>
+            <yu-button type="primary" @click="resetFormFn">重置</yu-button>
+        </yu-xform-item>
+    </yu-xform>
+    <div class="yu-toolBar" style="padding-top: 20px;">
+        <yu-button-group>
+            <yu-button @click="pointdetaillook">积分明细查询</yu-button>
+            <yu-button @click="orderlook">订单查询</yu-button>
+            <yu-button @click="exchangegift">兑换礼品</yu-button>
+        </yu-button-group>
+    </div>
+    <yu-xtable ref="refTable" row-number :data-url="dataUrl" :default-load="false" height="350px">
+        <yu-xtable-column label="客户编号" prop="custId" width="200"></yu-xtable-column>
+        <yu-xtable-column label="客户中文名称" prop="custName" width="100" data-code="YX_WF_APP_STATUS"></yu-xtable-column>
+        <yu-xtable-column label="客户英文名称" prop="englishName" width="100" data-code="MERCHANT_STS"></yu-xtable-column>
+        <yu-xtable-column label="国籍" prop="countryCd" width="220" data-code="CD0069"></yu-xtable-column>
+        <yu-xtable-column label="可用积分" prop="useableScore" width="150"></yu-xtable-column>
+        <yu-xtable-column label="历史累计赠送积分" prop="donateScore" width="150"></yu-xtable-column>
+        <yu-xtable-column label="历史累计扣减积分" prop="reduceScore" width="150"></yu-xtable-column>
+        <yu-xtable-column label="历史累计失效积分" prop="invalidScore" width="120"></yu-xtable-column>
+        <yu-xtable-column label="即将失效积分" prop="invalidingScore" width="200"></yu-xtable-column>
+        <yu-xtable-column label="即将失效积分日期" prop="invalidingDt" width="200"></yu-xtable-column>
+        <yu-xtable-column label="客户等级" prop="aumGrade" width="120"></yu-xtable-column>
+        <yu-xtable-column label="证件类型" prop="certType" width="120" data-code="CD0348"></yu-xtable-column>
+        <yu-xtable-column label="证件号" prop="certNo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="发证国家" prop="issCountry" width="120" data-code="CD0069"></yu-xtable-column>
+    </yu-xtable>
+    <!-- 积分明细查询 -->
+    <yu-xdialog title="积分明细查询" :visible.sync="pointdialogVisible" width="1250px" @close="pointcancel">
+        <yu-xform related-table-name="pointrefTable" form-type="search" v-model="forqueryFormdata" :custom-search-fn="pointsearchFn" :custom-rest-fn="pointresetMainFn">
+            <yu-xform-group :column="4">
+                <yu-xform-item placeholder="开始时间" name="startDate" ctype="datepicker"></yu-xform-item>
+                <yu-xform-item placeholder="结束时间" name="endDate" ctype="datepicker"></yu-xform-item>
+            </yu-xform-group>
+        </yu-xform>
+        <yu-xtable ref="pointrefTable" row-number :data-url="pointdataUrl" :default-load="false">
+            <yu-xtable-column label="客户号" prop="custNo" width="200"></yu-xtable-column>
+            <yu-xtable-column label="积分值" prop="thisSumScore" width="100"></yu-xtable-column>
+            <yu-xtable-column label="积分时间" prop="busnDate" width="100"></yu-xtable-column>
+            <yu-xtable-column label="积分变更前可用积分" prop="lastSrAccute" width="220"></yu-xtable-column>
+            <yu-xtable-column label="积分变更后可用积分" prop="currSrAccute" width="150"></yu-xtable-column>
+            <yu-xtable-column label="积分操作类型" prop="scoreDealType" width="150"></yu-xtable-column>
+            <yu-xtable-column label="账户类型" prop="acctType" width="150"></yu-xtable-column>
+            <yu-xtable-column label="赠送详情" prop="gameDesc" width="120"></yu-xtable-column>
+            <yu-xtable-column label="客户中文名" prop="custName" width="200"></yu-xtable-column>
+            <yu-xtable-column label="客户英文名" prop="englishName" width="200"></yu-xtable-column>
+            <yu-xtable-column label="客户等级" prop="aumGrade" width="120"></yu-xtable-column>
+        </yu-xtable>
+        <div class="yu-grpButton">
+            <yu-button type="primary" @click="pointcancel">关闭</yu-button>
+        </div>
+    </yu-xdialog>
+    <!-- 订单查询 -->
+    <yu-xdialog title="订单查询" :visible.sync="orderdialogVisible" width="1250px" @close="ordercancel">
+        <yu-xform related-table-name="orderrefTable" form-type="search" v-model="orderFormdata" :custom-search-fn="ordersearchFn" :custom-rest-fn="orderresetMainFn">
+            <yu-xform-group :column="4">
+                <yu-xform-item placeholder="开始时间" name="startDate" ctype="datepicker"></yu-xform-item>
+                <yu-xform-item placeholder="结束时间" name="endDate" ctype="datepicker"></yu-xform-item>
+            </yu-xform-group>
+        </yu-xform>
+        <yu-xtable ref="orderrefTable" row-number :data-url="derdataUrl" :default-load="false">
+            <yu-xtable-column label="订单号" prop="orderNo" width="200"></yu-xtable-column>
+            <yu-xtable-column label="订单时间" prop="orderDt" width="100" data-code="YX_WF_APP_STATUS"></yu-xtable-column>
+            <yu-xtable-column label="客户号" prop="custNo" width="100" data-code="MERCHANT_STS"></yu-xtable-column>
+            <yu-xtable-column label="客户中文名" prop="englishName" width="220"></yu-xtable-column>
+            <yu-xtable-column label="兑换渠道" prop="commodityVFlag" width="150"></yu-xtable-column>
+            <yu-xtable-column label="订单状态" prop="orderStatus" width="150"></yu-xtable-column>
+            <yu-xtable-column label="审批状态" prop="appStatus" width="150"></yu-xtable-column>
+            <yu-xtable-column label="兑换用户编号" prop="operatorCode" width="120"></yu-xtable-column>
+        </yu-xtable>
+        <div class="yu-grpButton">
+            <yu-button type="primary" @click="orderdetail">订单详情</yu-button>
+            <yu-button type="primary" @click="ordercancel">关闭</yu-button>
+        </div>
+    </yu-xdialog>
+
+    <!-- 礼品展示 -->
+    <yu-xdialog title="礼品展示" :visible.sync="giftdialogVisible" width="1250px" @close="giftcancel">
+        <div style="height: 30px" class="labelmorexx">
+            <yu-col :span="6">
+                <div>客户姓名：{{giftcustName}}</div>
+            </yu-col>
+            <yu-col :span="6">
+                <div>可用积分：{{giftopint}}</div>
+            </yu-col>
+            <yu-col :span="6">
+                <div></div>
+            </yu-col>
+            <yu-col :span="6">
+                <div></div>
+            </yu-col>
+        </div>
+        <yu-xform related-table-name="giftrefTable" form-type="search">
+            <yu-xform-group :column="3">
+                <yu-xform-item placeholder="礼品名称" name="commodityName" ctype="input"></yu-xform-item>
+                <yu-xform-item placeholder="礼品兑换方式" name="commodityVFlag" ctype="input"></yu-xform-item>
+                <yu-xform-item placeholder="所需积分范围" name="scoreRange" ctype="input"></yu-xform-item>
+                <!-- <yu-xform-item placeholder="礼品排序方式" name="contactType" ctype="input"></yu-xform-item> -->
+                <yu-xform-item placeholder="礼品种类" name="commodityType" ctype="input"></yu-xform-item>
+            </yu-xform-group>
+        </yu-xform>
+        <yu-xtable ref="giftrefTable" row-number :data-url="giftdataUrl" :default-load="true">
+            <!-- 图片 -->
+            <yu-xtable-column label="礼品图片" prop="merchantName" width="200">
+                <template slot-scope="scope">
+                    <img :src="fileIdToURL(scope.row.picturePath)" width="100px" height="100px">
+                </template>
+            </yu-xtable-column>
+
+            <yu-xtable-column label="合作商户" prop="merchantName" width="200"></yu-xtable-column>
+            <yu-xtable-column label="礼品编号" prop="commodityCode" width="100"></yu-xtable-column>
+            <yu-xtable-column label="礼品名称" prop="commodityName" width="100"></yu-xtable-column>
+            <yu-xtable-column label="礼品种类" prop="commodityType" width="220"></yu-xtable-column>
+            <yu-xtable-column label="所需积分" prop="commodityLValue" width="150" sortable></yu-xtable-column>
+            <yu-xtable-column label="礼品兑换方式" prop="commodityVFlag" width="150"></yu-xtable-column>
+            <yu-xtable-column label="礼品封面介绍" prop="coverSummary" width="150"></yu-xtable-column>
+        </yu-xtable>
+        <div class="yu-grpButton">
+            <yu-button type="primary" @click="nexttickfn">选择并下一步</yu-button>
+            <yu-button type="primary" @click="giftcancel">关闭</yu-button>
+        </div>
+    </yu-xdialog>
+    <!-- 礼品兑换 -->
+    <yu-xdialog title="兑换礼品" :visible.sync="exchangedialogVisible" width="1250px" @close="exchangecancel">
+        <div id="pointExch">
+            <yu-row>
+                <h3 class="titleo">礼品照片</h3>
+                <div id="container" v-for="(item, index) in sysmineInfo">
+                    <div class="lablename">图{{item.name}}：</div>
+                    <img class="lable" :src="item.url" />
+                </div>
+            </yu-row>
+            <!-- <yu-row>
+                <h3 class="titleo" @click="picfn">更多图片</h3>
+                <div id="container" v-for="(item, index) in sysmineInfo" v-show="pic">
+                    <div class="lablename">图{{item.name}}：</div>
+                    <img class="lable" src="" />
+                </div>
+            </yu-row> -->
+            <yu-row>
+                <h3 class="titleo">礼品信息</h3>
+                <yu-xform label-width="140px" ref="refForm" v-model="formdatalpxx" :disabled="formDisabled">
+                    <yu-xform-group>
+                        <yu-xform-item label="礼品编号" name="commodityCode" rules="required" ctype="input"></yu-xform-item>
+                        <yu-xform-item label="礼品名称" name="commodityName" rules="required" ctype="input"></yu-xform-item>
+                        <yu-xform-item label="礼品兑换方式" name="commodityMValue" rules="required" cctype="input"></yu-xform-item>
+                        <yu-xform-item label="礼品积分值" name="commodityStgNum" rules="required" ctype="input"></yu-xform-item>
+                        <yu-xform-item label="目前可用值" name="stgAlarm" ctype="input"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+            </yu-row>
+            <yu-row>
+                <h3 class="titleo">礼品描述</h3>
+                <yu-xform label-width="140px" ref="refForm" v-model="formdatalpms" :disabled="formDisabled">
+                    <yu-xform-group>
+                        <yu-xform-item label="礼品说明" name="commodityDescTemp" ctype="textarea" :rows="2"></yu-xform-item>
+                        <yu-xform-item label="礼品描述" name="commodityLValue" ctype="textarea" :rows="2"></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+            </yu-row>
+            <yu-row>
+                <h3 class="titleo">兑换属性</h3>
+                <yu-xform label-width="140px" ref="refForm" v-model="formdatadhsx">
+                    <yu-xform-group>
+                        <!-- <yu-xform-item label="客户手机号码" name="commodityLValue" rules="required" ctype="input"></yu-xform-item> -->
+                        <yu-xform-item label="兑换数量" name="changeCount" :rules="rule.amoOfIns" ctype="num" @blur="exchangenum"></yu-xform-item>
+                        <yu-xform-item label="订单所需积分" name="commodityMValue" ctype="input" disabled></yu-xform-item>
+                    </yu-xform-group>
+                </yu-xform>
+                <div v-for="(item,index) in attrlist" :key="index">
+                    <el-form label-width="140px" ref="attrformone" :model="dataSqlTemp[item.attrId]">
+                        <el-col :span="8">
+                            <el-form-item :label="item.attrName" class="mustWrite" :rules="signvRule">
+                                <yu-input v-model="dataSqlTemp[item.attrId]"></yu-input>
+                            </el-form-item>
+                        </el-col>
+
+                    </el-form>
+                </div>
+                <div v-for="(item,index) in attrdiclist" :key="index">
+                    <el-form label-width="140px" ref="attrformoned" :model="dataDicTemp[item.attrId]">
+                        <el-col :span="8">
+                            <el-form-item :label="item.attrName" class="mustWrite" :rules="signvRule">
+                                <el-select placeholder="请选择" v-model="dataDicTemp[item.attrId]">
+                                    <el-option v-for="(items, index) in dataDicTempoption[item.attrId]" :key="index" :label="items.value" :value="items.key">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+
+                    </el-form>
+                </div>
+                <div v-for="(item,index) in attrdzlist" :key="index">
+                    <el-form label-width="140px" ref="item.index">
+                        <el-col :span="8">
+                            <el-form-item label="省份" class="mustWrite" required>
+                                <el-select placeholder="请选择" @change="getCityOptions" v-model="datadzTemp.dzsf">
+                                    <el-option v-for="(items, index) in povinceOptions" :key="index" :label="items.value" :value="items.key">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="城市" class="mustWrite" required>
+                                <el-select placeholder="请选择" @change="getAreaOptions" v-model="datadzTemp.dzsq">
+                                    <el-option v-for="(items, index) in cityOptions" :key="index" :label="items.value" :value="items.key">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="县区" class="mustWrite" required>
+                                <el-select placeholder="请选择" v-model="datadzTemp.dzqj">
+                                    <el-option v-for="(items, index) in areaOptions" :key="index" :label="items.value" :value="items.key">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="24">
+                            <el-form-item label="邮寄地址" class="mustWrite" required>
+                                <yu-input v-model="datadzTemp.yjdz"></yu-input>
+                            </el-form-item>
+                        </el-col>
+
+                    </el-form>
+                </div>
+            </yu-row>
+        </div>
+        <div class="yu-grpButton">
+            <yu-button type="primary" @click="exchangefn" :disabled="duihuanBotton">兑换</yu-button>
+            <yu-button type="primary" @click="uptick">上一步</yu-button>
+            <yu-button type="primary" @click="exchangecancel">关闭</yu-button>
+        </div>
+    </yu-xdialog>
+    <yu-xdialog title="订单详情" :visible.sync="orderdetailable" width="1250px" @close="orderdetailcancel">
+        <order-comp :per-info="perInfo" v-if="orderdetailable" />
+    </yu-xdialog>
+</div>

@@ -1,0 +1,35 @@
+<!-- 
+  @Created by raop
+  @updated by
+  @description 存款业绩分配
+-->
+<div>
+  <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+
+  <yu-xtable ref="yutable1"   :data-url="dataUrl" :default-load="false" >
+    <yu-xtable-column label="交易流水号" prop="transactionMark"></yu-xtable-column>
+    <yu-xtable-column label="客户号" prop="customerNumber"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="customerName"></yu-xtable-column>
+    <yu-xtable-column label="交易日期" prop="transactionDate" ></yu-xtable-column>
+    <yu-xtable-column label="业务类型" prop="bussType" data-code="CD0501"></yu-xtable-column>
+    <yu-xtable-column label="产品代码" prop="productNumber"></yu-xtable-column>
+    <yu-xtable-column label="产品名称" prop="productName"></yu-xtable-column>
+    <yu-xtable-column label="交易金额" prop="transactionAmount"></yu-xtable-column>
+    <yu-xtable-column label="手续费" prop="serviceCharge"></yu-xtable-column>
+    <yu-xtable-column label="交易机构号" prop="orgId"></yu-xtable-column>
+    <yu-xtable-column label="交易机构名称" prop="orgName"></yu-xtable-column>
+    <yu-xtable-column label="分配状态" prop="dstrSts" data-code="DS0001"></yu-xtable-column>
+    <yu-xtable-column label="审批状态" prop="applySts" data-code="DS0002"></yu-xtable-column>
+    <yu-xtable-column label="客户经理编号" prop="managerId"  ></yu-xtable-column>
+    <yu-xtable-column label="客户经理名称" prop="managername"  ></yu-xtable-column>
+    <yu-xtable-column label="生效日期" prop="effectDate"  ></yu-xtable-column>
+    <yu-xtable-column label="失效日期" prop="expirateDate"  ></yu-xtable-column>
+    <yu-xtable-column label="起始金额" prop="startAmt"  ></yu-xtable-column>
+    <yu-xtable-column label="结束金额" prop="endAmt"  ></yu-xtable-column>
+    <yu-xtable-column label="业绩分配比例" prop="distrRate"  ></yu-xtable-column>
+    <yu-xtable-column label="分配人" prop="operUserName"  ></yu-xtable-column>
+    <yu-xtable-column label="分配时间" prop="operTime"  ></yu-xtable-column>
+  </yu-xtable>
+
+
+</div>

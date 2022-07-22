@@ -1,0 +1,56 @@
+<!-- 
+  @Created by xujiawei xujy3@yusys.com.cn on 2020-1-6 14:33:17.
+  @updated by
+  @description 基础指标值调整
+-->
+<div>
+  <yu-xform related-table-name="refTable"  form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="数据日期" ctype="datepicker" name="etlDate" :rules="comRules.statDate"></yu-xform-item>
+      <yu-xform-item placeholder="考核方案名称" ctype="yufp-scheme-selector" name="schemeId" @select-fn="schemeSelectFn" :rules="rule[0]"></yu-xform-item>
+      <yu-xform-item placeholder="考核对象名称" ctype="yufp-schemeobj-selector" name="evlObjId" :params="objParams"></yu-xform-item>
+      <yu-xform-item placeholder="指标名称" ctype="yufp-indexres-selector" name="indexId" :params="objParams"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" :default-load ="false">
+    <yu-xtable-column label="数据日期" prop="etlDate" width="110" ></yu-xtable-column>
+    <yu-xtable-column label="考核方案名称" prop="schemeName" width="200" ></yu-xtable-column>
+    <yu-xtable-column label="考核对象类型" prop="evlObjType" width="110" data-code="OBJ"></yu-xtable-column>
+    <yu-xtable-column label="考核对象编号" prop="evlObjId" width="200"></yu-xtable-column>
+    <yu-xtable-column label="考核对象名称" prop="evlObjName" width="200"></yu-xtable-column>
+    <yu-xtable-column label="指标编号" prop="indexId" width="120"></yu-xtable-column>
+    <yu-xtable-column label="指标名称" prop="indexName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="余额类型" prop="balType" width="100" data-code="YE_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="应用类型" prop="applyType" width="100" data-code="INDEX_APPLY_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="指标值" prop="indexValue" width="150" ></yu-xtable-column>
+    <yu-xtable-column label="原始指标值" prop="oldIndexValue" width="150" ></yu-xtable-column>
+    <yu-xtable-column label="修改人" prop="modifyUsername" width="150" ></yu-xtable-column>
+    <yu-xtable-column label="修改时间" prop="modifyDate" width="100" ></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group >
+        <yu-xform-item label="日期" name="etlDate" ctype="input" disabled="true"></yu-xform-item>  
+        <yu-xform-item label="指标编号" name="indexId" disabled="true"></yu-xform-item>  
+        <yu-xform-item label="指标名称" name="indexName" disabled="true"></yu-xform-item> 
+        <yu-xform-item label="考核对象编号" name="evlObjId" disabled="true"></yu-xform-item>  
+        <yu-xform-item label="考核对象名称" name="evlObjName" disabled="true"></yu-xform-item>  
+        <yu-xform-item label="考核对象类型" name="evlObjType" disabled="true" ctype="select" data-code="OBJ"></yu-xform-item>
+        <yu-xform-item label="余额类型" name="balType" disabled="true" ctype="select" data-code="YE_TYPE"></yu-xform-item>  
+        <yu-xform-item label="应用类型" name="applyType" disabled="true" ctype="select" data-code="INDEX_APPLY_TYPE"></yu-xform-item>  
+        <yu-xform-item label="指标值" ctype="input" name="indexValue" :rules="rule[1]" width="300px"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

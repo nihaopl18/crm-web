@@ -1,0 +1,133 @@
+/*
+  拖拽示例
+*/
+.crm-screen{
+ position: relative;
+ padding-top: 45px;
+}
+.crm-screen .btn.el-button{
+ position: absolute;
+ padding: 20px 20px;
+ top: 4px;
+}
+.drag-item{
+ user-select: none;
+}
+.infor-list-box{
+ width: 500px;
+ height: 270px;
+ position: absolute;
+ top: 5px;
+ right: 70px;
+ z-index: 3;
+ overflow: auto;
+ background: #fff;
+ box-shadow: 0 4px 6px 0 rgba(48,48,77,0.05), 0 2px 4px 0 rgba(48,48,77,0.05);
+ border-radius: 4px;
+}
+.drag-container .drag{
+  width: 262px;
+  height: 343px;
+  padding: 10px 10px;
+  border: 1px solid #c4c4c4;
+  background: #fff;
+  z-index: 99;
+  font-size: 14px;
+  color: #19233C;
+}
+.infor-list{
+ box-sizing: border-box;
+ height: 36px;
+ line-height: 36px;
+ width: 250px;
+ padding: 0 5px;
+ margin: 5px 0;
+ user-select: none;
+}
+.infor-list div{
+ height: 36px;
+ line-height: 36px;
+ padding: 0 10px;
+ background: #e9e9e9;
+ border-radius: 10px;
+}
+.infor-list i{
+ float: right;
+ width: 36px;
+ height: 36px;
+ line-height: 36px;
+ text-align: center;
+}
+.infor-list div:hover{
+ color: #fff;
+ background: #1e88d6;
+}
+
+.crm-screen .el-select .el-input {
+  width: 110px;
+}
+.crm-screen .el-select .el-input {
+  width: 110px;
+}
+.search-area{
+  width: 670px;
+  margin: 0 auto;
+  margin-top: 260px;
+}
+.search-panel{
+  width: 1000px;
+  margin: 0 auto;
+}
+.search-panel .grid-content{
+  margin-top: -40px;
+  box-shadow: 0 -2px 6px 0 rgba(48,48,77,.05), 0 2px 4px 0 rgba(48,48,77,.05);
+  border-radius: 4px;
+}
+.drag-mask{
+  background-color: red;
+}
+
+.yu-chart-box{display:block;padding-right:20px;padding-left:20px;height:100%;border-radius:4px;background:#fff;cursor:pointer;justify-content:space-around}
+.yu-chart-box:hover{box-shadow: 0 32px 32px 0 rgba(59, 59, 87, 0.01), 0 16px 16px 0 rgba(48,48,77,0.01), 0 8px 8px 0 rgba(48,48,77,0.05), 0 4px 4px 0 rgba(48,48,77,0.05), 0 2px 2px 0 rgba(48,48,77,0.05);}
+.yu-chart-box-val{letter-spacing:-.22px;font-family:MicrosoftYaHei-Bold;display:block;width:100%}
+.yu-chart-box>div{clear:both;width:100%}
+/* .yu-chart-box-text>div,.yu-chart-box-title>div{width:25%} */
+.yu-chart-box-title{padding-top:42px;height:90px}
+.yu-chart-box-text{height:20%}
+.yu-chart-box-left{float:left;text-align:center; width: 30%;height:66px;margin-right: 7%}
+.yu-chart-box-middle{margin-right: 7%}
+.yu-chart-box-right,.yu-chart-box-middle{float:left;width: 28%;height:66px;text-align:center;border-radius: 4px}
+.yu-chart-box-left .yu-chart-box-val{font-size:36px;color:#f3778e;margin-top:-8px}
+.yu-chart-box-middle .yu-chart-box-val{font-size:36px;color:#19233C;line-height: 40px}
+.yu-chart-box-right .yu-chart-box-val{font-size:36px;color:#19233C;line-height: 40px}
+.yu-chart-box-left .yu-chart-box-label{font-size:14px;;color:#19233c;margin-top:8px}
+.yu-chart-box-middle .yu-chart-box-label{font-size:14px;color:#19233c;margin-top:8px}
+.yu-chart-box-right .yu-chart-box-label{font-size:14px;color:#19233c;margin-top:8px}
+.yu-chart-box-content{text-align:center; width: 100%;}
+.yu-chart-box-content .yu-chart-box-val{font-size: 36px;margin-top:-8px}
+.yu-chart-box-content .yu-chart-box-label{font-size: 14px;color:#19233c;margin-top:8px}
+.yu-chart-box-progress-bk{padding:0;width:100%;height:6px;border-radius:3px;background:#f5f6fa;text-align:left}
+.yu-chart-box-progress-len{position:relative;top:-3px;display:inline-block;height:6px;border-radius:3px}
+.yu-chart-box-label{letter-spacing:-.09px;display:block;width:100%}
+.yu-chart-box-text{height:36px;color:#8b93a7;letter-spacing:-.09px;font-size:14px;line-height:36px}
+.yu-chart-box-icon{display:inline-block;vertical-align:middle;line-height:86px}
+.yu-chart-box-icon>i{font-size:36px}
+.yu-chart-box-left:hover .yu-chart-box-tips{display: block;}
+.yu-chart-box-middle:hover .yu-chart-box-tips{display: block;}
+.yu-chart-box-right:hover .yu-chart-box-tips{display: block;}
+.yu-chart-box-title .tips-no-offset:hover .yu-chart-box-tips{left:-17px;z-index:9}
+.yu-chart-box-content:hover .yu-chart-box-tips{display: block;}
+.yu-chart-box .yu-chart-box-tips{position:relative;top:0px;left:-21px;z-index:9;display:none;width:255px;height:255px;border-radius:4px;background-color:#fff;box-shadow:0 32px 32px 0 rgba(48,48,77,.05),0 16px 16px 0 rgba(48,48,77,.05),0 8px 8px 0 rgba(48,48,77,.05),0 4px 4px 0 rgba(48,48,77,.05),0 2px 2px 0 rgba(48,48,77,.05);animation:.5s}
+.yu-chart-box-tips .li-item-title>span{border-radius: 4px;font-size: 12px;color: #FFFFFF;letter-spacing: -0.07px;text-align: justify;display: inline-block;height: 16px;padding: 2px 8px;line-height: 16px;margin-left: 6px;}
+.yu-chart-box-tips-page,.yu-chart-box-tips-page>span{text-align:right;line-height:32px}
+.yu-chart-box-tips-page>span{display:inline-block;margin-left:22px;color:#8b93a7;letter-spacing:-.07px;font-size:12px}
+.yu-chart-box-tips-page>span.has-event{color:#D3DCE6}
+.yu-chart-box-tips-page>span.has-event:hover{color:#2877ff}
+.yu-chart-box-tips{clear:both;overflow:hidden;overflow-y:auto;padding:20px 28px}
+.yu-chart-box-tips .li-item{display:block;width:100%;height:56px}
+.yu-chart-box-tips .li-item>div>span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.yu-chart-box-tips .li-item .li-left{float:left;width:80%}
+.yu-chart-box-tips .li-item .li-right{float:right;width:20%}
+.yu-chart-box-tips .li-item .li-left>span{width:100%}
+.yu-chart-box-tips-left{float:left;width:80%;}
+.yu-chart-box-tips-right{float: left;box-sizing: border-box;padding-right: 5px;width: 20%; color: #8b93a7;text-align: right;white-space: nowrap;letter-spacing: 0;font-size: 12px;cursor: pointer}

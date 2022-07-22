@@ -1,0 +1,211 @@
+<!-- 
+  @Created by yangxiao2  on 2019-3-22 
+  @updated by
+  @description 营销活动管理-营销成效分析
+-->
+<div>
+  <yu-row>
+    <yu-col :span="18">
+      <yu-xform ref="form" form-type="edit" v-model="formdata" style="margin:10px 10px 0 0;">
+        <yu-xform-group :column="4">
+          <yu-xform-item placeholder="活动名称" name="activityName" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="活动状态" name="activitySts" ctype="select" data-code="ACTIVITY_STS">
+          </yu-xform-item>
+          <yu-xform-item placeholder="活动开始时间" name="startDate" ctype="datepicker"></yu-xform-item>
+          <yu-xform-item placeholder="活动结束时间" name="endDate" ctype="datepicker"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+    </yu-col>
+    <yu-col :span="5">
+      <yu-button-group class="btn-group" style="margin:10px 10px 0 0;">
+        <yu-button type="primary" @click="searchFn">搜索</yu-button>
+        <yu-button @click="resetFn">重置</yu-button>
+      </yu-button-group>
+    </yu-col>
+  </yu-row>
+  <yu-row>
+    <yu-col :span="5">
+      <yu-xtable ref="actBaseTable" :data-url="actBaseUrl" :pageable="true" @row-click="getActBaseInfobyid">
+        <yu-xtable-column label="营销活动名称" prop="activityName"></yu-xtable-column>
+      </yu-xtable>
+    </yu-col>
+    <yu-col :span="18">
+      <yu-tabs v-model="groupView" @tab-click="targetClick">
+        <yu-tab-pane label="营销活动基本信息" name="1">
+          <!-- 营销活动基本信息-->
+          <yu-xform ref="activeAddForm" v-if="!hasId" label-width="160px" :disabled="infoDisabled" v-model="actBaseFrom" disabled
+            style="margin:10px 10px 0 0">
+            <yu-xform-group :column="2">
+              <yu-xform-item label="营销活动编号" name="tempId" ctype="input"></yu-xform-item>
+              <yu-xform-item label="营销活动名称" name="activityName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="营销活动下达机构" name="releaseOrgName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="营销活动下达人名称" name="releaseUserName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="营销活动下达时间" name="releaseTime" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="营销活动状态" name="activitySts" ctype="select" data-code="ACTIVITY_STS">
+              </yu-xform-item>
+              <yu-xform-item label="营销活动开始日期" name="startDate" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="营销活动结束日期" name="endDate" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="营销活动关闭日期" name="closeTime" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="营销活动关闭人" name="closeUser" ctype="input"></yu-xform-item>
+              <yu-xform-item label="营销活动关闭机构" name="closeOrg" ctype="input"></yu-xform-item>
+              <yu-xform-item label="创建日期" name="createTime" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="创建人" name="createUserName" ctype="input"></yu-xform-item>
+              <yu-xform-item label="最近维护时间" name="updateTime" ctype="datepicker"></yu-xform-item>
+              <yu-xform-item label="最近维护人" name="updateUserName" ctype="input"></yu-xform-item>
+
+            </yu-xform-group>
+            <yu-xform-group :column="1">
+              <yu-xform-item label="备注" name="activityDesc" ctype="textarea" :colspan="24"></yu-xform-item>
+            </yu-xform-group>
+          </yu-xform>
+        </yu-tab-pane>
+        <yu-tab-pane label="指标信息" name="4" :disabled="hasId">
+          <!--  任务指标信息 -->
+          <yu-xtable ref="orgTargetTable" v-show="orgShow"  row-number :data-url="taskDataForOrgUrl" :pageable="true"
+            :default-load="load" @loaded="taskDataForOrgChange">
+            <!-- <yu-xtable-column label="机构编号" prop="exeObjCode" ctype="input" :disabled="infoDisabled"></yu-xtable-column> -->
+            <yu-xtable-column label="机构名称" prop="orgName" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标编号" prop="indexId" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标名称" prop="indexName" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标初期值" prop="initialValue" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标目标值" prop="targetValue" :disabled="infoDisabled" ctype="input">
+            </yu-xtable-column>
+            <yu-xtable-column label="指标完成值" prop="completionValue" :disabled="infoDisabled" ctype="input">
+            </yu-xtable-column>
+            <yu-xtable-column label="指标完成率(%)" prop="completionRate" :disabled="infoDisabled" ctype="input">
+            </yu-xtable-column>
+          </yu-xtable>
+          <yu-xtable ref="mgrTargetTable" v-show="mgrShow" row-number :data-url="taskDataForMgrUrl" :pageable="true"
+            :default-load="load" @loaded="taskDataForMgrChange">
+            <!-- <yu-xtable-column label="客户经理编号" prop="exeObjCode" ctype="input" :disabled="infoDisabled"></yu-xtable-column> -->
+            <yu-xtable-column label="客户经理名称" prop="userName" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标编号" prop="indexId" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标名称" prop="indexName" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标初期值" prop="initialValue" ctype="input" :disabled="infoDisabled"></yu-xtable-column>
+            <yu-xtable-column label="指标目标值" prop="targetValue" :disabled="infoDisabled" ctype="input">
+            </yu-xtable-column>
+            <yu-xtable-column label="指标完成值" prop="completionValue" :disabled="infoDisabled" ctype="input">
+            </yu-xtable-column>
+            <yu-xtable-column label="指标完成率(%)" prop="completionRate" :disabled="infoDisabled" ctype="input">
+            </yu-xtable-column>
+          </yu-xtable>
+        </yu-tab-pane>
+        <yu-tab-pane label="指标图表" name="5" :disabled="hasId">
+          <yu-tabs v-model="orgView" v-show="orgShow">
+            <yu-tab-pane label="目标机构完成情况对比图" name="6">
+              <!--  营销成效指标目标机构完成情况对比图 -->
+              <div>
+                <div class="yu-Con">
+                  <div class="yu-box">
+                    <div class="yu-content" style="height:400px;text-align: center; width: 100%">
+                      <yu-echarts :option="chart1Option" width="550px" height="400px" style="margin:0 auto">
+                      </yu-echarts>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </yu-tab-pane>
+            <yu-tab-pane label="目标机构占比图" name="5">
+              <!--  营销成效指标目标机构占比图 -->
+              <div>
+                <div class="yu-Con">
+                  <div class="yu-box">
+                    <div class="yu-content" style="height:400px;text-align: center;width: 100%">
+                      <yu-echarts :option="chart2Option" width="550px" height="400px" style="margin: 0 auto">
+                      </yu-echarts>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </yu-tab-pane>
+            
+          </yu-tabs>
+          <yu-tabs v-model="mgrView" v-show="mgrShow">
+            <yu-tab-pane label="目标客户经理进展图" name="7">
+              <!--  营销成效指标目标客户经理进展图 -->
+              <div>
+                <div class="yu-Con">
+                  <div class="yu-box">
+                    <div class="yu-content" style="height:400px;text-align: center; width: 100%">
+                      <yu-echarts :option="chart3Option" width="550px" height="400px" style="margin: 0 auto">
+                      </yu-echarts>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </yu-tab-pane>
+            <yu-tab-pane label="目标客户经理占比图" name="8">
+              <!--  营销成效指标目标客户经理占比图 -->
+              <div>
+                <div class="yu-Con">
+                  <div class="yu-box">
+                    <div class="yu-content" style="height:400px; width: 100%">
+                      <yu-echarts :option="chart4Option" width="550px" height="400px" style="margin:0 auto">
+                      </yu-echarts>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </yu-tab-pane>
+          </yu-tabs>
+        </yu-tab-pane>
+        <!--  反馈信息 -->
+        <!-- <yu-tab-pane label="反馈信息" name="7" :disabled="hasId">
+          
+          <div>
+            <yu-xtable ref="attachMentTable" row-number :data-url="actBackdataUrl" :base-params="prodParams"
+              :default-load="load">
+              <yu-xtable-column label="活动受众人数" prop="acceHumanNum"></yu-xtable-column>
+              <yu-xtable-column label="派发宣传单数量" prop="advPaperNum"></yu-xtable-column>
+              <yu-xtable-column label="实际费用支出" prop="costInAction"></yu-xtable-column>
+              <yu-xtable-column label="活动经验总结" prop="outcomeInAction"></yu-xtable-column>
+              <yu-xtable-column label="客户评价" prop="reviewInCoustomer"></yu-xtable-column>
+            </yu-xtable>
+          </div>
+        </yu-tab-pane> -->
+      </yu-tabs>
+    </yu-col>
+  </yu-row>
+</div>
+<style>
+  .result-left,
+  .result-right {
+    padding: 12px;
+  }
+
+  .result-left {
+    border: 1px solid #d1dbe5;
+    min-height: 500px;
+  }
+
+  .result-left-menu {
+    padding-top: 24px;
+  }
+
+  .result-left-menu li {
+    line-height: 36px;
+    height: 36px;
+    font-size: 12px;
+    color: #444;
+    padding-left: 15px;
+    cursor: pointer;
+  }
+
+  .result-left-menu li.active {
+    color: #20a0ff;
+  }
+
+  .result-left-menu li:not(:last-child) {
+    border-bottom: 1px solid #d1dbe5;
+  }
+  .el-pagination{
+    display: grid;
+  }
+  .el-pagination .btn-prev{
+    display: none;
+  }
+  .el-pagination .btn-next{
+    display: none;
+  }
+  
+</style>

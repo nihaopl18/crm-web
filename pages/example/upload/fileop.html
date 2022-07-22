@@ -1,0 +1,17 @@
+<!-- 文件操作示例 -->
+<div id="fileOpDemo">
+	<br/>
+	<div style="color:red">
+		<h2> 文件操作示例（本地存储）：上传、下载、删除</h2>
+	</div>
+	<el-upload style="display:inline-block" v-if="uploadVisible"
+		:show-file-list="false" :multiple="multiple"
+		:file-list="fileList" :headers="headers"
+		:action="action" :data="data"
+		:on-success="onSuccess" :on-error="onError"
+		:on-change="onChange"> <el-button>上传</el-button>
+	</el-upload>
+	<el-button v-if="downloadVisible" @click="downloadFile">下载</el-button>
+	<el-button v-if="deleteVisible" @click="deleteFile">删除</el-button>
+	<el-table-x ref="accessTable" :checkbox="true" :data-url="dataUrl" :table-columns="columns"></el-table-x>
+</div>

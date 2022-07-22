@@ -1,0 +1,308 @@
+<!--
+  @created by ranxun on 2021-8-6 09:46:35
+  @updated by
+  @description 东亚银行首页
+-->
+<div class="home-container">
+    <link rel="stylesheet" type="text/css" href="pages/dy/indexPage/indexPage.css">
+    <div class="top-container">
+        <yu-row>
+            <yu-col :span="18">
+                <div class="top-leftindexpage">
+                    <div class="custSearchindexpage" id="custResultBoxid">
+                        <el-input placeholder="请输入ECIF号、NDS号、客户中文名、客户英文名、手机号搜索" @keyup.enter="querySearchAsync" @focus="searchTenCusts" v-model="searchData" clearable>
+                            <span slot="prepend">客户</span>
+                        </el-input>
+                        <yu-button id="btn" slot="append" icon="search" type="danger" style="height: 36px;"></yu-button>
+                        <ul v-if="searchBoxShow" class="custResultBox" v-loading="loading">
+                            <li class="noData" v-if="!custResults.length">没有查找到~</li>
+                            <li v-else v-for="item in custResults" :key="item.custId" @click="handleCustomerSelect(item)">
+                                {{ item.custName }} - {{item.custId}}
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- <el-scrollbar> -->
+                    <div class="top-cardBo">
+                        <div v-for="item in cardData" :key="item.title">
+                            <div>{{ item.title }}
+                                <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                    <div slot="content">
+                                        <p class="title">{{ item.title }}</p>
+                                        <p class="content">{{ item.content }}</p>
+                                    </div>
+                                    <i class="el-icon-warning-outline"></i>
+                                </el-tooltip>
+                            </div>
+                            <p class="count">{{ item.data || '-' }}</p>
+                            <div class="compare">
+                                <div>
+                                    <span style="font-size: 11px;">同比</span>
+                                    <span style="font-size: 11px;">{{ yufp.util.returnPercent(item.tb) }}%
+                                        <!-- <i :class="item.tbClass"></i> -->
+                                            <i v-if='item.tb&lt;0' class="el-icon-caret-bottom"></i>
+                                            <i v-else class="el-icon-caret-top"></i>
+
+                                    </span>
+                                </div>
+                                <div>
+                                    <span style="font-size: 11px;">环比</span>
+                                    <span style="font-size: 11px;">{{ yufp.util.returnPercent(item.hb) }}%
+                                        <!-- <i :class="item.hbClass"></i> -->
+                                            <i v-if='item.hb&lt;0' class="el-icon-caret-bottom"></i>
+                                            <i v-else class="el-icon-caret-top"></i>    
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- </el-scrollbar> -->
+
+                    <div class="option-container">
+                        <div class="box-title">
+                            <div class="title">业绩看板</div>
+                            <div class="more">
+                                <!-- <yu-button-group>
+                                <yu-button size="mini" v-for="item in timeOptions" :key="item.key"
+                                    :type="selectKey === item.key ? 'danger' : ''" plain @click="handleTimeSelect(item.key)">
+                                    {{item.value}}</yu-button>
+                                </yu-button-group> -->
+                                <span @click="lookmoreFn">查看更多 ></span>
+                            </div>
+                        </div>
+                        <div class="top-kanban">
+                            <div class="top-circle">
+                                <div v-for="(item, index) in progressTop" :key="item.title">
+                                    <yu-progress type="circle" :percentage="item.percent" width="100" :stroke-width="8" color="#EE434C">
+                                        <div class="percent">{{ item.percent }}
+                                            <span>%</span>
+                                        </div>
+                                        <div class="desc">完成率</div>
+                                    </yu-progress>
+                                    <div class="left-content">
+                                        <div>{{ item.title }}
+                                            <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                                <div slot="content">
+                                                    <p class="title">{{ item.title }}</p>
+                                                    <p class="content">{{ item.content }}</p>
+                                                </div>
+                                                <i class="el-icon-warning-outline"></i>
+                                            </el-tooltip>
+                                        </div>
+                                        <p>{{ item.money }}</p>
+                                        <div class="compare">
+                                            <div>
+                                                <span>同比</span>
+                                                <span>{{yufp.util.returnPercent(item.tb)}}
+                                                <span>%</span>
+                                                <i v-if='item.tb>=0||item.tb=="-"' class="el-icon-caret-top colorRed"></i>
+                                                <i v-else class="el-icon-caret-bottom color-green"></i>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>环比</span>
+                                                <span>{{yufp.util.returnPercent(item.hb)}}
+                                                <span>%</span>
+                                                <i v-if='item.hb>=0||item.hb=="-"' class="el-icon-caret-top colorRed"></i>
+                                                <i v-else class="el-icon-caret-bottom color-green"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottom-circle">
+                                <div v-for="item in progressBottom" :key="item.title">
+                                    <yu-progress type="circle" :percentage="item.percent" :stroke-width="8" width="100" color="#EE434C">
+                                        <div class="percent">{{ parseInt(item.percent) }}
+                                            <span>%</span>
+                                        </div>
+                                        <div class="desc">完成率</div>
+                                    </yu-progress>
+                                    <div class="left-content">
+                                        <div>{{ item.title }}
+                                            <el-tooltip class="tooltip" :hide-after="0" effect="light" placement="bottom-start">
+                                                <div slot="content">
+                                                    <p class="title">{{ item.title }}</p>
+                                                    <p class="content">{{ item.content }}</p>
+                                                </div>
+                                                <i class="el-icon-warning-outline"></i>
+                                            </el-tooltip>
+                                        </div>
+                                        <p>{{ item.money }}</p>
+                                        <div class="compare">
+                                            <div>
+                                                <span>同比</span>
+                                                <span>{{yufp.util.returnPercent(item.tb)}}
+                                                <span>%</span>
+                                                <i v-if='item.tb>=0||item.tb=="-"' class="el-icon-caret-top colorRed"></i>
+                                                <i v-else class="el-icon-caret-bottom color-green"></i>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span>环比</span>
+                                                <span>{{yufp.util.returnPercent(item.hb)}}
+                                                <span>%</span>
+                                                <i v-if='item.hb>=0||item.hb=="-"' class="el-icon-caret-top colorRed"></i>
+                                                <i v-else class="el-icon-caret-bottom color-green"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </yu-col>
+            <yu-col :span="6">
+                <div class="top-right">
+                    <top-right></top-right>
+                </div>
+            </yu-col>
+        </yu-row>
+
+
+    </div>
+    <!-- 异动提醒 -->
+    <div class="bottom-container">
+        <div class="option-container">
+            <div class="box-title">
+                <div class="title">异动提醒</div>
+                <div class="more" @click="clickMessage">查看更多 ></div>
+            </div>
+            <yu-xtable :data="tableData" :pageable="false" stripe style="width: 100%">
+                <!-- <yu-xtable-column prop="infoId" label="事件编号">
+                    <template slot-scope="scope">
+                        <span class="type-box">{{ scope.row.infoId }}</span>
+                    </template>
+                </yu-xtable-column> -->
+                <yu-xtable-column prop="ruleName" label="事件名称">
+                    <template slot-scope="scope">
+                        {{scope.row.ruleName}}
+                        <yu-tooltip v-if="scope.row.ruleName === '客户AUM等级降级提醒'" class="item" effect="light" content="当月末，客户分层降级提醒" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '客户AUM等级升级提醒'" class="item" effect="light" content="当月末，客户分层升级提醒" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '理财风险评估到期'" class="item" effect="light" content="风险评估到期提前10天提醒，持续提醒11天" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '还款日提醒'" class="item" effect="light" content="贷款到期提前15天提醒，持续提醒16天" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '定期到期'" class="item" effect="light" content="定期存款到期提前10天提醒，持续提醒11天" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '理财产品到期'" class="item" effect="light" content="理财产品到期提前10天提醒，持续提醒11天" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '客户超过一个月未登录手机银行'" class="item" effect="light" content="客户超过一个月未登录手机银行当天提醒，持续提醒30天" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '账户余额变动（转出）'" class="item" effect="light" content="账户转入超过5万，当天提出提醒，持续提醒10天" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '账户余额变动（转入）'" class="item" effect="light" content="账户转入超过5万，当天提出提醒，持续提醒10天" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '贷款逾期'" class="item" effect="light" content="贷款逾期当天提醒，持续提醒11天" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '贷款还款账户余额不足'" class="item" effect="light" content="有签约还款账户且还款账户余额当期贷款还款额，提前5天，连续提醒6天" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                        <yu-tooltip v-if="scope.row.ruleName === '客户生日提醒'" class="item" effect="light" content="客户生日的提前10天开始提醒，一直持续提醒11天" placement="bottom-start">
+                            <i class="el-icon-warning-outline"></i>
+                        </yu-tooltip>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="typeName" label="事件类型"></yu-xtable-column>
+                <yu-xtable-column prop="amt" label="数额" sortable :sort-method="custSort">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.amt != '-'">{{ yufp.util.moneyFormatter(scope.row.amt || 0, 2) }}</span>
+                        <span v-if="scope.row.amt == '-'">-</span>
+                     </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="importDate" label="重要日期"></yu-xtable-column>
+                <yu-xtable-column prop="otherContent" label="其它内容"></yu-xtable-column>
+                <yu-xtable-column prop="remindCreateDate" label="触发时间" :formatter="formJE"></yu-xtable-column>
+                <yu-xtable-column prop="custName" label="客户姓名">
+                    <template slot-scope="scope">
+                        <el-link type="primary" @click="toCustomer360View(scope.row)">{{ scope.row.custName }} - {{
+                        scope.row.custId }}</el-link>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column prop="state" label="状态">
+                    <template slot-scope="scope">
+                        <div>
+                        <span :class="['stateDot', scope.row.state === '0' ? 'bg-geen' : 'bg-yellow']"></span>
+                        {{ noticeStatus[scope.row.state] }}
+                        </div>
+                    </template>
+                </yu-xtable-column>
+                <yu-xtable-column label="操作" width="200">
+                    <template slot-scope="scope">
+                        <yu-button type="text" style="padding: 0" v-if="scope.row.state == '2'" @click="changeCustomerState(scope.row,'1')">
+                            无需跟进</yu-button>
+                        <yu-button type="text" style="padding: 0" v-if="scope.row.state == '2'" @click="changeCustomerState(scope.row,'2')">
+                            已处理</yu-button>
+                        <yu-button type="text" style="padding: 0" disabled="true" v-if="scope.row.state != '2' && scope.row.operation == '1'">无需跟进</yu-button>
+                        <yu-button type="text" style="padding: 0" disabled="true" v-if="scope.row.state != '2' && scope.row.operation == '2'">已处理</yu-button>
+                        <!-- <el-dropdown trigger="click" @command="handleOptionSelect"
+                        @visible-change="handleOptionVisibleChange(scope.row)" v-if="scope.row.state == 2">
+                        <span class="el-icon-more"></span>
+                        <el-dropdown-menu slot="dropdown"> -->
+                        <!-- <el-dropdown-item command="alreadyRead"><i class="el-icon-view"></i> 已阅知</el-dropdown-item>  -->
+                        <!-- <el-dropdown-item command="noTrack"><i class="el-icon-document-delete"></i> 无需跟进</el-dropdown-item>
+                            <el-dropdown-item command="alreadyDeal"><i class="el-icon-document-checked"></i> 已处理</el-dropdown-item>
+                        </el-dropdown-menu>
+                        </el-dropdown> -->
+                    </template>
+                </yu-xtable-column>
+            </yu-xtable>
+        </div>
+    </div>
+
+    <yu-xdialog title="短信发送" width="600px" :visible.sync="connectVisible" :before-close="handleConnectClose">
+        <div style="padding: 0 70px">
+            <yu-xform ref="refFormDemo" label-width="120px" label-position="top" v-model="tableEditFormdata">
+                <yu-xform-group>
+                    <yu-xform-item label="客户" ctype="input" required name="custName" colspan="24" readonly></yu-xform-item>
+                    <yu-xform-item label="电话号码" ctype="input" name="phone" placeholder="请输入号码" readonly colspan="24">
+                    </yu-xform-item>
+                    <yu-xform-item label="异动类型" ctype="input" name="ruleName" readonly colspan="24" placeholder="请选择类型">
+                    </yu-xform-item>
+                    <yu-xform-item label="" ctype="textarea" name="custom" colspan="24" readonly></yu-xform-item>
+                </yu-xform-group>
+                </yu-row>
+            </yu-xform>
+            <span slot="footer" class="dialog-footer" style="text-align: center;display: block">
+        <yu-button @click="handleConnectClose">取 消</yu-button>
+        <yu-button type="primary" @click="handleConnectClose">确 定</yu-button>
+      </span>
+        </div>
+    </yu-xdialog>
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" title="信息" :visible.sync="optionDialogVisible" size="tiny" :show-close="false" :center="true">
+        <yu-xform ref="refDialogForm" label-width="120px" v-model="optionForm" :inline="false" label-position="top">
+            <yu-xform-group>
+                <yu-xform-item label="电话" name="phonenum" rules="required" colspan="24" ctype="input"></yu-xform-item>
+                <yu-xform-item label="邮箱" name="email" rules="required" colspan="24" ctype="input"></yu-xform-item>
+            </yu-xform-group>
+        </yu-xform>
+        <span slot="footer" class="dialog-footer">
+      <yu-button type="primary" id="confirmqd" @click="confirmFn">确 定</yu-button>
+    </span>
+    </yu-dialog>
+    <yu-dialog :modal-append-to-body="false" :append-to-body="false" :visible.sync="isChormeable" size="tiny" :show-close="false" :center="true">
+        <div style="height: 20px;padding-left:10px;line-height: 20px;font-size:20px;">
+            提示
+        </div>
+        <div style="height: 60px;text-align:center;line-height: 60px;font-size: 18px;">
+            请使用谷歌浏览器！
+        </div>
+        <div style="float:right;padding: 4px;">
+            <el-button type="danger" @click="sureFn">确定</el-button>
+        </div>
+    </yu-dialog>
+</div>

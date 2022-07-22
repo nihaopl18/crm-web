@@ -1,0 +1,31 @@
+<!--
+  @created by hyx on 2018/7/13.
+  @updated by taoting1
+  @description 客户群视图项-群成员信息（客户来源为“手动”）
+-->
+
+<div>
+	<el-row :gutter="10">
+		<el-form-q title="群客户查询" :field-data="queryFields" search-table="mytable"></el-form-q>
+		<div class="yu-toolBar">
+			<h2>客户群成员列表</h2>
+			<el-button-group>
+				<el-button icon="yx-bookmarks" @click="custViewportFn">客户视图</el-button>
+				<el-button icon="yx-menu-4" @click="custAdd">添加客户</el-button>
+			</el-button-group>
+		</div>
+	</el-row>
+	<div class="myTableDiv">
+		<el-table-x ref="mytable" class="permitSelect" @contextmenu.prevent.stop.native @row-dblclick="custViewportFn1" :data-url="joinUrl" :default-load="false" :table-columns="clientsView" :checkbox="true" :base-params="baseParams" height="420"></el-table-x>
+	</div>
+	</div>
+	<style type="text/css">
+		.permitSelect {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+	</style>

@@ -1,0 +1,160 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-27 16:59:38
+ * @update by: 
+ * @description: 
+-->
+<!--
+  @created by zhangkun6 on 2021-8-27 16:59:38
+  @updated by
+  @description 客群分析
+-->
+<div class="cust-group-analysis" :id="idsj">
+    <div class="dy-tabs tab-box">
+        <yu-row>
+            <yu-col :span="18">
+                <yu-tabs v-model="activeName" type="card" @tab-click="handleTabClick(activeName)">
+                    <yu-tab-pane label="客群统计" name="group"></yu-tab-pane>
+                    <yu-tab-pane label="客均统计" name="average"></yu-tab-pane>
+                </yu-tabs>
+            </yu-col>
+            <yu-col :span="6" class="export-option">
+                <p>数据更新时间：{{updateDate}}</p>
+                <!-- <yu-button icon="el-icon-yx-file-excel" @click="exprtPDF">导出报告</yu-button> -->
+                <yu-dropdown @command="handleExportCommand">
+                    <yu-button>
+                        导出<i class="el-icon-arrow-down el-icon--right"></i>
+                    </yu-button>
+                    <yu-dropdown-menu slot="dropdown">
+                        <yu-dropdown-item command="1">PDF报告</yu-dropdown-item>
+                        <yu-dropdown-item command="2">EXCEL报告</yu-dropdown-item>
+                    </yu-dropdown-menu>
+                </yu-dropdown>
+            </yu-col>
+        </yu-row>
+    </div>
+    <div class="table-list">
+        <yu-xtable ref="yutable" :data="list" style="width: 100%" :pageable="false">
+            <yu-xtable-column prop="title" label=""></yu-xtable-column>
+            <yu-xtable-column prop="customer" label="客户数">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.isCount">{{ yufp.util.moneyFormatter(scope.row.customer) }}</span>
+                    <i v-else :class="yufp.util.returnUpOrDownClass(scope.row.customer/100)">{{yufp.util.returnPercent(scope.row.customer)}}%</i>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="aum" label="客群年均AUM">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.isCount">{{ yufp.util.moneyFormatter(scope.row.aum) }}</span>
+                    <i v-else :class="yufp.util.returnUpOrDownClass(scope.row.aum/100)">{{yufp.util.returnPercent(scope.row.aum)}}%</i>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="deposit" label="客户存款规模">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.isCount">{{ yufp.util.moneyFormatter(scope.row.deposit) }}</span>
+                    <i v-else :class="yufp.util.returnUpOrDownClass(scope.row.deposit/100)">{{yufp.util.returnPercent(scope.row.deposit)}}%</i>
+                </template>
+            </yu-xtable-column>
+            <yu-xtable-column prop="loan" label="客均理财产品购买金额">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.isCount">{{ yufp.util.moneyFormatter(scope.row.loan) }}</span>
+                    <i v-else :class="yufp.util.returnUpOrDownClass(scope.row.loan/100)">{{yufp.util.returnPercent(scope.row.loan)}}%</i>
+                </template>
+            </yu-xtable-column>
+        </yu-xtable>
+    </div>
+
+    <div class="condition-box">
+        <yu-form :inline="true" :model="searchForm">
+            <yu-form-item label="时间范围：">
+                <div style="display: flex">
+                    <yu-date-picker v-model="searchForm.dateRange" type="monthrange" range-separator="→" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM" @change="handleDateChange">
+                    </yu-date-picker>
+                    <p class="warning-text"><i class="el-icon-warning"></i>统计日期跨度无法超过12个月</p>
+                </div>
+            </yu-form-item>
+        </yu-form>
+    </div>
+
+    <yu-row :gutter="20">
+        <yu-col :span="8">
+            <div class="cust-chart">
+                <p>
+                    <span class="title">{{titleView[activeName]}}AUM趋势</span>
+                    <span class="unit">单位：万</span>
+                </p>
+                <yu-echarts ref="AUMEchart" :option="AUMOption" width="100%" height="350px"></yu-echarts>
+            </div>
+        </yu-col>
+        <yu-col :span="8">
+            <div class="cust-chart">
+                <p>
+                    <span class="title">{{titleView[activeName]}}中间业务收入金额趋势</span>
+                    <span class="unit">单位：万</span>
+                </p>
+                <yu-echarts ref="incomeEchart" :option="incomeOption" width="100%" height="350px"></yu-echarts>
+            </div>
+        </yu-col>
+        <yu-col :span="8">
+            <div class="cust-chart">
+                <p>
+                    <span class="title">{{titleView[activeName]}}存款余额波动图</span>
+                    <span class="unit">单位：万</span>
+                </p>
+                <yu-echarts ref="depositEchart" :option="depositOption" width="100%" height="350px"></yu-echarts>
+            </div>
+        </yu-col>
+        <yu-col :span="8">
+            <div class="cust-chart">
+                <p>
+                    <span class="title">{{titleView[activeName]}}理财产品购买金额趋势</span>
+                    <span class="unit">单位：万</span>
+                </p>
+                <yu-echarts ref="prodBuyEchart" :option="prodBuyOption" width="100%" height="350px"></yu-echarts>
+            </div>
+        </yu-col>
+        <!-- <yu-col :span="8" v-if="activeName === 'average'">
+            <div class="cust-chart">
+                <p>
+                    <span class="title">客均综合价值图</span>
+                    <span class="unit">单位：万</span>
+                </p>
+                <yu-echarts ref="valuechart" :option="valueOption" width="100%" height="350px"></yu-echarts>
+            </div>
+        </yu-col> -->
+        <yu-col :span="8" v-show="activeName === 'group'">
+            <div ref="cust-chart" class="cust-chart">
+                <p class="title">客户标签词频图</p>
+                <div class="canvas-container" style="height: 350px;width: 100%;text-align: center">
+                    <!-- <canvas id="custTag" :width="canvasWidth" height="350"></canvas> -->
+                    <!-- <canvas id="custTag" style="width: 100%;height: 100%;"></canvas> -->
+                    <canvas id="custTag" style="width: 100%;" height="350"></canvas>
+                </div>
+            </div>
+        </yu-col>
+        <!-- <yu-col :span="8">
+      <div class="cust-chart">
+        <p class="title">客均综合价值</p>
+        <yu-echarts ref="synthesisEchart" :option="synthesisOption" width="100%" height="350px"></yu-echarts>
+      </div>
+    </yu-col> -->
+        <yu-col :span="8" v-show="activeName === 'group'">
+            <div class="cust-chart">
+                <p>
+                    <span class="title">客户等级分布图</span>
+                    <span class="unit">单位：人</span>
+                </p>
+                <yu-echarts ref="tagEchart" :option="tagOption" width="100%" height="350px"></yu-echarts>
+            </div>
+        </yu-col>
+        <yu-col :span="8" v-show="activeName === 'group'" id="wholenode">
+            <div class="cust-chart">
+                <p>
+                    <span class="title">客群产品结构</span>
+                    <span class="unit">单位：元</span>
+                </p>
+                <yu-echarts ref="prodStructEchart" :option="prodStructOption" width="100%" height="350px"></yu-echarts>
+            </div>
+        </yu-col>
+    </yu-row>
+</div>
+<link rel="stylesheet" href="pages/dy/custGroupManage/groupAnalysis/groupAnalysis.css">

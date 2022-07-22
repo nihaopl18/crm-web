@@ -1,0 +1,279 @@
+<!--
+  @created by wanshuang on 2020-4-20 09:57:47
+  @updated by
+  @description 带excel的考核方案
+-->
+<div>
+  <yu-row :gutter="20">
+      <yu-col :span="6">
+        <div class="yu-toolBar" style="padding-top: 10px;padding-left: 0px;">
+           <yu-button-group>
+             <yu-button icon="plus" @click="addNodeFn" >新增</yu-button>
+             <yu-button icon="edit" @click="modifyNodeFn">编辑</yu-button>
+             <yu-button icon="yx-bin" @click="deleteNodeFn" >删除</yu-button>
+           </yu-button-group>
+        </div>
+        <yufp-ext-tree ref="refTree" :show-checkbox="false" :height="height - 112"
+          :data-url="treeUrl" data-id="menuId" data-label="menuName" @node-click="nodeClickFn"
+          data-pid="parentMenuId" :highlight-current="true">
+        </yufp-ext-tree>
+        <yu-xdialog :title="title" :visible.sync="treeDialogVisible" width="512px" height="150px" :before-close="handlemenuDialogClose">
+            <yu-xform ref="treeForm" label-width="150px" v-model="treeFormdata" :disabled="treeformDisabled" hidden-rule="false">
+                <yu-xform-item label="目录名称" name="menuName" ctype="input" rules="required"></yu-xform-item> 
+                <yu-xform-item label="上级目录名称" name="parentMenuName" disabled="true"></yu-xform-item>  
+                <yu-xform-item label="上级目录编号" name="parentMenuId" hidden="true"></yu-xform-item>
+                <div style="padding-top:20px;text-align: center;">
+                  <yu-button icon="check" type="primary" @click="saveTreeFn" v-show="saveTreeBtnShow">保存</yu-button>
+                  <yu-button icon="yx-undo2" type="primary" @click="cancelTreeFn" >取消</yu-button>
+                </div>
+            </yu-xform>
+        </yu-xdialog>
+      </yu-col>
+      <yu-col :span="18">
+        <yu-xform related-table-name="refTable" ref="refForm" v-model="queryData"  form-type="search">
+          <yu-xform-group :column="4">
+            <yu-xform-item placeholder="考核方案ID" ctype="input" name="schemeId"></yu-xform-item>
+            <yu-xform-item placeholder="考核方案名称" ctype="input" name="schemeName"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+        <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="plus" @click="addFn">新增</yu-button>
+            <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+            <yu-button icon="document" @click="infoFn">详情</yu-button>
+            <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+            <yu-button icon="check" @click="startFn">启动</yu-button>
+            <yu-button icon="close" @click="stopFn">停用</yu-button>
+            <yu-button icon="yx-search" @click="previewFn">方案预览</yu-button>
+            <yu-button icon="yx-loop2" @click="preRunFn">方案运行</yu-button>
+            <yu-button icon="yx-loop2" @click="grantFn">授权</yu-button>
+            <yu-button icon="yx-loop2" @click="quoteFn">引用</yu-button>
+          </yu-button-group>
+        </div>
+        <yu-xtable ref="refTable" :data-url="dataUrl" selection-type="radio" :base-params="params">
+          <yu-xtable-column label="考核方案ID" prop="schemeId"></yu-xtable-column>
+          <yu-xtable-column label="考核方案名称" prop="schemeName"></yu-xtable-column>
+          <yu-xtable-column label="所属考核目录" prop="menuName"></yu-xtable-column>
+          <yu-xtable-column label="机构名称" prop="orgName"></yu-xtable-column>
+          <yu-xtable-column label="状态" prop="statFlag" data-code="STAT_FLAG"></yu-xtable-column>
+          <yu-xtable-column label="创建人" prop="creatorName"></yu-xtable-column>
+          <yu-xtable-column label="创建时间" prop="createDate"></yu-xtable-column>
+          <yu-xtable-column label="修改人" prop="updaterName"></yu-xtable-column>
+          <yu-xtable-column label="修改时间" prop="updateDate"></yu-xtable-column>
+        </yu-xtable>
+      </yu-col>
+      <!-- <yu-col :span="6"><div class="grid-content bg-purple-dark bg-title" style="margin-top:12px;"><span class="fontStyle">单元格属性</span></div>
+        <yu-xform ref="cellForm" v-model="cellFormdata" hidden-rule="false">
+            <yu-xform-item label="单元格类型" name="cellType" ctype="select" data-code="CELL_TYPE" rules="required"  @change="searchChangeFn" placeholder="请选择"></yu-xform-item> 
+            <yu-xform-item label="指标编号" name="indexId" ctype="yufp-baseindex-selector" :hidden="indexHiddenFlag"></yu-xform-item>
+            <yu-xform-item label="余额类型" name="balType" ctype="select" data-code="YE_TYPE" :hidden="indexHiddenFlag"></yu-xform-item>
+            <yu-xform-item label="评价对象类型" name="evlObjType" ctype="select" data-code="OBJ" :hidden="indexHiddenFlag"></yu-xform-item>
+            <yu-xform-item label="应用类型" name="applyType" ctype="select" data-code="INDEX_APPLY_TYPE" :hidden="indexHiddenFlag"></yu-xform-item>
+            <yu-xform-item label="指标编号" name="indexId" ctype="yufp-evlindex-selector" :hidden="indexHiddenFlagTwo"></yu-xform-item>
+            <yu-xform-item label="参数值" name="defaultValue" ctype="input" :hidden="valHiddenFlag"></yu-xform-item>
+            <yu-xform-item label="公式内容" name="excelFormula" ctype="textarea" :autosize="{ minRows: 10}" :hidden="formulaHiddenFlag"></yu-xform-item>
+            <div style="padding-top:20px;text-align: center;">
+                <yu-button icon="check" type="primary" @click="saveCellFn">保存</yu-button>
+                <yu-button icon="yx-undo2" type="primary" @click="cancelCellFn" >重置</yu-button>
+            </div>
+        </yu-xform>
+      </yu-col> -->
+
+      <!-- 考核方案面板 -->
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" :before-close="handleparamDialogClose"
+        width="98%" top="2%">
+          <yu-tabs type="border-card"  v-model="activeName">
+            <yu-tab-pane label="考核方案" name="tabOne" :disabled="tabOneDisable">
+                <yu-xform ref="refForm" label-width="150px" v-model="formdata" :disabled="formDisabled">
+                  <yu-xform-group>
+                    <yu-xform-item label="考核对象类型" ctype="select" name="evlObjType" data-code="OBJ" :rules="rule[0]"></yu-xform-item>
+                    <yu-xform-item label="考核场景" ctype="select" name="checkScene" data-code="CHECK_SCENE" :rules="rule[0]"></yu-xform-item>
+                    <yu-xform-item label="方案类型" ctype="select" name="schemeType" data-code="SCHEME_TYPE" :rules="rule[0]"></yu-xform-item>
+                    <yu-xform-item label="考核方案名称" ctype="input" name="schemeName" :rules="rule[0]"></yu-xform-item>
+                    <yu-xform-item label="所属考核目录" ctype="input" name="menuName" :disabled="true"></yu-xform-item>
+                    <yu-xform-item label="生效日期" ctype="datepicker" name="startDate" :rules="comRules.startDate" ></yu-xform-item>
+                    <yu-xform-item label="失效日期" ctype="datepicker" name="endDate" :rules="comRules.endDate"></yu-xform-item>
+                  </yu-xform-group>
+                  <div class="yu-grpButton">
+                    <yu-button type="primary" @click="nextFn(1)" >下一步</yu-button>
+                  </div>
+                </yu-xform>
+            </yu-tab-pane>
+            <yu-tab-pane label="考核对象" name="tabTwo" :disabled="tabTwoDisable">
+                <yu-row :gutter="20">
+                    <yu-col :span="spannumOne"><div class="grid-content bg-purple-dark bg-title"><span class="fontStyle">机构<span style="color: red;">(必选)</span></span></div>
+                      <yufp-ext-tree ref="refTreeOne" :show-checkbox="true" checkStrictly="true" :height="height - 112" expand-level="2"
+                        :root-visible="true" :data-root="dataRoot" :data-url="treeOrgUrl" node-key="orgId" data-id="orgId" data-label="orgName" :data-params="dataParams"
+                        data-pid="upOrgId" json-data="data"  highlight-current="true" :disabled="treeFlag">
+                      </yufp-ext-tree>
+                    </yu-col>
+                    <yu-col :span="7" v-show='spannumOne == 7' >
+                      <div class="grid-content bg-purple-dark bg-title">
+                        <yu-checkbox :indeterminate="false" v-model="postCheckAll" @change="handlePostCheckAllChange">全选</yu-checkbox>
+                        <span class="fontStyle">序列岗位等级<span style="color: red;">(必选)</span></span>
+                      </div>
+                      <yufp-ext-tree ref="refTreeTwo" :show-checkbox="true" :checkStrictly="true" :height="height - 112"
+                        :data-url="treePostUrl" node-key="sysPostCode" data-id="sysPostCode" data-label="sysPostName"
+                        data-pid="sysLv" :highlight-current="true" :disabled="treeFlag" @check-change="handlePostTreeCheckChange">
+                      </yufp-ext-tree>
+                    </yu-col>
+                    <yu-col :span="10" v-show='spannumOne == 7' ><div class="grid-content bg-purple-dark bg-title"><span class="fontStyle">考核对象</span></div>
+                      <yu-xform related-table-name="refTableThree">
+                        <yu-xform-group>
+                          <yu-xform-item  ref="refUserRelateObjIds"  :colspan="8" ctype="yufp-user-selector" :params="orgUserTreeParams" name="paramId" @select-fn="userSelectFn" :disabled="treeFlag"></yu-xform-item>
+                          <yu-xform-item  ref="selectType"  :colspan="14" label="特殊规则" ctype="select" name="speRuleType" data-code="SPE_RULE_TYPE" :disabled="treeFlag"></yu-xform-item>
+                        </yu-xform-group>
+                      </yu-xform>
+                      <yu-xtable ref="refTableThree" :pageable="false" :data="paramList" >
+                        <yu-xtable-column label="对象编号" prop="paramId"></yu-xtable-column>
+                        <yu-xtable-column label="对象名称" prop="paramName"></yu-xtable-column>
+                        <yu-xtable-column label="操作" >
+                            <template slot-scope="scope">
+                              <yu-button :disabled="formDisabled"
+                                size="small"
+                                type="danger"
+                                @click="handleDelete(scope.$index, scope.row)">删除</yu-button>
+                            </template>
+                        </yu-xtable-column>
+                      </yu-xtable>
+                    </yu-col>
+                </yu-row>
+                <div style="padding-top:20px;text-align: center;">
+                    <yu-button type="primary" @click="lastFn(2)" >上一步</yu-button>
+                    <yu-button type="primary" @click="nextFn(2)" >下一步</yu-button>
+                </div>
+            </yu-tab-pane>
+            <yu-tab-pane label="表格设计" name="tabThree" :disabled="tabThreeDisable">
+              <yufp-scheme-excel ref="schemeExcel" :scheme-id="schemeId" :template-type="templateType" :evl-obj-type="evlObjType" :params="schemeExcelParams"
+                v-if="!tabThreeDisable" @excel-save-success="excelSaveSuccess"></yufp-scheme-excel>
+              <div class="yu-grpButton">
+                <yu-button type="primary" @click="lastFn(3)" >上一步</yu-button>
+                <yu-button type="primary" @click="excelSaveFn" v-show="viewType != 'DETAIL'">保存并关闭</yu-button>
+                <yu-button type="primary" @click="closeFn" v-show="viewType == 'DETAIL'" >关闭</yu-button>
+              </div>
+              <!-- <div style="padding-top:20px;text-align: center;">
+                <yu-button type="primary" @click="lastFn(3)" >上一步</yu-button>
+                <yu-button type="primary" @click="nextFn(3)"  v-show="viewType != 'DETAIL'">完成</yu-button>
+                <yu-button type="primary" @click="closeFn" v-show="viewType == 'DETAIL'" >关闭</yu-button>
+              </div> -->
+            </yu-tab-pane>
+          </yu-tabs>
+      </yu-xdialog>
+      
+      <!-- 方案预览 -->
+      <yu-xdialog title="考核方案预览" :visible.sync="previewFormDialogVisible" width="40%">
+        <yu-xform ref="previewRefForm" label-width="130px" v-model="previewFormData">
+          <yu-xform-group column="1">
+            <yu-xform-item label="考核方案名称" ctype="input" name="schemeName" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="数据日期" ctype="datepicker" name="etlDate" format="yyyy-MM-dd" 
+              :editable="false" :required="true"></yu-xform-item>
+            <!-- 考核对象放大镜 -->
+            <yu-xform-item label="考核对象" ctype="yufp-schemeobj-selector" :params="previewSchemeObjParams" 
+              @select-fn="previewSchemeObjSel" name="evlObjId" 
+              v-show="previewFormEvlObjShow" :required="previewFormEvlObjShow"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button type="primary" @click="showPreviewFn">预览</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+      <yu-xdialog :title="previewDialogTitle" :visible.sync="previewDialogVisible" width="98%" top="2%">
+        <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="yx-download" @click="exportExcelFn">导出excel</yu-button>
+          </yu-button-group>
+        </div>
+        <yufp-scheme-excel ref="previewSchemeExcel" :scheme-id="schemeId" :template-type="templateType" :evl-obj-type="evlObjType" :params="schemeExcelParams"
+          v-if="previewDialogVisible"></yufp-scheme-excel>
+      </yu-xdialog>
+
+      <!-- 方案运行 -->
+      <yu-xdialog title="考核方案运行" :visible.sync="runFormDialogVisible" width="40%">
+        <yu-xform ref="runRefForm" label-width="130px" v-model="runFormData">
+          <yu-xform-group column="1">
+            <yu-xform-item label="考核方案名称" ctype="input" name="schemeName" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="数据日期" ctype="datepicker" name="etlDate" format="yyyy-MM-dd" 
+              :editable="false" :required="true"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button type="primary" @click="runFn">运行</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+
+      <!-- 方案授权 -->
+      <yu-xdialog title="考核方案授权" :visible.sync="grantFormDialogVisible" width="60%">
+        <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="plus" @click="addGrantFn">新增</yu-button>
+            <yu-button icon="yx-bin" @click="delGrantFn">删除</yu-button>
+          </yu-button-group>
+        </div>
+        <yu-xtable ref="grantRefTable" :data-url="grantDataUrl" row-number selection-type="checkbox" 
+          :base-params="grantTableParams" :default-load="false">
+          <yu-xtable-column label="考核方案ID" prop="schemeId"></yu-xtable-column>
+          <yu-xtable-column label="考核方案名称" prop="schemeName"></yu-xtable-column>
+          <yu-xtable-column label="授权机构编号" prop="grantObjId"></yu-xtable-column>
+          <yu-xtable-column label="授权机构名称" prop="grantObjName"></yu-xtable-column>
+          <yu-xtable-column label="创建时间">
+            <template scope="scope">
+              <span v-html="dateTimeFormat(scope.row.createTime)"></span>
+            </template>
+          </yu-xtable-column>
+        </yu-xtable>
+      </yu-xdialog>
+      <yu-xdialog title="考核方案新增授权" :visible.sync="grantAddFormDialogVisible" width="40%">
+        <yu-xform ref="grantAddForm" label-width="130px" v-model="grantAddFormData">
+          <yu-xform-group column="1">
+            <yu-xform-item label="考核方案ID" ctype="input" name="schemeId" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="考核方案名称" ctype="input" name="schemeName" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="授权机构" ctype="yufp-org-tree" name="grantObjId" @select-fn="grantAddOrgSelFn" :required="true"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button type="primary" @click="grantAddSaveFn">保存</yu-button>
+            <yu-button type="primary" @click="grantAddCancelFn">取消</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+
+      <!-- 方案引用 -->
+      <yu-xdialog title="考核方案引用" :visible.sync="quoteFormDialogVisible" width="40%">
+        <yu-xform ref="quoteForm" label-width="160px" v-model="quoteFormData">
+          <yu-xform-group column="1">
+            <yu-xform-item label="被引用考核方案" ctype="yufp-scheme-selector" name="schemeId" 
+              :params="quoteSchemeSelParams" @select-fn="quoteSchemeSel" :required="true"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button type="primary" @click="quoteAddFn">引用</yu-button>
+            <yu-button type="primary" @click="quoteCancelFn">取消</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+      <!--指标详细信息-->
+      <!-- <yu-xdialog title="指标信息" :visible.sync="dialogThreeVisible" width="800px">
+          <yu-collapse v-model="activeNames" class="myCollapse" style="margin-top: 20px;">
+              <yu-collapse-item title="指标基本信息" name="1">
+                  <yu-xform ref="refFormOne" v-model="queryDataOne" >
+                    <yu-xform-group :column="4">
+                      <yu-xform-item label="指标编号" name="indexId" disabled="false"></yu-xform-item>
+                      <yu-xform-item label="指标名称" name="indexName" disabled="false"></yu-xform-item>
+                    </yu-xform-group>
+                  </yu-xform>
+              </yu-collapse-item>
+              <yu-collapse-item title="指标维度信息" name="2">
+                  <yu-xform ref="refFormTwo" v-model="queryDataTwo">
+                      <yu-xform-group :column="4">
+                        <yu-xform-item label="余额类型" name="balTypeId" ctype="select" rules="required" data-code="YE_TYPE" :disabled="indexDisableOne"></yu-xform-item>
+                        <yu-xform-item label="应用类型" name="applyTypeId" ctype="select"  rules="required" data-code="INDEX_APPLY_TYPE" :disabled="indexDisableOne"></yu-xform-item>
+                        <yu-xform-item label="评价对象" name="evlObjType" ctype="select" data-code="OBJ" rules="required" :disabled="indexDisable"></yu-xform-item>
+                      </yu-xform-group>
+                  </yu-xform>
+              </yu-collapse-item>
+          </yu-collapse>
+          <div class="yu-grpButton">
+            <yu-button icon="check" type="primary" @click="saveTwoFn">确定</yu-button>
+            <yu-button icon="yx-undo2" type="primary" @click="cancelTwoFn">取消</yu-button>
+          </div>
+      </yu-xdialog> -->
+    </yu-row>
+</div>

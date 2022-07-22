@@ -1,0 +1,81 @@
+<!-- 
+  @Created by luhy1 luhy1@yusys.com.cn on 2019-2-11 16:07:39.
+  @updated by
+  @description 客户经理视图首页
+-->
+<div>
+  <el-row style="padding-top: 10px;">
+    <el-col :span="24">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          概览信息
+        </div>
+        <div>
+          <yu-xform ref="overviewForm" v-model="baseformdata" label-width="200px" class="yu-form-gap" style="padding-top: 20px;" :disabled="true">
+            <yu-xform-group :column="2">
+              <yu-xform-item label="员工工号" name="custManagerId" ctype="input" :colspan="10"></yu-xform-item>
+              <yu-xform-item label="用户名称" name="custManagerName" ctype="input" :colspan="10"></yu-xform-item>
+              <yu-xform-item label="归属机构" name="orgName" ctype="input" :colspan="10"></yu-xform-item>
+              <yu-xform-item label="归属条线" name="busiType" ctype="select" :colspan="10" data-code="CD0327"></yu-xform-item>
+            </yu-xform-group>
+          </yu-xform>
+        </div>
+      </div>
+    </el-col>
+  </el-row>
+  <el-row style="padding-top: 10px;">
+    <el-col :span="24">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          管户信息
+        </div>
+        <div>
+          <yu-xform ref="mgrcustForm" v-model="formdata" label-width="200px" class="yu-form-gap" style="padding-top: 20px;" :disabled="true">
+            <yu-xform-group :column="2">
+              <yu-xform-item label="管理企业户数" name="orgNum" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管理个人户数" name="perNum" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管理有效对公户数新增" name="newEffOrgNum" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管理有效个人户数新增" name="newEffPerNum" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户企业存款余额" name="dpsBalOrg" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户个人存款余额" name="dpsBalPer" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户企业存款日均" name="dpsMAvgBalOrg" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户个人存款日均" name="dpsMAvgBalPer" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户企业贷款余额" name="loanBalOrg" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户个人贷款余额" name="loanBalPer" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户企业贷款日均" name="loanMAvgBalOrg" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户个人贷款日均" name="loanMAvgBalPer" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户企业理财产品余额" name="finBalOrg" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户个人理财产品余额" name="finBalPer" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户企业理财产品日均" name="finMAvgBalOrg" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管户个人理财产品日均" name="finMAvgBalPer" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管理对公客户资产规模" name="aumBalOrg" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+              <yu-xform-item label="管理个人客户资产规模" name="aumBalPer" ctype="input" :colspan="10" :readonly="true"></yu-xform-item>
+            </yu-xform-group>
+          </yu-xform>
+        </div>
+      </div>-
+    </el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="12">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          管理客户AUM月日均连续12月趋势
+        </div>
+        <div style="margin-left: 10%">
+          <yu-echarts :option="option1" width="450px" height="400px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="12">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            管理客户贷款余额月日均连续12月趋势
+          </div>
+          <div style="margin-left: 10%">
+            <yu-echarts :option="option2" width="450px" height="400px"></yu-echarts>
+          </div>
+        </div>
+      </el-col>
+  </el-row>
+</div>

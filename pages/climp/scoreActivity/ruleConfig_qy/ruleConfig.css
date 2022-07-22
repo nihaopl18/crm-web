@@ -1,0 +1,23 @@
+.yu-activity .yu-btn-group{
+ margin-left:130px;
+}
+.yu-activity .yu-btn-group .el-button{
+ display: inline-block;
+ width: 70px;
+ height: 50px;
+ margin-left: 0px;
+ padding: 0px;
+ margin-bottom: 1px;
+ margin-right: 1px;
+}
+.yu-activity.yu-btn-addSection{
+ position: relative;
+ left: 520px;
+ top:-116px
+}
+.yu-activity .el-checkbox{
+ float: left;
+}
+.yu-activity .el-form-item__label{
+ white-space: normal;
+}

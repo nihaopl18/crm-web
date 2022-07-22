@@ -1,0 +1,172 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-17 14:31:58.
+  @updated by
+  @description 对公客户基本信息
+-->
+<div>
+  <yu-collapse v-model="expandCollapseName" @change="changeCollapse">
+    <yu-collapse-item title="基本信息" name="base">
+      <yu-xform ref="baseForm" label-width="200px"  v-model="baseformdata" class="yu-form-gap">
+        <yu-xform-group>
+            <yu-xform-item ref="custId" label="客户号" name="custId" ctype="input"  :disabled="true" ></yu-xform-item> 
+            <yu-xform-item ref="custName" label="客户名称" name="custName" ctype="input" :disabled="true"></yu-xform-item> 
+            <yu-xform-item ref="certType" label="证件类型" name="certType" ctype="select" data-code="CD0011" :disabled="true"></yu-xform-item>
+            <yu-xform-item ref="certNo" label="证件号码" name="certNo" ctype="input" :rules="rule.certNo" :disabled="true"></yu-xform-item>
+            <yu-xform-item ref="corpType" label="企业类型" name="corpType" ctype="select" data-code="CD0282" :disabled="true"></yu-xform-item>
+            <yu-xform-item ref="insCredCod" label="组织机构信用代码" name="insCredCod" ctype="input" :rules="rule.insCredCod" :disabled="true"></yu-xform-item>  <!-- ctype="select" data-code="CD0027" -->
+            <yu-xform-item ref="natTaxRegCode" label="国税税务登记代码" name="natTaxRegCode" ctype="input" :rules="rule.natTaxRegCode" :disabled="true"></yu-xform-item>
+            <yu-xform-item ref="locTaxRegCode" label="地税税务登记代码" name="locTaxRegCode" ctype="input" :rules="rule.locTaxRegCode" :disabled="true"></yu-xform-item>
+            <yu-xform-item ref="custStatus" label="客户状态" name="custStatus" ctype="select"   data-code="CD0019" :disabled="true" ></yu-xform-item> 
+            <yu-xform-item ref="totalAssets" label="资产规模" name="totalAssets" ctype="input" :rules="rule.totalAssets"></yu-xform-item>
+            <yu-xform-item ref="comScale" label="企业规模" name="comScale" ctype="select" data-code="CD0026"></yu-xform-item>
+            <yu-xform-item ref="invType" label="投资主体" name="invType" ctype="select" data-code="CD0206"></yu-xform-item>
+            <yu-xform-item ref="econProper" label="经济性质" name="econProper" ctype="select" data-code="CD0028"></yu-xform-item>
+            <!-- <yu-xform-item ref="indusCdName" label="行业类型名称" name="indusCdName" :disabled="true"></yu-xform-item> -->
+            <yu-xform-item ref="indusCd" label="行业类型" name="indusCd" ctype="select" data-code="CD0070"></yu-xform-item>
+            <!-- <yufp-ext-tree ref="indusCdTree" :height="height - 10" @node-click="nodeClickFn"
+                       :data-url="indusCdTreeUrl" data-id="key" data-label="orgName"
+                       :data-pid="upindusCd" :data-root="dataRoot" style="margin:10px 10px 0 0;">
+            </yufp-ext-tree> -->
+            <yu-xform-item ref="comEstabDate" label="成立日期" name="comEstabDate" ctype="datepicker" :disabled="true"></yu-xform-item>
+            <yu-xform-item ref="regAddr" label="注册登记地址" name="regAddr" ctype="input" :rules="rule.regAddr"></yu-xform-item>
+            <yu-xform-item ref="legalName" label="法定代表人/负责人姓名" name="legalName" ctype="input" :rules="rule.legalName"></yu-xform-item>
+            <yu-xform-item ref="realCntr" label="实际控制人" name="realCntr" ctype="input" :rules="rule.realCntr"></yu-xform-item>
+            <yu-xform-item ref="realCntr" label="客户与我行关系" :hidden="true" name="custBankRel"></yu-xform-item> 
+            <yu-xform-item ref="comRelDgr" label="与我行合作关系" :hidden="true" name="comRelDgr"></yu-xform-item>
+            <yu-xform-item ref="beCustDate" label="成为我行客户时间" :hidden="true" name="beCustDate"></yu-xform-item> 
+            <yu-xform-item ref="stockFlg" label="社员(股东)标志"  :hidden="true" name="stockFlg" ctype="select"  data-code="CD0238"></yu-xform-item>
+            <yu-xform-item ref="holdStockAmt" label="拥有我行股份金额" :hidden="true" name="holdStockAmt"></yu-xform-item> 
+            <yu-xform-item ref="comInitLoanDate" label="建立信贷关系时间" :hidden="true" name="comInitLoanDate" ctype="input"></yu-xform-item> 
+            <!-- <yu-xform-item ref="indusCd" label="行业类型" placeholder="行业类型" ctype="yufp-org-tree" name="indusCd" 
+              :params="treeParams"></yu-xform-item> -->
+        </yu-xform-group>
+      </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="重要标志信息" name="import">
+        <yu-xform ref="importForm" label-width="200px"  v-model="importformdata" class="yu-form-gap">
+          <yu-xform-group>
+              <yu-xform-item ref="importId" label="逻辑ID" :hidden="true" name="importId" ctype="input"></yu-xform-item>
+              <yu-xform-item ref="custId" label="客户标识" :hidden="true" name="custId" ctype="input"></yu-xform-item>
+              <yu-xform-item ref="listFlg" label="是否上市企业" name="listFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="miniComFlg" label="是否小微企业" name="miniComFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="groupCustFlg" label="是否集团客户" name="groupCustFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="famFlg" label="是否涉农客户" name="famFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="limitIndusFlg" label="是否限制行业" name="limitIndusFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="dhghFlg" label="是否两高一剩企业" name="dhghFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="loanFlg" label="是否贷款客户" name="loanFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="creditCustFlg" label="是否统一授信客户" name="creditCustFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="irRightFlg" label="有无进出口经营权" name="irRightFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="fexcPrmNo" label="外汇许可证号码" name="fexcPrmNo" ctype="input" :rules="rule.fexcPrmNo"></yu-xform-item>
+              <yu-xform-item ref="gatFlg" label="是否港澳台合资企业" name="gatFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="assocPartyFlg" label="是否我行关联方" name="assocPartyFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="holderFlg" label="是否本行/社股东" name="holderFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="vipFlg" label="是否本行/社VIP客户" name="vipFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="indusLev" label="行业地位" name="indusLev" ctype="select" data-code="CD0287"></yu-xform-item>
+              <yu-xform-item ref="corCustFlg" label="是否核心客户" name="corCustFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="keySupportFlg" label="是否重点扶持企业" name="keySupportFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="govCorFlg" label="是否政府所属企业" name="govCorFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="assocFlg" label="是否属于协(商)会" name="assocFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="assocName" label="协(商)会名称" name="assocName" ctype="input" :rules="rule.assocName"></yu-xform-item>
+              <yu-xform-item ref="shlmFlg" label="是否商户联盟客户" name="shlmFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="tsywFlg" label="是否特色业务合作客户" name="tsywFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="actCorFlg" label="是否活动合作商户" name="actCorFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="interBusiFlg" label="是否国际业务客户" name="interBusiFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="techCorFlg" label="是否科技型企业" name="techCorFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item ref="actDesc" label="合作活动描述" name="actDesc" ctype="textarea" :rows="3" :colspan="24" :rules="rule.actDesc"></yu-xform-item>
+              <yu-xform-item ref="tsywDesc" label="特色业务描述" name="tsywDesc" ctype="textarea" :rows="3" :colspan="24" :rules="rule.tsywDesc"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="涉农个性标识信息" name="relat">
+        <yu-xform ref="relatForm" label-width="200px"  v-model="relatformdata" class="yu-form-gap" :disabled="true">
+          <yu-xform-group>
+              <yu-xform-item label="逻辑ID" name="relatId" :hidden="true" ctype="input"></yu-xform-item>
+              <!-- <yu-xform-item label="客户号" name="custId" :hidden="true" ctype="input"></yu-xform-item> -->
+              <yu-xform-item label="农业产业化标识" name="proCooIndusLogo" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否农业科技创新" name="wheAgrSciTecInn" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否帮扶移民代销企业" name="wheHelpSale" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否帮扶移民就业" name="wheHelpJob" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="专业合作社标识" name="proCooLogo" ctype="select" data-code="CD0281"></yu-xform-item>
+              <yu-xform-item label="是否三农领军人物" name="wheThrFarLeaFig" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否涉农科技型客户" name="wheInduTech" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否双基双赢客户" name="wheDualBaseWinCus" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否涉农重点客户" name="wheInduKey" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否设施蔬菜项目" name="wheInduVegetables" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否投向新农村" name="wheToNewCou" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否投向城镇化建设" name="wheToConOfUrb" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否贴息" name="wheDis" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="贴息级别" name="disLevel" ctype="select" data-code="CD0279"></yu-xform-item>
+              <yu-xform-item label="是否新型农业经营主体" name="wheNewAgrManSub" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="主体类型" name="priType" ctype="select" data-code="CD0288"></yu-xform-item>
+              <yu-xform-item label="是否涉农客户" name="wheAgrRelCus" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="保险金额" name="amoOfIns" ctype="input" :rules="rule.amoOfIns"></yu-xform-item>
+              <yu-xform-item label="保险费" name="insurance" ctype="input" :rules="rule.insurance"></yu-xform-item>
+              <yu-xform-item label="保险险种" name="insType" ctype="select" data-code="CD0126"></yu-xform-item>
+              <yu-xform-item label="是否扶贫贷款客户" name="whePovAllLoanCus" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="是否支农再贷款" name="wheRefOfAgrLoa" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="扶贫客户类型" name="povAllCusType" ctype="select" data-code="CD0280"></yu-xform-item>
+              <yu-xform-item label="扶贫项目" name="povAllPro" ctype="select" data-code="CD0238"></yu-xform-item>
+              <yu-xform-item label="项目所在地" name="proLoc" ctype="input" :rules="rule.proLoc"></yu-xform-item>
+              <yu-xform-item label="主营业务村" name="mainBusiVillage" ctype="input" :rules="rule.mainBusiVillage"></yu-xform-item>
+              <yu-xform-item label="主营业务村编号" name="mainBusiVillageNo" ctype="input" :rules="rule.mainBusiVillageNo"></yu-xform-item>
+              <yu-xform-item label="资金需求" name="capitalDemand" ctype="input" :rules="rule.capitalDemand"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="与我行的关系" name="relation">
+      <yu-xform ref="relationForm" label-width="170px"  v-model="relationformdata" class="yu-form-gap">
+        <yu-xform-group>
+            <yu-xform-item ref="relationId" label="逻辑ID" name="relationId" :hidden="true" ctype="input"></yu-xform-item>
+            <yu-xform-item ref="custId" label="客户号" name="custId" :hidden="true" ctype="input"></yu-xform-item>
+            <yu-xform-item ref="custBankRel" label="客户与我行关系" name="custBankRel" ctype="select" placeholder="客户与我行关系" data-code="CD0447" ></yu-xform-item> 
+            <yu-xform-item ref="comRelDgr" label="与我行合作关系" name="comRelDgr" ctype="select" placeholder="与我行合作关系" data-code="CD0446"></yu-xform-item>
+            <yu-xform-item ref="beCustDate" label="成为我行客户时间" name="beCustDate" ctype="input" :disabled="true"></yu-xform-item> 
+            <yu-xform-item ref="stockFlg" label="社员(股东)标志" name="stockFlg" ctype="select" data-code="CD0238"></yu-xform-item>
+            <yu-xform-item ref="holdStockAmt" label="拥有我行股份金额" name="holdStockAmt" ctype="input"  :disabled="true" :rules="rule.holdStockAmt"></yu-xform-item> 
+            <yu-xform-item ref="comInitLoanDate" label="建立信贷关系时间" name="comInitLoanDate" ctype="input"  :disabled="true" ></yu-xform-item> 
+        </yu-xform-group>
+      </yu-xform>
+    </yu-collapse-item>
+    <yu-collapse-item title="经营信息" name="manage">
+      <yu-xform ref="manageForm" label-width="170px"  v-model="manageformdata" class="yu-form-gap">
+        <yu-xform-group>
+            <yu-xform-item ref="id" label="逻辑ID" name="id" ctype="input" hidden></yu-xform-item>
+            <yu-xform-item ref="custId2" label="客户标识" :hidden="true" name="custId" ctype="input"></yu-xform-item>
+            <!-- <yu-xform-item ref="invType" label="投资主体" name="invType" ctype="select" :rules="rule.invType" data-code="CD0206"></yu-xform-item> -->
+            <yu-xform-item ref="regCurrCd" label="注册资本币别" name="regCurrCd" ctype="select" data-code="CD0071"></yu-xform-item>
+            <yu-xform-item ref="regCapital" label="注册资本(万元)" name="regCapital" ctype="input" :rules="rule.regCapital"></yu-xform-item>
+            <yu-xform-item ref="netAsset" label="净资产(万元)" name="netAsset" ctype="input" :rules="rule.netAsset"></yu-xform-item>
+            <yu-xform-item ref="empNum" label="雇员人数" name="empNum" ctype=""></yu-xform-item>
+            <yu-xform-item ref="premisArea" label="经营场地面积(平方米)" name="premisArea" ctype="input" :rules="rule.premisArea"></yu-xform-item>
+            <yu-xform-item ref="premisOwnership" label="经营场地所有权" name="premisOwnership" ctype="select" data-code="CD0034"></yu-xform-item>
+            <yu-xform-item ref="manageStat" label="经营状况" name="manageStat" ctype="select" data-code="CD0052"></yu-xform-item>
+            <yu-xform-item ref="totalAsset" label="总资产(万元)" name="totalAsset" ctype="input" :rules="rule.totalAsset"></yu-xform-item>
+            <yu-xform-item ref="debtTotal" label="负债(万元)" name="debtTotal" ctype="input" :rules="rule.debtTotal"></yu-xform-item>
+            <yu-xform-item ref="invenTotal" label="存货(万元)" name="invenTotal" ctype="input" :rules="rule.invenTotal"></yu-xform-item>
+            <yu-xform-item ref="saleTotal" label="销售总额(万元)" name="saleTotal" ctype="input" :rules="rule.saleTotal"></yu-xform-item>
+            <yu-xform-item ref="profitScale" label="利润规模(万元)" name="profitScale" ctype="input" :rules="rule.profitScale"></yu-xform-item>
+            <yu-xform-item ref="receBal" label="应收款项(万元)" name="receBal" ctype="input" :rules="rule.receBal"></yu-xform-item>
+            <yu-xform-item ref="payabBal" label="应付款项(万元)" name="payabBal" ctype="input" :rules="rule.payabBal"></yu-xform-item>
+            <yu-xform-item ref="mainRange" label="主营范围" name="mainRange" ctype="textarea" :rows="3" :colspan="24" :rules="rule.mainRange"></yu-xform-item>
+            <yu-xform-item ref="partRange" label="兼营范围" name="partRange" ctype="textarea" :rows="3" :colspan="24" :rules="rule.partRange"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+    </yu-collapse-item>
+  </yu-collapse>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应     修改历史
+    width="650px" height="380px" -->
+    <yu-xdialog :title="hisviewTitle[hisviewType]" :visible.sync="hisdialogVisible" width="850px">
+      <yu-xtable ref="hisrefTable" row-number :data-url="hisdataUrl">
+          <yu-xtable-column label="修改项目" prop="chgChiName" width="120"></yu-xtable-column>
+          <yu-xtable-column label="修改前内容" prop="chgBefKeyValue" width="120"></yu-xtable-column>
+          <yu-xtable-column label="修改后内容" prop="chgAftKeyValue" width="120"></yu-xtable-column>
+          <yu-xtable-column label="修改人" prop="userName" width="120"></yu-xtable-column>
+          <yu-xtable-column label="修改人机构" prop="orgName" width="120"></yu-xtable-column>
+          <yu-xtable-column label="修改时间" prop="chgDt"></yu-xtable-column>  
+      </yu-xtable>
+    </yu-xdialog>
+  <div class="yu-grpButton">
+    <yu-button icon="yx-undo2" type="primary" @click="selectHis" v-if="hisBtn">修改历史</yu-button>
+    <yu-button icon="check" type="primary" @click="saveFn" v-if="saveBtn">保存</yu-button>
+  </div>
+</div>

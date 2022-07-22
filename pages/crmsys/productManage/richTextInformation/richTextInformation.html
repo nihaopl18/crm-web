@@ -1,0 +1,24 @@
+<!-- 
+  @Created by 闫天一 yanty1@yusys.com.cn on 2019-2-20 15:34:04.
+  @updated by
+  @description 产品视图-富文本信息
+-->
+<div>
+  <link href="./pages/crmsys/productManage/richTextInformation/richTextInformation.css" rel="stylesheet" type="text/css" />
+  <div class="" :style="{ 'height': (height / 2) + 'px' }">
+    <!-- <h1>{{viewTitle[viewType]}}</h1> -->
+    <div>
+      <div style="padding: 10px;color: white;font-size: initial;"></div>
+    </div>
+    <div style="padding: 20px 0px 0px 0px;border: 1px solid #dfe6ec;">
+      <yu-xform style="width: 90%;margin: auto;" ref="refForm" label-width="80px" v-model="formdata" :disabled="formDisabled">
+        <yu-xform-group :column="1">
+          <yu-xform-item label="" ctype="el-tinymce-x" name="content" id="tinymceEditor" :height="height / 2" :action="action" :bus-no="busNo"></yu-xform-item>
+        </yu-xform-group>
+        <div class="yu-grpButton">
+          <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn" v-if="saveBtn">保存</yu-button>
+          </div>
+      </yu-xform>
+    </div>
+  </div>
+</div>

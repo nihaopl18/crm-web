@@ -1,0 +1,36 @@
+<!-- 
+  @Created by panglx panglx@yusys.com.cn on 2018-12-26 15:08:03.
+  @updated by
+  @description 信息提醒
+-->
+<div>
+	<yu-xform related-table-name="refTable" form-type="search">
+		<yu-xform-group :column="3">
+			<yu-xform-item placeholder="是否已读" ctype="select" name="isread" data-code='IS_READ'></yu-xform-item>
+			<yu-xform-item placeholder="产生提醒日期" ctype="datepicker" name="msgCrtDate"></yu-xform-item>
+		</yu-xform-group>
+	</yu-xform>
+	<div class="yu-toolBar">
+		<yu-button-group>
+			<yu-button icon="message" @click="setReadFn">设为已读</yu-button>
+			<yu-button icon="document" @click="infoFn">详情</yu-button>
+		</yu-button-group>
+	</div>
+	<yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+		<yu-xtable-column label="规则类别" prop="ruleCode" width="240" data-code="RULE_CODE"></yu-xtable-column>
+		<yu-xtable-column label="是否已读" prop="isread" width="240" data-code="IS_READ">
+		</yu-xtable-column>
+		<yu-xtable-column label="产生提醒日期" prop="msgCrtDate"></yu-xtable-column>
+	</yu-xtable>
+	<!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+     width="650px" height="380px" -->
+	<yu-xdialog width="500px" title="详情" :visible.sync="dialogVisible" :before-close="dialogClose">
+		<yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="formDisabled">
+			<yu-xform-group :column="1">
+				<yu-xform-item label="规则类别" ctype="select" name="ruleCode" data-code="RULE_CODE"></yu-xform-item>
+				<yu-xform-item label="产生提醒日期" ctype="datepicker" name="msgCrtDate"></yu-xform-item>
+				<yu-xform-item label="提醒内容" ctype="textarea" :rows="3" :colspan="24" name="messageRemark" ></yu-xform-item>
+			</yu-xform-group>
+		</yu-xform>
+	</yu-xdialog>
+</div>

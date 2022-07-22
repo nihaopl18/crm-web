@@ -1,0 +1,132 @@
+<!--
+  @created by houyx3 on 2019/05/13.
+  @description 实时数据
+-->
+
+<div id="realTimeData" class="whole">
+	<link rel="stylesheet" href="pages/context/effectAnalysis/activityEffect/temp.css">
+	<!-- 顶部 -->
+	<div class="topTitle">
+		<span>今日实时(2019-05-22 13:00:00)</span>
+		<div>活动时间
+			<yu-date-picker v-model="value1" type="datetimerange" placeholder="选择日期"></yu-date-picker>
+		</div>
+	</div>
+	<!-- 内容1 -->
+	<div class="vuebox">
+		<div class="topTitle">
+			<div>
+				<yu-button type="primary">导出</yu-button>
+			</div>
+		</div>
+		<div class="activity-data-list">
+			<el-row :gutter="32">
+				<el-col :span="4">
+					<div>
+						<p>活动总收入</p><span>2123411 <i>元</i></span></div>
+				</el-col>
+				<el-col :span="4">
+					<div>
+						<p>活动总支出</p><span>13411<i>元</i></span></div>
+				</el-col>
+				<el-col :span="4">
+					<div>
+						<p>总参与人数</p><span>2123<i>人</i></span></div>
+				</el-col>
+				<el-col :span="4">
+					<div>
+						<p>总购买人数</p><span>3411<i>人</i></span></div>
+				</el-col>
+				<el-col :span="4">
+					<div>
+						<p>总活跃人数</p><span>123</span></div>
+				</el-col>
+			</el-row>
+		</div>
+		<div class="timedata-table">
+			<div class="timedata-table-box">
+				<div>
+					<p>平均获客成本（参与）：45元</p>
+					<p>历史平均：50 <i v-bind:class="[isActive1 ?'el-icon-yx-arrow-up':'el-icon-yx-arrow-down']"></i></p>
+					<p>历史最优：30<i v-bind:class="[isActive2 ?'el-icon-yx-arrow-up':'el-icon-yx-arrow-down']"></i></p>
+				</div>
+				<div>
+					<p>平均获客成本（购买）：45元</p>
+					<p>历史平均：50<i v-bind:class="[isActive3 ?'el-icon-yx-arrow-up':'el-icon-yx-arrow-down']"></i></p>
+					<p>历史最优：30<i v-bind:class="[isActive4 ?'el-icon-yx-arrow-up':'el-icon-yx-arrow-down']"></i></p>
+				</div>
+				<div>
+					<p>平均获客成本（活跃）：45元</p>
+					<p>历史平均：50<i v-bind:class="[isActive5 ?'el-icon-yx-arrow-up':'el-icon-yx-arrow-down']"></i></p>
+					<p>历史最优：30<i v-bind:class="[isActive6 ?'el-icon-yx-arrow-up':'el-icon-yx-arrow-down']"></i></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 内容2 -->
+	<div class="vuebox" style="margin-top: 32px;">
+		<div class="topTitle">
+			<span>电子卡券兑换分析</span>
+			<div>
+				<yu-button type="primary">导出CSV</yu-button>
+			</div>
+		</div>
+		<el-row :gutter="10" style="margin-top: 35px;padding-bottom: 30px;">
+			<el-col :span="10">
+				<yu-echarts ref="echartspie" :option="exchangeChart" width="100%" height="200px"></yu-echarts>
+			</el-col>
+			<el-col :span="14">
+				<yu-xtable ref="refTable" :data="exchangeData" :default-load="false" :highlight-current-row="true" row-number :pageable="pageable" :border="border">
+					<yu-xtable-column label="电子卡券名称" prop="cardName"></yu-xtable-column>
+					<yu-xtable-column label="费用（元）" prop="cost"></yu-xtable-column>
+					<yu-xtable-column label="使用时间" prop="useTime">
+						<template slot-scope="scope">
+							<div style="padding: 5px 0px;">
+								<p>开始：{{scope.row.useTime}}</p>
+								<p>结束：{{scope.row.useTime}}</p>
+							</div>
+						</template>
+					</yu-xtable-column>
+					<yu-xtable-column label="说明" prop="explain"></yu-xtable-column>
+				</yu-xtable>
+			</el-col>
+		</el-row>
+	</div>
+	<!-- 内容3 -->
+	<div class="vuebox" style="margin-top: 32px;">
+		<div class="topTitle">
+			<span>推广费用</span>
+			<div>
+				<yu-button type="primary">导出CSV</yu-button>
+			</div>
+		</div>
+		<el-row :gutter="10" style="margin-top: 35px;padding-bottom: 30px;">
+			<el-col :span="10">
+				<yu-echarts ref="echartspie2" :option="costChart" width="100%" height="200px"></yu-echarts>
+			</el-col>
+			<el-col :span="14">
+				<yu-xtable ref="refTable" :data="costData" :default-load="false" :highlight-current-row="true" row-number :pageable="pageable" :border="border">
+					<yu-xtable-column label="渠道名称" prop="channelName"></yu-xtable-column>
+					<yu-xtable-column label="费用成本" prop="cost"></yu-xtable-column>
+					<yu-xtable-column label="贡献率" prop="contriRate"></yu-xtable-column>
+					<yu-xtable-column label="ROI" prop="roi"></yu-xtable-column>
+					<yu-xtable-column label="投放时间" prop="putTime"></yu-xtable-column>
+					<yu-xtable-column label="说明" prop="explain"></yu-xtable-column>
+				</yu-xtable>
+			</el-col>
+		</el-row>
+	</div>
+	<div class="topTitle">
+			<span>栏位访问趋势</span>
+			<div>
+				<yu-button type="primary">导出CSV</yu-button>
+			</div>
+			<div>活动时间
+				<yu-date-picker v-model="value1" type="datetimerange" placeholder="选择日期"></yu-date-picker>
+			</div>
+		</div>
+		<div class="vuebox">
+			<yu-echarts ref="echarts" :option="equityChart" width="100%" height="340px"></yu-echarts>
+		</div>
+</div>
+<!-- 内容 -->

@@ -1,0 +1,44 @@
+<!--
+  @created by houyx3 on 2019/05/13.
+  @description 实时数据
+-->
+<div id="realTimeData" class="contentbox">
+                  <yu-xform ref="validatorForm" label-width="100px" label-suffix="：" v-model="formdata" form-type="search" class="hide-form-search-btn">
+                      <yu-xform-group :column="4">
+                        <yu-xform-item placeholder="活动计划ID" ctype="input" name="activityId" ></yu-xform-item>
+                        <yu-xform-item placeholder="一级渠道名称" ctype="input" name="channelNameOne" ></yu-xform-item>
+                        <yu-xform-item placeholder="二级渠道名称" ctype="input" name="channelNameTwo" ></yu-xform-item>
+                        <yu-xform-item placeholder="三级渠道名称" ctype="input" name="channelNameThree" ></yu-xform-item>
+                        <yu-xform-item placeholder="四级渠道名称" ctype="input" name="channelNameFour" ></yu-xform-item>
+                        <yu-xform-item placeholder="所属机构" ctype="input" name="org" ></yu-xform-item>
+                      </yu-xform-group>
+                  </yu-xform>
+                  <yu-button class="exportbtn" type='primary' @click="">导出CSV</yu-button>
+                  <!--<div class="yu-toolBar">
+                      <yu-button-group>
+                        <yu-button icon="document">三方渠道绩效详情</yu-button>
+                      </yu-button-group>
+                    </div>-->
+                    <yu-xtable  ref="yutable4" :data="tableData" style="width: 100%" >
+                        <yu-xtable-column prop="channelNameOne" label="一级渠道名称"> </yu-xtable-column>
+                        <yu-xtable-column prop="channelNameTwo" label="二级渠道名称"> </yu-xtable-column>
+                        <yu-xtable-column prop="channelNameThree" label="三级渠道名称"> </yu-xtable-column>
+                        <yu-xtable-column prop="channelNameFour" label="四级渠道名称"> </yu-xtable-column>
+                        <yu-xtable-column prop="org" label="所属机构"> </yu-xtable-column>
+                        <yu-xtable-column prop="bringCustNum" label="带来的客户数量"> </yu-xtable-column>
+                        <yu-xtable-column prop="spreadCustNum" label="传播人数"> </yu-xtable-column>
+                        <yu-xtable-column prop="markCustNum" label="营销人数"> </yu-xtable-column>
+                        <yu-xtable-column prop="markCustNum" label="转发量"> </yu-xtable-column>
+                        <yu-xtable-column prop="markCustNum" label="曝光量"> </yu-xtable-column>
+                        <yu-xtable-column prop="integralAllNum" label="总积分"> </yu-xtable-column>
+                        <yu-xtable-column prop="integralAllNum" label="已兑换积分"> </yu-xtable-column>
+                        <yu-xtable-column prop="integralAllNum" label="未兑换积分"> </yu-xtable-column>
+                        <yu-xtable-column prop="operation" label="操作" width="320px" header-align="center">
+						<template slot-scope="scope">
+							<div class="operation">
+								<span>三方渠道绩效详情</span>
+							</div>
+						</template>
+					</yu-xtable-column>
+                    </yu-xtable>
+</div>

@@ -1,0 +1,50 @@
+<!-- 
+  @Created by luhy1 luhy1@yusys.com.cn on 2019-1-17 15:05:54.
+  @updated by
+  @description 客户经理查询
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="员工工号" name="userCode" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="用户名称" name="userName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="归属机构" name="orgId" ctype="yufp-org-tree"></yu-xform-item>
+      <yu-xform-item placeholder="学历" name="education" ctype="select" data-code="CD0430" :hidden="true"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar" style="padding-top: 10px;padding-left: 0px;">
+    <yu-button-group>
+      <el-button icon="yx-newspaper" @click="openview" v-if="viewBtn">客户经理视图</el-button>
+      <!-- <el-button icon="yx-exit" @click="quitCustMgrApplyFn" v-if="quitBtn">退出客户经理</el-button> -->
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" style="padding-left: 0px;" :highlight-current-row="true" @row-dblclick="rowDblclickFn" :stripe="true">
+    <yu-xtable-column label="员工工号" prop="userCode"></yu-xtable-column>
+    <yu-xtable-column label="用户名称" prop="userName"></yu-xtable-column>
+    <yu-xtable-column label="归属机构" prop="orgName"></yu-xtable-column>
+    <yu-xtable-column label="归属条线" prop="busiType" data-code="CD0327" :formatter="formatter"></yu-xtable-column>
+    <yu-xtable-column label="归属部门" prop="dptName"></yu-xtable-column>
+    <yu-xtable-column label="管理客户数" prop="mgrCustNum"></yu-xtable-column>
+    <yu-xtable-column label="出生日期" prop="birthday"></yu-xtable-column>
+    <yu-xtable-column label="学历" prop="education" data-code="CD0430"></yu-xtable-column>
+    <yu-xtable-column label="入行时间" prop="entrantsDate"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+  width="650px" height="380px" -->
+  <yu-xdialog :title="viewTitle" :visible.sync="dialogVisible" width="650px">
+    <yu-xform ref="refForm" label-width="100px" v-model="formdata">
+      <yu-xform-group>
+        <yu-xform-item label="员工工号" name="userCode" ctype="input" :disabled="formDisabled"></yu-xform-item>
+        <yu-xform-item label="用户名称" name="userName" ctype="input" :disabled="formDisabled"></yu-xform-item>
+        <yu-xform-item label="归属机构" name="orgName" ctype="input" :disabled="formDisabled"></yu-xform-item>
+        <yu-xform-item label="归属条线" name="busiType" ctype="select" :disabled="formDisabled" data-code="CD0327"></yu-xform-item>
+        <yu-xform-item label="退出理由" name="reason" ctype="textarea" :colspan="24" :rules="rule.reason"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="quitCustMgrApply">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" :common-params="wfCommonParams" />
+</div>

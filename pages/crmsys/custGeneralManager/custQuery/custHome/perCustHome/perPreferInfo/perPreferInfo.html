@@ -1,0 +1,401 @@
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-1-22 09:34:22.
+  @updated by
+  @description 家庭信息
+-->
+<div id="perPreferInfo">
+  <yu-collapse v-model="expandCollapseName">
+    <yu-collapse-item title="喜好的电子渠道" name="elec">
+
+                      
+                        <yu-form ref="elecform" :model="elecform" label-width="80px">
+                               <yu-form-item label="电子渠道:">
+                                    <yu-checkbox-group v-model="elecform.chnCd">
+                                        <yu-checkbox label="1" name="chnCd">手机银行</yu-checkbox>
+                                        <yu-checkbox label="2" name="chnCd">电话银行</yu-checkbox>
+                                        <yu-checkbox label="3" name="chnCd">网上银行</yu-checkbox>
+                                        <yu-checkbox label="4" name="chnCd">微信银行</yu-checkbox>
+                                        <yu-checkbox label="5" name="chnCd">短信服务</yu-checkbox>
+                                        <yu-checkbox label="6" name="chnCd">自助银行</yu-checkbox>
+                                    </yu-checkbox-group>
+                              </yu-form-item>
+                              <yu-form-item label="其他:" :rules="rule.chnOth">
+                                    <yu-input v-model="elecform.chnOth" ></yu-input>
+                              </yu-form-item>
+                                
+                          
+                           
+                     </yu-form>
+          
+   
+    </yu-collapse-item>
+    <yu-collapse-item title="喜好投资类型" name="invest">
+            <yu-form ref="investform" :model="investform" label-width="80px">
+                    <yu-form-item label="投资类型:">
+                         <yu-checkbox-group v-model="investform.invCd">
+                                <yu-checkbox label="1" name="invCd">债卷</yu-checkbox>
+                                <yu-checkbox label="2" name="invCd">股票</yu-checkbox>
+                                <yu-checkbox label="3" name="invCd">期权</yu-checkbox>
+                                <yu-checkbox label="4" name="invCd">保险</yu-checkbox>
+                                <yu-checkbox label="5" name="invCd">存款</yu-checkbox>
+                                <yu-checkbox label="6" name="invCd">不动产</yu-checkbox>
+                                <yu-checkbox label="7" name="invCd">外汇</yu-checkbox>
+                                <yu-checkbox label="8" name="invCd">贵金属</yu-checkbox>
+                                <yu-checkbox label="9" name="invCd">理财</yu-checkbox>
+                                <yu-checkbox label="10" name="invCd">产品</yu-checkbox>
+                                <yu-checkbox label="11" name="invCd">基金</yu-checkbox>
+                                <yu-checkbox label="12" name="invCd">信托产品</yu-checkbox>
+                                <yu-checkbox label="13" name="invCd">P2P</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="investform.invOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+    </yu-collapse-item>
+    <yu-collapse-item title="喜好品牌类型" name="brand">
+            <yu-form ref="brandform" :model="brandform" label-width="80px">
+                    <yu-form-item label="品牌类型:">
+                         <yu-checkbox-group v-model="brandform.consBrandCd">
+                                <yu-checkbox label="1" name="consBrandCd">Bubbery</yu-checkbox>
+                                <yu-checkbox label="2" name="consBrandCd">Prada</yu-checkbox>
+                                <yu-checkbox label="3" name="consBrandCd">Hermes</yu-checkbox>
+                                <yu-checkbox label="4" name="consBrandCd">Lv</yu-checkbox>
+                                <yu-checkbox label="5" name="consBrandCd">Chanel</yu-checkbox>
+                                <yu-checkbox label="6" name="consBrandCd">Gucci</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="brandform.consOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+
+    </yu-collapse-item>
+    <yu-collapse-item title="希望得到的理财服务" name="finaser">
+            <yu-form ref="finaserform" :model="finaserform" label-width="80px">
+                    <yu-form-item label="理财服务:">
+                         <yu-checkbox-group v-model="finaserform.finAdviCd">
+                                <yu-checkbox label="1" name="finAdviCd">外汇投资</yu-checkbox>
+                                <yu-checkbox label="2" name="finAdviCd">股市行情</yu-checkbox>
+                                <yu-checkbox label="3" name="finAdviCd">理财产品推荐</yu-checkbox>
+                                <yu-checkbox label="4" name="finAdviCd">理财咨询</yu-checkbox>
+                                <yu-checkbox label="5" name="finAdviCd">市场信息</yu-checkbox>
+                                <yu-checkbox label="6" name="finAdviCd">家庭理财</yu-checkbox><br/>
+                                <yu-checkbox label="7" name="finAdviCd">外汇</yu-checkbox>
+                                <yu-checkbox label="8" name="finAdviCd">银行理财产品</yu-checkbox>
+                                <yu-checkbox label="9" name="finAdviCd">证劵市场</yu-checkbox>
+                                <yu-checkbox label="10" name="finAdviCd">基金</yu-checkbox>
+                                <yu-checkbox label="11" name="finAdviCd">信托</yu-checkbox>
+                                <yu-checkbox label="12" name="finAdviCd">宏观经济</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="finaserform.finOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+
+      
+    </yu-collapse-item>
+    <yu-collapse-item title="希望理财经理的联系方式" name="finacon">
+            <yu-form ref="finaconform" :model="finaconform" label-width="120px">
+                    <yu-form-item label="理财经理的联系方式:">
+                         <yu-checkbox-group v-model="finaconform.contCd">
+                                <yu-checkbox label="1" name="contCd">电子邮件</yu-checkbox>
+                                <yu-checkbox label="2" name="contCd">MSN</yu-checkbox>
+                                <yu-checkbox label="3" name="contCd">微信</yu-checkbox>
+                                <yu-checkbox label="4" name="contCd">电话</yu-checkbox>
+                                <yu-checkbox label="5" name="contCd">QQ</yu-checkbox>
+                                <yu-checkbox label="6" name="contCd">短信</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="finaconform.contOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+     
+    </yu-collapse-item>
+    <yu-collapse-item title="希望参加的沙龙活动" name="activity">
+            <yu-form ref="activityform" :model="activityform" label-width="80px">
+                    <yu-form-item label="沙龙活动:">
+                         <yu-checkbox-group v-model="activityform.saloCd">
+                                <yu-checkbox label="1" name="saloCd">名车鉴赏</yu-checkbox>
+                                <yu-checkbox label="2" name="saloCd">厨艺</yu-checkbox>
+                                <yu-checkbox label="3" name="saloCd">养生</yu-checkbox>
+                                <yu-checkbox label="4" name="saloCd">理财</yu-checkbox>
+                                <yu-checkbox label="5" name="saloCd">品酒</yu-checkbox>
+                                <yu-checkbox label="6" name="saloCd">美容</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="activityform.saloOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+      
+    </yu-collapse-item>
+    <yu-collapse-item title="个人兴趣爱好" name="prefer">
+            <yu-form ref="preferform" :model="preferform" label-width="80px">
+                    <yu-form-item label="兴趣爱好:">
+                         <yu-checkbox-group v-model="preferform.hobbCd">
+                                <yu-checkbox label="1" name="hobbCd">美术</yu-checkbox>
+                                <yu-checkbox label="2" name="hobbCd">品酒</yu-checkbox>
+                                <yu-checkbox label="3" name="hobbCd">养生/美容</yu-checkbox>
+                                <yu-checkbox label="4" name="hobbCd">音乐</yu-checkbox>
+                                <yu-checkbox label="5" name="hobbCd">名车鉴赏</yu-checkbox>
+                                <yu-checkbox label="6" name="hobbCd">厨艺</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="preferform.hobbOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+       
+    </yu-collapse-item>
+    <yu-collapse-item title="希望联系的时间" name="contime">
+            <yu-form ref="contimeform" :model="contimeform" label-width="120px">
+                    <yu-form-item label="希望联系的时间:">
+                         <yu-checkbox-group v-model="contimeform.contTimeCd">
+                                <yu-checkbox label="1" name="contTimeCd">上午</yu-checkbox>
+                                <yu-checkbox label="2" name="contTimeCd">中午</yu-checkbox>
+                                <yu-checkbox label="3" name="contTimeCd">下午</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                
+          </yu-form>
+
+      
+    </yu-collapse-item>
+    <yu-collapse-item title="投资周期偏好" name="investper">
+            <yu-form ref="investperform" :model="investperform" label-width="80px">
+                    <yu-form-item label="投资周期:">
+                         <yu-checkbox-group v-model="investperform.invTermCd">
+                                <yu-checkbox label="3" name="invTermCd">短期</yu-checkbox>
+                                <yu-checkbox label="2" name="invTermCd">中期</yu-checkbox>
+                                <yu-checkbox label="1" name="invTermCd">长期</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                
+          </yu-form>
+
+      
+    </yu-collapse-item>
+    <yu-collapse-item title="其他信息" name="otherinfo">
+            <yu-form ref="otherinfoform" :model="otherinfoform" label-width="80px">
+                 
+                   <yu-form-item label="宗教信仰:">
+                         <yu-input v-model="otherinfoform.faithCd"></yu-input>
+                   </yu-form-item>
+                   <yu-form-item label="忌讳:">
+                        <yu-input v-model="otherinfoform.taboo"></yu-input>
+                  </yu-form-item>
+                  <yu-form-item label="特别需求:">
+                        <yu-input v-model="otherinfoform.specNeed"></yu-input>
+                  </yu-form-item>
+                  <yu-form-item label="备注:">
+                        <yu-input v-model="otherinfoform.remarks"></yu-input>
+                  </yu-form-item>
+          </yu-form>
+        
+      </yu-collapse-item>
+    <yu-collapse-item title="偏好的金融业务类型" name="banktype">
+            <yu-form ref="banktypeform" :model="banktypeform" label-width="80px">
+                    <yu-form-item label="金融业务:">
+                         <yu-checkbox-group v-model="banktypeform.finBusiCd">
+                                <yu-checkbox label="1"  name="finBusiCd">柜面通</yu-checkbox>
+                                <yu-checkbox label="2" name="finBusiCd">现金</yu-checkbox>
+                                <yu-checkbox label="3" name="finBusiCd">银行本票</yu-checkbox>
+                                <yu-checkbox label="4" name="finBusiCd">ATM</yu-checkbox>
+                                <yu-checkbox label="5" name="finBusiCd">网银转账</yu-checkbox>
+                                <yu-checkbox label="6" name="finBusiCd">支票</yu-checkbox>
+                                <yu-checkbox label="7" name="finBusiCd">POS支付</yu-checkbox>
+                                <yu-checkbox label="8" name="finBusiCd">银行汇票</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="banktypeform.finBusiOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+
+     
+    </yu-collapse-item>
+    <yu-collapse-item title="喜好休闲类型" name="ardertype">
+            <yu-form ref="ardertypeform" :model="ardertypeform" label-width="80px">
+                    <yu-form-item label="休闲类型:">
+                         <yu-checkbox-group v-model="ardertypeform.arderCd">
+                                <yu-checkbox label="1" name="arderCd">读书看报</yu-checkbox>
+                                <yu-checkbox label="2" name="arderCd">汽车驾驶</yu-checkbox>
+                                <yu-checkbox label="3" name="arderCd">影音娱乐</yu-checkbox>
+                                <yu-checkbox label="4" name="arderCd">电脑游戏</yu-checkbox>
+                                <yu-checkbox label="5" name="arderCd">旅游度假</yu-checkbox>
+                                <yu-checkbox label="6" name="arderCd">购物消费</yu-checkbox>
+                                <yu-checkbox label="7" name="arderCd">书法绘画</yu-checkbox>
+                                <yu-checkbox label="8" name="arderCd">民间收藏</yu-checkbox>
+                                <yu-checkbox label="9" name="arderCd">体育健身</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="ardertypeform.arderOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+       
+    </yu-collapse-item>
+    <yu-collapse-item title="喜好媒体类型" name="media">
+            <yu-form ref="mediaform" :model="mediaform" label-width="80px">
+                    <yu-form-item label="媒体类型:">
+                         <yu-checkbox-group v-model="mediaform.mediaCd">
+                                <yu-checkbox label="1" name="mediaCd">电视</yu-checkbox>
+                                <yu-checkbox label="2" name="mediaCd">杂志</yu-checkbox>
+                                <yu-checkbox label="3" name="mediaCd">网络</yu-checkbox>
+                                <yu-checkbox label="4" name="mediaCd">广播</yu-checkbox>
+                                <yu-checkbox label="5" name="mediaCd">报纸</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="mediaform.mediaOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+      
+    </yu-collapse-item>
+    <yu-collapse-item title="喜好运动类型" name="actitype">
+            <yu-form ref="actitypeform" :model="actitypeform" label-width="80px">
+                    <yu-form-item label="运动类型:">
+                         <yu-checkbox-group v-model="actitypeform.sportCd">
+                                <yu-checkbox label="1" name="sportCd">网球</yu-checkbox>
+                                <yu-checkbox label="2" name="sportCd">游艇</yu-checkbox>
+                                <yu-checkbox label="3" name="sportCd">篮球</yu-checkbox>
+                                <yu-checkbox label="4" name="sportCd">游泳</yu-checkbox>
+                                <yu-checkbox label="5" name="sportCd">高尔夫</yu-checkbox>
+                                <yu-checkbox label="6" name="sportCd">羽毛球</yu-checkbox>
+                                <yu-checkbox label="7" name="sportCd">帆船</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="actitypeform.sportOth"></yu-input>
+                   </yu-form-item>
+                 
+          </yu-form>
+       
+    </yu-collapse-item>
+    <yu-collapse-item title="喜好杂志类型" name="magatype">
+            <yu-form ref="magatypeform" :model="magatypeform" label-width="80px">
+                    <yu-form-item label="杂志类型:">
+                         <yu-checkbox-group v-model="magatypeform.magazCd">
+                                <yu-checkbox label="1"  name="magazCd">健康</yu-checkbox>
+                                <yu-checkbox label="2"  name="magazCd">新闻</yu-checkbox>
+                                <yu-checkbox label="3"  name="magazCd">运动</yu-checkbox>
+                                <yu-checkbox label="4"  name="magazCd">财经</yu-checkbox>
+                                <yu-checkbox label="5"  name="magazCd">时尚</yu-checkbox>
+                                <yu-checkbox label="6"  name="magazCd">生活</yu-checkbox>
+                                <yu-checkbox label="7"  name="magazCd">收藏</yu-checkbox>
+                                <yu-checkbox label="8"  name="magazCd">汽车</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="magatypeform.magazOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+      
+    </yu-collapse-item>
+    <yu-collapse-item title="喜好电视节目类型" name="tvtyep">
+            <yu-form ref="tvtyepform" :model="tvtyepform" label-width="120px">
+                    <yu-form-item label="电视节目类型:">
+                         <yu-checkbox-group v-model="tvtyepform.tvshowCd">
+                                <yu-checkbox label="1" name="tvshowCd">动作</yu-checkbox>
+                                <yu-checkbox label="2" name="tvshowCd">犯罪</yu-checkbox>
+                                <yu-checkbox label="3" name="tvshowCd">恐怖</yu-checkbox>
+                                <yu-checkbox label="4" name="tvshowCd">历史</yu-checkbox>
+                                <yu-checkbox label="5" name="tvshowCd">文艺</yu-checkbox>
+                                <yu-checkbox label="6" name="tvshowCd">科幻</yu-checkbox>
+                                <yu-checkbox label="7" name="tvshowCd">冒险</yu-checkbox>
+                                <yu-checkbox label="8" name="tvshowCd">战争</yu-checkbox><br/>
+                                <yu-checkbox label="9" name="tvshowCd">传记</yu-checkbox>
+                                <yu-checkbox label="10" name="tvshowCd">奇幻</yu-checkbox>
+                                <yu-checkbox label="11" name="tvshowCd">悬疑</yu-checkbox>
+                                <yu-checkbox label="12" name="tvshowCd">动画</yu-checkbox>
+                                <yu-checkbox label="13" name="tvshowCd">爱情</yu-checkbox>
+                                <yu-checkbox label="14" name="tvshowCd">喜剧</yu-checkbox>
+                                <yu-checkbox label="15" name="tvshowCd">惊悚</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="tvtyepform.tvshowOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+      
+    </yu-collapse-item>
+    <yu-collapse-item title="喜好宠物类型" name="pets">
+            <yu-form ref="petsform" :model="petsform" label-width="80px">
+                    <yu-form-item label="宠物类型:">
+                         <yu-checkbox-group v-model="petsform.petCd">
+                                <yu-checkbox label="1" name="petCd">猫</yu-checkbox>
+                                <yu-checkbox label="2" name="petCd">鱼</yu-checkbox>
+                                <yu-checkbox label="3" name="petCd">狗</yu-checkbox>
+                                <yu-checkbox label="4" name="petCd">鸟</yu-checkbox>
+                                <yu-checkbox label="5" name="petCd">虫</yu-checkbox> 
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="petsform.petOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+       
+    </yu-collapse-item>
+    <yu-collapse-item title="喜好收藏类型" name="colltype">
+            <yu-form ref="colltypeform" :model="colltypeform" label-width="80px">
+                    <yu-form-item label="收藏类型:">
+                         <yu-checkbox-group v-model="colltypeform.collCd">
+                                <yu-checkbox label="1" name="collCd">文物</yu-checkbox>
+                                <yu-checkbox label="2" name="collCd">红酒</yu-checkbox>
+                                <yu-checkbox label="3" name="collCd">标本</yu-checkbox>
+                                <yu-checkbox label="4" name="collCd">票劵</yu-checkbox>
+                                <yu-checkbox label="5" name="collCd">绘画</yu-checkbox>
+                                <yu-checkbox label="6" name="collCd">玉器</yu-checkbox>
+                                <yu-checkbox label="7" name="collCd">陶瓷</yu-checkbox>
+                                <yu-checkbox label="8" name="collCd">徽章</yu-checkbox><br/>
+                                <yu-checkbox label="9" name="collCd">邮票</yu-checkbox>
+                                <yu-checkbox label="10" name="collCd">钱币</yu-checkbox>
+                                <yu-checkbox label="11" name="collCd">珠宝、名石和观赏石</yu-checkbox>
+                                <yu-checkbox label="12" name="collCd">文献</yu-checkbox>
+                                <yu-checkbox label="13" name="collCd">商标</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                   <yu-form-item label="其他:">
+                         <yu-input v-model="colltypeform.collOth"></yu-input>
+                   </yu-form-item>
+          </yu-form>
+       
+    </yu-collapse-item>
+    <yu-collapse-item title="消费习惯" name="conhabit">
+            <yu-form ref="conhabitform" :model="conhabitform" label-width="80px">
+                    <yu-form-item label="消费习惯:">
+                         <yu-checkbox-group v-model="conhabitform.consCd">
+                                <yu-checkbox label="1"  name="consCd">高端</yu-checkbox>
+                                <yu-checkbox label="2"  name="consCd">中端</yu-checkbox>
+                                <yu-checkbox label="3"  name="consCd">低端</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                
+          </yu-form>
+      
+    </yu-collapse-item>
+    <yu-collapse-item title="消费渠道" name="conchan">
+            <yu-form ref="conchanform" :model="conchanform" label-width="80px">
+                    <yu-form-item label="消费渠道:">
+                         <yu-checkbox-group v-model="conchanform.consChnCd">
+                                <yu-checkbox label="1"  name="consChnCd">市场</yu-checkbox>
+                                <yu-checkbox label="2" name="consChnCd">超市</yu-checkbox>
+                                <yu-checkbox label="3" name="consChnCd">商场</yu-checkbox>
+                                <yu-checkbox label="4" name="consChnCd">网购</yu-checkbox>
+                         </yu-checkbox-group>
+                   </yu-form-item>
+                
+          </yu-form>
+     
+    </yu-collapse-item>
+   
+   
+  </yu-collapse>
+  <div class="yu-grpButton">
+    <yu-button icon="check" type="primary" @click="saveFn" v-if="saveBtn">保存</yu-button>
+   
+  </div>
+</div>

@@ -1,0 +1,89 @@
+<!--
+  @created by luoshun 2019-1-4
+  @updated by 
+  @description 积分池管理
+-->
+<div>
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="积分池编号" ctype="input" :maxlength="20" name="poolNo"></yu-xform-item>
+      <yu-xform-item placeholder="积分池名称" ctype="input" :maxlength="100" name="poolName"></yu-xform-item>
+      <yu-xform-item placeholder="审批状态" ctype="select" :maxlength="20" name="wfApprSts" data-code="YX_WF_APP_STATUS"></yu-xform-item>
+      <yu-xform-item placeholder="父积分池" ctype="select" :maxlength="20" name="poolParentId" :data-url="poolUrl"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 工具按钮 -->
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="addFn">新增</yu-button>
+      <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="yx-bin" @click="deleteFn">删除</yu-button>
+      <yu-button icon="minus" @click="commitFn">提交</yu-button>
+    </yu-button-group>
+  </div>
+  <!-- 查询显示表格 -->
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio">
+    <yu-xtable-column label="积分池编号" prop="poolNo" width="85">
+    </yu-xtable-column>
+    <yu-xtable-column label="积分池名称" prop="poolName" width="180">
+    </yu-xtable-column>
+    <!-- <yu-xtable-column label="父积分池" prop="poolParentId" width="180" :formatter="selectFormatter"> -->
+    <yu-xtable-column label="父积分池" prop="poolParentName" width="180">
+    </yu-xtable-column>
+    <yu-xtable-column label="积分池额度" prop="poolScoreInitial" width="115">
+    </yu-xtable-column>
+    <yu-xtable-column label="已用积分" prop="poolScoreUsed" width="110">
+    </yu-xtable-column>
+    <yu-xtable-column label="剩余积分" prop="poolScoreSurplus" width="115">
+    </yu-xtable-column>
+    <yu-xtable-column label="剩余积分比例(%)" prop="poolScoreSurplusPercent" width="115">
+    </yu-xtable-column>
+    <yu-xtable-column label="剩余积分现金价值" prop="scorePrice" width="115">
+    </yu-xtable-column>
+    <!-- <yu-xtable-column label="每分现金价值" prop="referenceCost" width="110">
+    </yu-xtable-column> -->
+    <yu-xtable-column label="预警阀值(%)" prop="warnThreshold" width="90">
+    </yu-xtable-column>
+    <yu-xtable-column label="审批状态" prop="wfApprSts" width="80" data-code="YX_WF_APP_STATUS">
+    </yu-xtable-column>
+    <yu-xtable-column label="创建人" prop="createUser" width="85">
+    </yu-xtable-column>
+    <yu-xtable-column label="创建日期" prop="createDate" width="90">
+    </yu-xtable-column>
+    <yu-xtable-column label="最近维护人" prop="updateUser" width="90">
+    </yu-xtable-column>
+    <yu-xtable-column label="最近维护日期" prop="updateDate" width="100">
+    </yu-xtable-column>
+  </yu-xtable>
+  <!-- 新增、修改、详情弹窗 -->
+  <yu-xdialog :title="viewTitle" :visible.sync="dialogVisible" width="800px">
+    <yu-xform ref="refForm" label-width="140px" v-model="formdata" :disabled="formDisabled">
+      <yu-xform-group>
+        <yu-xform-item label="审批状态" ctype="select" :maxlength="20" name="wfApprSts"  :hidden="isHidden" data-code="YX_WF_APP_STATUS"></yu-xform-item>
+        <yu-xform-item label="积分池编号" ctype="input" :maxlength="20" name="poolNo" :disabled="true"  :hidden="isAdjust"></yu-xform-item>
+        <yu-xform-item label="父积分池" ctype="select" placeholder="请选择"  :maxlength="20" name="poolParentId"  :options="poolList" @change="poolChange"></yu-xform-item>
+        <yu-xform-item label="父积分池剩余额度" ctype="input" :maxlength="20" name="surplusScore" disabled></yu-xform-item>
+        <yu-xform-item label="积分池名称" ctype="input" :maxlength="100" name="poolName" rules="required"></yu-xform-item>
+        <yu-xform-item label="积分池额度" ctype="input" name="poolScoreInitial" :rules="rules.poolScoreInitial"></yu-xform-item>
+        <yu-xform-item label="已用积分" ctype="input" name="poolScoreUsed"  :hidden="isHidden"></yu-xform-item>
+        <yu-xform-item label="剩余积分" ctype="input" name="poolScoreSurplus"  :hidden="isHidden"></yu-xform-item>
+        <yu-xform-item label="预警阀值(%)" ctype="input" :maxlength="10" name="warnThreshold" :rules="rules.warnThreshold"></yu-xform-item>
+        <yu-xform-item label="预警短信发送手机号码" ctype="input" name="warnPhoneNo" :rules="rules.warnPhoneNo"></yu-xform-item>
+        <!-- <yu-xform-item label="是否有上限" ctype="select" :maxlength="20"  name="upperLimit" placeholder="请选择" rules="required" data-code="UPPER_LIMIT" :hidden="!isHidden"></yu-xform-item> -->
+        <yu-xform-item label="是否有上限" ctype="select"  name="upperLimit" placeholder="请选择" rules="required" data-code="UPPER_LIMIT"></yu-xform-item>
+        <yu-xform-item label="积分池描述" ctype="textarea" :maxlength="1024" name="remark" :colspan="24" :rules="rules.remark"></yu-xform-item>
+        <yu-xform-item label="创建人" ctype="input" :maxlength="100" name="createUser" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="创建日期" ctype="input" name="createDate" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="最近维护人" ctype="input" :maxlength="100" name="updateUser" :hidden="true"></yu-xform-item>
+        <yu-xform-item label="最近维护日期" ctype="input" name="updateDate" :hidden="true"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yufp-wf-init ref="yufpWfInit" @afterinit="onAfterInit" @afterclose="onAfterClose" :common-params="wfCommonParams" />
+</div>

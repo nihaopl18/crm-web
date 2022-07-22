@@ -1,0 +1,10 @@
+<!-- 必须全局拥有唯一的id -->
+<div id="ExceptionWfInit">
+    <div class="yu-toolBar">
+        <el-button-group>
+            <el-button icon="add" type="primary" @click="submitFn" >处理</el-button>
+        </el-button-group>
+    </div>
+    <el-table-x ref="WfInitExceptionList"  :max-height="height" :data-url="urls.dataUrl" :base-params="dataParams" :table-columns="tableColumns" >
+    </el-table-x>
+</div>

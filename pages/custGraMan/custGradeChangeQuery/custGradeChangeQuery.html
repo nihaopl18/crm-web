@@ -1,0 +1,72 @@
+<!-- 
+  @Created by 张成龙 zhangcl3@yusys.com.cn on 2019-1-17 14:02:55.
+  @updated by
+  @description 客户等级变动查询
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="6">
+        <yu-xform-item placeholder="客户类型" ctype="select" name="custType" data-code="CD0016" value="1" rules="required"></yu-xform-item>
+      <yu-xform-item placeholder="归属机构" ctype="yufp-org-tree" name="orgId"></yu-xform-item>
+      
+      <!-- <yu-xform-item placeholder="机构名称" ctype="yufp-org-tree" name="orgName" ></yu-xform-item> -->
+      <!-- <yu-xform-item placeholder="客户经理工号" ctype="input" name="mgrId"></yu-xform-item> -->
+      <yu-xform-item placeholder="客户经理名称" ctype="yufp-mgr-selector" name="mgrName" :params="custManagerParams"  @select-fn="userSelectFn"></yu-xform-item>
+      <!-- <yu-xform-item placeholder="客户经理类型" ctype="select" name="mgrType" data-code="CD0241"></yu-xform-item> -->
+      <yu-xform-item placeholder="客户编号" ctype="input" name="custId"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" ctype="input" name="custName"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="document" @click="changeDel">变动明细查询</yu-button>
+      <yu-button v-if="false" icon="document" @click="showZj">组件测试</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" class="permitSelect" @contextmenu.prevent.stop.native row-number :data-url="dataUrl" selection-type="radio" :default-load="false">
+    <yu-xtable-column label="客户编号" prop="custId" ></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" ></yu-xtable-column>
+    <yu-xtable-column label="等级类别" prop="levelType" :options="levelType"></yu-xtable-column>
+    <yu-xtable-column label="上期等级" prop="oldCustLevel"  data-code="CD0445"></yu-xtable-column>
+    <yu-xtable-column label="本期等级" prop="custLevel"  data-code="CD0445"></yu-xtable-column>
+    <yu-xtable-column label="等级变动情况" prop="levelChange" :options="levelChange"  ></yu-xtable-column>
+  </yu-xtable>
+   <yu-xdialog title="变动明细列表" :visible.sync="dialogVisible" width="1350px">
+   <yu-xtable ref="refTable2" row-number  selection-type="radio" :data="changeDelData" :data-url="dataUrldetail">
+    <yu-xtable-column label="客户编号" prop="custId" ></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName"  sortable></yu-xtable-column>
+    <yu-xtable-column label="客户等级" prop="custLevel"  data-code="CD0445"></yu-xtable-column>
+    <yu-xtable-column label="评级指标号" prop="targetId" v-if="false"></yu-xtable-column>
+    <yu-xtable-column label="评级指标值" prop="targetValue" ></yu-xtable-column>
+    <yu-xtable-column label="上期客户等级" prop="oldCustLevel"  data-code="CD0445"></yu-xtable-column>
+    <yu-xtable-column label="上期评级指标号" prop="oldTargetId"  v-if="false"></yu-xtable-column>
+    <yu-xtable-column label="上期评级指标值" prop="oldTargetValue"  ></yu-xtable-column>
+    <yu-xtable-column label="数据日期" prop="dataDt" :formatter="formData" ></yu-xtable-column>
+  </yu-xtable> 
+  <div class="yu-grpButton">
+    <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+  </div>
+  </yu-xdialog> 
+
+  <yu-xdialog title="指标编辑" :visible.sync="dialogVisibleShow" width="800px">
+    <yu-xform-group ref="formGroup"  :column="1" v-model="index">
+      <yu-xform-item ctype="yufp-base-index"  v-model="indexCode"  placeholder="指标选择" name="指标选择" :params="params" @select-fn="selectIndex"></yu-xform-item>
+      <yu-xform-item ctype="textarea" v-model="index.selectIndexCode" name="index.selectIndexCode" :rows="3" :colspan="24" placeholder="评价指标公式" :rules="rule[0]"></yu-xform-item>
+      <yu-xform-item  ctype="textarea" v-model="index.selectIndexName"  name="index.selectIndexName" :rows="3" :colspan="24" placeholder="评价指标公式解释" :rules="rule[0]" ></yu-xform-item>
+    </yu-xform-group>
+   <div class="yu-grpButton">
+      <yu-button icon="yx-undo2" type="primary" @click="cancelFnZj">确定</yu-button>
+   </div>
+   </yu-xdialog> 
+
+</div>
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

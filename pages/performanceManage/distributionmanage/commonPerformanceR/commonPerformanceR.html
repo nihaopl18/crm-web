@@ -1,0 +1,61 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2020-2-10 10:45:42.
+  @updated by
+  @description 批量导入结果页面
+-->
+<div class="commonPerformanceR">
+  <link href="./commonPerformanceR.css" rel="stylesheet" type="text/css" />
+  <div style="margin: 10px 0px;">
+    <yu-xdynamic-form ref="searchForm" mode="normal" :template-data="templateData" v-if="isInitData"></yu-xdynamic-form>
+    <div style="float:right;">
+      <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+    </div>
+  </div>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <!-- <yu-button icon="edit" @click="testFn">导出数据</yu-button> -->
+      <yu-button icon="plus" @click="invokeFn">批次撤销</yu-button>
+      <yu-button icon="edit" @click="exportErrFn">导出错误数据</yu-button>
+      <yu-button icon="document" @click="importErrFn">修改错误数据导入</yu-button>
+      <yu-button icon="plus" @click="processFn" v-if="syncProcessFn">同步执行/发起审批</yu-button>
+      <yu-button icon="plus" @click="asynProcessFn" v-if="asyncProcessFn">异步执行/发起审批</yu-button>
+      <yu-button icon="plus" @click="reInitWorkFlowFn">重新发起审批</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" :data-url="dataUrl" selection-type="radio" @loaded="refTableLoaded">
+    <yu-xtable-column label="业绩类型" prop="funCodeName"></yu-xtable-column>
+    <yu-xtable-column label="批次号" prop="batchId"></yu-xtable-column>
+    <yu-xtable-column label="执行状态" prop="status" data-code="PERFORMANCE_STATUS"></yu-xtable-column>
+    <yu-xtable-column label="导入时间" prop="createTime" sortable></yu-xtable-column>
+    <yu-xtable-column label="导入人" prop="createUserName"></yu-xtable-column>
+    <yu-xtable-column label="错误信息" prop="checkResult"></yu-xtable-column>
+    <yu-xtable-column label="工作流总数" prop="wfTotalCount"></yu-xtable-column>
+    <yu-xtable-column label="工作流发起成功数" prop="wfSuccCount"></yu-xtable-column>
+    <yu-xtable-column label="工作流发起失败数" prop="wfErrCount"></yu-xtable-column>
+  </yu-xtable>
+  <yu-xdialog title="错误数据修改后导入" :visible.sync="dialogVisible" width="40%">
+    <center>
+      <yu-upload
+        class="upload-demo"
+        :action="action"
+        :data="uploadData"
+        :headers="uploadHeaders"
+        :before-upload="beforeFileUpload"
+        :on-success="uploadSuccessFn"
+        :on-error="uploadErrorFn"
+        :on-timeout="uploadTimeoutFn"
+        :timeout="720000"
+        :show-file-list="false"
+        :auto-upload="true"
+        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        >
+        <yu-button size="small" type="primary">点击上传</yu-button>
+        <div slot="tip" class="el-upload__tip" style="color:red;">
+          1、导入的excel对应的业绩类型与列表中选中的业绩类型一致<br>
+          2、导入的excel请先删除'错误信息'对应列
+        </div>
+      </yu-upload>
+    </center>
+  </yu-xdialog>
+</div>

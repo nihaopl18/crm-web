@@ -1,0 +1,81 @@
+<!-- 普通查询Freemarker模板自动生成代码 -->
+<!-- 必须全局拥有唯一的id -->
+<!--
+  @created by yangye on 2018/11/12.
+  @description 普通查询模板
+-->
+<div id="exampleEdit">
+  <el-form-q :field-data="queryFields" :buttons="queryButtons"></el-form-q>
+  <div class="yu-toolBar">
+    <el-button-group>
+      <el-button icon="document" @click="infoFn">详情查看</el-button>
+      <el-button icon="document" @click="taskBackFn">任务反馈</el-button>
+    </el-button-group>
+  </div>
+  <el-table-x ref="reftable" :height="height" :checkbox="true" :default-load="false" :table-columns="tableColumns"
+    data-url="/api/cimftcmytask/mytasklist">
+  </el-table-x>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+	 width="650px" height="380px" -->
+  <!--任务详情页面 -->
+  <!-- <el-dialog-x :title="viewTitle[viewType]" :visible.sync="dialogVisibleSts" width="800px" height="350px">
+    <el-form-x ref="refformSts" :group-fields="stsFields" :buttons="stsButtons" :disabled="formDisabled" label-width="180px">
+    </el-form-x>
+  </el-dialog-x> -->
+
+  <el-dialog-x :title="viewTitle[viewType]" :visible.sync="dialogVisibleSts" width="800px" height="300px">
+    <el-form-x ref="refformSts" :group-fields="stsFields" :buttons="stsButtons" :disabled="formDisabled"
+      label-width="80px">
+    </el-form-x>
+  </el-dialog-x>
+
+  <!--风险任务反馈页面 -->
+  <el-dialog-x :title="feedBack" :visible.sync="dialogVisibleRiskback" width="800px" height="300px">
+    <el-form-x ref="refformRiskFeedback" :group-fields="riskFields" :buttons="riskbackButtons" :disabled="formDisabled"
+      label-width="120px">
+    </el-form-x>
+  </el-dialog-x>
+
+  <!--关怀任务反馈页面 -->
+  <el-dialog-x :title="feedBack" :visible.sync="dialogVisibleCareback" width="800px" height="300px">
+    <el-form-x ref="refformCareFeedback" :group-fields="careFields" :buttons="carebackButtons" :disabled="formDisabled"
+      label-width="120px">
+    </el-form-x>
+  </el-dialog-x>
+
+  <!-- 商机任务反馈页面
+  <el-dialog-x :title="feedBack" :visible.sync="dialogVisibleNicheback" width="800px" height="350px">
+    <el-form-x ref="refformFeedback" :group-fields="feedbackFields" :buttons="feedbackButtons" :disabled="formDisabled" label-width="120px">
+    </el-form-x>
+  </el-dialog-x> -->
+
+  <el-dialog-x title="任务反馈" :visible.sync="dialogVisibleNicheback" width="1300px">
+    <el-collapse v-model="expandCollapseName">
+      <!-- <el-collapse-item title="商机信息" name="base">
+        <el-form-x ref="refformNicheFeedback" :group-fields="nicheFields" :disabled="formDisabled" label-width="100px">
+        </el-form-x>
+      </el-collapse-item> -->
+      <!-- <el-collapse-item title="反馈内容" name="2"> -->
+      <yu-xtable ref="nicheback" :data="tableData1" :pageable="false" style="width: 100%" @row-click="cellClick">
+        <yu-xtable-column prop="nicheStage" label="商机阶段">
+        </yu-xtable-column>
+        <yu-xtable-column ctype="radio" prop="yesNo" label="是否成功" :options="options1">
+        </yu-xtable-column>
+        <yu-xtable-column ctype="input" prop="situation" label="完成情况说明">
+        </yu-xtable-column>
+        <yu-xtable-column prop="feedbackTime" label="反馈时间" readonly="true">
+        </yu-xtable-column>
+      </yu-xtable>
+
+      <!-- <el-table ref="reftable" :height ="height" :data="tableData1"
+        :checkbox="true"
+        :default-load="false"
+        :table-columns="nichebackColumns"  data-url="/api/cimftcmytask/nichebacklist"  >
+        </el-table> -->
+      <el-form-x ref="refformNicheback" :buttons="feedbackButtons" :disabled="formDisabled" label-width="120px">
+      </el-form-x>
+      <!-- </el-collapse-item> -->
+    </el-collapse>
+  </el-dialog-x>
+
+</div>

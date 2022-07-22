@@ -1,0 +1,50 @@
+<div id="exampleEdit">
+    <!-- 管护详情 -->
+    <yu-xform ref="custdetailform" label-width="180px" v-model="custdetailData" v-show="detailformshow">
+        <h2>{{detailtitle}}</h2>
+        <yu-xform-group :column="2">
+            <yu-xform-item label="客户姓名" name="custname" :title="custdetailData.custname" ctype="input" :colspan="24" disabled></yu-xform-item>
+            <yu-xform-item label="ECIF号" name="custid" :title="custdetailData.custid" ctype="input" :colspan="24" disabled></yu-xform-item>
+            <yu-xform-item label="调整至" name="adjust" ctype="input" :colspan="8" disabled :hidden="istzz"></yu-xform-item>
+            <yu-xform-item label="客户等级" name="aumgrade" ctype="select" filterable data-code="CUST_GRADE" disabled :hidden="true"></yu-xform-item>
+            <yu-xform-item label="客户等级" name="aumgrade" ctype="input" disabled :hidden="iskhdj"></yu-xform-item>
+            <yu-xform-item label="归属机构" name="orgName" ctype="input" :colspan="8" disabled></yu-xform-item>
+            <!-- 管户调整详情页/客户托管详情页 -->
+
+            <yu-xform-item label="变更原因" name="changeReason" ctype="input" :colspan="16" disabled :hidden="isbgyy"></yu-xform-item>
+            <yu-xform-item label="变更原因" name="trustReason" ctype="input" :colspan="16" disabled :hidden="istgyy"></yu-xform-item>
+            <yu-xform-item label="理财/个贷客户经理" label-width="180px" name="customerMgr" ctype="input" :colspan="8" :hidden="isfp" disabled></yu-xform-item>
+
+        </yu-xform-group>
+    </yu-xform>
+    <!-- 信息编辑 -->
+    <yu-xform ref="neweditForm" v-model="neweditData" label-width="140px" v-show="newsshow">
+        <h2>客户信息编辑</h2>
+        <h3> 客户信息 </h3>
+        <yu-xform-group :column="3">
+            <yu-xform-item label="ECIF号" name="custId" ctype="input" disabled></yu-xform-item>
+            <yu-xform-item label="微信" name="wechat" ctype="input" disabled></yu-xform-item>
+            <yu-xform-item label="政治面貌" name="polStat" ctype="select" filterable data-code="CD0017" disabled></yu-xform-item>
+            <yu-xform-item label="身体状态" name="hltStat" ctype="select" filterable data-code="HEALTH_STATE" disabled></yu-xform-item>
+        </yu-xform-group>
+        <h3>教育信息 </h3>
+        <yu-xform-group :column="3">
+            <yu-xform-item label="最后毕业院校" name="comSch" ctype="input" disabled></yu-xform-item>
+            <yu-xform-item label="所学专业" name="schMajor" ctype="select" filterable data-code="MAJOR" disabled></yu-xform-item>
+            <yu-xform-item label="毕业时间" name="endDate" ctype="datepicker" style="width: 100%" disabled></yu-xform-item>
+        </yu-xform-group>
+        <h3> 资产信息 </h3>
+        <yu-xform-group :column="3">
+            <yu-xform-item label="房产数量" name="houseCount" ctype="input" disabled></yu-xform-item>
+            <yu-xform-item label="收入来源" name="incomeSrc" ctype="select" multiple data-code="CD0376" disabled></yu-xform-item>
+            <yu-xform-item label="车辆情况" ctype="select" name="carFlg" data-code="YES_NO" disabled></yu-xform-item>
+        </yu-xform-group>
+        <h3> 房产信息 </h3>
+        <yu-xtable ref="listTable" :data="newseditltable" :pageable="false" style="width: 100%">
+            <yu-xtable-column label="房产状况" prop="houseInfo" ctype="select" data-code="PROPERTY_MORTGAGE_STATUS" disabled></yu-xtable-column>
+            <yu-xtable-column label="购置时间" prop="purDt" ctype="datepicker" disabled></yu-xtable-column>
+            <yu-xtable-column label="购置原价" prop="purPrc" ctype="input" disabled></yu-xtable-column>
+        </yu-xtable>
+    </yu-xform>
+
+</div>

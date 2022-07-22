@@ -1,0 +1,24 @@
+<!-- 
+  @Created by 闫天一 yanty1@yusys.com.cn on 2019-1-30 16:20:46.
+  @updated by
+  @description 产品类别管理
+-->
+<div id = "productCategory">
+	<el-row :gutter= "20">
+		<el-col :span="6">
+            <div class="yu-toolBar">
+                <h2  style="margin-top: 10px;">产品树</h2>
+                <el-button  icon="plus" class="btn" @click="createFn">新增</el-button>
+                <el-button  icon="delete" class="btn" @click="deleteFn">删除</el-button>
+            </div>
+            <yufp-ext-tree ref="productTree" :show-checkbox="false" :height="height - 112"
+                :data-url="productTreeUrl" data-id="catlCode" data-label="catlName" @node-click="nodeClickFn"
+                data-pid="catlParent" :expand-level='2' :highlight-current="true">
+            </yufp-ext-tree>
+		</el-col>
+		<el-col :span="17">
+            <h2 class="yu-formTitle"  style="margin-top: 10px;">产品树维护</h2>
+            <el-form-x ref="productForm" :group-fields="productFields" :buttons="formButtons"  label-width="150px"></el-form-x>
+        </el-col>
+	</el-row>
+</div>

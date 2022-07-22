@@ -1,0 +1,294 @@
+/**
+ * @created by zhangkun6 on 2021-9-14 17:45:04
+ * @updated by
+ * @description 活动量检测
+ */
+
+.active-level-monitor {
+    background: #f5f5f5;
+}
+
+.active-level-monitor .el-icon-warning-outline {
+    margin-left: 5px;
+}
+
+.active-level-monitor .option-btn {
+    padding: 16px 20px;
+    background: #fff;
+    text-align: right;
+}
+
+.active-level-monitor .card-box {
+    padding: 16px 0;
+}
+
+.active-level-monitor .card-box .el-col .card-item {
+    height: 122px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #fff;
+    padding: 20px 10px;
+    /* position: relative; */
+}
+
+.active-level-monitor .card-box .el-col .card-item::after,
+.active-level-monitor .card-box .el-col .card-item::before {
+    position: absolute;
+    display: inline-block;
+    content: '';
+    right: 0;
+    top: 0;
+}
+
+.active-level-monitor .card-box .el-col .card-item::before {
+    width: 137.84px;
+    height: 64px;
+    opacity: 0.1;
+    background-image: linear-gradient(64deg, rgba(255, 255, 255, 0.10) 0%, #FFFFFF 54%);
+    border-bottom-left-radius: 100%;
+}
+
+.active-level-monitor .card-box .el-col .card-item::after {
+    width: 55.29px;
+    height: 87px;
+    opacity: 0.2;
+    background-image: linear-gradient(39deg, rgba(255, 255, 255, 0.10) 0%, #FFFFFF 67%);
+    border-bottom-left-radius: 100%;
+}
+
+.active-level-monitor .card-box .el-col .card-item>p:nth-child(1) {
+    font-size: 12px;
+    line-height: 22px;
+    font-weight: 400;
+}
+
+.active-level-monitor .card-box .el-col .card-item>p:nth-child(2) {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: bold;
+}
+
+.active-level-monitor .card-box .el-col .card-item>p:nth-child(3) {
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: 400;
+}
+
+.active-level-monitor .card-box .el-col:nth-child(1) .card-item {
+    /* background-image: linear-gradient(45deg, #FAD057 0%, #F5A456 100%); */
+    /* box-shadow: 0px 2px 8px 0px rgba(255, 186, 89, 0.5); */
+    background-color: #FAD057;
+}
+
+.active-level-monitor .card-box .el-col:nth-child(2) .card-item {
+    /* background-image: linear-gradient(45deg, #FF9191 0%, #FA6565 100%);
+    box-shadow: 0px 2px 8px 0px rgba(255, 102, 102, 0.49); */
+    background-color: #FF9191;
+}
+
+.active-level-monitor .card-box .el-col:nth-child(3) .card-item {
+    /* background-image: linear-gradient(45deg, #4FE0AB 0%, #5DC3F5 100%);
+    box-shadow: 0px 2px 8px 0px rgba(91, 210, 230, 0.49); */
+    background-color: #4FE0AB;
+}
+
+.active-level-monitor .card-box .el-col:nth-child(4) .card-item {
+    /* background-image: linear-gradient(45deg, #82A0FA 0%, #58A9F5 100%);
+    box-shadow: 0px 2px 8px 0px rgba(104, 165, 247, 0.5); */
+    background-color: #82A0FA;
+}
+
+.active-level-monitor .card-box .el-col:nth-child(5) .card-item {
+    /* background-image: linear-gradient(45deg, #8785FF 0%, #9F65E0 100%);
+    box-shadow: 0px 2px 8px 0px rgba(152, 104, 247, 0.5); */
+    background-color: #8785FF;
+}
+
+.active-level-monitor .card-box .el-col:nth-child(6) .card-item {
+    /* background-image: linear-gradient(224deg, #D696EB 0%, #B252D1 100%);
+    box-shadow: 0px 2px 8px 0px rgba(214, 150, 235, 0.49); */
+    background-color: #D696EB;
+}
+
+.active-level-monitor .data-chart .el-col>div {
+    background: #fff;
+    height: 448px;
+}
+
+.active-level-monitor .data-chart .el-col>div>p {
+    padding: 24px;
+    font-size: 16px;
+    color: #303133;
+    line-height: 24px;
+}
+
+.active-level-monitor .data-chart .content-item {
+    margin-left: 78px;
+    margin-top: 47px;
+}
+
+.active-level-monitor .data-chart .content-item>p:first-child {
+    font-size: 14px;
+    color: #909399;
+    line-height: 22px
+}
+
+.active-level-monitor .data-chart .content-item>p:last-child {
+    font-size: 24px;
+    color: #303133;
+    line-height: 32px;
+    font-weight: bold
+}
+
+.active-level-monitor .date-rang {
+    background-color: #fff;
+    margin-top: 16px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+}
+
+.active-level-monitor .cust-toutch,
+.active-level-monitor .waitdo-notice,
+.active-level-monitor .report-situation,
+.active-level-monitor .change-notice {
+    padding: 24px;
+    background: #fff;
+    margin-top: 16px;
+}
+
+.active-level-monitor .cust-toutch>p,
+.active-level-monitor .waitdo-notice>p,
+.active-level-monitor .report-situation>p,
+.active-level-monitor .change-notice>p {
+    font-size: 16px;
+    color: #303133;
+    line-height: 24px;
+    font-weight: bold;
+}
+
+.active-level-monitor .cust-toutch .el-col {
+    display: flex;
+    align-items: center;
+}
+
+.active-level-monitor .cust-toutch .el-divider--vertical {
+    height: 40px;
+}
+
+.active-level-monitor .cust-toutch .el-col .item {
+    height: 138px;
+    box-sizing: border-box;
+    padding: 28px 100px;
+}
+
+.active-level-monitor .cust-toutch .el-col .item>p:nth-child(1) {
+    font-size: 14px;
+    color: #909399;
+    line-height: 22px;
+}
+
+.active-level-monitor .cust-toutch .el-col .item>p:nth-child(2) {
+    font-size: 24px;
+    color: #303133;
+    line-height: 32px;
+    font-weight: bold;
+    margin: 4px 0;
+}
+
+.active-level-monitor .cust-toutch .el-col .item>p:nth-child(3) {
+    font-size: 12px;
+    color: #606266;
+    line-height: 20px;
+}
+
+.active-level-monitor .change-notice .notice-card .el-col>p:first-child,
+.active-level-monitor .report-situation .notice-card .el-col>p:first-child,
+.active-level-monitor .waitdo-notice .notice-card .el-col>p:first-child {
+    font-size: 14px;
+    color: #909399;
+    line-height: 22px;
+    /* text-align: center; */
+}
+
+.active-level-monitor .change-notice .notice-card .el-col>p:last-child,
+.active-level-monitor .report-situation .notice-card .el-col>p:last-child,
+.active-level-monitor .waitdo-notice .notice-card .el-col>p:last-child {
+    font-size: 24px;
+    color: #303133;
+    line-height: 32px;
+    font-weight: bold;
+    margin-top: 4px;
+    /* text-align: center; */
+}
+
+.active-level-monitor .change-notice .notice-card .el-col>p:last-child span {
+    font-size: 14px;
+    color: #303133;
+    line-height: 22px;
+}
+
+.active-level-monitor .waitdo-notice .table-title {
+    font-size: 14px;
+    color: #303133;
+    line-height: 22px;
+    margin-bottom: 16px;
+}
+
+.el-table__body-wrapper {
+    position: relative;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+.box-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.opendiatitle {
+    display: inline-block;
+    font-family: PingFangSC-Semibold;
+    font-size: 16px;
+    color: #303133;
+    line-height: 24px;
+    font-weight: 600;
+}
+
+.more {
+    display: inline-block;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #909399;
+    text-align: right;
+    line-height: 18px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.colorRed {
+    color: #ee434c;
+}
+
+.bg-geen {
+    background: #86d256;
+}
+
+.bg-yellow {
+    background: #FFA019;
+}
+
+.color-green {
+    color: #86d256;
+}
+
+@media screen and (min-width: 1440px) {
+    .active-level-monitor .card-box .el-col .card-item {
+        padding: 20px;
+    }
+    .active-level-monitor .card-box .el-col .card-item>p:nth-child(1) {
+        font-size: 14px;
+    }
+}

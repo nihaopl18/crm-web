@@ -1,0 +1,69 @@
+<!--
+  @created by hyx on 2018/7/13.
+  @updated by taoting1
+  @description 客户群成员—添加成员
+-->
+
+<div>
+        <el-row :gutter="10">
+            <!--平分两列显示不同角色信息-->
+            <el-col :span="12">
+                    <el-form-q title="未入群客户查询"  ref="nojoinform" :field-data="queryFieldsnojion" :columns="3" :buttons="queryButtonsnojion"></el-form-q>
+                <div class="yu-toolBar">
+                    <h2>待加入客户</h2>
+                    <el-button-group>
+                        <el-button icon="plus" @click="clientjoin">归入客户群</el-button>
+                        <!-- <el-button icon="plus" @click="checkPro">选择营销产品</el-button> -->
+                    </el-button-group>
+                </div>
+                <el-table-x ref="nojoin" :data-url="noJoinUrl" :table-columns="clientsView" :checkbox="true"
+                :base-params = "baseParams"  height= 360></el-table-x>
+            </el-col>
+            <el-col :span="12">
+                    <el-form-q title="群客户查询" ref="joinform" :field-data="queryFieldsjoin" :columns="3" :buttons="queryButtonsjoin"></el-form-q>
+                <div class="yu-toolBar">
+                    <h2>客户群成员列表</h2>
+                        <el-button-group>
+                            <el-button icon="yx-bookmarks" @click="opencustViewFn">客户视图</el-button>
+                                <el-button icon="yx-bin" @click="clientremove">移除群成员</el-button>
+                        </el-button-group>
+                </div>
+                <el-table-x ref="join" :data-url="joinUrl" :table-columns="joinclientsView" :checkbox="true"
+                :base-params = "baseParams" height= 360></el-table-x>
+            </el-col>
+    </el-row>
+    <!-- <el-dialog-x title="营销产品选择" :visible.sync="provisible" width="540px" height="330px">
+        <el-form-x ref="productref" :group-fields="productFields" :buttons="productButtons"></el-form-x>
+    </el-dialog-x> -->
+    <el-dialog-x title="营销产品选择" :visible.sync="provisibleupd" width="540px" height="330px">
+        <el-form-x ref="productref" :group-fields="productFieldsupd" :buttons="productButtonsupd"></el-form-x>
+    </el-dialog-x>
+    <el-dialog-x :title="uploadTitle" :visible.sync="uploadDialog" width="540px" height="330px">
+		<div id="template_tinymce">
+			<textarea ref="dataSqlTemp" cols="70" rows="15">
+				  导入注意事项：
+				  
+一. Excel文件的需严格安照模板格式(可以先下载模板)。
+二. 字段不能为空。
+三. 证件类型为数字;
+    0：境内居民身份证  1:户口簿  3:军官证 4:士兵证
+    5:港澳居民来往内地通行证 6:台湾同胞来往内地通行证,
+    7:临时身份证 8:外国人居留证 9:警官证 10:个体工商户营业执照
+    10:个体工商户营业执照 20:境内组织机构代码
+四. 客户类型为数字
+    1:个人 2：企业 
+
+			</textarea>
+		</div>
+			<el-upload style="display: inline-block;" :show-file-list="true" 
+				:multiple="false" :file-list="fileList"  
+				:action="action"  ref="verUpload" :auto-upload="false" :headers="headers" :data="uploaddata"
+				:on-success="onSuccess" :on-error="onError" :before-upload="beforeAvatarUpload">
+				<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+			  	<el-button style="margin-left: 10px;" size="small" type="success" 
+			  		@click="submitUpload">上传到服务器</el-button>
+			</el-upload>
+			<el-button style="margin-left: 10px;" size="large" type="warning" 
+			  		@click="downTable">下载模板</el-button>
+    </el-dialog-x>
+</div> 

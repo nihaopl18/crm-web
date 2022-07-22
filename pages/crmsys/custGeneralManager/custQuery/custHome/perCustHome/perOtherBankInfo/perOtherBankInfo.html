@@ -1,0 +1,267 @@
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-2-15 10:12:38.
+  @updated by
+  @description 他行信息
+-->
+<div>
+  <yu-collapse v-model="expandCollapseName">
+    <yu-collapse-item title="他行存款" name="dep">
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="plus" @click="addDepFn">新增</yu-button> 
+          <yu-button icon="edit" @click="modifyDepFn">修改</yu-button>
+          <yu-button icon="edit" @click="delDepFn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="depTable" row-number :data-url="depUrl">
+        <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+        <yu-xtable-column label="开户机构名称" prop="openBrchName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="他行存款类型" prop="deptType" width="120" data-code="CD0244"></yu-xtable-column>
+        <yu-xtable-column label="他行定期到期日" prop="tdepDueDt" width="120"></yu-xtable-column>
+        <yu-xtable-column label="账号" prop="acctId" width="150"></yu-xtable-column>
+        <yu-xtable-column label="币种" prop="currCd" width="150" data-code="CD0071"></yu-xtable-column>
+        <yu-xtable-column label="存款余额" prop="deptBal" width="120"></yu-xtable-column>
+      </yu-xtable>
+      <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+        width="800px" height="380px" -->
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="depDialogVisible" width="700px">
+        <yu-xform ref="depForm" label-width="150px" :disabled="formDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="id" name="id" ctype="input" hidden></yu-xform-item>
+            <yu-xform-item label="开户机构名称" name="openBrchName" ctype="input" :rules="rule.openBrchName"></yu-xform-item>
+            <yu-xform-item label="他行存款类型" name="deptType" ctype="select" data-code="CD0244"></yu-xform-item>
+            <yu-xform-item label="他行定期到期日" name="tdepDueDt" ctype="datepicker"></yu-xform-item>
+            <yu-xform-item label="账号" name="acctId" ctype="input" :rules="rule.acctId"></yu-xform-item>
+            <yu-xform-item label="币种" name="currCd" ctype="select" data-code="CD0071"></yu-xform-item>
+            <yu-xform-item label="存款余额" name="deptBal" ctype="input" :rules="rule.deptBal"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="depCancelFn">取消</yu-button>
+            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveDepFn">保存</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+
+      <!-- <yu-xform  ref="deprefForm" label-width="150px"  v-model="depFormdata">
+        <yu-xform-group>
+            <yu-xform-item label="开户机构名称" name="openBrchName" ctype="input" :rules="rule.openBrchName"></yu-xform-item>
+            <yu-xform-item label="他行存款类型" name="deptType" ctype="select" data-code="CD0244"</yu-xform-item>
+            <yu-xform-item label="他行定期到期日" name="tdepDueDt" ctype="datepicker"></yu-xform-item>
+            <yu-xform-item label="账号" name="acctId" ctype="input" :rules="rule.acctId"></yu-xform-item>
+            <yu-xform-item label="币种" name="currCd" ctype="select" data-code="CD0071"></yu-xform-item>
+            <yu-xform-item label="存款余额" name="deptBal" ctype="input" :rules="rule.deptBal"></yu-xform-item>
+
+        </yu-xform-group>
+      </yu-xform> -->
+    </yu-collapse-item>
+    <yu-collapse-item title="他行贷款" name="loan">
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="plus" @click="addLoanFn">新增</yu-button> 
+          <yu-button icon="edit" @click="modifyLoanFn">修改</yu-button>
+          <yu-button icon="edit" @click="delLoanFn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="loanTable" row-number :data-url="loanUrl">
+        <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+        <yu-xtable-column label="业务品种" prop="bussCd" width="120"></yu-xtable-column>
+        <yu-xtable-column label="开户机构名称" prop="openBrchName" width="120"></yu-xtable-column>
+        <yu-xtable-column label="币种" prop="currCd" width="120" data-code="CD0071"></yu-xtable-column>
+        <yu-xtable-column label="合同金额" prop="contAmt" width="150"></yu-xtable-column>
+        <yu-xtable-column label="利率" prop="execRate" width="150"></yu-xtable-column>
+        <yu-xtable-column label="余额" prop="loanBal" width="120"></yu-xtable-column>
+        <yu-xtable-column label="首付\保证金比例" prop="marginRatio" width="120"></yu-xtable-column>
+        <yu-xtable-column label="主要担保方式" prop="mainGuarCd" width="120" data-code="CD0085"></yu-xtable-column>
+        <yu-xtable-column label="抵押物" prop="mortgageNo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="质押物" prop="pledgeNo" width="120"></yu-xtable-column>
+        <yu-xtable-column label="还款方式" prop="repayWay" width="120" data-code="CD0358"></yu-xtable-column>
+        <yu-xtable-column label="起始日期" prop="startDate" width="120"></yu-xtable-column>
+        <yu-xtable-column label="到期日期" prop="endDate" width="120"></yu-xtable-column>
+        <yu-xtable-column label="是否有展期" prop="extendFlg" width="120" data-code="CD0238"></yu-xtable-column>
+        <yu-xtable-column label="是否借新还旧" prop="refinanceFlg" width="120" data-code="CD0238"></yu-xtable-column>
+        <yu-xtable-column label="诉讼状态" prop="lawsuitFlg" width="120"></yu-xtable-column>
+        <yu-xtable-column label="备注" prop="remark" width="120"></yu-xtable-column>
+        <yu-xtable-column label="有效标志" prop="validFlg" width="120" data-code="CD0238"></yu-xtable-column>
+      </yu-xtable>
+      <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+        width="800px" height="380px" -->
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="loanDialogVisible" width="700px">
+        <yu-xform ref="loanForm" label-width="150px" :disabled="formDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="id" name="id"  ctype="input" hidden></yu-xform-item>
+            <yu-xform-item label="业务品种" name="bussCd" ctype="input" placeholder="业务品种" :rules="rule.bussCd"></yu-xform-item> 
+            <yu-xform-item label="开户机构名称" name="openBrchName" ctype="input" placeholder="开户机构名称" :rules="rule.openBrchName1"></yu-xform-item> 
+            <yu-xform-item label="币种" name="currCd" ctype="select" placeholder="币种" data-code="CD0071"></yu-xform-item> 
+            <yu-xform-item label="合同金额" name="contAmt" ctype="input" placeholder="合同金额" :rules="rule.contAmt"></yu-xform-item> 
+            <yu-xform-item label="利率" name="execRate" ctype="input" placeholder="利率" ></yu-xform-item> 
+            <yu-xform-item label="余额" name="loanBal" ctype="input" placeholder="余额" :rules="rule.loanBal"></yu-xform-item> 
+            <yu-xform-item label="首付\保证金比例" name="marginRatio" ctype="input" placeholder="首付\保证金比例" :rules="rule.marginRatio"></yu-xform-item> 
+            <yu-xform-item label="主要担保方式" name="mainGuarCd" ctype="select" placeholder="主要担保方式" data-code="CD0085"></yu-xform-item> 
+            <yu-xform-item label="抵押物" name="mortgageNo" ctype="input" placeholder="抵押物" :rules="rule.mortgageNo"></yu-xform-item> 
+            <yu-xform-item label="质押物" name="pledgeNo" ctype="input" placeholder="质押物" :rules="rule.pledgeNo"></yu-xform-item> 
+            <yu-xform-item label="还款方式" name="repayWay" ctype="select" placeholder="还款方式" data-code="CD0358"></yu-xform-item> 
+            <yu-xform-item label="起始日期" name="startDate" ctype="datepicker" placeholder="起始日期"></yu-xform-item> 
+            <yu-xform-item label="到期日期" name="endDate" ctype="datepicker" placeholder="到期日期"></yu-xform-item> 
+            <yu-xform-item label="是否有展期" name="extendFlg" ctype="select" placeholder="是否有展期" data-code="CD0238"></yu-xform-item> 
+            <yu-xform-item label="是否借新还旧" name="refinanceFlg" ctype="select" placeholder="是否借新还旧" data-code="CD0238"></yu-xform-item> 
+            <yu-xform-item label="诉讼状态" name="lawsuitFlg" ctype="input" placeholder="诉讼状态"></yu-xform-item> 
+            <yu-xform-item label="备注" name="remark" ctype="textarea":colspan="24" placeholder="备注" :rules="rule.remark"></yu-xform-item> 
+            <yu-xform-item label="有效标志" name="validFlg" ctype="select" placeholder="有效标志" data-code="CD0238"></yu-xform-item> 
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="loanCancelFn">取消</yu-button>
+            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveLoanFn">保存</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+
+
+        <!-- <yu-xform ref="loanrefForm" label-width="120px"  v-model="loanformdata" >
+            <yu-xform-group>
+                <yu-xform-item label="业务品种" name="bussCd" ctype="input" placeholder="业务品种" :rules="rule.bussCd"></yu-xform-item> 
+                <yu-xform-item label="开户机构名称" name="openBrchName" ctype="input" placeholder="开户机构名称" :rules="rule.openBrchName1"></yu-xform-item> 
+                <yu-xform-item label="币种" name="currCd" ctype="select" placeholder="币种" data-code="CD0071"></yu-xform-item> 
+                <yu-xform-item label="合同金额" name="contAmt" ctype="input" placeholder="合同金额" :rules="rule.contAmt"></yu-xform-item> 
+                <yu-xform-item label="利率" name="execRate" ctype="input" placeholder="利率" ></yu-xform-item> 
+                <yu-xform-item label="余额" name="loanBal" ctype="input" placeholder="余额" :rules="rule.loanBal"></yu-xform-item> 
+                <yu-xform-item label="首付\保证金比例" name="marginRatio" ctype="input" placeholder="首付\保证金比例" :rules="rule.marginRatio"></yu-xform-item> 
+                <yu-xform-item label="主要担保方式" name="mainGuarCd" ctype="select" placeholder="主要担保方式" data-code="CD0085"></yu-xform-item> 
+                <yu-xform-item label="抵押物" name="mortgageNo" ctype="input" placeholder="抵押物" :rules="rule.mortgageNo"></yu-xform-item> 
+                <yu-xform-item label="质押物" name="pledgeNo" ctype="input" placeholder="质押物" :rules="rule.pledgeNo"></yu-xform-item> 
+                <yu-xform-item label="还款方式" name="repayWay" ctype="select" placeholder="还款方式" data-code="CD0358"></yu-xform-item> 
+                <yu-xform-item label="起始日期" name="startDate" ctype="datepicker" placeholder="起始日期"></yu-xform-item> 
+                <yu-xform-item label="到期日期" name="endDate" ctype="datepicker" placeholder="到期日期"></yu-xform-item> 
+                <yu-xform-item label="是否有展期" name="extendFlg" ctype="select" placeholder="是否有展期" data-code="CD0238"></yu-xform-item> 
+                <yu-xform-item label="是否借新还旧" name="refinanceFlg" ctype="select" placeholder="是否借新还旧" data-code="CD0238"></yu-xform-item> 
+                <yu-xform-item label="诉讼状态" name="lawsuitFlg" ctype="input" placeholder="诉讼状态"></yu-xform-item> 
+              
+                <yu-xform-item label="备注" name="remark" ctype="textarea":colspan="24" placeholder="备注" :rules="rule.remark"></yu-xform-item> 
+                <yu-xform-item label="有效标志" name="validFlg" ctype="select" placeholder="有效标志" data-code="CD0242"></yu-xform-item> 
+            </yu-xform-group>
+            
+          </yu-xform> -->
+    </yu-collapse-item>
+    <yu-collapse-item title="他行理财" name="fina">
+        <div class="yu-toolBar">
+            <yu-button-group>
+              <yu-button icon="plus" @click="addFinaFn">新增</yu-button> 
+              <yu-button icon="edit" @click="modifyFinaFn">修改</yu-button>
+              <yu-button icon="edit" @click="delFinaFn">删除</yu-button>
+            </yu-button-group>
+          </div>
+          <yu-xtable ref="finaTable" row-number :data-url="finaUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="账号" prop="account" width="120"></yu-xtable-column>
+            <yu-xtable-column label="理财产品类型(保本\非保本)" prop="finProType" width="120"></yu-xtable-column>
+            <yu-xtable-column label="购买金额" prop="purAmo" width="120"></yu-xtable-column>
+            <yu-xtable-column label="预期收益率" prop="expRateOfRet" width="150"></yu-xtable-column>
+            <yu-xtable-column label="期限" prop="term" width="150"></yu-xtable-column>
+            <yu-xtable-column label="购买日期" prop="purDate" width="120"></yu-xtable-column>
+            <yu-xtable-column label="到期日期" prop="expDate" width="120"></yu-xtable-column>
+            <yu-xtable-column label="购买银行" prop="buyBank" width="120"></yu-xtable-column>
+          </yu-xtable>
+          <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+          <yu-xdialog :title="viewTitle[viewType]" :visible.sync="finaDialogVisible" width="700px">
+            <yu-xform ref="finaForm" label-width="150px" :disabled="formDisabled">
+              <yu-xform-group>
+                  <yu-xform-item label="id" name="id"  ctype="input" hidden></yu-xform-item>
+                  <yu-xform-item label="账号" name="account" ctype="input" placeholder="账号" :rules="rule.account"></yu-xform-item> 
+                  <yu-xform-item label="理财产品类型(保本\非保本)" name="finProType" ctype="select" placeholder="理财产品类型(保本\非保本)" data-code="CD0192"></yu-xform-item> 
+                  <yu-xform-item label="购买金额" name="purAmo" ctype="input" placeholder="购买金额" :rules="rule.purAmo"></yu-xform-item> 
+                  <yu-xform-item label="预期收益率" name="expRateOfRet" ctype="input" placeholder="预期收益率" :rules="rule.expRateOfRet"></yu-xform-item> 
+                  <yu-xform-item label="期限" name="term" ctype="input" placeholder="期限" :rules="rule.term"></yu-xform-item> 
+                  <yu-xform-item label="购买日期" name="purDate" ctype="datepicker" placeholder="购买日期"></yu-xform-item> 
+                  <yu-xform-item label="到期日期" name="expDate" ctype="datepicker" placeholder="到期日期"></yu-xform-item> 
+                  <yu-xform-item label="购买银行" name="buyBank" ctype="input" placeholder="购买银行" :rules="rule.buyBank"></yu-xform-item> 
+              </yu-xform-group>
+              <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="finaCancelFn">取消</yu-button>
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFinaFn">保存</yu-button>
+              </div>
+            </yu-xform>
+          </yu-xdialog>
+
+        <!-- <yu-xform ref="finarefForm" label-width="170px"  v-model="finaformdata" >
+            <yu-xform-group>
+                <yu-xform-item label="账号" name="account" ctype="input" placeholder="账号" :rules="rule.account"></yu-xform-item> 
+                <yu-xform-item label="理财产品类型(保本\非保本)" name="finProType" ctype="select" placeholder="理财产品类型(保本\非保本)" data-code="CD0192"></yu-xform-item> 
+                <yu-xform-item label="购买金额" name="purAmo" ctype="input" placeholder="购买金额" :rules="rule.purAmo"></yu-xform-item> 
+                <yu-xform-item label="预期收益率" name="expRateOfRet" ctype="input" placeholder="预期收益率" :rules="rule.expRateOfRet"></yu-xform-item> 
+                <yu-xform-item label="期限" name="term" ctype="input" placeholder="期限" :rules="rule.term"></yu-xform-item> 
+                <yu-xform-item label="购买日期" name="purDate" ctype="datepicker" placeholder="购买日期"></yu-xform-item> 
+                <yu-xform-item label="到期日期" name="expDate" ctype="datepicker" placeholder="到期日期"></yu-xform-item> 
+                <yu-xform-item label="购买银行" name="buyBank" ctype="input" placeholder="购买银行" :rules="rule.buyBank"></yu-xform-item> 
+        
+            </yu-xform-group>
+          
+          </yu-xform> -->
+    </yu-collapse-item>
+    <yu-collapse-item title="他行担保" name="guar">
+        <div class="yu-toolBar">
+            <yu-button-group>
+              <yu-button icon="plus" @click="addGuarFn">新增</yu-button> 
+              <yu-button icon="edit" @click="modifyGuarFn">修改</yu-button>
+              <yu-button icon="edit" @click="delGuarFn">删除</yu-button>
+            </yu-button-group>
+          </div>
+          <yu-xtable ref="guarTable" row-number :data-url="guarUrl">
+            <yu-xtable-column label="id" prop="id" width="120" v-if=false></yu-xtable-column>
+            <yu-xtable-column label="被担保人名称" prop="byGuaName" width="120"></yu-xtable-column>
+            <yu-xtable-column label="担保方式" prop="guaMet" width="120" data-code="CD0085"></yu-xtable-column>
+            <yu-xtable-column label="担保业务描述" prop="guaBusDes" width="120"></yu-xtable-column>
+            <yu-xtable-column label="担保金额" prop="guaAmo" width="150"></yu-xtable-column>
+            <yu-xtable-column label="担保余额" prop="guaBal" width="150"></yu-xtable-column>
+            <yu-xtable-column label="起始日期" prop="startDate" width="120"></yu-xtable-column>
+            <yu-xtable-column label="到期日期" prop="expDate" width="120"></yu-xtable-column>
+            <yu-xtable-column label="银行详细名称" prop="bankDetName" width="120"></yu-xtable-column>
+            <yu-xtable-column label="备注" prop="note" width="120"></yu-xtable-column>
+            <yu-xtable-column label="有效标志" prop="validLogo" width="120" data-code="CD0238"></yu-xtable-column>
+          </yu-xtable>
+          <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="800px" height="380px" -->
+          <yu-xdialog :title="viewTitle[viewType]" :visible.sync="guarDialogVisible" width="700px">
+            <yu-xform ref="guarForm" label-width="150px" :disabled="formDisabled">
+              <yu-xform-group>
+                <yu-xform-item label="id" name="id"  ctype="input" hidden></yu-xform-item>
+                <yu-xform-item label="被担保人名称" name="byGuaName" ctype="input" placeholder="被担保人名称" :rules="rule.byGuaName"></yu-xform-item> 
+                <yu-xform-item label="担保方式" name="guaMet" ctype="select" placeholder="担保方式" data-code="CD0085"></yu-xform-item> 
+                <yu-xform-item label="担保业务描述"  name="guaBusDes" ctype="input" placeholder="担保业务描述" :rules="rule.guaBusDes"></yu-xform-item> 
+                <yu-xform-item label="担保金额" name="guaAmo" ctype="input" placeholder="担保金额" :rules="rule.guaAmo"></yu-xform-item> 
+                <yu-xform-item label="担保余额" name="guaBal" ctype="input" placeholder="担保余额" :rules="rule.guaBal"></yu-xform-item> 
+                <yu-xform-item label="起始日期" name="startDate" ctype="datepicker" placeholder="起始日期"></yu-xform-item> 
+                <yu-xform-item label="到期日期" name="expDate" ctype="datepicker" placeholder="到期日期"></yu-xform-item> 
+                <yu-xform-item label="银行详细名称"  name="bankDetName" ctype="input" placeholder="银行详细名称" :rules="rule.bankDetName"></yu-xform-item> 
+                <yu-xform-item label="备注"  name="note" ctype="textarea":colspan="24" placeholder="备注" :rules="rule.note"></yu-xform-item> 
+                <yu-xform-item label="有效标志" name="validLogo" ctype="select" placeholder="有效标志" data-code="CD0238"></yu-xform-item> 
+              </yu-xform-group>
+              <div class="yu-grpButton">
+                <yu-button icon="yx-undo2" type="primary" @click="guarCancelFn">取消</yu-button>
+                <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveGuarFn">保存</yu-button>
+              </div>
+            </yu-xform>
+          </yu-xdialog>
+
+        <!-- <yu-xform ref="guarrefForm" label-width="120px"  v-model="guarformdata" class="yu-form-gap">
+            <yu-xform-group>
+                <yu-xform-item label="被担保人名称" name="byGuaName" ctype="input" placeholder="被担保人名称" :rules="rule.byGuaName"></yu-xform-item> 
+                <yu-xform-item label="担保方式" name="guaMet" ctype="select" placeholder="担保方式"></yu-xform-item> 
+                <yu-xform-item label="担保业务描述"  name="guaBusDes" ctype="input" placeholder="担保业务描述" :rules="rule.guaBusDes"></yu-xform-item> 
+                <yu-xform-item label="担保金额元" name="guaAmo" ctype="input" placeholder="担保金额元" :rules="rule.guaAmo"></yu-xform-item> 
+                <yu-xform-item label="担保余额元" name="guaBal" ctype="input" placeholder="担保余额元" :rules="rule.guaBal"></yu-xform-item> 
+                <yu-xform-item label="起始日期" name="startDate" ctype="datepicker" placeholder="起始日期"></yu-xform-item> 
+                <yu-xform-item label="到期日期" name="expDate" ctype="datepicker" placeholder="到期日期"></yu-xform-item> 
+                <yu-xform-item label="银行详细名称"  name="bankDetName" ctype="input" placeholder="银行详细名称" :rules="rule.bankDetName"></yu-xform-item> 
+               
+                <yu-xform-item label="备注"  name="note" ctype="textarea":colspan="24" placeholder="备注" :rules="rule.note"></yu-xform-item> 
+                <yu-xform-item label="有效标志" name="validLogo" ctype="select" placeholder="有效标志" data-code="CD0242"></yu-xform-item> 
+            </yu-xform-group>
+           
+          </yu-xform> -->
+    </yu-collapse-item>
+  </yu-collapse>
+  <!-- <div class="yu-grpButton">
+      <yu-button icon="check" type="primary" @click="saveFn" v-if="saveBtn">保存</yu-button>
+    
+    </div> -->
+</div>

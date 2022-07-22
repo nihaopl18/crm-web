@@ -1,0 +1,12 @@
+.form-item{
+  padding: 10px;
+}
+.form-group{
+  height: 450px;
+}
+.legal-person{
+  position: absolute;
+  left: 31%;
+  bottom: 160px;
+  font-size: 14px;
+}

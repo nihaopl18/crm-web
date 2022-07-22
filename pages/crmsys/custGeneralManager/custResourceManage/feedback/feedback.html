@@ -1,0 +1,73 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!--
+  @created by  on 2019-1-21 18:28:07
+  @updated by
+  @description feedback
+-->
+<div id="feedback_grid">
+  <el-form-q :field-data="queryFields" :buttons='queryButtons'></el-form-q>
+  <el-button-group>
+    <el-button icon="document" @click="infoFn" v-if="infoBtn">客户反馈清单</el-button>
+    <el-button icon="document" @click="addBack" v-if="addBackBtn">客户反馈新增</el-button>
+  </el-button-group>
+  <el-table-x ref="reftable" :radiobox="true" :data-url="serviceUrl" :table-columns="tableColumns" :default-load="false"></el-table-x>
+  <el-dialog-x :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1000px">
+    <el-form-q :field-data="queryFields2" :buttons='queryButtons2'></el-form-q>
+    <div class="yu-toolBar">
+      <el-button-group>
+        <el-button icon="plus" @click="addFn" v-if="addBtn">反馈登记</el-button>
+        <el-button icon="edit" @click="editFn" v-if="editBtn">反馈修改</el-button>
+        <el-button icon="document" @click="detailFn" v-if="detailBtn">详情</el-button>
+        <el-button icon="yx-quill" @click="modifyFn" v-if="modifyBtn">反馈处理</el-button>
+        <el-button icon="delete" @click="deleteFn" v-if="deleteBtn">反馈删除</el-button>
+      </el-button-group>
+    </div>
+    <el-table-x ref="reform" :data-url="serviceUrl2" :table-columns="tableColumns2" :default-load="false"></el-table-x>
+    <el-dialog-x :title="viewTitle[viewType2]" :visible.sync="dialogVisible2" width="700px" append-to-body>
+      <el-form-x ref="reform2" :group-fields="updateFields" :buttons="updateButtons" :disabled="formDisabled" label-width="120px"></el-form-x>
+    </el-dialog-x>
+  </el-dialog-x>
+  <el-dialog-x title="新增客户反馈" :visible.sync="xinzeng" width="1000px" append-to-body  top="10vh">
+      <yu-xform ref="refForm" label-width="150px"  v-model="formdata" class="yu-form-gap" >
+        <yu-xform-group :column="3">
+          <yu-xform-item label="法人" name="corpOrgCode" ctype="input" placeholder="法人"  :hidden="true"></yu-xform-item> 
+          <yu-xform-item label="客户号" name="custId" ctype="input" placeholder="客户号" :hidden="true"></yu-xform-item> 
+          <yu-xform-item label="客户名称" ctype="yufp-governed-cust-selector" name="custName" rules="required" 
+          :params="selectCustParams" @select-fn="custSelFn" :disabled="false"></yu-xform-item>          
+          <yu-xform-item label="反馈类型" name="feedbackType" ctype="select" placeholder="反馈类型" rules="required" data-code="CD0436"></yu-xform-item> 
+          <yu-xform-item label="反馈渠道" name="feedbackChg" ctype="select" placeholder="反馈渠道" data-code="CD0438" rules="required"></yu-xform-item> 
+          <yu-xform-item label="工单来源" name="workOrderSource" ctype="input" placeholder="工单来源"></yu-xform-item> 
+          <yu-xform-item label="紧急程度" name="emergencyLevel" ctype="input" placeholder="紧急程度"></yu-xform-item> 
+          <yu-xform-item label="处理有效期" name="expiryDate" ctype="datepicker" placeholder="处理有效期"></yu-xform-item> 
+          <yu-xform-item label="处理人名称" name="conductorId" ctype="yufp-user-selector" placeholder="处理人名称" @select-fn="userSelFn" :params="params"></yu-xform-item> 
+          <yu-xform-item label="处理人名称" name="conductorName" ctype="input"  :hidden="true"></yu-xform-item> 
+          <yu-xform-item label="待处理机构编号" name="conductorOrgId" ctype="input" placeholder="待处理机构编号" :hidden="true"></yu-xform-item> 
+          <yu-xform-item label="待处理机构名称" name="conductorOrgName" ctype="input" placeholder="" :disabled="true"></yu-xform-item> 
+          <yu-xform-item label="处理所需资源" name="needResource" ctype="input" placeholder="处理所需资源"></yu-xform-item> 
+          <yu-xform-item label="客户卡号/账号" name="acctNo" ctype="input" placeholder="客户卡号/账号"></yu-xform-item> 
+          <yu-xform-item label="客户联系电话" name="custPhoneNo" ctype="input" placeholder="客户联系电话"></yu-xform-item> 
+          <yu-xform-item label="客户性别" name="custSex" ctype="select" placeholder="客户性别" data-code="SEX_TYPE"></yu-xform-item> 
+          <yu-xform-item label="被投诉员工姓名" name="complainEmpId" ctype="yufp-user-selector" placeholder="被投诉员工姓名" @select-fn="userSelFn2" :params="params"></yu-xform-item> 
+          <yu-xform-item label="被投诉员工姓名" name="complainEmpName" ctype="yufp-user-selector" placeholder="被投诉员工姓名" :hidden="true"></yu-xform-item> 
+          <yu-xform-item label="处理时间" name="conductTm" ctype="datepicker" placeholder="处理时间"></yu-xform-item> 
+          <yu-xform-item label="反馈标题" :rows="1" :colspan="24" name="feedbackTitle" ctype="textarea" placeholder="反馈标题" rules="required"></yu-xform-item>
+          <yu-xform-item label="反馈内容" :rows="3" :colspan="24" name="feedbackContent" ctype="textarea" placeholder="反馈内容" rules="required"></yu-xform-item> 
+          <yu-xform-item label="投诉内同" :rows="3" :colspan="24" name="complainContent" ctype="textarea" placeholder="投诉内同"></yu-xform-item> 
+          <yu-xform-item label="支行调查结果" :rows="3" :colspan="24" name="checkResult" ctype="textarea" placeholder="支行调查结果"></yu-xform-item> 
+        </yu-xform-group>
+        <div class="yu-grpButton">
+            <!-- <yufp-upload-table ref="fileTable" :data-params="initFilesParams" :data ="fileUpLoadBusNo" :multiple="false"
+            :upload-visible="fileBtnVisible" :download-visible="fileBtnVisible1" :delete-visible="fileBtnVisible" 
+            :before-upload="beforeFileUpload" :success-fn="uploadSuccessFn"></yufp-upload-table> -->
+            <yu-button icon="yx-undo2" type="primary" @click="cancleFn">取消</yu-button>
+            <yu-button icon="yx-loop2" type="primary"  @click="resetFn">重置</yu-button>
+          <yu-button icon="check" type="primary" @click="saveFn">保存</yu-button>
+        </div>
+      </yu-xform>
+  </el-dialog-x>
+</div>

@@ -1,0 +1,10 @@
+
+<div >
+    <el-card class= "box-card" >
+        <div slot= "header" class= "clearfix" >
+            <span >审批历史信息</span>
+        </div>
+        <el-table-x ref="HistoryList"  :data-url="urls.dataUrl" :pageable=false :request-type="requestType" :base-params="dataParams" :table-columns="tableColumns"
+        ></el-table-x>
+    </el-card>
+</div>

@@ -1,0 +1,39 @@
+<!-- 
+  @Created by 闫天一 yanty1@yusys.com.cn on 2019-1-30 16:20:46.
+  @updated by
+  @description 产品视图-产品基本信息
+-->
+<div>
+  <h2 class="yu-formTitle" style="margin-top: 10px;">产品基本信息</h2>
+  <yu-xform ref="refForm" label-width="120px"  v-model="formdata" class="yu-form-gap">
+    <yu-xform-group>
+      <yu-xform-item label="产品编号" name="productId" ctype="input" :disabled="true"></yu-xform-item>
+      <yu-xform-item label="产品名称" name="prodName" ctype="input" :rules="rule.prodName"></yu-xform-item>
+      <yu-xform-item label="产品分类" name="catlCode" ctype="yufp-prod-tree" :rules="rule.catlCode"></yu-xform-item>
+      <yu-xform-item label="是否在售" name="prodState" ctype="select" data-code="CD0242" :rules="rule.prodState"></yu-xform-item>
+      <yu-xform-item label="风险等级" name="riskLevel" ctype="select" data-code="CD0201" :rules="rule.riskLevel"></yu-xform-item>
+      <yu-xform-item label="利率" name="rate" ctype="input" :rules="rule.rate"></yu-xform-item>
+      <yu-xform-item label="费率" name="freeRate" ctype="input" :rules="rule.freeRate"></yu-xform-item>
+      <yu-xform-item label="产品期限" name="prodTerm" ctype="input" :rules="rule.prodTerm"></yu-xform-item>
+      <yu-xform-item label="币种" name="cuyyenType" ctype="select" data-code="CD0071" :rules="rule.cuyyenType"></yu-xform-item>
+      <yu-xform-item label="是否需要双录" name="isMultiRecord" ctype="select" data-code="CD0242" :rules="rule.isMultiRecord"></yu-xform-item>
+      <yu-xform-item label="产品发布日期" name="prodStartDate" ctype="datepicker" :editable="false"></yu-xform-item>
+      <yu-xform-item label="产品截止日期" name="prodEndDate" ctype="datepicker" :editable="false"></yu-xform-item>
+      <yu-xform-item label="认购起点金额" name="subscribeStartAmt" ctype="input" :rules="rule.subscribeStartAmt"></yu-xform-item>  
+    </yu-xform-group>
+      <yu-xform-group :column="1">
+      <yu-xform-item label="简介" name="prodDesc" ctype="textarea" :rules="rule.prodDesc"></yu-xform-item>
+      <yu-xform-item label="产品特点" name="prodCharact" ctype="textarea" :rules="rule.prodCharact"></yu-xform-item>
+      <yu-xform-item label="适用对象" name="appObj" ctype="textarea" :rules="rule.appObj"></yu-xform-item>
+      <yu-xform-item label="办理条件" name="buyCondition" ctype="textarea" :rules="rule.buyCondition"></yu-xform-item>
+      <yu-xform-item label="业务流程" name="handProcess" ctype="textarea" :rules="rule.handProcess"></yu-xform-item>
+      <yu-xform-item label="办理渠道" name="handChannle" ctype="textarea" :rules="rule.handChannle"></yu-xform-item>
+      <yu-xform-item label="优惠信息" name="discntInfo" ctype="textarea" :rules="rule.discntInfo"></yu-xform-item>
+      <yu-xform-item label="一句话营销话术" name="mktMsg" ctype="textarea" :rules="rule.mktMsg"></yu-xform-item>
+      <yu-xform-item label="备注" name="remark" ctype="textarea" :rules="rule.remark"></yu-xform-item>
+    </yu-xform-group>
+    <div class="yu-grpButton">
+      <yu-button icon="check" type="primary" @click="saveFn" v-if="saveBtn">保存</yu-button>
+    </div>
+  </yu-xform>
+</div>

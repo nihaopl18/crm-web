@@ -1,0 +1,20 @@
+<!--
+  @created by 刘杰 on 2018/11/19.
+  @description 营销组件FORM表单-触发组件-时间触发
+-->
+<div>
+  <yu-xform label-width="100px" label-suffix="：" v-model="formdata2">
+    <yu-xform-group>
+      <yu-xform-item label="频率" ctype="select" :options="selectValue" name="number"></yu-xform-item>
+      <yu-xform-item label="月份" ctype="select" name="title" :options="selectValue1"></yu-xform-item>
+      <yu-xform-item label="日期" ctype="select" name="type" :options="selectValue2"></yu-xform-item>
+      <yu-xform-item label="时间" ctype="timepicker" :options="selectValue2" name="status"></yu-xform-item>
+    </yu-xform-group>
+    <div class="yu-toolBar" style="margin-top: 10px;">
+      <el-button-group>
+        <el-button icon="edit" @click="">保存</el-button>
+        <el-button icon="yx-switch" @click="close">关闭</el-button>
+      </el-button-group>
+    </div>
+  </yu-xform>
+</div>

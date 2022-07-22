@@ -1,0 +1,206 @@
+/**
+ * @created by 冉珣 on 2021-11-1 14:59:51
+ * @updated by
+ * @description 业绩查看
+ */
+ .performa_view {
+  background: #f0f0f0;
+ }
+ .performa_view .top-kanban .top-circle,
+.performa_view .top-kanban .bottom-circle {
+  display: flex;
+  padding: 30px 0;
+}
+
+.performa_view .top-kanban .bottom-circle {
+  border-top: 1px solid #eceef5;
+}
+
+.performa_view .top-kanban .top-circle>div,
+.performa_view .top-kanban .bottom-circle>div {
+  flex: 1;
+  display: flex;
+  padding-left: 30px;
+}
+
+.performa_view .top-kanban .top-circle>div .percent,
+.performa_view .top-kanban .bottom-circle>div .percent {
+  font-size: 18px;
+  color: #303133;
+  line-height: 32px;
+  font-weight: 500;
+}
+
+.performa_view .top-kanban .top-circle>div .percent>span,
+.performa_view .top-kanban .bottom-circle>div .percent>span {
+  font-size: 12px;
+  color: #303133;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.performa_view .top-kanban .top-circle>div .desc,
+.performa_view .top-kanban .bottom-circle>div .desc,
+  {
+  font-size: 12px;
+  color: #909399;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.performa_view .top-kanban .top-circle>div:first-child {
+  position: relative;
+}
+
+.performa_view .top-kanban .top-circle>div:nth-child(2),
+.performa_view .top-kanban .bottom-circle>div:nth-child(2) {
+  border-right: 1px solid #eceef5;
+  border-left: 1px solid #eceef5;
+  height: 100px;
+}
+
+.performa_view .top-kanban .top-circle>div .left-content,
+.performa_view .top-kanban .bottom-circle>div .left-content {
+  margin-left: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  padding-right: 10px;
+}
+
+.performa_view .top-kanban .top-circle>div .left-content .title-detail,
+.performa_view .top-kanban .bottom-circle>div .left-content .title-detail {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.performa_view .top-kanban .top-circle>div .left-content .title-detail div,
+.performa_view .top-kanban .bottom-circle>div .left-content .title-detail div {
+ color: #909399;
+}
+
+.performa_view .top-kanban .top-circle .time-select {
+  position: absolute;
+  right: 10px;
+}
+
+.performa_view .top-kanban .top-circle .time-select li {
+  float: left;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.performa_view .top-kanban .top-circle .time-select li.active {
+  color: #E82F3D
+}
+
+.performa_view .top-kanban .top-circle .time-select li:nth-child(2) {
+  border-left: 1px solid #E5E7ED;
+  border-right: 1px solid #E5E7ED;
+}
+
+.performa_view .top-kanban .top-circle>div .left-content>p:first-child,
+.performa_view .top-kanban .bottom-circle>div .left-content>p:first-child {
+  font-size: 14px;
+  color: #606266;
+}
+
+.performa_view .top-kanban .top-circle>div .left-content>p:nth-child(2),
+.performa_view .top-kanban .bottom-circle>div .left-content>p:nth-child(2) {
+  font-size: 18px;
+  color: #303133;
+  line-height: 32px;
+  font-weight: 500;
+}
+
+.performa_view .top-kanban .bottom-circle>div .left-content .compare,
+.performa_view .top-kanban .top-circle>div .left-content .compare {
+  display: flex;
+}
+
+.performa_view .top-kanban .bottom-circle>div .left-content .compare div,
+.performa_view .top-kanban .top-circle>div .left-content .compare div {
+  color: #606266;
+}
+ .option-container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+
+.option-container .box-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.option-container .box-title .title {
+  font-family: PingFangSC-Semibold;
+  font-size: 16px;
+  color: #303133;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.option-container .box-title .more {
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #909399;
+  text-align: right;
+  line-height: 18px;
+  font-weight: 400;
+  cursor: pointer;
+}
+.red {
+  color: #E82F3D;
+}
+.green{
+  color: #13BF4F
+}
+.performa_view .echartBox .echartsItem {
+  display: flex;
+  justify-content: space-around;
+}
+.performa_view .echartBox .echartsItem p::before{
+  display: inline-block;
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.performa_view .echartBox .echartsItem p:nth-child(1):before{
+  background: #F06C7F;
+}
+.performa_view .echartBox .echartsItem p:nth-child(2):before{
+  background: #A660BD;
+}
+.performa_view .echartBox .echartsItem p:nth-child(3):before{
+  background: #3178F5;
+}
+.performa_view .echartBox .echartsItem p span{
+  font-size: 12px;
+  color: #606266;
+  margin-left: 8px;
+}
+
+@media screen and (min-width: 1440px) {
+  .performa_view .top-cardBox>div {
+    font-size: 14px;
+  }
+
+  .performa_view .top-cardBox>div .count {
+    font-size: 24px;
+  }
+
+  .performa_view .top-kanban .top-circle>div .percent,
+  .performa_view .top-kanban .top-circle>div .left-content>p:nth-child(2),
+  .performa_view .top-kanban .bottom-circle>div .left-content>p:nth-child(2),
+  .performa_view .top-kanban .bottom-circle>div .percent {
+    font-size: 24px;
+  }
+}

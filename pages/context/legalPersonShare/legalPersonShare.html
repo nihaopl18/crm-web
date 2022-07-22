@@ -1,0 +1,131 @@
+<!-- 
+  @Created by zhanghan zhanghan3@yusys.com.cn on 2019-5-17 14:32:41.
+  @updated by
+  @description 法人成本分摊
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="活动名称" name="activityName" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="数据日期" name="dataDate" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group> 
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <!-- <yu-button icon="yx-file-excel" @click="exportFn">导出</yu-button> -->
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+    <yu-xtable-column label="ID" prop="id" width="120"></yu-xtable-column>
+    <yu-xtable-column label="法人机构" prop="legalPerson" width="120"></yu-xtable-column>
+    <yu-xtable-column label="费用汇总" prop="totalCost" width="100"></yu-xtable-column>
+    <yu-xtable-column label="积分汇总" prop="integralCost" width="100"></yu-xtable-column>
+    <yu-xtable-column label="积分费用汇总" prop="integralTotalCost" width="100"></yu-xtable-column>
+    <yu-xtable-column label="卡券数量汇总" prop="cardTotalNum" width="100"></yu-xtable-column>
+    <yu-xtable-column label="卡券费用汇总" prop="cardTotalCost" width="120"></yu-xtable-column>
+    <yu-xtable-column label="礼品数量汇总" prop="giftTotalNum" width="120"></yu-xtable-column>
+    <yu-xtable-column label="礼品费用汇总" prop="giftTotalCost" width="120"></yu-xtable-column>
+    <yu-xtable-column label="数据日期" prop="dataDate"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog title="法人分摊活动明细" :visible.sync="dialogVisible" width="800px">
+    <yu-xform related-table-name="activitySearchTable" form-type="search">
+      <yu-xform-group :column="4">
+        <yu-xform-item placeholder="活动名称" name="activityName" ctype="input"></yu-xform-item>
+        <yu-xform-item placeholder="数据日期" name="dataDate" ctype="input"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <div class="yu-toolBar">
+      <yu-button-group> 
+        <yu-button icon="document" @click="activityInfoFn">详情</yu-button>
+        <!-- <yu-button icon="yx-file-excel" @click="exportFn">导出</yu-button> -->
+      </yu-button-group>
+    </div>
+    <yu-xtable ref="activityTable" row-number :data-url="activityDataUrl">
+      <yu-xtable-column label="ID" prop="id" width="120"></yu-xtable-column>
+      <yu-xtable-column label="法人机构" prop="legalPerson" width="120"></yu-xtable-column>
+      <yu-xtable-column label="活动名称" prop="activityName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="费用汇总" prop="totalCost" width="100"></yu-xtable-column>
+      <yu-xtable-column label="积分汇总" prop="integralCost" width="100"></yu-xtable-column>
+      <yu-xtable-column label="积分费用汇总" prop="integralTotalCost" width="100"></yu-xtable-column>
+      <yu-xtable-column label="卡券数量汇总" prop="cardTotalNum" width="100"></yu-xtable-column>
+      <yu-xtable-column label="卡券费用汇总" prop="cardTotalCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品数量汇总" prop="giftTotalNum" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品费用汇总" prop="giftTotalCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="数据日期" prop="dataDate"></yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+<!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+      width="650px" height="380px" -->
+  <yu-xdialog title="法人成本分摊活动客户明细" :visible.sync="legalDialogVisible" width="800px">
+    <yu-xform related-table-name="legalActivitySearchTable" form-type="search">
+      <yu-xform-group :column="4">
+        <yu-xform-item placeholder="活动名称" name="activityName" ctype="input"></yu-xform-item>
+        <yu-xform-item placeholder="数据日期" name="dataDate" ctype="input"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <div class="yu-toolBar">
+      <yu-button-group> 
+        <yu-button icon="document" @click="custInfoFn">详情</yu-button>
+        <!-- <yu-button icon="yx-file-excel" @click="exportFn">导出</yu-button> -->
+      </yu-button-group>
+    </div>
+    <yu-xtable ref="legalActivitySearchTable" row-number :data-url="activityDataUrl">
+      <yu-xtable-column label="法人机构" prop="legalPerson" width="120"></yu-xtable-column>
+      <yu-xtable-column label="活动名称" prop="activityName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="机构名称" prop="orgName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="客户名称" prop="custName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="费用汇总" prop="totalCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="积分汇总" prop="integralCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="积分费用汇总" prop="integralTotalCost" width="100"></yu-xtable-column>
+      <yu-xtable-column label="卡券数量汇总" prop="cardTotalNum" width="100"></yu-xtable-column>
+      <yu-xtable-column label="卡券费用汇总" prop="cardTotalCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品数量汇总" prop="giftTotalNum" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品费用汇总" prop="giftTotalCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="数据日期" prop="dataDate"></yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+  <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+    width="650px" height="380px" -->
+  <yu-xdialog title="法人成本分摊活动单个客户明细" :visible.sync="siginDialogVisible" width="800px">
+    <!-- <div class="yu-toolBar">
+      <yu-button-group> 
+        <yu-button icon="yx-file-excel" @click="exportFn">导出</yu-button>
+      </yu-button-group>
+    </div> -->
+    <yu-xtable ref="siginCustTable" row-number :data-url="activityDataUrl">
+      <yu-xtable-column label="订单日期" prop="legalPerson" width="120"></yu-xtable-column>
+      <yu-xtable-column label="订单编号" prop="legalPerson" width="120"></yu-xtable-column>
+      <yu-xtable-column label="订单来源渠道" prop="legalPerson" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品供应商编号" prop="legalPerson" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品供应商" prop="activityName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品编号" prop="orgName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品类型" prop="custName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品名称" prop="totalCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品规格" prop="integralCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="兑换数量" prop="totalCost" width="100"></yu-xtable-column>
+      <yu-xtable-column label="积分单价" prop="cardTotalNum" width="100"></yu-xtable-column>
+      <yu-xtable-column label="现金单价" prop="cardTotalCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="积分总价" prop="giftTotalNum" width="120"></yu-xtable-column>
+      <yu-xtable-column label="现金总价" prop="giftTotalCost" width="120"></yu-xtable-column>
+    </yu-xtable>
+    <yu-xtable ref="siginCustTable" row-number :data-url="activityDataUrl">
+      <yu-xtable-column label="订单日期" prop="legalPerson" width="120"></yu-xtable-column>
+      <yu-xtable-column label="订单编号" prop="legalPerson" width="120"></yu-xtable-column>
+      <yu-xtable-column label="订单来源渠道" prop="legalPerson" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品供应商编号" prop="legalPerson" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品供应商" prop="activityName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品编号" prop="orgName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品类型" prop="custName" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品名称" prop="totalCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="礼品规格" prop="integralCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="兑换数量" prop="totalCost" width="100"></yu-xtable-column>
+      <yu-xtable-column label="积分单价" prop="cardTotalNum" width="100"></yu-xtable-column>
+      <yu-xtable-column label="现金单价" prop="cardTotalCost" width="120"></yu-xtable-column>
+      <yu-xtable-column label="积分总价" prop="giftTotalNum" width="120"></yu-xtable-column>
+      <yu-xtable-column label="现金总价" prop="giftTotalCost" width="120"></yu-xtable-column>
+    </yu-xtable>
+  </yu-xdialog>
+</div>

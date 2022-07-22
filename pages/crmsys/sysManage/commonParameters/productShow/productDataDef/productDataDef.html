@@ -1,0 +1,79 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:37
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2019-1-5
+  @updated by
+  @description 系统参数管理-公共参数管理-产品基础数据定义
+-->
+<div>
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="中文表名" name="tableChName" ctype="input"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="edit" @click="handFn('add')">新增</yu-button>
+      <yu-button icon="document" @click="handFn('edit')">修改</yu-button>
+      <yu-button icon="edit" @click="deleteFn">删除</yu-button>
+      <yu-button icon="plus" @click="infoFn">详情</yu-button>
+      <yu-button icon="plus" @click="tabPropDefFn">表属性定义</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+    <yu-table-column type="selection" width="55"> </yu-table-column>
+    <yu-xtable-column label="表名" prop="tableName"></yu-xtable-column>
+    <yu-xtable-column label="中文表名" prop="tableChName"></yu-xtable-column>
+    <yu-xtable-column label="类型" prop="tableType" data-code="TAB_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="表别名" prop="tableOthName"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 新增修改弹窗 -->
+  <yu-xdialog :title="viewTitle[0]" :visible.sync="handFormVisible">
+    <yu-xform label-width="120px" ref="handForm" v-model="handFormdata">
+      <yu-xform-group :column="3">
+        <yu-xform-item label="表名" name="tableName" rules="required" ctype="select" :options="tableOptions" :disabled="editDsiabled" @change="tableNameValidateFn" filterable></yu-xform-item>
+        <yu-xform-item label="表别名" name="tableOthName" ctype="" rules="required" :disabled="editDsiabled" @blur="tableOthNameValFn"></yu-xform-item>
+        <yu-xform-item label="中文表名" name="tableChName" ctype="input" rules="required"></yu-xform-item>
+        <yu-xform-item label="类型" name="tableType" rules="" ctype="select" data-code="TAB_TYPE"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="check" type="primary" @click="saveHandFn">保存</yu-button>
+        <yu-button icon="close" type="primary" @click="cancleFn('hand')">取消</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 详情弹窗 -->
+  <yu-xdialog :title="viewTitle[1]" :visible.sync="infoFormVisible">
+    <yu-xform label-width="120px" ref="infoForm" v-model="infoFormdata" disabled>
+      <yu-xform-group :column="3">
+        <yu-xform-item label="表名" name="tableName" rules="required" ctype="select"></yu-xform-item>
+        <yu-xform-item label="表别名" name="tableOthName"  rules="required"></yu-xform-item>
+        <yu-xform-item label="中文表名" name="tableChName"></yu-xform-item>
+        <yu-xform-item label="类型" name="tableType" rules="required" data-code="TAB_TYPE"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="" @click="cancleFn('info')">取消</yu-button>
+        <yu-button icon="check" @click="">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 表属性定义弹窗 -->
+  <yu-xdialog :title="viewTitle[2]" :visible.sync="tabPopDefVisible" >
+    <yu-xtable ref="tablePropTable" row-number :data-url="propDataUrl" :base-params="tableName" @loaded="getTableDataFn">
+      <yu-xtable-column label="字段名" prop="columnName" ctype="input"></yu-xtable-column>
+      <yu-xtable-column label="中文名" prop="columnOthName" ctype="input"></yu-xtable-column>
+      <yu-xtable-column label="字段类型" prop="dataType" ctype="select" data-code=""></yu-xtable-column>
+      <yu-xtable-column label="对齐方式" prop="alignType" ctype="select" data-code="ALGIN_TYPE"></yu-xtable-column>
+      <yu-xtable-column label="宽度" prop="showWidth" ctype="input"></yu-xtable-column>
+      <yu-xtable-column label="引用字典" prop="dicName" ctype="input"></yu-xtable-column>
+    </yu-xtable>
+    <div class="yu-grpButton">
+      <yu-button type="primary" icon="" @click="cancleFn('tablePropTable')">取消</yu-button>
+        <yu-button type="primary" icon="check" @click="saveTabPropDefFn">保存</yu-button>
+      </div>
+  </yu-xdialog>
+</div>

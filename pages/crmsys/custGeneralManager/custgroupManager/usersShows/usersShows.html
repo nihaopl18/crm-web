@@ -1,0 +1,18 @@
+<!--
+  @created by houyx3 on 2018/07/06.
+  @updated by taoting1
+  @description 客户群视图
+-->
+<div>
+		<el-row>
+				<el-col :span="5">
+					<yufp-ext-tree ref="mytree" :height="height - 20 - 10"
+						:data-url="Url" @node-click="nodeClickFn" data-id="groupNo" data-label="groupName"
+						node-key="groupNo" data-pid="parentNo" data-root="0" style="margin:10px 10px 0 0;">
+					</yufp-ext-tree>
+				</el-col>
+				<el-col :span="19">
+						<div :id="Div" ></div>
+				</el-col>
+			</el-row>
+		</div>

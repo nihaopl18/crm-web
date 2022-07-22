@@ -1,0 +1,241 @@
+<div class="crm-screen">
+  <link rel="stylesheet" type="text/css" href="pages/common/dashboard/dashboard.css" />
+  <ul v-show="visible" class="infor-list-box">
+    <li :class="{'infor-list': true, 'drag-item': true, exist: item.exist}" v-for="(item, index) in list" :key="index">
+      <div>
+        {{item.graphName}}
+        <i class="el-icon-yx-checkmark" v-if="item.exist"></i>
+      </div>
+    </li>
+  </ul>
+<yu-button v-if="active > 0" @click="save" class="el-icon-yx-checkmark btn" style="right: 70px">保存</yu-button>
+<yu-button v-if="active > 0" @click="showList" class="el-icon-yx-stats-bars btn" style="right: 10px;"></yu-button>
+<yu-xsplit-screen ref="screen" @drop-end="dropEnd" @change="change" @delete-end="deleteEnd" :screen-data-url="dataUrl" :default-load = "false" :initial-index="0" trigger="click" :autoplay="false" indicator-position="outside" :height="height">
+  <div slot="custom">
+    <!-- <div class="search-area">
+      <yu-input placeholder="支持模糊查询" v-model="value">
+        <yu-select v-model="type" slot="prepend" placeholder="请选择" @change="serchange">
+          <yu-option label="个人" value="1" ></yu-option>
+          <yu-option label="对公" value="2" ></yu-option>
+        </yu-select>
+        <yu-button slot="append" icon="search" @click="searchFn"></yu-button>
+      </yu-input>
+    </div> -->
+    <div class="search-panel">
+        <yu-row :gutter="30">
+          <yu-col :span="14">
+              <div class="yu-chart-box grid-content" data-item="yu-duty">
+                <div class="yu-chart-box-title">
+                    <div class="yu-chart-box-left">
+                        <span class="yu-chart-box-val">{{toDoTotal}}</span>
+                        <span class="yu-chart-box-label">待办事项</span>
+                        <div class="yu-chart-box-tips">
+                            <ul class="yu-chart-box-tips-left">
+                                <li class="li-item" v-for="(item,index) in ToDos">
+                                    <div class="li-left">
+                                        <span class="li-item-title"  @click="clickToDo()">{{item.wfJobName}}</span>
+                                        <span class="li-item-desc">{{item.wfStartTime}}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="yu-chart-box-tips-right" @click="clickToDo()">更多
+                                <i class="el-icon-yx-ctrl r90"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="yu-chart-box-middle">
+                        <!-- doneWorkTotal、endWorkTotal -->
+                        <span class="yu-chart-box-val">{{DonesTotal}}</span>
+                        <span class="yu-chart-box-label">已办事项</span>
+                        <div class="yu-chart-box-tips">
+                            <ul class="yu-chart-box-tips-left">
+                                <li class="li-item" v-for="(item,index) in Dones">
+                                    <div class="li-left" >
+                                        <span class="li-item-title"  @click="clickDone()">{{item.wfJobName}}</span>
+                                        <span class="li-item-desc">{{item.wfStartTime}}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="yu-chart-box-tips-right" @click="clickDone()">更多
+                                <i class="el-icon-yx-ctrl r90"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="yu-chart-box-right">
+                        <span class="yu-chart-box-val">{{EndsTotal}}</span>
+                        <span class="yu-chart-box-label">办结事项</span>
+                        <div class="yu-chart-box-tips">
+                            <ul class="yu-chart-box-tips-left">
+                                <li class="li-item" v-for="(item,index) in Ends">
+                                    <div class="li-left">
+                                        <span class="li-item-title"  @click="clickEndDo()">{{item.wfJobName}}</span>
+                                        <span class="li-item-desc">{{item.wfStartTime}}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="yu-chart-box-tips-right" @click="clickEndDo()">更多
+                                <i class="el-icon-yx-ctrl r90"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+          </yu-col>
+          <yu-col :span="6">
+              <div class="yu-chart-box grid-content" data-item="yu-notice">
+                  <div class="yu-chart-box-title">
+                      <div class="yu-chart-box-content">
+                          <span class="yu-chart-box-val">{{NoticesTotal}}</span>
+                          <span class="yu-chart-box-label">公告</span>
+                          <div class="yu-chart-box-tips">
+                              <ul class="yu-chart-box-tips-left">
+                                  <li class="li-item" v-for="(item,index) in Notices">
+                                      <div class="li-left" >
+                                          <span class="li-item-title" @click="clickNotice()">{{item.noticeTitle}}</span>
+                                          <span class="li-item-desc">{{item.activeDate}}</span>
+                                      </div>
+                                  </li>
+                              </ul>
+                              <div class="yu-chart-box-tips-right" @click="clickNotice()">更多
+                                  <i class="el-icon-yx-ctrl r90"></i>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </yu-col>
+          <yu-col :span="4">
+              <div class="yu-chart-box grid-content" data-item="yu-remind">
+                  <div class="yu-chart-box-title">
+                      <div class="yu-chart-box-content tips-no-offset">
+                          <span class="yu-chart-box-val" style="color: #35D0AF">{{MessagesTotal}}</span>
+                          <span class="yu-chart-box-label">提醒</span>
+                          <div class="yu-chart-box-tips">
+                              <ul class="yu-chart-box-tips-left">
+                                  <li class="li-item" v-for="(item,index) in Messages">
+                                      <div class="li-left" >
+                                          <span class="li-item-title"  @click="clickMessage()">{{item.typeName}}</span>
+                                          <span class="li-item-desc">{{item.sendTime}}</span>
+                                      </div>
+                                  </li>
+                              </ul>
+                              <div class="yu-chart-box-tips-right" @click="clickMessage()">更多
+                                  <i class="el-icon-yx-ctrl r90"></i>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </yu-col>
+        </yu-row>
+    </div>
+    <div style="height: 200px;width: 100%;">
+        <div style="width: 31%;margin-left: 2%; margin-top: 5px; float: left;border:1px solid rgb(190, 183, 183);box-shadow:rgb(190, 183, 183) 0px 0px 8px">
+                <!-- <span class="yu-chart-box-label" style="color: #35D0AF;font-size:15px">客户指标</span> -->
+            <div style="width: 30%;float: left;margin-left: 3%; margin-top: 20px;height: 200px;">
+                    <span class="yu-chart-box-label" style="font-weight: bold; font-size: 15px;">客户总量：</span>
+                    <span class="yu-chart-box-val" style="color: #35D0AF;font-size:20px;margin-left:50%">{{custNum}}</span>
+                    <span class="yu-chart-box-label">&nbsp;</span>
+                    <span class="yu-chart-box-label" style="font-weight: bold; font-size: 15px">对公客户量：</span>
+                    <span class="yu-chart-box-val" style="font-size:15px;margin-left:50%">{{custNumOrg}}</span>
+                    <span class="yu-chart-box-label">&nbsp;</span>
+                    <span class="yu-chart-box-label" style="font-weight: bold; font-size: 15px">零售客户量：</span>
+                    <span class="yu-chart-box-val" style="font-size:15px;margin-left:50%">{{custNumPer}}</span>
+            </div>
+            <div style="width: 60%;float: right;margin-top: 20px; "><yu-echarts ref="echarts" :option="custAmount" width="100%" height="180px"></yu-echarts></div>
+            
+        </div>
+        <div id="topaaa" style="width: 31%;margin-left: 1%; margin-top: 5px; float: left;border:1px solid rgb(190, 183, 183);box-shadow:rgb(190, 183, 183) 0px 0px 8px">
+            <!-- <div style="width: 30%;float: left; margin-top: 80px">
+                        <span class="yu-chart-box-label">AUM管理资产：{{aumTotal}}</span>
+                        <span class="yu-chart-box-label">存款余额：{{dpsTotal}}</span>
+                        <span class="yu-chart-box-label">理财余额：{{finTotal}}</span>
+                        <span class="yu-chart-box-label">基金余额：{{fundTotal}}</span>
+                        <span class="yu-chart-box-label">保险余额：{{insuTotal}}</span>
+                        <span class="yu-chart-box-label">贵金属余额：{{goldTotal}}</span>
+                        <span class="yu-chart-box-label">信用卡溢缴款余额：{{ccdTotal}}</span>
+                        <span class="yu-chart-box-label">贷款余额：{{loanTotal}}</span>
+                </div> -->
+                <div style="width: 100%;float: left;">
+                    <yu-tabs type="card" @tab-click="assetIndexClick" active-name = "pertab">
+                        <yu-tab-pane label="零售" name="pertab"><yu-echarts ref="echarts" :option="assetIndex" width="402px" height="180px"></yu-echarts></yu-tab-pane>
+                        <yu-tab-pane label="对公" name="orgtab"><yu-echarts ref="echarts" :option="assetIndex" width="402px" height="180px"></yu-echarts></yu-tab-pane>
+                    </yu-tabs>
+            </div>
+        </div>
+        <div id="topaaa" style="width: 31%;margin-left: 1%; margin-top: 5px; float: left;border:1px solid rgb(190, 183, 183);box-shadow:rgb(190, 183, 183) 0px 0px 8px">
+                <!-- <div style="width: 20%;float: left; margin-top: 80px">
+                        <span class="yu-chart-box-label">贡献度：{{contriTotal}}</span>
+                        <span class="yu-chart-box-label">&nbsp;</span>
+                        <span class="yu-chart-box-label">中间业务贡献度：{{midContriTotal}}</span>
+                        <span class="yu-chart-box-label">&nbsp;</span>
+                        <span class="yu-chart-box-label">存款贡献度：{{depContriTotal}}</span>
+                        <span class="yu-chart-box-label">&nbsp;</span>
+                        <span class="yu-chart-box-label">贷款贡献度：{{loanContriTotal}}</span>
+                </div> -->
+                <div style="width: 100%;float: left;">
+                        <yu-tabs type="card" @tab-click="contriIndexClick" active-name = "pertab">
+                                <yu-tab-pane label="零售" name="pertab"><yu-echarts ref="echarts" :option="contriIndex" width="402px" height="180px"></yu-echarts></yu-tab-pane>
+                                <yu-tab-pane label="对公" name="orgtab"><yu-echarts ref="echarts" :option="contriIndex" width="402px" height="180px"></yu-echarts></yu-tab-pane>
+                              </yu-tabs>
+                </div>
+            </div>
+    </div>
+    
+    <div style="height: 200px;width: 100%;">
+            <div style="width: 31%;margin-left: 2%; margin-top: 5px; float: left;border:1px solid rgb(190, 183, 183);box-shadow:rgb(190, 183, 183) 0px 0px 8px">
+                <!-- <yu-echarts ref="echarts" :option="option"  height="200px"></yu-echarts> -->
+                <div style="width: 100%;float: left;">
+                        <yu-tabs type="card" @tab-click="rankClick" :active-name = "activetab">
+                                <yu-tab-pane label="零售" name="pertab"><yu-echarts ref="echarts" :option="rankOption" width="402px"  height="180px"></yu-echarts></yu-tab-pane>
+                                <yu-tab-pane label="对公" name="orgtab"><yu-echarts ref="echarts" :option="rankOption" width="402px"  height="180px"></yu-echarts></yu-tab-pane>
+                              </yu-tabs>
+                </div>
+            </div>
+            
+            <div id="topaaa" style="width: 31%;margin-left: 1%; margin-top: 5px; float: left;border:1px solid rgb(190, 183, 183);box-shadow:rgb(190, 183, 183) 0px 0px 8px">
+                <!-- <div style="width: 30%;float: left; margin-top: 80px">
+                            <span class="yu-chart-box-label">{{valueLev1}}</span>
+                            <span class="yu-chart-box-label">{{valueLev2}}</span>
+                            <span class="yu-chart-box-label">{{valueLev3}}</span>
+                            <span class="yu-chart-box-label">{{valueLev4}}</span>
+                            <span class="yu-chart-box-label">{{valueLev5}}</span>
+                            <span class="yu-chart-box-label">{{valueLev6}}</span>
+                            <span class="yu-chart-box-label">{{valueLev7}}</span>
+                            <span class="yu-chart-box-label">{{valueLev8}}</span>
+                    </div> -->
+                    <div style="width: 100%;float: left;">
+                        <yu-tabs type="card" @tab-click="valueLevelClick" active-name = "pertab">
+                            <yu-tab-pane label="零售" name="pertab"><yu-echarts ref="echarts" :option="valueLevel" width="402px" height="180px"></yu-echarts></yu-tab-pane>
+                            <yu-tab-pane label="对公" name="orgtab"><yu-echarts ref="echarts" :option="valueLevel" width="402px" height="180px"></yu-echarts></yu-tab-pane>
+                        </yu-tabs>
+                </div>
+            </div>
+            <div id="topaaa" style="width: 31%;margin-left: 1%; margin-top: 5px; float: left;border:1px solid rgb(190, 183, 183);box-shadow:rgb(190, 183, 183) 0px 0px 8px">
+                    <!-- <div style="width: 20%;float: left; margin-top: 80px">
+                            <span class="yu-chart-box-label">7星：{{servLevel7}}</span>
+                            <span class="yu-chart-box-label">6星：{{servLevel6}}</span>
+                            <span class="yu-chart-box-label">5星：{{servLevel5}}</span>
+                            <span class="yu-chart-box-label">4星：{{servLevel4}}</span>
+                            <span class="yu-chart-box-label">3星：{{servLevel3}}</span>
+                            <span class="yu-chart-box-label">2星：{{servLevel2}}</span>
+                            <span class="yu-chart-box-label">1星：{{servLevel1}}</span>
+                    </div> -->
+                    <div style="width: 100%;float: left;">
+                            <yu-tabs type="card" @tab-click="servLevClick" active-name = "pertab">
+                            <yu-tab-pane label="零售" name="pertab"><yu-echarts ref="echarts" :option="servLev" width="402px" height="180px"></yu-echarts></yu-tab-pane>
+                            <yu-tab-pane label="对公" name="orgtab"><yu-echarts ref="echarts" :option="servLev" width="402px" height="180px"></yu-echarts></yu-tab-pane>
+                        </yu-tabs>
+                </div>
+                </div>
+        </div>
+  </div>
+</yu-xsplit-screen>
+</div>
+<!-- <style>
+    .yu-idxTabs>.yu-tab-content>div>span>i:after {
+    content: "\e60c";
+    width: 20px;
+    height: 20px;
+    }
+</style> -->

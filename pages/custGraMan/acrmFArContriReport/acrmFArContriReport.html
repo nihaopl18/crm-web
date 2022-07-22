@@ -1,0 +1,111 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:37
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by 张成龙 zhangcl3@yusys.com.cn on 2019-1-16 21:07:17.
+  @updated by
+  @description 客户贡献度查询
+-->
+<div>
+  <!--  <yu-xform related-table-name="yutable" form-type="search">-->
+   <yu-xform related-table-name="refTable" ref="custSearchForm" v-model="queryFormdata" form-type="search" class="hide-form-search-btn"  :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn">
+     <yu-xform-group :column="6">
+        <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016" rules="required"></yu-xform-item>
+        <yu-xform-item placeholder="统计日期" name="dataDate" ctype="datepicker" type = "month" rules="required"></yu-xform-item>
+        <yu-xform-item placeholder="机构名称" name="belongBrch" ctype="yufp-org-tree"></yu-xform-item>
+       <yu-xform-item placeholder="客户号" name="custId" ctype="input"></yu-xform-item>
+       <yu-xform-item placeholder="客户名称" name="custName" ctype="input"></yu-xform-item>
+       <!-- 个人证件类型 -->
+       <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != '1'" data-code="CD0348"></yu-xform-item>
+       <!-- 对公证件类型 -->
+       <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != '2'" data-code="CD0349"></yu-xform-item>
+       <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != ''" data-code="CD0011"></yu-xform-item>
+       <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="queryFormdata.custType != undefined" data-code="CD0011"></yu-xform-item>
+       <yu-xform-item placeholder="证件号码" name="certNo" ctype="input"></yu-xform-item>
+       
+       <yu-xform-item placeholder="管户客户经理" name="belongMgr" ctype="yufp-mgr-selector" :params="custManagerParams" @select-fn="userSelectFn"></yu-xform-item>
+       <yu-xform-item placeholder="客户服务等级" name="servLev" ctype="select" data-code="CD0032"></yu-xform-item>
+        
+       
+     </yu-xform-group>
+     <!-- <div class="yu-grpButton" style="text-align: right;">
+      <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+    </div> -->
+   </yu-xform>
+   <div class="yu-toolBar">
+     <yu-button-group> 
+       <yu-button icon="document" @click="infoFn" v-if="detailBtn">详情</yu-button>
+      <!-- <yu-button v-if="exportAcrm" icon="yx-file-excel" @click="exportFn">导出</yu-button>-->
+     </yu-button-group>
+   </div>
+    <yu-xtable ref="refTable" class="permitSelect" @contextmenu.prevent.stop.native  row-number :data-url="dataUrl" :default-load="false" @row-dblclick = "dblclick"> <!--fit='true' -->
+     <yu-xtable-column label="客户号" prop="custId" width="100"></yu-xtable-column>
+     <yu-xtable-column label="客户名称" prop="custName" width="140"></yu-xtable-column>
+     <yu-xtable-column label="证件类型" prop="certType" width="100" data-code="CD0011"></yu-xtable-column>
+     <yu-xtable-column label="证件号码" prop="certNo" width="150"></yu-xtable-column>
+     <yu-xtable-column label="客户类型" prop="custType" width="80" data-code="CD0016"></yu-xtable-column>
+     <yu-xtable-column label="机构名称ID" prop="belongBrch" width="200" v-if="false"></yu-xtable-column>
+     <yu-xtable-column label="机构名称" prop="belongBrchName" width="120"></yu-xtable-column>
+     <yu-xtable-column label="所属一级支行编号" prop="belongFirgBrchNo" width="120" v-if="false" ></yu-xtable-column>
+     <yu-xtable-column label="所属一级支行" prop="belongFirgBrchName" width="120"></yu-xtable-column>
+     <yu-xtable-column label="管户客户经理ID" prop="belongMgr" width="120" v-if="false" ></yu-xtable-column>
+     <yu-xtable-column label="管户客户经理" prop="mgrName" width="130"></yu-xtable-column>
+     <yu-xtable-column label="客户价值等级" prop="valueLev" width="150" data-code="CD0243"></yu-xtable-column>
+     <yu-xtable-column label="客户服务等级" prop="servLev" width="100" data-code="CD0032"></yu-xtable-column>
+     <yu-xtable-column label="本月综合贡献度" prop="mDepContribu" width="110" :formatter="formJE"  align="right" align="right"></yu-xtable-column>
+     <yu-xtable-column label="本月存款贡献度" prop="mLoanContribu" width="110" :formatter="formJE"  align="right"></yu-xtable-column>
+     <yu-xtable-column label="本月贷款贡献度" prop="mMidContribu" width="110" :formatter="formJE"  align="right"></yu-xtable-column>
+     <yu-xtable-column label="本月中间业务贡献度" prop="mSumContribu" width="130" :formatter="formJE"  align="right"></yu-xtable-column>
+     <yu-xtable-column label="累计12个月综合贡献度" prop="dep_12mContribu" width="150" :formatter="formJE"  align="right"></yu-xtable-column>
+     <yu-xtable-column label="累计12个月存款贡献度" prop="loan_12mContribu" width="150" :formatter="formJE"  align="right"></yu-xtable-column>
+     <yu-xtable-column label="累计12个月贷款贡献度" prop="mid_12mContribu" width="150" :formatter="formJE"  align="right"></yu-xtable-column>
+     <yu-xtable-column label="累计12个月中间业务贡献度" prop="sum_12mContribu" width="180" :formatter="formJE"  align="right"></yu-xtable-column>
+     <yu-xtable-column label="统计日期" prop="dataDate" width="80"></yu-xtable-column>
+   </yu-xtable>
+   <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+       width="650px" height="380px" -->
+   <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="1080px">
+     <yu-xform ref="refForm" label-width="140px" v-model="formdata" :disabled="formDisabled">
+       <yu-xform-group :column="3">
+         <yu-xform-item label="机构名称" name="belongBrchName" ctype="input"></yu-xform-item>
+         <yu-xform-item label="所属一级支行" name="belongFirgBrchName" ctype="input"></yu-xform-item>
+         <yu-xform-item label="客户号"  name="custId" ctype="input"></yu-xform-item>
+         <yu-xform-item label="客户名称" name="custName" ctype="input"></yu-xform-item>
+         <yu-xform-item label="证件类型" name="certType" ctype="select" data-code="CD0011"></yu-xform-item>
+         <yu-xform-item label="证件号码" name="certNo" ctype="input"></yu-xform-item>
+         <yu-xform-item label="客户类型" name="custType" ctype="select" data-code="CD0016"></yu-xform-item>
+         <yu-xform-item label="管户客户经理ID" name="belongMgr" ctype="input" v-show="false"></yu-xform-item>
+         <yu-xform-item label="管户客户经理" name="mgrName" ctype="input"></yu-xform-item>
+         <yu-xform-item label="客户价值等级" name="valueLev" ctype="select" data-code="CD0243"></yu-xform-item>
+         <yu-xform-item label="客户服务等级" name="servLev" ctype="select" data-code="CD0032"></yu-xform-item>
+         <yu-xform-item label="本月综合贡献度" name="mDepContribu" ctype="num"    :formatter="formJE" :formatter="formJE"></yu-xform-item>
+         <yu-xform-item label="本月存款贡献度" name="mLoanContribu" ctype="num"    :formatter="formJE"></yu-xform-item>
+         <yu-xform-item label="本月贷款贡献度" name="mMidContribu" ctype="num"    :formatter="formJE"></yu-xform-item>
+         <yu-xform-item label="本月中间业务贡献度" name="mSumContribu" ctype="num"    :formatter="formJE"></yu-xform-item>
+         <yu-xform-item label="累计12个月综合贡献度" name="dep_12mContribu" ctype="num"    :formatter="formJE"></yu-xform-item>
+         <yu-xform-item label="累计12个月存款贡献度" name="loan_12mContribu" ctype="num"    :formatter="formJE"></yu-xform-item>
+         <yu-xform-item label="累计12个月贷款贡献度" name="mid_12mContribu" ctype="num"    :formatter="formJE"></yu-xform-item>
+         <yu-xform-item label="累计12个月中间业务贡献度" name="sum_12mContribu" ctype="num"    :formatter="formJE"></yu-xform-item>
+         <yu-xform-item label="统计日期" name="dataDate" ctype="input"></yu-xform-item>
+       </yu-xform-group>
+       <div class="yu-grpButton">
+         <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+       </div>
+     </yu-xform>
+   </yu-xdialog>
+ </div>
+
+ <style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

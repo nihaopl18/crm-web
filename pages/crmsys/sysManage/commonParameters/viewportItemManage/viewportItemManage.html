@@ -1,0 +1,107 @@
+<!--
+  @created by taoting1 on 2019-1-9 20:21:59
+  @updated by
+  @description 视图项管理
+-->
+<div class="viewportItemManage">
+  <yu-row :gutter="10">
+    <!-- 视图管理 -->
+    <yu-col :span="10">
+      <h2 class="yu-formTitle" style="margin-top: 10px;">视图管理</h2>
+      <!-- <el-form-q :field-data="modQueryFields" :buttons="modQueryButtons" :columns="2" title="模块管理"></el-form-q> -->
+      <yu-xform related-table-name="modTable" form-type="search">
+        <yu-xform-group :column="2">
+          <yu-xform-item placeholder="视图名称" name="viewName" ctype="input"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <!--  v-if="modAddCheck" -->
+          <yu-button icon="plus" @click="modAddFn">新增</yu-button>
+          <!-- v-if="modModifyCheck" -->
+          <yu-button icon="edit" @click="modModifyFn">修改</yu-button>
+          <!--  v-if="modDeleteCheck" -->
+          <yu-button icon="yx-bin" @click="modDeleteFn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="modTable" :data-url="modDataUrl" @row-dblclick="modSelect" @row-click="modSelect" :height="height" selection-type="radio">
+        <!-- <yu-xtable-column label="视图编号" prop="viewId"  :sortable="true"></yu-xtable-column> -->
+        <yu-xtable-column label="视图名称" prop="viewName" :sortable="true">
+          <template slot-scope="scope">
+            <a onclick="return false;" href="javascipt:void(0);" style="text-decoration:underline;" @click="modRowClick(scope)">{{ scope.row.viewName}}</a>
+          </template>
+        </yu-xtable-column>
+        <!-- <yu-xtable-column label="视图类型" prop="viewType" data-code="DARA_BB"></yu-xtable-column>
+        <yu-xtable-column label="备注" prop="notes"></yu-xtable-column> -->
+      </yu-xtable>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="modDialogVisible">
+        <!-- <yu-form-x ref="modForm" :group-fields="modFields" :buttons="modFormButtons" :disabled="modFormDisabled" label-width="120px"></yu-form-x> -->
+        <yu-xform ref="modForm" label-width="140px" v-model="viewportClassifyFormdata" :disabled="modFormDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="视图类型" name="viewType" rules="required" ctype="select" data-code="VIEW_TYPE"></yu-xform-item>
+            <yu-xform-item label="视图名称" name="viewName" ctype="input" rules="required"></yu-xform-item>
+            <yu-xform-item label="备注" name="notes" ctype="textarea" :colspan="24"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelViewItemClassifyFn">取消</yu-button>
+            <yu-button icon="check" type="primary" v-show="viewType == 'ADD'" @click="saveCreateModFn">保存</yu-button>
+            <yu-button icon="check" type="primary" v-show="viewType == 'EDIT'" @click="saveEditModFn">保存</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+    </yu-col>
+    <!-- 视图项管理 -->
+    <yu-col :span="14">
+      <!-- <yu-form-q :field-data="funcQueryFields" :buttons="funcQueryButtons" :columns="3" title="业务功能管理"></yu-form-q> -->
+      <h2 class="yu-formTitle" style="margin-top: 10px;">视图项管理</h2>
+      <yu-xform ref="viewItem" v-model="viewItemSearchData" style="position: relative;" class="cust-search-form">
+        <yu-xform-group :column="3">
+          <yu-xform-item placeholder="视图项名称" name="viewItemName" ctype="input"></yu-xform-item>
+          <yu-xform-item placeholder="链接地址" name="viewAddr" ctype="input"></yu-xform-item>
+        </yu-xform-group>
+        <div class="custom-search-btn">
+          <yu-button icon="search" type="primary" @click="searchFn">搜索</yu-button>
+          <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+        </div>
+      </yu-xform>
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <!--  v-if="funcAddCheck" -->
+          <yu-button icon="plus" @click="funcAddFn">新增</yu-button>
+          <!--  v-if="funcModifyCheck" -->
+          <yu-button icon="edit" @click="funcModifyFn">修改</yu-button>
+          <!--  v-if="funcDeleteCheck" -->
+          <yu-button icon="yx-bin" @click="funcDeleteFn">删除</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="funcTable" :height="height" :default-load="false" :data-url="funcDataUrl" selection-type="checkbox">
+        <yu-xtable-column label="视图项名称" prop="viewItemName" width="250" :sortable="true" :resizable="true">
+          <template slot-scope="scope">
+            <a href="javascipt:void(0);" style="text-decoration:underline;" @click="funcRowClick(scope)">{{ scope.row.viewItemName}}</a>
+          </template>
+        </yu-xtable-column>
+        <yu-xtable-column label="链接地址" prop="viewAddr" width="275" :sortable="true" :resizable="true" :show-overflow-tooltip="true"></yu-xtable-column>
+        <yu-xtable-column label="顺序" prop="orders" :sortable="true" :resizable="true"></yu-xtable-column>
+      </yu-xtable>
+      <yu-xdialog :title="viewTitle[viewType]" :visible.sync="funcDialogVisible">
+        <!-- <yu-form-x ref="funcForm" :group-fields="funcFields" :buttons="funcFormButtons" :disabled="funcFormDisabled" label-width="120px">
+        </yu-form-x> -->
+        <yu-xform ref="funcForm" label-width="120px" v-model="viewportFormdata" :disabled="funcFormDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="视图项id" name="id" ctype="input" :colspan="24" :hidden="true"></yu-xform-item>
+            <yu-xform-item label="视图项名称" name="viewItemName" ctype="input" :rules="itemNameRules" :colspan="24"></yu-xform-item>
+            <yu-xform-item label="链接地址" name="viewAddr" :rules="addrRules" ctype="input" :colspan="24" placeholder="pages/crmsys/custview/custview"></yu-xform-item>
+            <yu-xform-item label="顺序" name="orders" :rules="orderRules"></yu-xform-item>
+            <!-- <yu-xform-item label="顺序" name="orders" :rules="orderRules" ctype="select" data-code="CERT_TYPE"></yu-xform-item> -->
+            <yu-xform-item label="描述" name="viewItemDesc" :rules="desRules" ctype="textarea" :colspan="24"></yu-xform-item>
+          </yu-xform-group>
+          <div class="yu-grpButton">
+            <yu-button icon="yx-undo2" type="primary" @click="cancelViewItemFn">取消</yu-button>
+            <yu-button icon="check" type="primary" v-show="viewType == 'ADD'" @click="saveCreateFuncFn">保存</yu-button>
+            <yu-button icon="check" type="primary" v-show="viewType == 'EDIT'" @click="saveEditFuncFn">保存</yu-button>
+          </div>
+        </yu-xform>
+      </yu-xdialog>
+    </yu-col>
+  </yu-row>
+</div>

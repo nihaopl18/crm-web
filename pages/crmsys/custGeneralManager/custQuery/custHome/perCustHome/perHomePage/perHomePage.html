@@ -1,0 +1,499 @@
+<!-- 
+  @Created by mayan mayan2@yusys.com.cn on 2019-2-4 19:25:42.
+  @updated by
+  @description 零售客户视图首页
+-->
+
+<div id ="perHome">
+<div >
+  <el-row :gutter="5" style="padding-top: 10px;">
+    <el-col :span="17">
+      <div style="border: 1px solid rgb(190, 183, 183); height:260px;">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            自然属性
+        </div>
+        <div class="base_info" >
+          <div class="img_info" >
+                <!-- <img v-if="baseformdata.sex==1"  src="themes/default/images/sexnan.png" class="img_top"/>   
+                <img v-else   src="themes/default/images/sexnv.png" class="img_top"/>   -->
+                <yu-upload
+                class="avatar-uploader"
+                :action="uploadAction"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload">
+                <img v-if="custPhotoStr" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </yu-upload>
+            <div class="img_bottom">
+                <span style=" font-size: 18px;color: #2d2d2d;    font-weight: bold;">{{baseformdata.custName}}</span>
+                <p style=" font-size: 14px;color: #888585;;">{{baseformdata.sexName}},{{baseformdata.birthDt}},{{baseformdata.age}}岁</p>
+            </div>
+            </div>
+          <div>
+                  <div class="info_div">
+                        <span class="label1">客户号:</span>
+                        <span class="value">{{baseformdata.custId}}</span>
+                       
+                        <span  class="label1">联系手机:</span>
+                    <span class="value">{{baseformdata.phoneNo}}</span>
+                       
+                  </div>
+                  <div class="info_div">
+                    <span  class="label1">服务等级:</span>
+                <span class="value">{{baseformdata.servLevName}}</span>
+                      <span  class="label1">证件类型:</span>
+                      <span class="value">{{baseformdata.certTypeName}}</span>
+                     
+                </div>
+                <div class="info_div">
+                  <span  class="label1">贡献度:</span>
+                    <span class="value">{{baseformdata.reportSumNumber}}</span>  
+                  <span  class="label1">证件号码:</span>
+                    <span class="value">{{baseformdata.certNo}}</span>            
+              </div>
+              <div class="info_div">
+               <!-- <span  class="label">风险等级:</span>
+                <span class="value">{{baseformdata.riskLev}}</span>--> 
+                <span  class="label1">价值等级:</span>
+                <span class="value">{{baseformdata.valueLevName}}</span>
+                <span  class="label1"  style="width: 100px">客户经理电话:</span>
+                <span class="value">{{baseformdata.mgrTel}}</span>
+               
+          </div>
+              <div class="info_div">
+                <span  class="label1">主办机构:</span>
+              <span class="value">{{baseformdata.orgName}}</span>
+              <span  class="label1"  style="width: 100px">主办客户经理:</span>
+              <span class="value">{{baseformdata.mgrUserName}}</span>
+                 
+            </div>
+            <div class="info_div">
+              <span  class="label1">信用评级:</span>
+              <span class="value">{{baseformdata.CREDIT_GRADE}}</span>
+          </div>
+            <div class="info_div">
+
+              <span  class="label1">联系地址:</span>
+              <span class="value">{{baseformdata.contAddr}}</span>
+              
+               
+          </div>
+          
+<!--<div class="base1_row">
+  
+                        <span class="base1_label">:</span><span class="base1_value">{{baseformdata.}}</span>
+                        <span class="base1_label">:</span><span class="base1_value">{{baseformdata.}}</span>
+                        <span class="base1_label">:</span><span class="base_value">{{baseformdata.}}</span>
+                       
+                  </div>
+                  <div class="base1_row">
+                     <span class="base1_label">:</span><span class="base1_value">{{baseformdata.}}</span>
+                      <span class="base1_label">:</span><span class="base1_value">{{baseformdata.}}</span>
+                      <span class="base1_label">:</span><span class="base_value">{{baseformdata.}}</span>
+                      <span class="base1_label">:</span><span class="base_value">{{baseformdata.}}</span>
+                      </div>
+                <div class="base1_row">
+                      <span class="base1_label">:</span><span class="base1_value">{{baseformdata.}}</span>
+                      <span class="base1_label">:</span><span class="base1_value">{{baseformdata.}}</span>
+                      <span class="base1_label">:</span><span class="base_value">{{baseformdata.}}</span>       
+                </div>-->
+            <!-- <yu-xform ref="baseForm" v-model="baseformdata" label-width="120px" class="yu-form-gap" style="padding-top: 20px;" :disabled="true">
+              <yu-xform-group :column="3">
+                <yu-xform-item label="客户号" name="custId" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="姓名" name="custName" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="性别" name="sex" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="证件类型" name="certType" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="证件号码" name="certNo" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="联系手机（首选）" name="phoneNo" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="联系地址（首选）" name="contAddr" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="年龄" name="age" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="生日（公历/农历）" name="birthDt" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="风险等级" name="riskLev" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="价值等级" name="valueLev" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="服务等级" name="servLev" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="贡献度" name="mSumContribu" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="主办机构" name="orgName" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="主办客户经理" name="mgrUserName" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="客户经理电话" name="mgrTel" ctype="input" :readonly="true"></yu-xform-item>
+              </yu-xform-group>
+            </yu-xform> -->
+          </div>
+      </div>
+      </div>
+    </el-col>
+    <el-col :span="7">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          客户持有我行产品信息
+        </div>
+        <div  style="height:230px;     word-wrap: break-word;  white-space: normal;">
+         <yu-tag style="    margin: 0.5em; white-space: normal;" v-for="tag in tags" :key="tag.name"  :type="tag.type" >
+           {{tag.name}}
+          </yu-tag>
+         <!-- <yu-tag type="curre"  v-if="curre=='1'">活期</yu-tag>
+          <yu-tag type="regular" v-if="regular=='1'">定期</yu-tag>
+          <yu-tag type="loan">贷款</yu-tag>
+          <yu-tag type="financial">理财</yu-tag>
+          <yu-tag type="insurance">保险</yu-tag>
+          <yu-tag type="nobleMetal">贵金属</yu-tag>
+          <yu-tag type="fund">基金</yu-tag>
+          <yu-tag type="onlineBank">网上银行</yu-tag>
+          <yu-tag type="mobileBank">手机银行</yu-tag>
+          <yu-tag type="wechatBank">微信银行</yu-tag>
+          <yu-tag type="quickPay">快捷支付</yu-tag>
+          <yu-tag type="telBank">电话银行</yu-tag>
+          <yu-tag type="telBankTrans">电话银行转账</yu-tag>
+          <yu-tag type="message">短信</yu-tag>
+          <yu-tag type="creditCard">信用卡</yu-tag>
+          <yu-tag type="socialSecurityCard">社保卡</yu-tag>
+          <yu-tag type="icGoldCard">IC金卡</yu-tag>
+          <yu-tag type="houseProFundCard">住房公积金卡</yu-tag>
+
+
+
+
+          <yu-tag type="thirdDartyDep">第三方存管</yu-tag>
+          <yu-tag type="ledoTreasure">利多宝</yu-tag>
+          <yu-tag type="certificateDeposit">大额存单</yu-tag>-->
+        </div>
+      </div>
+    </el-col>
+  </el-row>
+  <el-row style="padding-top: 10px;">
+    <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+            <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+              存款变化趋势图（元）
+            </div>
+            <div>
+              <yu-echarts :option="option3"  width="330px" height="270px"></yu-echarts>
+            </div>
+          </div>
+   
+    </el-col>
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183);margin:0 5px">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          AUM时点占比信息
+        </div>
+        <div>
+          <yu-echarts :option="option" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            AUM月日均趋势图（元）
+          </div>
+          <div>
+            <yu-echarts :option="option2" width="330px" height="270px"></yu-echarts>
+          </div>
+        </div>
+      </el-col>
+  </el-row>
+  <el-row style="padding-top: 10px;">
+  
+    <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          存款信息（元）
+        </div>
+        <div>
+     <!--     <yu-xtable ref="deprefTable" row-number :data-url="depdataUrl" :pageable="false" height="300">
+      
+       
+            <yu-xtable-column label="时点余额" prop="dpsBal" ></yu-xtable-column>
+            <yu-xtable-column label="上年日均余额" prop="dpsYAvgBalLy" width="150"></yu-xtable-column>
+            <yu-xtable-column label="当年日均余额" prop="dpsYAvgBal" width="150" ></yu-xtable-column>
+            
+          </yu-xtable>-->
+          <yu-echarts :option="option7" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183);margin:0 5px">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            贷款信息（元）
+          </div>
+          <div>
+       <!--     <yu-xtable ref="loanrefTable" row-number :data-url="loandataUrl" :pageable="false" height="300">
+              <yu-xtable-column label="时点余额" prop="loanBal"></yu-xtable-column>
+              <yu-xtable-column label="上年日均余额" prop="loanYAvgBalLy" width="150"></yu-xtable-column>
+              <yu-xtable-column label="当年日均余额" prop="loanYAvgBal"  width="150"></yu-xtable-column>
+            </yu-xtable>-->
+            <yu-echarts :option="option8" width="330px" height="270px"></yu-echarts>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            理财信息（元）
+          </div>
+          <div>
+         <!--   <yu-xtable ref="finrefTable" row-number :data-url="findataUrl" :pageable="false" height="300">
+              <yu-xtable-column label="时点余额" prop="finBal" ></yu-xtable-column>
+              <yu-xtable-column label="上年日均余额" prop="finYAvgBalLy" width="150"></yu-xtable-column>
+              <yu-xtable-column label="当年日均余额" prop="finYAvgBal"  width="150"></yu-xtable-column>
+            </yu-xtable>-->
+            <yu-echarts :option="option9" width="330px" height="270px"></yu-echarts>
+          </div>
+        </div>
+      </el-col>
+  </el-row>
+  <el-row style="padding-top: 10px;">
+    <!-- <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+            <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+              贡献度占比
+            </div>
+            <div>
+              <yu-echarts :option="option1" width="330px" height="270px"></yu-echarts>
+            </div>
+          </div>
+    </el-col>
+    <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183);margin:0 5px">
+            <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+              贡献度趋势图
+            </div>
+            <div>
+              <yu-echarts :option="option4" width="330px" height="270px"></yu-echarts>
+            </div>
+          </div>
+    </el-col> -->
+    <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+            <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+              流入流出趋势图（元）
+            </div>
+            <div>
+              <yu-echarts :option="option10" width="330px" height="270px"></yu-echarts>
+            </div>
+          </div>
+      </el-col>
+      <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183);margin:0 5px">
+            <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+              推荐的产品TOP5
+            </div>
+            <div>
+              <yu-xtable ref="productrefTable" row-number :data-url="productdataUrl" :pageable="false" height="270">
+                <yu-xtable-column label="产品名称" prop="prodName" ></yu-xtable-column>
+              </yu-xtable>
+            </div>
+          </div>
+      </el-col>
+      <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183);height: 300px;">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            接触信息
+          </div>
+          <div>
+              <div class="info_div">
+                  <span class="label1" style="width: 140px">参与的最近一次活动:</span>
+                  <span class="value">{{visitformdata.visitTypeName}}</span>
+            </div>
+            <div class="info_div">
+                <span class="label1" style="width: 120px">最近一次接触时间:</span>
+                <span class="value">{{visitformdata.visitStartDate}}</span>
+          </div>
+          <div class="info_div">
+              <span class="label1" style="width: 110px">最近一次拜访人:</span>
+              <span class="value">{{visitformdata.visitorName}}</span>
+        </div>
+      </div>
+    </div>
+  </el-col>
+  </el-row>
+  <el-row style="padding-top: 10px;">
+   
+    <!-- <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          贷款变化趋势图（元）
+        </div>
+        <div>
+          <yu-echarts :option="option5" width="330px" height="270px"></yu-echarts>
+        </div>
+      </div>
+    </el-col> -->
+    <!-- <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183);margin:0 5px">
+            <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+              推荐的产品TOP5
+            </div>
+            <div>
+              <yu-xtable ref="productrefTable" row-number :data-url="productdataUrl" :pageable="false" height="270">
+                <yu-xtable-column label="产品名称" prop="prodName" ></yu-xtable-column>
+              </yu-xtable>
+            </div>
+          </div>
+      </el-col> -->
+      <!-- <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            最新事件-TOP5
+          </div>
+          <div>
+            <yu-xtable ref="eventrefTable" row-number :data-url="eventdataUrl" :pageable="false" height="270">
+              <yu-xtable-column label="事件名称" prop="eventName"></yu-xtable-column>
+              <yu-xtable-column label="产生日期" prop="eventDate" ></yu-xtable-column>
+            
+            </yu-xtable>
+          </div>
+        </div>
+      </el-col> -->
+  </el-row>
+  <el-row style="padding-top: 10px;">
+    <!-- <el-col :span="8">
+      <div style="border: 1px solid rgb(190, 183, 183);height: 300px;">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          接触信息
+        </div>
+        <div>
+            <div class="info_div">
+                <span class="label1" style="width: 140px">参与的最近一次活动:</span>
+                <span class="value">{{visitformdata.visitTypeName}}</span>
+          </div>
+          <div class="info_div">
+              <span class="label1" style="width: 120px">最近一次接触时间:</span>
+              <span class="value">{{visitformdata.visitStartDate}}</span>
+        </div>
+        <div class="info_div">
+            <span class="label1" style="width: 110px">最近一次拜访人:</span>
+            <span class="value">{{visitformdata.visitorName}}</span>
+      </div> -->
+         <!--   <yu-xform ref="visitForm" v-model="visitformdata" label-width="120px" class="yu-form-gap" style="padding-top: 20px;" :disabled="true">
+              <yu-xform-group :column="1">
+                <yu-xform-item label="参与的最近一次活动" name="visitType" ctype="select" :readonly="true" data-code="CD0332"></yu-xform-item>
+                <yu-xform-item label="最近一次接触时间" name="visitStartDate" ctype="input" :readonly="true"></yu-xform-item>
+                <yu-xform-item label="最近一次拜访人" name="visitorName" ctype="input" :readonly="true"></yu-xform-item>
+              
+              </yu-xform-group>
+            </yu-xform> -->
+        <!--  <yu-xtable ref="visitrefTable" row-number :data-url="viaitdataUrl" :pageable="false" height="300">
+            <yu-xtable-column label="参与的最近一次活动" prop="visitType" data-code="CD0332" width="170"></yu-xtable-column>
+            <yu-xtable-column label="最近一次接触时间" prop="visitStartDate" width="170"></yu-xtable-column>
+            <yu-xtable-column label="最近一次拜访人" prop="visitorName" width="170"></yu-xtable-column>
+          </yu-xtable>-->
+        <!-- </div>
+      </div>
+    </el-col> -->
+    <!-- <el-col :span="8">
+        <div style="border: 1px solid rgb(190, 183, 183);margin:0 5px">
+            <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+              优惠信息
+            </div>
+            <div>
+              <yu-xtable ref="discountrefTable" row-number :data-url="discountdataUrl"  :pageable="false" height="270">
+                <yu-xtable-column label="优惠名称" prop="preferentContent" ></yu-xtable-column>
+              </yu-xtable>
+            </div>
+          </div>
+    </el-col> -->
+  </el-row>
+</div>
+</div>
+<style>
+  .info_div:after{
+    clear:both;
+    content: '';
+  }
+  .info_div{
+    padding:0.4em;
+  }
+  .label{
+    /* float:left; */
+    font-size: 16px;
+    color: #888585;
+    display: inline-block;
+    width: 97px;
+  }
+  .label1{
+    /* float:left; */
+    font-size: 14px;
+    color: #888585;
+    display: inline-block;
+    width: 65px;
+  }
+  .label2{
+    /* float:left; */
+    font-size: 16px;
+    color: #888585;
+    display: inline-block;
+    width: 95px;
+  }
+  .label3{
+    /* float:left; */
+    font-size: 16px;
+    color: #888585;
+    display: inline-block;
+   
+  }
+  .label4{
+    /* float:left; */
+    font-size: 16px;
+    color: #888585;
+    display: inline-block;
+    width: 70px;
+  }
+  .value{
+    font-size: 14px;
+    color: #2d2d2d;
+    display: inline-block;
+    width: 159px;
+  }
+  .base_info{
+    height: 100%;
+    width: 100%; 
+       padding-top: 1.3em;
+  }
+  .img_info{
+    float: left;
+    text-align: center;
+    height:80%;
+    width: 30%;
+  }
+  .img_top{
+    /* position: relative;
+    left: 12%;*/
+    width: 100px;
+    height: 100px; 
+    border-radius: 50%; 
+    margin-left: 25%;
+    margin-top: 15%;
+  /* background-color:red;*/
+  }
+  /* .img_bottom{
+
+    margin-top: 70%;
+  } */
+  .avatar-uploader .el-upload {
+      border: 1px dashed #d9d9d9;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+  
+    }
+    .avatar-uploader .el-upload:hover {
+      border-color: #20a0ff;
+    }
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 120px;
+      height: 120px;
+      line-height: 120px;
+   
+    }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      display: block;
+    }
+    
+</style>

@@ -1,0 +1,56 @@
+<!-- 必须全局拥有唯一的id -->
+<div>
+    <el-form-q :field-data="queryFields" :buttons="queryButtons"></el-form-q>
+    <div class="yu-toolBar">
+        <el-button-group>
+            <!-- <el-button icon="plus" @click="addFn">新增</el-button> -->
+            <el-button icon="edit" @click="modifyFn">修改</el-button>
+            <el-button icon="yx-bin" @click="deleteFn">删除</el-button>
+            <el-button icon="arrow-up" @click="connectFn">渠道对接方式</el-button>
+            <el-button icon="d-caret" @click="changeFn">渠道对接方式切换</el-button>
+            <el-button icon="minus" @click="mktSetFn">营销位管理</el-button>
+        </el-button-group>
+    </div>
+    <el-table-x ref="reftable" :checkbox="true" data-url="/api/cmfrcchannelmgr/list" :table-columns="tableColumns">
+    </el-table-x>
+    <!--新增、修改、详情界面-->
+    <el-dialog-x :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+        <el-form-x ref="reform" :group-fields="updateFields" :buttons="buttons" :disabled="formDisabled" label-width="120px">
+        </el-form-x>
+    </el-dialog-x>
+    <!--渠道对接维护界面-->
+    <el-dialog-x :title="titleConnect" :visible.sync="dialogVisibleConnect" width="650px">
+        <yu-tabs v-model="activeName" type="card">
+            <yu-tab-pane label="批量文件" name="first">
+                <el-form-x ref="reformFile" :group-fields="updateFieldsFile" :buttons="buttonsFile" label-width="120px">
+                </el-form-x>
+            </yu-tab-pane>
+            <yu-tab-pane label="联机交易" name="second">
+                <el-form-x ref="reformDeal" :group-fields="updateFieldsDeal" :buttons="buttonsDeal" label-width="120px">
+                </el-form-x>
+            </yu-tab-pane>
+        </yu-tabs>
+    </el-dialog-x>
+    <!--渠道对接启用界面-->
+    <el-dialog-x :title="titleChange" :visible.sync="dialogVisibleChange" width="650px">
+        <el-form-x ref="reformChange" :group-fields="updateFieldsChange" :buttons="buttonsChange" label-width="80px">
+        </el-form-x>
+    </el-dialog-x>
+    <!--营销位管理维护界面-->
+    <el-dialog-x :title="titleMkt" :visible.sync="dialogVisibleMkt" width="650px">
+        <div class="yu-toolBar">
+            <el-button-group>
+                <el-button icon="plus" @click="addMktFn">新增</el-button>
+                <el-button icon="edit" @click="modifyMktFn">修改</el-button>
+                <el-button icon="yx-bin" @click="deleteMktFn">删除</el-button>
+                <el-button icon="close" @click="closeMktFn">关闭</el-button>
+            </el-button-group>
+        </div>
+        <el-table-x ref="reftableMkt" :checkbox="true" data-url="/api/mktposition/setlist" :table-columns="tableColumnsMkt">
+        </el-table-x>
+    </el-dialog-x>
+    <el-dialog-x :title="titleMktSet" :visible.sync="dialogVisibleMktSet" width="650px">
+        <el-form-x ref="reformMktSet" :group-fields="updateFieldsMktSet" :buttons="buttonsMktSet" label-width="80px">
+        </el-form-x>
+    </el-dialog-x>
+</div>

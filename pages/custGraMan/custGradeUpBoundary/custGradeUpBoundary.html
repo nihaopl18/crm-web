@@ -1,0 +1,56 @@
+<!--
+  @created by 张成龙 on 2019-1-17 16:32:49
+  @updated by
+  @description 等级提升临界客户查询
+-->
+<div >
+  <yu-xform related-table-name="refTable" form-type="search" v-model="searchformData">
+      <yu-xform-group :column="6">
+          <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016"></yu-xform-item>
+        <yu-xform-item placeholder="归属机构" ctype="yufp-org-tree" name="orgId"></yu-xform-item>
+        <yu-xform-item placeholder="客户经理名称" ctype="yufp-mgr-selector" name="mgrName" :params="custManagerParams" @select-fn="userSelectFn"></yu-xform-item>
+        <yu-xform-item placeholder="客户编号" ctype="input" name="custId"></yu-xform-item>
+        <yu-xform-item placeholder="客户名称" ctype="input" name="custName"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <div class="yu-toolBar">
+      <yu-button-group>
+        <yu-button icon="document" @click="changeDel">可提升业务明细查看</yu-button>
+      </yu-button-group>
+    </div>
+    <yu-xtable ref="refTable" class="permitSelect" @contextmenu.prevent.stop.native row-number :data-url="dataUrl" :default-load="false" selection-type="radio">
+      <yu-xtable-column label="客户编号" prop="custId" ></yu-xtable-column>
+      <yu-xtable-column label="客户名称" prop="custName" ></yu-xtable-column>
+      <yu-xtable-column label="等级类型" prop="levelType"  :options="levelType"></yu-xtable-column>
+      <yu-xtable-column label="当前等级" prop="custLevel"  data-code="CD0445"></yu-xtable-column>
+      <yu-xtable-column label="可提升等级" prop="criticalCustLevel"  data-code="CD0445"></yu-xtable-column>
+      <yu-xtable-column label="提升量" prop="promoteAmount" :formatter="formTsl" ></yu-xtable-column>
+    </yu-xtable>
+     <yu-xdialog title="可提升业务明细列表" :visible.sync="dialogVisible" width="1350px">
+     <yu-xtable ref="refTable2" row-number  selection-type="radio" :data-url="dataUrldetail" :data="changeDelData">
+      <yu-xtable-column label="客户编号" prop="custId" ></yu-xtable-column>
+      <yu-xtable-column label="客户名称" prop="custName"  sortable></yu-xtable-column>
+      <yu-xtable-column label="等级类型" prop="levelType"  :options="levelType"></yu-xtable-column>
+      <yu-xtable-column label="客户当前等级" prop="custLevel"  data-code="CD0445"></yu-xtable-column>
+      <yu-xtable-column label="客户临界等级" prop="criticalCustLevel"  data-code="CD0445"></yu-xtable-column>
+      <yu-xtable-column label="临界指标号" prop="criticalTargetId" v-if="false"></yu-xtable-column>
+      <yu-xtable-column label="临界指标当前值" prop="criticaltargetValue" ></yu-xtable-column>
+      <yu-xtable-column label="等级提升下限" prop="nextTargetValue"  ></yu-xtable-column>
+      <yu-xtable-column label="指标差额" prop="targetBalance"  ></yu-xtable-column>
+      <yu-xtable-column label="数据日期" prop="dataDt" :formatter="formData"  ></yu-xtable-column>
+    </yu-xtable> 
+    <div class="yu-grpButton">
+      <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+    </div>
+    </yu-xdialog> 
+</div>
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

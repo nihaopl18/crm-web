@@ -1,0 +1,65 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2020-1-7 16:23:39.
+  @updated by
+  @description 业绩批量导入
+-->
+<div class="commonPerformance">
+  <div style="margin: 10px 0px;">
+    <yu-xdynamic-form ref="searchForm" mode="normal" :template-data="templateData" v-if="isInitData"></yu-xdynamic-form>
+    <div style="float:right;">
+      <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetFn">重置</yu-button>
+    </div>
+  </div>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <!--
+      <yu-button icon="yx-download" @click="downloadFn">导出</yu-button>
+      <yu-button icon="yx-download" @click="openDownloadFn">下载界面</yu-button>-->
+      <yu-button icon="yx-download" @click="downloadAsyncFn" :loading="downloading">导出</yu-button>
+      <yu-button icon="yx-upload" @click="openUploadDialogFn">导入</yu-button>
+    </yu-button-group>
+  </div>
+  <!-- 导出进度条 开始-->
+  <el-dialog class="dialog-panel pop-sm" title="导出进度" :visible.sync="exportDataProgress" :show-close="false">
+    <div style="text-align: center;">
+        <el-progress :text-inside="true" :stroke-width="26" :percentage="percentage"></el-progress>
+    </div>
+  </el-dialog>
+
+  <!-- 下载成功界面 开始-->
+  <el-dialog class="dialog-panel pop-sm" title="下载界面" :visible.sync="exportDataSuccess">
+    <div style="text-align: center;">
+        <h4>导出成功，请点击按钮下载!</h4>
+        <br />
+        <yu-button icon="download" type="primary" @click="downloadExcelFn">下载</yu-button>
+    </div>
+  </el-dialog>
+
+  <yu-xtable ref="refTable" height="550" row-number :data-url="dataUrl" selection-type="radio" 
+    :default-load="false" v-show="xtableShow" @loaded="refTableLoaded">
+    <yu-xtable-column v-for="(item, index) in tableColList" 
+      :key="index" :label="item.label" :prop="item.ename" :width="item.width" :data-code="item.dataCode"></yu-xtable-column>
+  </yu-xtable>
+  <yu-xdialog title="业绩分配文件导入" :visible.sync="dialogVisible" width="40%">
+    <center>
+      <yu-upload
+        class="upload-demo"
+        :action="action"
+        :data="uploadData"
+        :headers="uploadHeaders"
+        :before-upload="beforeFileUpload"
+        :on-success="uploadSuccessFn"
+        :on-error="uploadErrorFn"
+        :on-timeout="uploadTimeoutFn"
+        :timeout="720000"
+        :show-file-list="false"
+        :auto-upload="true"
+        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        >
+        <yu-button size="small" type="primary">点击上传</yu-button>
+        <div slot="tip" class="el-upload__tip">请导入当前页面选择的业绩类型对应的模板文件</div>
+      </yu-upload>
+    </center>
+  </yu-xdialog>
+</div>

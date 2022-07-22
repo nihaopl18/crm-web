@@ -1,0 +1,762 @@
+<!-- 
+  @Created by 林鸿杰 yanty1@yusys.com.cn on 2022-2-22 15:51:54.
+  @updated by
+  @description 产品视图
+-->
+<div id="productmain">
+    <div class="containermain">
+        <div class="container">
+            <div>
+                <div class="cpmcclass" :title="cpmc">{{cpmc}}</div>
+                <div class="focusclass" @click.stop="handleFocusChange()">
+                    <p>
+                        <!-- <span>{{ guanzhu == true ? '关注' : '未关注' }}</span> -->
+                        <span>关注</span>
+                        <i :class="[guanzhu == true ? 'el-icon-yx-star-full' : 'el-icon-yx-star-empty', 'focus']"></i>
+                    </p>
+                </div>
+            </div>
+            <div class="cpztclass"></div>
+            <div style="width:150px">数据更新日期：{{gxsj}}</div>
+        </div>
+        <div style="height: 150px;" class="labelmore">
+            <yu-col :span="6">
+                <div>产品代码：{{cpdm}}</div>
+                <div>认购开始日：{{rgksr}}</div>
+            </yu-col>
+            <yu-col :span="6">
+                <div>源产品代码：{{ycpdm}}</div>
+                <div>认购结束日：{{rgjsr}}</div>
+            </yu-col>
+            <yu-col :span="6">
+                <div>风险级别：{{fxjb}}</div>
+                <div>利率：{{lilv}}</div>
+            </yu-col>
+            <yu-col :span="6">
+                <div>产品类别：{{cplb}}</div>
+                <div>产品状态：{{cpzt}}</div>
+            </yu-col>
+        </div>
+    </div>
+    <div class="tabBox dy-tabs">
+        <yu-tabs v-model="activeName" type="card" @tab-click="handleClick">
+            <yu-tab-pane label="基础信息" name="baseInfo">
+                <yu-col :span="23">
+                    <h2 style="padding-left: 10px;">产品分类信息</h2>
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdatafl">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="产品代码" name="prodCode" rules="required" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="源产品代码" name="srcProdCode" ctype="input" rules="required" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品中文名称" name="prodName" rules="required" ctype="input" :colspan="24"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <!-- 存款 -->
+                    <h2 style="padding-left: 10px;" v-if="cunkuan==true">存款产品资讯</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="cunkuan==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="基准利率（单位%）" name="baseRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="利率浮动比例（单位%）" name="rateFloatRatio" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="利率（单位%）" name="rate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="币种" name="ccy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="期限" name="term" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低起存金额" name="minDepositAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低支取金额" name="minCrawAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="存期类型" name="termType" ctype="select" :colspan="12" data-code="DY0008"></yu-xform-item>
+                            <yu-xform-item label="利率类型" name="rateType" ctype="select" :colspan="12" data-code="RATE_TYPE"></yu-xform-item>
+                            <yu-xform-item label="央行利率标志" name="pbocRateFlag" ctype="select" :colspan="12" data-code="YES_NO"></yu-xform-item>
+                            <yu-xform-item label="最高利率（单位%）" name="maxRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低利率（单位%）" name="minRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="浮动利率（单位%）" name="floatRate" ctype="input" :colspan="12"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="cunkuan==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="cunkuan==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="生效日期" name="effectDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="金额" name="amt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="基本天数" name="basicDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="失效日期" name="invalidDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最新修改人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改日期" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="是否自动更新信息" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <!-- 结构化理财 -->
+                    <h2 style="padding-left: 10px;" v-if="jiegouhua==true">结构化产品资讯</h2>
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="jiegouhua==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="产品英文名称" name="prodEngName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品简称" name="prodShortName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="TA代码" name="taCode" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管银行代码" name="escrowBankNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管账号" name="escrowAcctNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管手续费费率" name="escrowFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="状态" name="prodStatus" ctype="select" :colspan="12" data-code="PROD_STATUS"></yu-xform-item>
+                            <yu-xform-item label="产品成立日" name="prodEstablishDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品到期日" name="prodExpiryDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购开始日" name="subscribeStartDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购结束日" name="subscribeEndDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="交易开始时间" name="transStartTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="交易结束时间" name="transEndTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="计价币种" name="priceCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="交易币种" name="transCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="首次最低投资金额" name="firstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="总额度" name="totalAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="已发售额度" name="soldAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="分红方式" name="bounsType" ctype="select" :colspan="12" data-code="BOUNS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="最低追加投资资金" name="minAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低转化金额" name="minConversionAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低赎回金额" name="minRedeemAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低持有金额" name="minHoldAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="管理费比率" name="manageFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="巨额赎回标志" name="hugeAmtRedeemFlag" ctype="select" :colspan="12" data-code="HUGE_REDEEM_FLAG"></yu-xform-item>
+                            <yu-xform-item label="最新净值" name="prodNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品额度控制标志" name="prodAmtCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="帐务模式" name="liquMode" ctype="select" :colspan="12" data-code="LIQU_MODE"></yu-xform-item>
+                            <yu-xform-item label="个人单笔最低赎回份额" name="singleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低持有份额" name="minHoldShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构控制标志" name="orgCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="首次最低投资金额" name="firstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构单笔最低赎回份额" name="orgSingleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="jiegouhua==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="jiegouhua==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="机构单笔最大赎回份额" name="orgSingleMaxRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构首次最低投资金额ss" name="orgFirstMinInvestAmt" ctype="input" :colspan="12" @change=func( "d")></yu-xform-item>
+                            <yu-xform-item label="机构追加最低投资金额" name="orgMinAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="允许渠道组" :multiple="true" name="allowChannelGroup" collapse-tags :title="allowLoadFn(activeAddFormdataother.allowChannelGroup)" ctype="select" :colspan="12" data-code="CHANNEL_GROUP"></yu-xform-item>
+                            <yu-xform-item label="面值" name="parValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="赎回资金到账天数" name="redeemAmtReceiptDay" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="分红资金到账天数" name="bonusRecivedDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="模板产品代码" name="templateProdNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="理财产品类型" name="financeProdType" ctype="select" :colspan="12" data-code="PROD_TYPE"></yu-xform-item>
+                            <yu-xform-item label="手续费计算方式" name="feeCalType" ctype="select" :colspan="12" data-code="CAL_TYPE"></yu-xform-item>
+                            <yu-xform-item label="份额保留小数位数" name="shareDecimalPoint" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="返款日期类型" name="repayDateType" ctype="select" :colspan="12" data-code="DATE_TYPE"></yu-xform-item>
+                            <yu-xform-item label="收益特征" name="incomeFeatures" ctype="select" :colspan="12" data-code="INCOME_FEATURES"></yu-xform-item>
+                            <yu-xform-item label="风险等级" name="riskLevel" ctype="select" :colspan="12" data-code="RISKLEVEL"></yu-xform-item>
+                            <yu-xform-item label="是否自动更新" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="预期收益率" name="expectReturnRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="预期最低收益率" name="expectMinReturnRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售范围" name="prodSaleRange" :multiple="true" collapse-tags :title="orgFn(activeAddFormdataother.prodSaleRange)" ctype="select" :colspan="12" data-code="ORG_BRACH"></yu-xform-item>
+                            <yu-xform-item label="最小赎回单位" name="minRedeemUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购模式" name="subscribeType" ctype="select" :colspan="12" data-code="SUBS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="认申购退款结算天数" name="subscribeRefundSettleDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="发行失败资金到账天数" name="releaseFundDaysOfPublishFailure" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="明细赎回模式" name="detailRedeemType" ctype="select" :colspan="12" data-code="REDEEM_TYPE"></yu-xform-item>
+                            <yu-xform-item label="钞汇标志" name="cashFlag" ctype="select" :colspan="12" data-code="CASH_FLAG"></yu-xform-item>
+                            <yu-xform-item label="认购撤单标志" name="subscribeRevokeFlag" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                            <yu-xform-item label="月末净值" name="monthEndNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="净值显示方式" name="netValueShowType" ctype="select" :colspan="12" data-code="NET_SHOW_TYPE"></yu-xform-item>
+                            <yu-xform-item label="FOUNDCOST" name="foundcost" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品期限" name="term" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最新修改人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改日期" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最小认购单位" name="minSubscribeUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="允许客户属性组" :multiple="true" name="allrowCustPpropertyGroup" collapse-tags :title="allowLoadFnclass(activeAddFormdataother.allrowCustPpropertyGroup)" ctype="select" :colspan="12" data-code="CUST_PROP_GROP"></yu-xform-item>
+                            <yu-xform-item label="预期最高收益率" name="expectMaxReturnRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售属性" :multiple="true" name="prodSaleAttr" ctype="select" :colspan="12" data-code="SALE_ATTR"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+
+                    <!-- 信托 -->
+                    <h2 style="padding-left: 10px;" v-if="xintuo==true">信托产品资讯</h2>
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="xintuo==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="产品英文名称" name="prodEngName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品简称" name="prodShortName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="TA代码" name="taCode" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管银行代码" name="escrowBankNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管账号" name="escrowAcctNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管手续费费率" name="escrowFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="状态" name="prodStatus" ctype="select" :colspan="12" data-code="PROD_STATUS"></yu-xform-item>
+                            <yu-xform-item label="产品成立日" name="prodEstablishDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品到期日" name="prodExpiryDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购开始日" name="subscribeStartDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低转化金额" name="minConversionAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低赎回金额" name="minRedeemAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低持有金额" name="minHoldAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="管理费比率" name="manageFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="收益特征" name="incomeFeatures" ctype="select" :colspan="12" data-code="INCOME_FEATURES"></yu-xform-item>
+                            <yu-xform-item label="巨额赎回标志" name="hugeAmtRedeemFlag" ctype="select" :colspan="12" data-code="HUGE_REDEEM_FLAG"></yu-xform-item>
+                            <yu-xform-item label="交易开始时间" name="transStartTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="交易结束时间" name="transEndTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="计价币种" name="priceCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="交易币种" name="transCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="首次最低投资金额" name="firstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="总额度" name="totalAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="已发售额度" name="soldAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="分红方式" name="bounsType" ctype="select" :colspan="12" data-code="BOUNS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="最低追加投资资金" name="minAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最新净值" name="prodNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品额度控制标志" name="prodAmtCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="帐务模式" name="liquMode" ctype="select" :colspan="12" data-code="LIQU_MODE"></yu-xform-item>
+                            <yu-xform-item label="个人单笔最低赎回份额" name="singleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低持有份额" name="minHoldShare" ctype="input" :colspan="12"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="xintuo==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="xintuo==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="机构控制标志" name="orgCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="机构单笔最小赎回份额" name="orgSingleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构单笔最大赎回份额" name="orgSingleMaxRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构首次最低投资金额" name="orgFirstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构追加最低投资金额" name="orgMinAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="允许渠道组" :multiple="true" name="allowChannelGroup" ctype="select" collapse-tags :title="allowLoadFn(activeAddFormdataother.allowChannelGroup)" :colspan="12" data-code="CHANNEL_GROUP"></yu-xform-item>
+                            <yu-xform-item label="面值" name="parValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="赎回资金到账天数" name="redeemAmtReceiptDay" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="分红资金到账天数" name="bonusRecivedDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="模板产品代码" name="templateProdNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="理财产品类型" name="financeProdType" ctype="select" :colspan="12" data-code="PROD_TYPE"></yu-xform-item>
+                            <yu-xform-item label="手续费计算方式" name="feeCalType" ctype="select" :colspan="12" data-code="CAL_TYPE"></yu-xform-item>
+                            <yu-xform-item label="份额保留小数位数" name="shareDecimalPoint" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="返款日期类型" name="repayDateType" ctype="select" :colspan="12" data-code="DATE_TYPE"></yu-xform-item>
+                            <yu-xform-item label="产品期限" name="prodTerm" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="是否自动更新信息" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="预期收益率" name="expectReturnRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="预期最低收益率" name="expectMinReturnRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售范围" name="prodSaleRange" :multiple="true" ctype="select" collapse-tags :title="orgFn(activeAddFormdataother.prodSaleRange)" :colspan="12" data-code="ORG_BRACH"></yu-xform-item>
+                            <yu-xform-item label="风险等级" name="riskLevel" ctype="select" :colspan="12" data-code="RISKLEVEL"></yu-xform-item>
+                            <yu-xform-item label="最小认购单位" name="minSubscribeUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="允许客户属性组" :multiple="true" name="allrowCustPpropertyGroup" collapse-tags :title="allowLoadFnclass(activeAddFormdataother.allrowCustPpropertyGroup)" ctype="select" :colspan="12" data-code="CUST_PROP_GROP"></yu-xform-item>
+                            <yu-xform-item label="最小赎回单位" name="minRedeemUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购模式" name="subscribeType" ctype="select" :colspan="12" data-code="SUBS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="认申购退款结算天数" name="subscribeRefundSettleDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="发行失败资金到账天数" name="releaseFundDaysOfPublishFailure" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="明细赎回模式" name="detailRedeemType" ctype="select" :colspan="12" data-code="REDEEM_TYPE"></yu-xform-item>
+                            <yu-xform-item label="钞汇标志" name="cashFlag" ctype="select" :colspan="12" data-code="CASH_FLAG"></yu-xform-item>
+                            <yu-xform-item label="认购撤单标志" name="subscribeRevokeFlag" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                            <yu-xform-item label="月末净值" name="monthEndNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="净值显示方式" name="netValueShowType" ctype="select" :colspan="12" data-code="NET_SHOW_TYPE"></yu-xform-item>
+                            <yu-xform-item label="产品特殊属性" name="prodSpecialAttr" ctype="select" :colspan="12" data-code="PROD_SPE_ATTR"></yu-xform-item>
+                            <yu-xform-item label="FOUNDCOST" name="foundcost" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改日期" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="预期最高收益率" name="expectMaxReturnRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售属性" :multiple="true" name="prodSaleAttr" ctype="select" :colspan="12" data-code="SALE_ATTR"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+
+                    <!-- QDII -->
+                    <h2 style="padding-left: 10px;" v-if="qdii==true">QDII产品资讯</h2>
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="qdii==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="产品英文名称" name="prodEngName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品简称" name="prodShortName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="TA代码" name="taCode" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管银行代码" name="escrowBankNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管账号" name="escrowAcctNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管手续费费率" name="escrowFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="状态" name="prodStatus" ctype="select" :colspan="12" data-code="PROD_STATUS"></yu-xform-item>
+                            <yu-xform-item label="认购开始日" name="subscribeStartDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购结束日" name="subscribeEndDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="交易开始时间" name="transStartTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="交易结束时间" name="transEndTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="首次最低投资金额" name="firstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="计价币种" name="priceCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="交易币种" name="transCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="总额度" name="totalAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="已发售额度" name="soldAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="分红方式" name="bounsType" ctype="select" :colspan="12" data-code="BOUNS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="最低追加投资资金" name="minAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低转化金额" name="minConversionAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低赎回金额" name="minRedeemAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低持有金额" name="minHoldAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="管理费比率" name="manageFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="巨额赎回标志" name="hugeAmtRedeemFlag" ctype="select" :colspan="12" data-code="HUGE_REDEEM_FLAG"></yu-xform-item>
+                            <yu-xform-item label="产品到期日" name="prodExpiryDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最新净值" name="prodNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品额度控制标志" name="prodAmtCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="帐务模式" name="liquMode" ctype="select" :colspan="12" data-code="LIQU_MODE"></yu-xform-item>
+                            <yu-xform-item label="个人单笔最低赎回份额" name="singleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低持有份额" name="minHoldShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构控制标志" name="orgCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="qdii==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="qdii==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="机构单笔最小赎回份额" name="orgSingleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构单笔最大赎回份额" name="orgSingleMaxRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构首次最低投资金额" name="orgFirstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构追加最低投资金额" name="orgMinAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="允许渠道组" :multiple="true" name="allowChannelGroup" ctype="select" collapse-tags :title="allowLoadFn(activeAddFormdataother.allowChannelGroup)" :colspan="12" data-code="CHANNEL_GROUP"></yu-xform-item>
+                            <yu-xform-item label="面值" name="parValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="赎回资金到账天数" name="redeemAmtReceiptDay" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="QDII产品类型" name="qdiiProdType" ctype="select" :colspan="12" data-code="QDII_TYPE"></yu-xform-item>
+                            <yu-xform-item label="手续费计算方式" name="feeCalType" ctype="select" :colspan="12" data-code="CAL_TYPE"></yu-xform-item>
+                            <yu-xform-item label="是否自动更新" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售属性" :multiple="true" name="prodSaleAttr" ctype="select" :colspan="12" data-code="SALE_ATTR"></yu-xform-item>
+                            <yu-xform-item label="份额保留小数位数" name="shareDecimalPoint" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="返款日期类型" name="repayDateType" ctype="select" :colspan="12" data-code="DATE_TYPE"></yu-xform-item>
+                            <yu-xform-item label="收益特征" name="incomeFeatures" ctype="select" :colspan="12" data-code="INCOME_FEATURES"></yu-xform-item>
+                            <yu-xform-item label="境外资金运作方式" name="foreignAmtOperateType" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="风险等级" name="riskLevel" ctype="select" :colspan="12" data-code="RISKLEVEL"></yu-xform-item>
+                            <yu-xform-item label="最小认购单位" name="minSubscribeUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="允许客户属性组" :multiple="true" name="allrowCustPpropertyGroup" ctype="select" collapse-tags :title="allowLoadFnclass(activeAddFormdataother.allrowCustPpropertyGroup)" :colspan="12" data-code="CUST_PROP_GROP"></yu-xform-item>
+                            <yu-xform-item label="最小赎回单位" name="minRedeemUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改日期" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售范围" name="prodSaleRange" :multiple="true" ctype="select" collapse-tags :title="orgFn(activeAddFormdataother.prodSaleRange)" :colspan="12" data-code="ORG_BRACH"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+
+
+                    <!-- 代收付 -->
+                    <h2 style="padding-left: 10px;" v-if="daishoufu==true">代收付产品资讯</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="daishoufu==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="产品英文名称" name="prodEngName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品简称" name="prodShortName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="TA代码" name="taCode" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管银行代码" name="escrowBankNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管账号" name="escrowAcctNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="托管手续费费率" name="escrowFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="状态" name="prodStatus" ctype="select" :colspan="12" data-code="PROD_STATUS"></yu-xform-item>
+                            <yu-xform-item label="认购开始日期" name="subscribeStartDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购结束日期" name="subscribeEndDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="交易开始时间" name="transStartTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="交易结束时间" name="transEndTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="首次最低投资金额" name="firstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="计价币种" name="priceCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="交易币种" name="transCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="分红方式" name="bounsType" ctype="select" :colspan="12" data-code="BOUNS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="代理费率" name="proxyFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品交收日" name="prodSettleDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品到期日" name="prodExpiryDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最新净值" name="prodNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品额度控制标志" name="prodAmtCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="daishoufu==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="daishoufu==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="帐务模式" name="liquMode" ctype="select" :colspan="12" data-code="LIQU_MODE"></yu-xform-item>
+                            <yu-xform-item label="机构控制标志" name="orgCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="机构首次最低投资金额" name="orgFirstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="允许渠道组" :multiple="true" name="allowChannelGroup" ctype="select" collapse-tags :title="allowLoadFn(activeAddFormdataother.allowChannelGroup)" :colspan="12" data-code="CHANNEL_GROUP"></yu-xform-item>
+                            <yu-xform-item label="面值" name="parValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认申购退款结算天数" name="subscribeRefundSettleDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="赎回资金到账天数" name="redeemAmtReceiptDay" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="分红资金到账天数" name="bonusRecivedDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="是否自动更新信息" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="预期最高收益率" name="expectMaxReturnRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售属性" :multiple="true" name="prodSaleAttr" ctype="select" :colspan="12" data-code="SALE_ATTR"></yu-xform-item>
+                            <yu-xform-item label="份额保留小数位数" name="shareDecimalPoint" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="返款日期类型" name="repayDateType" ctype="select" :colspan="12" data-code="DATE_TYPE"></yu-xform-item>
+                            <yu-xform-item label="风险等级" name="riskLevel" ctype="select" :colspan="12" data-code="RISKLEVEL"></yu-xform-item>
+                            <yu-xform-item label="允许客户属性组" :multiple="true" name="allrowCustPpropertyGroup" ctype="select" :colspan="12" collapse-tags :title="allowLoadFnclass(activeAddFormdataother.allrowCustPpropertyGroup)" data-code="CUST_PROP_GROP"></yu-xform-item>
+                            <yu-xform-item label="FOUNDCOST" name="foundcost" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品期限" name="prodTerm" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="更新人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="更新时间" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="预期收益率" name="expectReturnRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="预期最低收益率" name="expectMinReturnRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售范围" name="prodSaleRange" :multiple="true" ctype="select" collapse-tags :title="orgFn(activeAddFormdataother.prodSaleRange)" :colspan="12" data-code="ORG_BRACH"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+
+
+                    <!-- 人民币基金 -->
+                    <h2 style="padding-left: 10px;" v-if="renminbi==true">人民币基金产品资讯</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="renminbi==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="产品英文名称" name="prodEngName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品简称" name="prodShortName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="TA代码" name="taCode" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发起编号" name="prodStarter" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发起人" name="prodStarterName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品管理编号" name="prodManager" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品管理人" name="prodManagerName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品托管编号" name="prodTrusteeNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品托管人" name="prodTrusteeName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品托管费率" name="prodEscrowFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="管理费比率" name="manageFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品净值" name="prodNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品面值" name="prodParValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="发行价格" name="publishPrice" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="交易币种" name="transCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="产品币种" name="prodCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="募集开始日期" name="raiseStartDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="募集结束日期" name="raiseEndDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品成立日期" name="prodEstablishDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品到期日期" name="prodExpiryDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品规模" name="prodAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购模式" name="subscribeType" ctype="select" :colspan="12" data-code="SUBS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="最小认购单位" name="minSubscribeUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="赎回资金到账天数" name="redeemAmtReceiptDay" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="分红资金到账天数" name="bonusRecivedDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认申购退款结算天数" name="subscribeRefundSettleDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="发行失败资金到账天数" name="releaseFundDaysOfPublishFailure" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="个人首次最低投资金额" name="firstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="个人追加最低投资金额" name="minAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购撤单标志" name="subscribeRevokeFlag" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="renminbi==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="renminbi==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="默认分红方式" name="defaultBounsType" ctype="select" :colspan="12" data-code="BOUNS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="开市时间" name="marketOpenTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="闭市时间" name="closedTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="额度控制标志" name="amtCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="允许渠道组" :multiple="true" name="allowChannelGroup" ctype="select" collapse-tags :title="allowLoadFn(activeAddFormdataother.allowChannelGroup)" :colspan="12" data-code="CHANNEL_GROUP"></yu-xform-item>
+                            <yu-xform-item label="转换标志" name="transformFlag" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                            <yu-xform-item label="产品属性" name="prodAttr" ctype="select" :colspan="12" data-code="INCOME_FEATURES"></yu-xform-item>
+                            <yu-xform-item label="风险等级" name="riskLevel" ctype="select" :colspan="12" data-code="RISKLEVEL"></yu-xform-item>
+                            <yu-xform-item label="产品总份额" name="prodShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品累计净值" name="prodTotalNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="默认巨额赎回标志" name="defaultHugeRedeemFlag" ctype="select" :colspan="12" data-code="HUGE_REDEEM_FLAG"></yu-xform-item>
+                            <yu-xform-item label="产品状态" name="prodStatus" ctype="select" :colspan="12" data-code="PROD_STATUS"></yu-xform-item>
+                            <yu-xform-item label="产品总额度" name="prodTotalAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品已发售额度" name="prodSoldAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="帐务模式" name="liquMode" ctype="select" :colspan="12" data-code="LIQU_MODE"></yu-xform-item>
+                            <yu-xform-item label="钞汇标志" name="cashFlag" ctype="select" :colspan="12" data-code="CASH_FLAG"></yu-xform-item>
+                            <yu-xform-item label="个人单笔最小赎回份额" name="singleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低持有份额" name="minHoldShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="是否自动更新" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售属性" :multiple="true" name="prodSaleAttr" ctype="select" :colspan="12" data-code="SALE_ATTR"></yu-xform-item>
+                            <yu-xform-item label="机构单笔最小赎回份额" name="orgSingleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构单笔最大赎回份额" name="orgSingleMaxRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构首次最低投资金额" name="orgFirstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构追加最低投资金额" name="orgMinAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="允许的分红方式" name="allowBounsType" ctype="select" :colspan="12" data-code="BOUNS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="最低资管转换份额" name="minFundConversionShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低自动申购份额" name="minAutoSubscriptionShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="明细赎回模式" name="detailRedeemType" ctype="select" :colspan="12" data-code="REDEEM_TYPE"></yu-xform-item>
+                            <yu-xform-item label="手续费收费方式" name="feeChargeType" ctype="select" :colspan="12" data-code="CAL_TYPE"></yu-xform-item>
+                            <yu-xform-item label="份额保留小数位数" name="shareDecimalPoint" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="返款日期类型" name="repayDateType" ctype="select" :colspan="12" data-code="DATE_TYPE"></yu-xform-item>
+                            <yu-xform-item label="允许客户属性组" :multiple="true" name="allrowCustPpropertyGroup" ctype="select" collapse-tags :title="allowLoadFnclass(activeAddFormdataother.allrowCustPpropertyGroup)" :colspan="12" data-code="CUST_PROP_GROP"></yu-xform-item>
+                            <yu-xform-item label="最小赎回单位" name="minRedeemUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品暂停申购是否允许定投" name="prodSuspendIsAllowAip" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                            <yu-xform-item label="更新人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构控制标志" name="orgCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="个人单笔最大赎回份额" name="orgSingleMaxRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="更新时间" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售范围" name="prodSaleRange" :multiple="true" collapse-tags :title="orgFn(activeAddFormdataother.prodSaleRange)" ctype="select" :colspan="12" data-code="ORG_BRACH"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+
+                    <!-- 代销信托 -->
+                    <h2 style="padding-left: 10px;" v-if="daixiaoxt==true">代销信托产品资讯</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="daixiaoxt==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="产品英文名称" name="prodEngName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品简称" name="prodShortName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="TA代码" name="taCode" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发起编号" name="prodStarter" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发起人" name="prodStarterName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品管理编号" name="prodManager" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品管理人" name="prodManagerName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品托管编号" name="prodTrusteeNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品托管人" name="prodTrusteeName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品托管费率" name="prodEscrowFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="管理费比率" name="manageFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品净值" name="prodNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品面值" name="prodParValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="发行价格" name="publishPrice" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="交易币种" name="transCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="产品币种" name="prodCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="募集开始日期" name="raiseStartDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="募集结束日期" name="raiseEndDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品成立日期" name="prodEstablishDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品到期日期" name="prodExpiryDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品规模" name="prodAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购模式" name="subscribeType" ctype="select" :colspan="12" data-code="SUBS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="最小认购单位" name="minSubscribeUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="赎回资金到账天数" name="redeemAmtReceiptDay" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="分红资金到账天数" name="bonusRecivedDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认申购退款结算天数" name="subscribeRefundSettleDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="发行失败资金到账天数" name="releaseFundDaysOfPublishFailure" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="个人首次最低投资金额" name="firstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="个人追加最低投资金额" name="minAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购撤单标志" name="subscribeRevokeFlag" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="daixiaoxt==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="daixiaoxt==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="默认分红方式" name="defaultBounsType" ctype="select" :colspan="12" data-code="BOUNS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="开市时间" name="marketOpenTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="闭市时间" name="closedTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="额度控制标志" name="amtCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="允许渠道组" :multiple="true" name="allowChannelGroup" ctype="select" :colspan="12" collapse-tags :title="allowLoadFn(activeAddFormdataother.allowChannelGroup)" data-code="CHANNEL_GROUP"></yu-xform-item>
+                            <yu-xform-item label="转换标志" name="transformFlag" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                            <yu-xform-item label="产品属性" name="prodAttr" ctype="select" :colspan="12" data-code="INCOME_FEATURES"></yu-xform-item>
+                            <yu-xform-item label="风险等级" name="riskLevel" ctype="select" :colspan="12" data-code="RISKLEVEL"></yu-xform-item>
+                            <yu-xform-item label="产品总份额" name="prodShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品累计净值" name="prodTotalNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="默认巨额赎回标志" name="defaultHugeRedeemFlag" ctype="select" :colspan="12" data-code="HUGE_REDEEM_FLAG"></yu-xform-item>
+                            <yu-xform-item label="产品状态" name="prodStatus" ctype="select" :colspan="12" data-code="PROD_STATUS"></yu-xform-item>
+                            <yu-xform-item label="产品总额度" name="prodTotalAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品已发售额度" name="prodSoldAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="帐务模式" name="liquMode" ctype="select" :colspan="12" data-code="LIQU_MODE"></yu-xform-item>
+                            <yu-xform-item label="钞汇标志" name="cashFlag" ctype="select" :colspan="12" data-code="CASH_FLAG"></yu-xform-item>
+                            <yu-xform-item label="个人单笔最小赎回份额" name="singleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低持有份额" name="minHoldShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="是否自动更新" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售属性" :multiple="true" name="prodSaleAttr" ctype="select" :colspan="12" data-code="SALE_ATTR"></yu-xform-item>
+                            <yu-xform-item label="机构单笔最小赎回份额" name="orgSingleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构单笔最大赎回份额" name="orgSingleMaxRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构首次最低投资金额" name="orgFirstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构追加最低投资金额" name="orgMinAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="允许的分红方式" name="allowBounsType" ctype="select" :colspan="12" data-code="BOUNS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="最低转换份额" name="minTransfromShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低自动申购份额" name="minAutoSubscriptionShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="明细赎回模式" name="detailRedeemType" ctype="select" :colspan="12" data-code="REDEEM_TYPE"></yu-xform-item>
+                            <yu-xform-item label="手续费收费方式" name="feeChargeType" ctype="select" :colspan="12" data-code="CAL_TYPE"></yu-xform-item>
+                            <yu-xform-item label="份额保留小数位数" name="shareDecimalPoint" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="返款日期类型" name="repayDateType" ctype="select" :colspan="12" data-code="DATE_TYPE"></yu-xform-item>
+                            <yu-xform-item label="允许客户属性组" :multiple="true" name="allrowCustPpropertyGroup" ctype="select" :colspan="12" collapse-tags :title="allowLoadFnclass(activeAddFormdataother.allrowCustPpropertyGroup)" data-code="CUST_PROP_GROP"></yu-xform-item>
+                            <yu-xform-item label="最小赎回单位" name="minRedeemUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品暂停申购是否允许定投" name="prodSuspendIsAllowAip" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                            <yu-xform-item label="更新人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构控制标志" name="orgCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="个人单笔最大赎回份额" name="singleMaxRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="更新时间" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售范围" name="prodSaleRange" :multiple="true" collapse-tags :title="orgFn(activeAddFormdataother.prodSaleRange)" ctype="select" :colspan="12" data-code="ORG_BRACH"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+
+                    <!-- 资管 -->
+                    <h2 style="padding-left: 10px;" v-if="ziguan==true">资管产品资讯</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="ziguan==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="产品英文名称" name="prodEngName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品简称" name="prodShortName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="TA代码" name="taCode" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发起编号" name="prodStarter" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发起人" name="prodStarterName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品管理编号" name="prodManager" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品管理人" name="prodManagerName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品托管编号" name="prodTrusteeNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品托管人" name="prodTrusteeName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品托管费率" name="prodEscrowFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="管理费比率" name="manageFeeRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品净值" name="prodNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品面值" name="prodParValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="发行价格" name="publishPrice" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="交易币种" name="transCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="产品币种" name="prodCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="募集开始日期" name="raiseStartDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="募集结束日期" name="raiseEndDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品成立日期" name="prodEstablishDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品到期日期" name="prodExpiryDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品规模" name="prodAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购模式" name="subscribeType" ctype="select" :colspan="12" data-code="SUBS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="最小认购单位" name="minSubscribeUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="赎回资金到账天数" name="redeemAmtReceiptDay" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="分红资金到账天数" name="bonusRecivedDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认申购退款结算天数" name="subscribeRefundSettleDays" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="发行失败资金到账天数" name="releaseFundDaysOfPublishFailure" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="个人首次最低投资金额" name="firstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="个人追加最低投资金额" name="minAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="认购撤单标志" name="subscribeRevokeFlag" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="ziguan==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="ziguan==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="默认分红方式" name="defaultBounsType" ctype="select" :colspan="12" data-code="BOUNS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="开市时间" name="marketOpenTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="闭市时间" name="closedTime" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="额度控制标志" name="amtCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="允许渠道组" :multiple="true" name="allowChannelGroup" ctype="select" collapse-tags :title="allowLoadFn(activeAddFormdataother.allowChannelGroup)" :colspan="12" data-code="CHANNEL_GROUP"></yu-xform-item>
+                            <yu-xform-item label="转换标志" name="transformFlag" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                            <yu-xform-item label="产品属性" name="prodAttr" ctype="select" :colspan="12" data-code="INCOME_FEATURES"></yu-xform-item>
+                            <yu-xform-item label="风险等级" name="riskLevel" ctype="select" :colspan="12" data-code="RISKLEVEL"></yu-xform-item>
+                            <yu-xform-item label="产品总份额" name="prodShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品累计净值" name="prodTotalNetValue" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="默认巨额赎回标志" name="defaultHugeRedeemFlag" ctype="select" :colspan="12" data-code="HUGE_REDEEM_FLAG"></yu-xform-item>
+                            <yu-xform-item label="产品状态" name="prodStatus" ctype="select" :colspan="12" data-code="PROD_STATUS"></yu-xform-item>
+                            <yu-xform-item label="产品总额度" name="prodTotalAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品已发售额度" name="prodSoldAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="帐务模式" name="liquMode" ctype="select" :colspan="12" data-code="LIQU_MODE"></yu-xform-item>
+                            <yu-xform-item label="钞汇标志" name="cashFlag" ctype="select" :colspan="12" data-code="CASH_FLAG"></yu-xform-item>
+                            <yu-xform-item label="个人单笔最小赎回份额" name="singleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低持有份额" name="minHoldShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="是否自动更新" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售属性" :multiple="true" name="prodSaleAttr" ctype="select" :colspan="12" data-code="SALE_ATTR"></yu-xform-item>
+                            <yu-xform-item label="机构单笔最小赎回份额" name="orgSingleMinRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构单笔最大赎回份额" name="orgSingleMaxRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构首次最低投资金额" name="orgFirstMinInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构追加最低投资金额" name="orgMinAppendInvestAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="允许的分红方式" name="allowBounsType" ctype="select" :colspan="12" data-code="BOUNS_TYPE"></yu-xform-item>
+                            <yu-xform-item label="最低资管转换份额" name="minFundConversionShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低自动申购份额" name="minAutoSubscriptionShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="明细赎回模式" name="detailRedeemType" ctype="select" :colspan="12" data-code="REDEEM_TYPE"></yu-xform-item>
+                            <yu-xform-item label="手续费收费方式" name="feeChargeType" ctype="select" :colspan="12" data-code="CAL_TYPE"></yu-xform-item>
+                            <yu-xform-item label="份额保留小数位数" name="shareDecimalPoint" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="返款日期类型" name="repayDateType" ctype="select" :colspan="12" data-code="DATE_TYPE"></yu-xform-item>
+                            <yu-xform-item label="允许客户属性组" :multiple="true" name="allrowCustPpropertyGroup" ctype="select" :colspan="12" collapse-tags :title="allowLoadFnclass(activeAddFormdataother.allrowCustPpropertyGroup)" data-code="CUST_PROP_GROP"></yu-xform-item>
+                            <yu-xform-item label="最小赎回单位" name="minRedeemUnit" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品暂停申购是否允许定投" name="prodSuspendIsAllowAip" ctype="select" :colspan="12" data-code="DY0011"></yu-xform-item>
+                            <yu-xform-item label="更新人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="机构控制标志" name="orgCtlFlag" ctype="select" :colspan="12" data-code="CTL_FLAG"></yu-xform-item>
+                            <yu-xform-item label="个人单笔最大赎回份额" name="orgSingleMaxRedeemShare" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="更新时间" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品发售范围" name="prodSaleRange" :multiple="true" collapse-tags :title="orgFn(activeAddFormdataother.prodSaleRange)" ctype="select" :colspan="12" data-code="ORG_BRACH"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+
+                    <!-- 保险产品 -->
+                    <h2 style="padding-left: 10px;" v-if="baoxian==true">保险产品资讯</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="baoxian==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="保险公司名称" name="insuranceCompanyName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="销售起期" name="saleStartDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="销售止期" name="saleEndDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="缴费年限" name="payYearTerm" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="保障年限" name="insuanceTerm" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="缴费方式" name="payType" ctype="select" :colspan="12" data-code="PAY_TYPE"></yu-xform-item>
+                            <yu-xform-item label="主/附险标志" name="mainAdditionFlag" ctype="select" :colspan="12" data-code="MAIN_NO"></yu-xform-item>
+                            <yu-xform-item label="投保年龄" name="insureAge" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="起售金额" name="minSaleAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="保险责任" name="insuranseLiability" ctype="input" :colspan="12"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="baoxian==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="baoxian==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="是否自动更新" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改日期" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+
+                    <!-- 贷款产品 -->
+                    <h2 style="padding-left: 10px;" v-if="daikuan==true">贷款产品资讯</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="daikuan==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <!-- <yu-xform-item label="是否需要抵押物" name="isNeedCollateral" ctype="input" :colspan="12" data-code="YES_NO"></yu-xform-item> -->
+                            <yu-xform-item label="币种" name="ccy" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="期限" name="term" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最高贷款额度" name="maxLoanAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="生效日期" name="effectDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="失效日期" name="invalidDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="合作项目" name="cooperateProject" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="最低贷款额度" name="minLoanAmt" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="基准利率（单位%）" name="baseRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="利率浮动比例（单位%）" name="rateFloatRate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="利率（单位%）" name="rate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="还款方式" name="repayType" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="担保方式" name="guaranteeType" ctype="select" :colspan="12" data-code="CD0357"></yu-xform-item>
+                            <yu-xform-item label="手续费用" name="feeAmt" ctype="input" :colspan="12"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="daikuan==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="daikuan==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="是否自动更新" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改日期" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+
+                    <!-- 信用卡产品 -->
+                    <h2 style="padding-left: 10px;" v-if="xinyongka==true">信用卡产品资讯</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdata" v-if="xinyongka==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="产品描述" name="prodDescription" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="银行卡服务代码" name="bankServiceNo" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="卡品牌" name="cardBrand" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="外币币种" name="foreignCcy" ctype="select" :colspan="12" data-code="CD0433"></yu-xform-item>
+                            <yu-xform-item label="卡有效期（年）" name="cardValidityTermYear" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="产品经理" name="prodMgeName" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="销售指引" name="saleGuide" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="生效日期" name="effectDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="失效日期" name="invalidDate" ctype="input" :colspan="12"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+                    <h2 style="padding-left: 10px;" v-if="xinyongka==true">其他信息</h2>
+
+                    <yu-xform ref="activeAddForm" label-width="200px" :disabled="infoDisabled" v-model="activeAddFormdataother" v-if="xinyongka==true">
+                        <yu-xform-group :column="3" class="jieucalss">
+                            <yu-xform-item label="是否自动更新" name="isAutoUpdate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改日期" name="lastChgDate" ctype="input" :colspan="12"></yu-xform-item>
+                            <yu-xform-item label="修改人" name="lastChgUserName" ctype="input" :colspan="12"></yu-xform-item>
+                        </yu-xform-group>
+                    </yu-xform>
+
+
+                </yu-col>
+            </yu-tab-pane>
+            <yu-tab-pane label="产品净值走势" name="productInfo" v-if="licaijst==false">
+                <!-- <h2 style="padding-left: 10px;" v-show="licaijst==false">四、产品净值走势</h2> -->
+
+                <!-- <yu-echarts  :option="option1" width="1000px" height="400px"></yu-echarts> -->
+                <yu-echarts :id="mainid" width="1000px" height="300px" ref="chart" v-show="licaijst==false"></yu-echarts>
+                <div style="width:90%;margin-left: 100px;" v-show="licaijst==false">
+                    <yu-button @click="getMap(1)" :autofocus="true"> 近一月</yu-button>
+                    <yu-button @click="getMap(3)">近三月</yu-button>
+                    <yu-button @click="getMap(12)">近一年</yu-button>
+                    <yu-button @click="getMap(36)">近三年</yu-button>
+                </div>
+            </yu-tab-pane>
+            <yu-tab-pane label="持有客户" name="productInfo1" v-if="licai==false">
+                <!-- <h2 style="padding-left: 10px;" v-show="licai==false">五、购买客户清单</h2> -->
+
+                <yu-xtable :borde="false" ref="multipleTable" :data-url="tableUrl" max-height="350" min-height="250" :pageable="true" v-show="licai==false" :default-load=false>
+                    <yu-xtable-column type="index" label="序号"></yu-xtable-column>
+                    <yu-xtable-column prop="custName" label="客户姓名" width="110px"></yu-xtable-column>
+                    <yu-xtable-column prop="custNo" label="ECIF号" width="160px"></yu-xtable-column>
+                    <yu-xtable-column prop="finaningMgrUserName" label="理财客户经理" width="160px"></yu-xtable-column>
+                    <yu-xtable-column prop="holdShare" label="持有份额" width="110px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.holdShare || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="marketValue" label="持有净值" width="110px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.marketValue || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="totalProfitRate" label="当前收益率（%）" width="140px">
+                        <template slot-scope="scope">
+                            <span>{{yufp.util.toPercentno(scope.row.totalProfitRate)}}</span>
+                        </template>
+                    </yu-xtable-column>
+                    <yu-xtable-column prop="totalProfit" label="当前收益（元）" width="140px">
+                        <template slot-scope="scope">
+                            {{ yufp.util.moneyFormatter(scope.row.totalProfit || 0) }}
+                        </template>
+                    </yu-xtable-column>
+                </yu-xtable>
+            </yu-tab-pane>
+            <yu-tab-pane label="营销指导" name="riskInfo">
+                <!-- <h2 style="padding-left: 10px;" v-if="cunkuan==true">三、营销指导</h2>
+                <h2 style="padding-left: 10px;" v-if="cunkuan==false&&licai==false">六、营销指导</h2>
+                <h2 style="padding-left: 10px;" v-if="cunkuan==false&&licai==true">四、营销指导</h2> -->
+                <!-- 营销指导 -->
+                <div>
+                    <yufp-upload-table ref="filesTable" :data-params="initFilesParams" :data="reportUpLoadBusNo" :before-upload="beforeAvatarUpload" :upload-visible="uploadVisible" :download-visible="true" :delete-visible="false"></yufp-upload-table>
+                </div>
+            </yu-tab-pane>
+
+        </yu-tabs>
+    </div>
+
+
+</div>

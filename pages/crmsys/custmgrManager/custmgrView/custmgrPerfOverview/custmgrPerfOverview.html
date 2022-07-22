@@ -1,0 +1,73 @@
+<!-- 
+  @Created by luhy luhy1@yusys.com.cn on 2019-2-4 19:25:42.
+  @updated by
+  @description 客户经理业绩概览
+-->
+<div>
+  <el-row :gutter="5" style="padding-top: 10px;">
+    <el-col :span="12">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          零售客户服务等级分布
+        </div>
+        <div>
+          <yu-echarts :option="option" width="600px" height="300px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="12">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          对公客户服务等级分布
+        </div>
+        <div>
+          <yu-echarts :option="option1" width="600px" height="300px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="12">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          零售客户AUM趋势连续12个月
+        </div>
+        <div>
+          <yu-echarts :option="option2" width="500px" height="400px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="12">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            对公客户AUM趋势连续12个月
+          </div>
+          <div>
+            <yu-echarts :option="option3" width="500px" height="400px"></yu-echarts>
+          </div>
+        </div>
+      </el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="12">
+      <div style="border: 1px solid rgb(190, 183, 183)">
+        <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+          零售客户贷款余额趋势连续12个月
+        </div>
+        <div>
+          <yu-echarts :option="option4" width="500px" height="400px"></yu-echarts>
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="12">
+        <div style="border: 1px solid rgb(190, 183, 183)">
+          <div style="background:rgb(224, 222, 219);height: 30px;font-size: 16px;line-height:30px;padding-left: 2px;">
+            对公客户贷款余额趋势连续12个月
+          </div>
+          <div>
+            <yu-echarts :option="option5" width="500px" height="400px"></yu-echarts>
+          </div>
+        </div>
+      </el-col>
+  </el-row>
+</div>

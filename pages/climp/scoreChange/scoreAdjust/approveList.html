@@ -1,0 +1,23 @@
+<div>
+  <yu-xform ref="refForm" label-width="120px" v-model="formdata" :disabled="true" style="margin-top:20px">
+    <!-- 积分调加和调减 -->
+    <yu-xform-group>
+      <yu-xform-item label="客户号" ctype="input" name="custId"></yu-xform-item>
+      <yu-xform-item label="客户姓名" ctype="input" name="custName"></yu-xform-item>
+      <yu-xform-item label="证件类型" ctype="select" name="identType" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item label="证件号码" ctype="input" name="identNo"></yu-xform-item>
+      <yu-xform-item label="可用积分" ctype="input" name="scoreNum"></yu-xform-item>
+      <yu-xform-item label="综合积分" ctype="input" name="totalNum"></yu-xform-item>
+      <yu-xform-item label="调整类型" ctype="select" name="transType" :options="options"></yu-xform-item>
+      <yu-xform-item label="调整分值" ctype="input" name="adjustNum"></yu-xform-item>
+      <yu-xform-item label="调整原因" ctype="textarea" name="adjustReason" :colspan="24"></yu-xform-item>
+      <yu-xform-item label="审批状态" ctype="select" name="approveStatus" data-code="WF_APP_STATUS"></yu-xform-item>
+      <yu-xform-item label="积分大类" ctype="select" name="acctBType" data-code="ACCT_B_TYPE"></yu-xform-item>
+      <yu-xform-item label="积分小类" ctype="select" name="acctSType" data-code="ACCT_S_TYPE"></yu-xform-item>
+      <yu-xform-item label="客户是否冻结" ctype="select" name="isFreeze"></yu-xform-item>
+      <yu-xform-item label="积分有效期" ctype="datepicker" name="validDate" :formatter="dateFormatterSimple"></yu-xform-item>
+      <yu-xform-item label="创建人" ctype="input" name="createUserName"></yu-xform-item>
+      <yu-xform-item label="创建日期" ctype="datepicker" name="createDate" :formatter="dateFormatter"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+</div>

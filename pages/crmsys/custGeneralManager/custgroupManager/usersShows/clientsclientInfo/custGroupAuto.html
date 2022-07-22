@@ -1,0 +1,211 @@
+<!--
+  @created by  zhangxs4 on 2019/01/14.
+  @description 客户灵活查询
+-->
+<div id="custFlexyQuery">
+		<link rel="stylesheet" type="text/css" href="./pages/crmsys/custGeneralManager/custQuery/custFlexyQuery/custFlexyQuery.css"
+		/>
+		<el-row :gutter="6">
+			<!-- <el-col :span="colv.solcol" style="padding-right: 0px">
+				<div v-show="!collapse" :style="{width: widthsol}" style="transition: width .3s linear;">
+							<h3>方案列表</h3>
+					<el-table-x ref="filterTable" :checkbox="true" :max-height="height - 320" @row-dblclick="dblclick" @select="rowClickFn" :data-url="ssolutionUrl"
+						:table-columns="ssolutiontableColumns" :pageable=false>
+					</el-table-x>
+				</div>
+			</el-col> -->
+			<!-- <el-col :span="1" style="padding-right: 0px">
+				<div :style="{height: pageHeight}" class="oper-bar">
+					<i class="el-icon-d-arrow-left cust-icon-oper" v-show="!collapse" @click="shrinkFn"></i>
+					<i class="el-icon-d-arrow-right cust-icon-oper" v-show="collapse"  @click="expandFn"></i>
+				</div>
+			</el-col> -->
+			<el-col :span="colv.spanTree" style="padding-left: 0px">
+				<template>
+					<el-select v-model="value" placeholder="请选择" class="searchselect">
+						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+						</el-option>
+					</el-select>
+					<!-- <yu-input  placeholder="请输入" icon="search" v-model="value" :on-icon-click="searchFn">
+	
+					</yu-input> -->
+				</template>
+				<yufp-ext-tree ref="flexytree" :height="height - 220" v-bind:style="{height: (height-220) + 'px' }" draggable :allow-drop="allowDroprow"
+					@node-drag-start="handleDragStart" data-url="/api/ocrmfcifqdbcol/prepare" data-id="nodeid" data-label="name" data-pid="parentId"
+					node-key="nodeid" :root-visible="false" data-root="0" style="margin:10px 0 0 0;width: 200px" @load-all-data='getdata' :filter-node-method="filterNode">
+				</yufp-ext-tree>
+			</el-col>
+			<el-col :span="18" class="custFlexytab">
+				<template>
+					<el-tabs v-model="activeName">
+						<el-tab-pane label="查询条件" name="first">
+							<div id="queryCon" v-bind:style="{height: (height-230) + 'px' }" style="background-color:#FAFAFA" @drop="allowDrop($event)"
+								@dragover='allowDropover($event)'>
+								<div class="ys-stGroup" v-for="(item,index) in list" :key="index">
+									<el-form label-width="80px" ref="item.index" :model="dataSqlTemp[item.index]">
+										<el-row class="conDisable">
+											<el-col :span="6">
+												<el-radio-group v-model="dataSqlTemp[item.index].radio2" v-show="radioshow">
+													<el-radio :label="item.and" ></el-radio>
+													<el-radio :label="item.or"></el-radio>
+												</el-radio-group>
+											</el-col>
+										</el-row>
+										<div @drop='childrenallowDrop($event,index)' @dragover='Dragover($event)'>
+											<div class="formrow">
+												<el-row>
+													<el-col :span="7">
+														<el-form-item label="属性" class="mustWrite">
+															<el-input :placeholder="item.name" v-model="dataSqlTemp[item.index].proPer" readonly></el-input>
+														</el-form-item>
+													</el-col>
+													<el-col :span="7">
+														<el-form-item label="操作符" class="mustWrite" :rules="opRule" prop="signOp">
+															<!-- <el-select placeholder="请选择" v-model="dataSqlTemp[item.id].signOp" @change="signchange">
+																<el-option v-for="(items, index) in signOptions" :key="index" :label="items.value" :value="items.key">
+																</el-option>
+															</el-select> -->
+															<yu-xform-item-part v-model="dataSqlTemp[item.index].signOp" rules="required" :ctype="item.section.ctype" :options="item.section.options"></yu-xform-item-part>
+														</el-form-item>
+													</el-col>
+													<el-col :span="7">
+														<el-form-item label="属性值" class="mustWrite" :rules="signvRule" prop="signVal">
+															<yu-xform-item-part v-model="dataSqlTemp[item.index].signVal" :unit="item.items.unit" :ctype="item.items.ctype" :type="item.items.type"
+																:options="item.items.options"></yu-xform-item-part>
+														</el-form-item>
+													</el-col>
+													<el-col :span="3">
+														<i class="el-icon-yx-cross" @click="queryCondelTableRow(index,list)"></i>
+													</el-col>
+												</el-row>
+												<div v-for="(item,index) in item.children">
+															<el-form label-width="80px" ref="refQueryChd" style="margin: 0px;margin-top: 10px;">
+																<!-- TODO -->
+														<el-radio-group v-model="dataSqlTemp[item.index].radio2">
+														<!-- <el-radio-group > -->
+															<el-radio :label="item.and"></el-radio>
+															<el-radio :label="item.or"></el-radio>
+														</el-radio-group>	
+														<div>
+																<el-row class="formrow" style="margin-top: 0px;padding: 10px;">
+																						<el-col :span="7">
+																<el-form-item label="属性" class="mustWrite" >
+																		<el-input :placeholder="item.name" v-model="dataSqlTemp[item.index].proPer" readonly></el-input>
+																		<!-- <el-input :placeholder="item.name"  readonly></el-input> -->
+																</el-form-item>
+															</el-col>		
+															<el-col :span="7">
+																<el-form-item label="操作符" class="mustWrite" :rules="opRule" prop="childSignOp">
+																	<!-- <el-select v-model="dataSqlTemp[item.id].signOp"> 
+																		<el-option v-for="(items, index) in signOptions" :key="index" :label="items.value" :value="items.key">
+																	</el-option>
+																		</el-select> -->
+																		<yu-xform-item-part v-model="dataSqlTemp[item.index].signOp" rules="required" :ctype="item.section.ctype" :options="item.section.options"></yu-xform-item-part>
+																</el-form-item>
+															</el-col>	
+															<el-col :span="7">
+																<el-form-item label="属性值" class="mustWrite" :rules="signvRule" prop="childsignVal">
+																		<el-input placeholder='请填写' v-model="dataSqlTemp[item.index].signVal" ></el-input>
+																		<!-- <el-input placeholder='请填写'></el-input> -->
+																		
+																</el-form-item>
+															</el-col>
+															<el-col :span="3">
+																<!-- TODO 需要添加删除逻辑 -->
+																<i class="el-icon-yx-cross"></i>
+															</el-col>
+														</el-row>
+														</div>
+														</el-form>
+												</div>
+											</div>
+										</div>
+									</el-form>
+								</div>
+							</div>
+						</el-tab-pane>
+					</el-tabs>
+				</template>
+				<div class="yu-toolBar" style="margin:10px 2px 0 0;">
+					<span>筛选条数：</span>
+					<el-input v-model="limitNum" type="num" style="width: 60px;"></el-input>
+					<el-button type="warning" @click="queryInfoFn">保存</el-button>
+					<el-button type="primary" @click="resetconditionFn">重置</el-button>
+				</div>
+			</el-col>
+		</el-row>
+		<!-- 保存为客户群-->
+		<el-dialog-x ref="customersdialog" title="新增自动筛选客户群" :visible.sync="addcustomersdialogVisible" width="600px" height="400px"
+			class="dialogOne">
+			<el-form label-width="100px" ref="customersTemp" :model="customersTemp" :rules="ruless">
+				<el-row :gutter="20">
+					<el-col :span="24">
+						<el-form-item label="客户群名称" class="mustWrite" prop="custGroupName">
+							<el-input placeholder='请填写' v-model="customersTemp.custGroupName"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="24">
+						<el-form-item label="客户群类型" class="mustWrite" prop="custGroupType">
+							<el-select placeholder="请选择" v-model="customersTemp.custGroupType">
+								<el-option v-for="(item,index) in customersOptions" :key="index" :label="item.value" :value="item.key">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="24">
+						<el-form-item label="筛选排序字段" class="mustWrite" prop="customersColumn">
+							<el-select placeholder="请选择" v-model="customersTemp.customersColumn">
+								<el-option v-for="(item,index) in conlist" :key="index" :label="item.name" :value="item.id">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="24">
+						<el-form-item label="群成员类型" class="mustWrite" prop="groupMemberType">
+							<el-select placeholder="请选择" v-model="customersTemp.groupMemberType">
+								<el-option v-for="(item,index)  in membersOptions" :key="index" :label="item.value" :value="item.key">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="24">
+						<el-form-item label="共享范围" class="mustWrite">
+							<el-select placeholder="请选择" v-model="customersTemp.shareScope">
+								<el-option v-for="(item,index) in sharerangeOptions" :key="index" :label="item.value" :value="item.key">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="24">
+						<el-form-item label="跑批标识" class="mustWrite" prop="batchType">
+							<el-select placeholder="请选择" v-model="customersTemp.batchType">
+								<el-option v-for="(item,index) in batchTypeOptions" :key="index" :label="item.value" :value="item.key">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row :gutter="20">
+					<el-col :span="24">
+						<el-form-item label="客户群描述" class="mustWrite">
+							<el-input type="textarea" v-model="customersTemp.remark"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<!-- <el-button type="primary" icon="yx-checkmark" :disabled="customersbuttonsDisabled" @click="savecustomers">保存</el-button> -->
+				<el-button type="primary" icon="yx-checkmark" :disabled="closecustbuttonsDisabled" @click="closeaddcustomers">关闭</el-button>
+			</div>
+		</el-dialog-x>
+		</div>

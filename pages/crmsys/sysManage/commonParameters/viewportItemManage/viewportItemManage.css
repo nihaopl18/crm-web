@@ -1,0 +1,13 @@
+/**
+ * @created by taoting1 on 2019-1-15
+ * @updated by
+ * @description 视图项管理
+ */
+.viewportItemManage .custom-search-btn {
+ position: absolute;
+ top: 0;
+ left: 70%;
+}
+.viewportItemManage .cust-search-form .el-form-item{
+ padding-right: 10px;
+}

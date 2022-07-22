@@ -1,0 +1,30 @@
+<!--
+  @created by geyun geyun@yusys.com.cn on 2019-1-28 15:48:59.
+  @updated by 
+  @description 积分统计报表
+-->
+<div>
+  <!-- 查询表单 -->
+  <yu-xform related-table-name="refTable" form-type="search">
+    <yu-xform-group :column="8">
+      <yu-xform-item placeholder="积分兑换渠道" ctype="select" name="consumerChnl" data-code='CD0067'></yu-xform-item>
+      <yu-xform-item placeholder="开始日期" ctype="datepicker" name="beginTime"></yu-xform-item>
+      <yu-xform-item placeholder="结束日期" ctype="datepicker" name="endTime"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <!-- 工具按钮 -->
+  <div class="yu-toolBar">
+  </div>
+  <!-- 查询显示表格 -->
+  <yu-xtable ref="refTable" :data-url="dataUrl" :summary-method="getSummaries"
+  show-summary>
+    <yu-xtable-column label="积分兑换渠道" prop="consumerChnl" width="120px" data-code='CD0067'></yu-xtable-column>
+    <yu-xtable-column label="商户名称" prop="merchantNo" ></yu-xtable-column>
+    <yu-xtable-column label="兑换积分" prop="exchangeAmt"></yu-xtable-column>
+    <yu-xtable-column label="兑换积分占比(%)" prop="exchangeAmtPercent"></yu-xtable-column>
+    <yu-xtable-column label="积分兑换笔数" prop="exchangeNum"></yu-xtable-column>
+    <yu-xtable-column label="积分兑换笔数占比(%)" prop="exchangeNumPercent"></yu-xtable-column>
+    <yu-xtable-column label="积分兑换客户数" prop="exchangeCustNum"></yu-xtable-column>
+    <yu-xtable-column label="积分兑换客户数占比(%)" prop="exchangeCustNumPercent"></yu-xtable-column>
+  </yu-xtable>
+</div>

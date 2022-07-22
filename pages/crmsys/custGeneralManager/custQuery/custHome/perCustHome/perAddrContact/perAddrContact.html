@@ -1,0 +1,129 @@
+<!-- 
+  @Created by 马妍 mayan2@yusys.com.cn on 2019-1-21 17:28:36.
+  @updated by
+  @description 地址及联系信息
+-->
+<div id="peraddrcontact">
+ <yu-collapse v-model="expandCollapseName">
+    <yu-collapse-item title="地址信息" name="addr">
+        <yu-xform related-table-name="refTable" form-type="search">
+          <yu-xform-group :column="4">
+          </yu-xform-group>
+        </yu-xform>
+        <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button> 
+            <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button> 
+            <yu-button icon="yx-bin" @click="deleteFn" v-if="deleteBtn">删除</yu-button>  
+            <!-- <yu-button icon="yx-file-excel" @click="updateHisFn" v-if="hisBtn">修改历史</yu-button> -->
+          </yu-button-group>
+        </div>
+        <yu-xtable ref="refTable" row-number :data-url="dataUrl" :highlight-current-row="true" :stripe="true">
+         
+            <yu-xtable-column label="地址类型" prop="addrTypeCd" width="120" data-code="CD0012"></yu-xtable-column>
+            <yu-xtable-column label="是否首选项" prop="mainAddrFlg" width="120" data-code="CD0238"></yu-xtable-column>
+            <!-- <yu-xtable-column label="国家" prop="nationCd" width="120" data-code="CD0069" ></yu-xtable-column>
+            <yu-xtable-column label="省份" prop="provCd" width="120" data-code="CD0070"></yu-xtable-column>
+            <yu-xtable-column label="城市" prop="cityName" width="120" data-code="CD0070"></yu-xtable-column>
+            <yu-xtable-column label="县区" prop="areaCd" width="120" data-code="CD0070"></yu-xtable-column>
+            <yu-xtable-column label="乡镇" prop="townName" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="街道" prop="streetName" width="120"></yu-xtable-column> -->
+            <yu-xtable-column label="详细地址" prop="addrCommOne" width="220"></yu-xtable-column>
+            <yu-xtable-column label="邮政编码" prop="postCd" width="120" ></yu-xtable-column>
+            <yu-xtable-column label="创建人" prop="userName"></yu-xtable-column>
+            <yu-xtable-column label="最新维护日期" prop="lastChgDt" width="100"></yu-xtable-column>   
+            <yu-xtable-column label="来源系统" prop="lastChgSys" width="100"></yu-xtable-column>
+            
+        </yu-xtable>
+        <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="650px" height="380px" -->
+        <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="750px">
+          <yu-xform ref="refForm" label-width="100px" v-model="formdata" :disabled="formDisabled">
+            <yu-xform-group>
+                <yu-xform-item label="ID" name="id" ctype="input" :hidden=true></yu-xform-item>
+                <yu-xform-item label="地址类型" name="addrTypeCd"  ctype="select" data-code="CD0012" rules="required"></yu-xform-item>
+                <yu-xform-item label="是否首选项" name="mainAddrFlg" ctype="select" data-code="CD0238" rules="required"></yu-xform-item>
+                <!-- <yu-xform-item label="国家" name="nationCd" ctype="select" data-code="CD0069" ></yu-xform-item>
+                <yu-xform-item label="省份" name="provCd" ctype="select" data-code="CD0070"></yu-xform-item>
+                <yu-xform-item label="城市" name="cityName" ctype="select" data-code="CD0070"></yu-xform-item>
+                <yu-xform-item label="县区" name="areaCd" ctype="select" data-code="CD0070"></yu-xform-item>
+                <yu-xform-item label="乡镇" name="townName" ctype="input"></yu-xform-item>
+                <yu-xform-item label="街道" name="streetName" ctype="input" ></yu-xform-item> -->
+                <yu-xform-item label="详细地址" name="addrCommOne" ctype="textarea":colspan="24" :rules="rule.addrCommOne"></yu-xform-item>
+                <yu-xform-item label="邮政编码" name="postCd"  ctype="input" :rules="rule.postCd"></yu-xform-item>
+              
+
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+              <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+            </div>
+          </yu-xform>
+        </yu-xdialog>
+   </yu-collapse-item>
+   <yu-collapse-item title="联系信息" name="contract">
+      
+        <div class="yu-toolBar">
+          <yu-button-group>
+            <yu-button icon="plus" @click="conaddFn" v-if="conaddBtn">新增</yu-button> 
+            <yu-button icon="edit" @click="conmodifyFn" v-if="coneditBtn">修改</yu-button> 
+            <yu-button icon="yx-bin" @click="condeleteFn" v-if="condeleteBtn">删除</yu-button>
+            <!-- <yu-button icon="yx-file-excel" @click="conupdateHisFn" v-if="conhisBtn">修改历史</yu-button> -->
+          </yu-button-group>
+        </div>
+        <yu-xtable ref="conrefTable" row-number :data-url="condataUrl" :highlight-current-row="true" :stripe="true">
+            <yu-xtable-column label="联系方式类型" prop="contType" data-code="CD0258" ></yu-xtable-column>
+            <yu-xtable-column label="是否首选项" prop="mainContFlg" data-code="CD0238"></yu-xtable-column>
+            <yu-xtable-column label="联系人" prop="contName" ></yu-xtable-column>
+            <yu-xtable-column label="联系方式" prop="contMeth" ></yu-xtable-column>
+            <yu-xtable-column label="创建人" prop="userName" ></yu-xtable-column>
+            <yu-xtable-column label="最近维护日期" prop="lastChgDt" ></yu-xtable-column>
+            <yu-xtable-column label="来源系统" prop="lastChgSys" width="100"></yu-xtable-column>
+
+        </yu-xtable>
+        <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+            width="650px" height="380px" -->
+        <yu-xdialog :title="conviewTitle[conviewType]" :visible.sync="condialogVisible" width="750px">
+          <yu-xform ref="conrefForm" label-width="120px" v-model="conformdata" :disabled="conformDisabled">
+            <yu-xform-group>
+                <yu-xform-item label="联系方式类型" name="contType" ctype="select" data-code="CD0258" rules="required"></yu-xform-item>
+                <yu-xform-item label="是否首选项" name="mainContFlg"  ctype="select" data-code="CD0238" rules="required"></yu-xform-item>
+                <yu-xform-item label="联系人" name="contName"  ctype="input" :rules="rule.contName"></yu-xform-item>
+                <yu-xform-item label="联系方式" name="contMeth"  ctype="input" :rules="rule.contMeth"></yu-xform-item>
+                 
+            </yu-xform-group>
+            <div class="yu-grpButton">
+              <yu-button icon="yx-undo2" type="primary" @click="concancelFn">取消</yu-button>
+              <yu-button v-show="consaveBtnShow" icon="check" type="primary" @click="consaveFn">保存</yu-button>
+            </div>
+          </yu-xform>
+        </yu-xdialog>
+          <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应     修改历史
+      width="650px" height="380px" -->
+      <yu-xdialog :title="hisviewTitle[hisviewType]" :visible.sync="hisdialogVisible" width="750px">
+         
+          <yu-xtable ref="hisrefTable" row-number :data-url="hisdataUrl" :base-params="tableName">
+             <!-- <yu-xtable-column label="修改项目" prop="" width="120"></yu-xtable-column>-->
+            <yu-xtable-column label="修改前内容" prop="chgBefValueValue" ></yu-xtable-column>
+            <yu-xtable-column label="修改后内容" prop="chgAftValueValue" ></yu-xtable-column>
+            <yu-xtable-column label="修改人" prop="userName" ></yu-xtable-column>
+            <yu-xtable-column label="修改人机构" prop="orgName" ></yu-xtable-column>
+            <yu-xtable-column label="修改时间" prop="chgDt" ></yu-xtable-column>  
+          </yu-xtable>
+        </yu-xdialog>
+          <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应     修改历史
+      width="650px" height="380px" -->
+      <yu-xdialog :title="conhisviewTitle[conhisviewType]" :visible.sync="conhisdialogVisible" width="750px">
+         
+          <yu-xtable ref="conhisrefTable" row-number :data-url="conhisdataUrl"   :base-params="conParams">
+               <!-- <yu-xtable-column label="修改项目" prop="" width="120"></yu-xtable-column>-->
+              <yu-xtable-column label="修改前内容" prop="chgBefValueValue" ></yu-xtable-column>
+              <yu-xtable-column label="修改后内容" prop="chgAftValueValue" ></yu-xtable-column>
+              <yu-xtable-column label="修改人" prop="userName" ></yu-xtable-column>
+              <yu-xtable-column label="修改人机构" prop="orgName" ></yu-xtable-column>
+              <yu-xtable-column label="修改时间" prop="chgDt" ></yu-xtable-column>  
+          </yu-xtable>
+        </yu-xdialog>
+   </yu-collapse-item>
+</yu-collapse>
+</div>

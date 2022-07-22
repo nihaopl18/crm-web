@@ -1,0 +1,296 @@
+<!-- 
+  @Created by 宋雨 songyu4@yusys.com.cn on 2019-1-17 14:31:58.
+  @updated by
+  @description 零售客户基本信息
+-->
+<div>
+    <yu-collapse v-model="expandCollapseName">
+        <yu-collapse-item title="基本信息" name="base">
+            <!--
+    <div class="base_Info_top">
+      <yu-upload
+      class="avatar-uploader"
+      :action="uploadAction"
+      :show-file-list="false"
+      :on-success="handleAvatarSuccess"
+      :before-upload="beforeAvatarUpload">
+      <img v-if="custPhotoStr" :src="imageUrl" class="avatar">
+      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    </yu-upload>
+    <div class="base_custInfo">
+      <p class="base_custname">{{formdata1.custId}}</p>
+      <span class="base_custname">{{formdata1.custName}}</span>
+   
+    </div>
+
+  </div>
+-->
+
+
+            <yu-xform ref="baseForm" label-width="200px" v-model="formdata1" class="yu-form-gap">
+                <yu-xform-group>
+                    <!-- -->
+                    <yu-xform-item ref="custId" label="客户编号" name="custId" ctype="input" :disabled="true"></yu-xform-item>
+                    <yu-xform-item ref="custName" label="客户名称" name="custName" ctype="input" :disabled="true"></yu-xform-item>
+                    <yu-xform-item ref="otherName" label="曾用名" name="otherName" ctype="input" :disabled="true"></yu-xform-item>
+                    <yu-xform-item ref="custPhoto" label="照片" name="custPhoto" ctype="input" placeholder="照片" :hidden="true"></yu-xform-item>
+                    <yu-xform-item ref="englishName" label="英文名" name="englishName" ctype="input" placeholder="英文名" :rules="rule.englishName"></yu-xform-item>
+                    <yu-xform-item ref="titleCd" label="称谓" name="titleCd" ctype="input" placeholder="称谓" :rules="rule.titleCd"></yu-xform-item>
+                    <yu-xform-item ref="custStatus" label="客户状态" name="custStatus" ctype="select" data-code="CD0019" :disabled="true"></yu-xform-item>
+                    <yu-xform-item ref="sex" label="性别" name="sex" ctype="select" :disabled="true" data-code="SEX_TYPE"></yu-xform-item>
+                    <yu-xform-item ref="countryCd" label="地区" name="countryCd" ctype="select" :disabled="true" data-code="CD0069"></yu-xform-item>
+                    <yu-xform-item ref="nation" label="民族" name="nation" ctype="select" :disabled="true" data-code="CD0004"></yu-xform-item>
+                    <yu-xform-item ref="residentStat" label="居民/非居民" name="residentStat" ctype="select" :disabled="true" data-code="CD0254"></yu-xform-item>
+                    <yu-xform-item ref="loanCustType" label="信贷客户类型" name="loanCustType" ctype="select" :disabled="true" data-code="CD0253"></yu-xform-item>
+                    <yu-xform-item ref="polStat" label="政治面貌" name="polStat" ctype="select" placeholder="政治面貌" :rules="rule.polStat" data-code="CD0017"></yu-xform-item>
+                    <yu-xform-item ref="brnPlace" label="籍贯" name="brnPlace" ctype="input" placeholder="籍贯" :rules="rule.brnPlace"></yu-xform-item>
+                    <yu-xform-item ref="regPlace" label="户口所在地" name="regPlace" ctype="input" placeholder="户口所在地" :rules="rule.regPlace"></yu-xform-item>
+                    <yu-xform-item ref="langCd" label="语言习惯" name="langCd" ctype="select" placeholder="语言习惯" data-code="CD0343"></yu-xform-item>
+                    <yu-xform-item ref="faithStat" label="宗教信仰" name="faithStat" ctype="select" placeholder="宗教信仰" :rules="rule.faithStat" data-code="CD0009"></yu-xform-item>
+                    <yu-xform-item ref="indivOcc" label="职业" name="indivOcc" ctype="select" placeholder="职业" :rules="rule.indivOcc" data-code="CD0010"></yu-xform-item>
+                    <yu-xform-item ref="birthDt" label="出生日期" name="birthDt" ctype="datepicker" placeholder="出生日期"></yu-xform-item>
+                    <yu-xform-item ref="marriStat" label="婚姻状况" name="marriStat" ctype="select" placeholder="婚姻状况" :rules="rule.marriStat" data-code="CD0005"></yu-xform-item>
+                    <yu-xform-item ref="higEduDgr" label="最高学位" name="higEduDgr" ctype="select" placeholder="最高学位" :rules="rule.higEduDgr" data-code="CD0049"></yu-xform-item>
+                    <yu-xform-item ref="higEduRec" label="教育水平" name="higEduRec" ctype="select" placeholder="教育水平" :rules="rule.higEduRec" data-code="CD0048"></yu-xform-item>
+                    <yu-xform-item ref="agriFlg" label="是否农户" name="agriFlg" ctype="select" placeholder="是否农户" :rules="rule.agriFlg" data-code="CD0238"></yu-xform-item>
+                    <yu-xform-item ref="hltStat" label="健康状况" name="hltStat" ctype="select" placeholder="健康状况" :rules="rule.hltStat" data-code="CD0008"></yu-xform-item>
+                    <yu-xform-item ref="inspInd" label="客户核实结果" name="inspInd" ctype="select" placeholder="客户核实结果" data-code="CD0238"></yu-xform-item>
+                    <yu-xform-item ref="belongBrch" label="归属机构编号" name="belongBrch" ctype="input" :disabled="true"></yu-xform-item>
+                    <yu-xform-item ref="orgName" label="归属机构名称" name="orgName" ctype="input" :disabled="true"></yu-xform-item>
+                    <yu-xform-item ref="passportFlg" label="是否拥有外国护照或居住权" name="passportFlg" ctype="select" placeholder="是否拥有外国护照或居住权" :rules="rule.passportFlg" data-code="CD0238"></yu-xform-item>
+                    <yu-xform-item ref="socSecurStat" label="社会保障情况" name="socSecurStat" ctype="input" placeholder="社会保障情况" :rules="rule.socSecurStat"></yu-xform-item>
+                    <yu-xform-item ref="finRiskLev" label="理财风险评级类型" name="finRiskLev" ctype="input" :disabled="true" data-code="CD0008"></yu-xform-item>
+                    <yu-xform-item ref="riskLev" label="信贷风险等级" name="riskLev" ctype="select" :disabled="true" data-code="CD0008"></yu-xform-item>
+                    <yu-xform-item ref="creditGrade" label="信贷信用评级" name="creditGrade" ctype="select" :disabled="true" data-code="CD0025"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+        </yu-collapse-item>
+        <yu-collapse-item title="工作信息" name="work">
+            <yu-xform ref="workForm" label-width="170px" v-model="formdata2" class="yu-form-gap">
+                <yu-xform-group>
+                    <yu-xform-item ref="workId" label="逻辑ID" name="workId" ctype="input" placeholder="逻辑ID" hidden></yu-xform-item>
+                    <yu-xform-item ref="curWorkUnit" label="现工作单位名称" name="curWorkUnit" ctype="input" placeholder="现工作单位名称" :rules="rule.curWorkUnit"></yu-xform-item>
+                    <yu-xform-item ref="unitConPer" label="单位联系人" name="unitConPer" ctype="input" placeholder="单位联系人" :rules="rule.unitConPer"></yu-xform-item>
+                    <yu-xform-item ref="engInPro" label="从事职业" name="engInPro" ctype="select" placeholder="从事职业" data-code="CD0010"></yu-xform-item>
+                    <yu-xform-item ref="unitNat" label="单位性质" name="unitNat" ctype="select" placeholder="单位性质" data-code="CD0418"></yu-xform-item>
+                    <yu-xform-item ref="indOwnUnit" label="单位所属行业" name="indOwnUnit" ctype="select" placeholder="单位所属行业" data-code="CD0070"></yu-xform-item>
+                    <yu-xform-item ref="department" label="所在部门" name="department" ctype="input" placeholder="所在部门" :rules="rule.department"></yu-xform-item>
+                    <yu-xform-item ref="duties" label="职务" name="duties" ctype="select" placeholder="职务" data-code="CD0047"></yu-xform-item>
+                    <yu-xform-item ref="position" label="职位" name="position" ctype="select" placeholder="职位" :rules="rule.position" data-code="CD0240"></yu-xform-item>
+                    <yu-xform-item ref="corExe" label="是否企业高管" name="corExe" ctype="select" placeholder="是否企业高管" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="boardMem" label="是否董事会成员" name="boardMem" ctype="select" placeholder="是否董事会成员" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="relWithActualCon" label="与实际控制人关系" name="relWithActualCon" ctype="select" placeholder="与实际控制人关系" data-code="CD0008"></yu-xform-item>
+                    <yu-xform-item ref="title" label="职称" name="title" ctype="select" placeholder="职称" data-code="CD0419"></yu-xform-item>
+                    <yu-xform-item ref="entryDate" label="入职日期" name="entryDate" ctype="datepicker" placeholder="入职日期"></yu-xform-item>
+                    <yu-xform-item ref="totalLenSer" label="总工龄" name="totalLenSer" ctype="input" placeholder="总工龄" :rules="rule.totalLenSer" :disabled="true"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+        </yu-collapse-item>
+        <yu-collapse-item title="履历信息" name="resume">
+            <div class="yu-toolBar">
+                <yu-button-group>
+                    <yu-button icon="plus" @click="addFn" v-if="addBtn">新增</yu-button>
+                    <yu-button icon="edit" @click="modifyFn" v-if="editBtn">修改</yu-button>
+                </yu-button-group>
+            </div>
+            <yu-xtable ref="refTable" row-number :data-url="dataUrl">
+                <yu-xtable-column label="开始日期" prop="startDate" width="120"></yu-xtable-column>
+                <yu-xtable-column label="结束日期" prop="endDate" width="120"></yu-xtable-column>
+                <yu-xtable-column label="国家" prop="country" width="120" data-code="CD0069"></yu-xtable-column>
+                <yu-xtable-column label="城市" prop="city" width="120"></yu-xtable-column>
+                <yu-xtable-column label="单位_学校" prop="comSch" width="120"></yu-xtable-column>
+                <yu-xtable-column label="所在部门" prop="dept" width="120"></yu-xtable-column>
+                <yu-xtable-column label="所在系院" prop="schDept" width="120"></yu-xtable-column>
+                <yu-xtable-column label="专业" prop="schMajor" width="120"></yu-xtable-column>
+                <yu-xtable-column label="学制" prop="schLength" width="120"></yu-xtable-column>
+                <yu-xtable-column label="职务" prop="duty" width="120" data-code="CD0047"></yu-xtable-column>
+                <yu-xtable-column label="备注" prop="remarks"></yu-xtable-column>
+                <yu-xtable-column label="全职兼职标识" prop="fullPartFlg" width="120" data-code="CD0425"></yu-xtable-column>
+            </yu-xtable>
+            <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
+        width="650px" height="380px" -->
+            <yu-xdialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="650px">
+                <yu-xform ref="refForm" label-width="100px" v-model="formdata3" :disabled="formDisabled">
+                    <yu-xform-group>
+                        <yu-xform-item label="id" name="id" ctype="input" hidden=true></yu-xform-item>
+                        <yu-xform-item label="客户编号" name="custId" ctype="input" hidden=true></yu-xform-item>
+                        <yu-xform-item label="国家" name="country" ctype="select" data-code="CD0069"></yu-xform-item>
+                        <yu-xform-item label="城市" name="city" ctype="input" :rules="rule.city"></yu-xform-item>
+                        <yu-xform-item label="单位_学校" name="comSch" ctype="input" :rules="rule.comSch"></yu-xform-item>
+                        <yu-xform-item label="所在部门" name="dept" ctype="input" :rules="rule.dept"></yu-xform-item>
+                        <yu-xform-item label="所在系院" name="schDept" ctype="input" :rules="rule.schDept"></yu-xform-item>
+                        <yu-xform-item label="专业" name="schMajor" ctype="input" :rules="rule.schMajor"></yu-xform-item>
+                        <yu-xform-item label="学制" name="schLength" ctype="input" :rules="rule.schLength"></yu-xform-item>
+                        <yu-xform-item label="职务" name="duty" ctype="select" data-code="CD0047"></yu-xform-item>
+                        <yu-xform-item label="备注" name="remarks" ctype="input" :rules="rule.remarks"></yu-xform-item>
+                        <yu-xform-item label="全职兼职标识" name="fullPartFlg" ctype="select" data-code="CD0425"></yu-xform-item>
+                        <yu-xform-item label="开始日期" name="startDate" ctype="datepicker"></yu-xform-item>
+                        <yu-xform-item label="结束日期" name="endDate" ctype="datepicker"></yu-xform-item>
+                    </yu-xform-group>
+                    <div class="yu-grpButton">
+                        <yu-button icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+                        <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveResumeFn">保存</yu-button>
+                    </div>
+                </yu-xform>
+            </yu-xdialog>
+        </yu-collapse-item>
+        <yu-collapse-item title="与我行的关系" name="relation">
+            <yu-xform ref="relationForm" label-width="170px" v-model="formdata4" class="yu-form-gap">
+                <yu-xform-group>
+                    <yu-xform-item ref="id" label="id" name="id" ctype="input" hidden></yu-xform-item>
+                    <yu-xform-item ref="beCustDate" label="成为我行客户时间" name="beCustDate" ctype="input" :disabled="true"></yu-xform-item>
+                    <yu-xform-item ref="holdStockAmt" label="拥有我行股份金额" name="holdStockAmt" ctype="select" :disabled="true"></yu-xform-item>
+                    <yu-xform-item ref="holdStockTot" label="持股数量" name="holdStockTot" ctype="input" :disabled="true"></yu-xform-item>
+                    <yu-xform-item ref="staffFlg" label="是否本行员工" name="staffFlg" ctype="select" placeholder="是否本行员工" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="bankDuty" label="在我行职务" name="bankDuty" ctype="select" placeholder="在我行职务" data-code="CD0047"></yu-xform-item>
+                    <yu-xform-item ref="custBankRel" label="与我行关系" name="custBankRel" ctype="select" placeholder="客户与我行关系" data-code="CD0447"></yu-xform-item>
+                    <yu-xform-item ref="comInitLoanDate" label="在我行建立信贷关系时间" name="comInitLoanDate" ctype="input" :disabled="true"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+        </yu-collapse-item>
+        <yu-collapse-item title="涉农个性标识信息" name="relat">
+            <yu-xform ref="relatForm" label-width="150px" v-model="formdata5" class="yu-form-gap" :disabled="true">
+                <yu-xform-group>
+                    <yu-xform-item label="是否涉农客户" name="wheAgrRelCus" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="是否三农领军人物" name="wheThrFarLeaFig" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="是否专业大户" name="wheProLarHou" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="农村信用青年" name="ruralCreYouth" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="是否家庭农场" name="wheFamFarm" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="科技示范户" name="sciAndTecDemHou" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="示范户认定时间" name="demHouDetTime" ctype="select"></yu-xform-item>
+                    <yu-xform-item label="是否双基双赢客户" name="wheDualBaseWinCus" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="是否移民" name="wheImm" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="是否贴息" name="wheDis" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="贴息级别" name="disLevel" ctype="select" data-code="CD0279"></yu-xform-item>
+                    <yu-xform-item label="是否农业科技创新" name="wheAgrSciTecInn" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="是否新型农业经营主体" name="wheNewAgrManSub" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="主体类型" name="priType" ctype="select" data-code="CD0288"></yu-xform-item>
+                    <yu-xform-item label="是否合作社成员" name="wheCooMem" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="保险金额" name="amoOfIns" ctype="input" :rules="rule.amoOfIns"></yu-xform-item>
+                    <yu-xform-item label="保险费" name="insurance" ctype="input" :rules="rule.insurance"></yu-xform-item>
+                    <yu-xform-item label="保险险种" name="insType" ctype="select" data-code="CD0124"></yu-xform-item>
+                    <yu-xform-item label="是否扶贫贷款客户" name="whePovAllLoanCus" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="扶贫客户类型" name="povAllCusType" ctype="select" data-code="CD0280"></yu-xform-item>
+                    <yu-xform-item label="扶贫项目" name="povAllPro" ctype="select"></yu-xform-item>
+                    <yu-xform-item label="项目所在地" name="proLoc" ctype="input"></yu-xform-item>
+                    <yu-xform-item label="是否支农再贷款" name="wheRefOfAgrLoa" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="专业合作社标识" name="proCooLogo" ctype="select" data-code="CD0281"></yu-xform-item>
+                    <yu-xform-item label="是否投向新农村" name="wheToNewCou" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item label="是否投向城镇化建设" name="wheToConOfUrb" ctype="select" data-code="CD0242"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+        </yu-collapse-item>
+        <yu-collapse-item title="重要标志信息" name="importInfo">
+            <yu-xform ref="importForm" label-width="150px" v-model="formdata6" class="yu-form-gap">
+                <yu-xform-group>
+                    <yu-xform-item ref="flagId" label="逻辑ID" name="flagId" ctype="input" hidden></yu-xform-item>
+                    <yu-xform-item ref="peasantFlg" label="是否农户" name="peasantFlg" ctype="select" :disabled="true" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="finaceFlag" label="是否理财客户" name="finaceFlag" ctype="select" :disabled="true" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="depositFlag" label="是否储蓄客户" name="depositFlag" ctype="select" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="staffFlg" label="是否本行职工" name="staffFlg" ctype="select" placeholder="是否本行职工" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="thirdDepFlag" label="是否第三方存管客户" name="thirdDepFlag" ctype="select" placeholder="是否第三方存管客户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="staffLoanFlag" label="是否有本行贷款" name="staffLoanFlag" ctype="select" placeholder="是否有本行贷款" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="mobileBankFlag" label="是否开通手机银行" name="mobileBankFlag" ctype="select" placeholder="是否开通手机银行" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="badloanFlag" label="是否存在不良贷款" name="badloanFlag" ctype="select" placeholder="是否存在不良贷款" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="creditcardFlag" label="是否信用卡客户" name="creditcardFlag" ctype="select" placeholder="是否信用卡客户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="internetBankFlag" label="是否网银签约客户" name="internetBankFlag" ctype="select" placeholder="是否网银签约客户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="posFlag" label="是否POS客户" name="posFlag" ctype="select" placeholder="是否POS客户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="questLoanFlag" label="是否问题贷款" name="questLoanFlag" ctype="select" placeholder="是否问题贷款" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="interBusiFlg" label="是否国结客户" name="interBusiFlg" ctype="select" placeholder="是否国际业务客户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="errornameFlag" label="是否假借冒名" name="errornameFlag" ctype="select" placeholder="是否假借冒名" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="workerFlg" label="是否正式在职员工" name="workerFlg" ctype="select" placeholder="是否正式在职员工" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="payrollFlg" label="是否代发工资客户" name="payrollFlg" ctype="select" placeholder="是否代发工资客户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="keepPhoFlg" label="是否留存照片" name="keepPhoFlg" ctype="select" placeholder="是否留存照片" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="recSmsFlg" label="客户是否愿意接收短信" name="recSmsFlg" ctype="select" placeholder="客户是否愿意接收短信" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="vipFlg" label="是否本行VIP客户" name="vipFlg" ctype="select" placeholder="是否本行/社VIP客户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="xwdFlg" label="是否小微贷客户" name="xwdFlg" ctype="select" placeholder="是否小微贷客户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="housefundLnFlg" label="是否公积金贷款户" name="housefundLnFlg" ctype="select" placeholder="是否公积金贷款户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="mortgageFlg" label="是否按揭户" name="mortgageFlg" ctype="select" placeholder="是否按揭户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="housefundFlg" label="是否公积金缴存户" name="housefundFlg" ctype="select" placeholder="是否公积金缴存户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="goverFlg" label="是否事业编客户" name="goverFlg" ctype="select" placeholder="是否事业编客户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="stockholderFlg" label="是否本行股东" name="stockholderFlg" ctype="select" placeholder="是否本行/社股东" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="neighbFlg" label="是否村/居委会成员" name="neighbFlg" ctype="select" placeholder="是否村/居委会成员" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="cntrFlg" label="是否企业实际控制人" name="cntrFlg" ctype="select" placeholder="是否企业实际控制人" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="entStockholderFlg" label="是否企业股东" name="entStockholderFlg" ctype="select" placeholder="是否企业股东" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="guarFlg" label="是否担保人" name="guarFlg" ctype="select" placeholder="是否担保人" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="corCustFlg" label="是否核心客户" name="corCustFlg" ctype="select" placeholder="是否核心客户" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="otherbVipFlg" label="是否他行VIP" name="otherbVipFlg" ctype="select" placeholder="是否他行VIP" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="staffRelFlg" label="是否员工家属" name="staffRelFlg" ctype="select" placeholder="是否员工家属" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="civilsverFlg" label="是否公务员" name="civilsverFlg" ctype="select" placeholder="是否公务员" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="teacherFlg" label="是否教师" name="teacherFlg" ctype="select" placeholder="是否教师" data-code="CD0242"></yu-xform-item>
+                    <yu-xform-item ref="doctorFlg" label="是否医生" name="doctorFlg" ctype="select" placeholder="是否医生" data-code="CD0242"></yu-xform-item>
+                </yu-xform-group>
+            </yu-xform>
+        </yu-collapse-item>
+    </yu-collapse>
+    <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应     修改历史
+    width="650px" height="380px" -->
+    <yu-xdialog title="修改历史" :visible.sync="hisdialogVisible" width="850px">
+        <yu-xtable ref="hisrefTable" row-number :data-url="hisdataUrl">
+            <yu-xtable-column label="修改项目" prop="chgChiName" width="120"></yu-xtable-column>
+            <yu-xtable-column label="修改前内容" prop="chgBefKeyValue" width="120"></yu-xtable-column>
+            <yu-xtable-column label="修改后内容" prop="chgAftKeyValue" width="120"></yu-xtable-column>
+            <yu-xtable-column label="修改人" prop="userName" width="120"></yu-xtable-column>
+            <yu-xtable-column label="修改人机构" prop="orgName" width="120"></yu-xtable-column>
+            <yu-xtable-column label="修改时间" prop="chgDt"></yu-xtable-column>
+        </yu-xtable>
+    </yu-xdialog>
+    <div class="yu-grpButton">
+        <yu-button icon="yx-undo2" type="primary" @click="selectHis" v-if="hisButton">修改历史</yu-button>
+        <yu-button icon="check" type="primary" @click="saveFn" v-if="saveButton">保存</yu-button>
+    </div>
+</div>
+
+<style>
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 50%;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .avatar-uploader .el-upload:hover {
+        border-color: #20a0ff;
+    }
+    
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    
+    .avatar {
+        width: 120px;
+        height: 120px;
+        display: block;
+    }
+    
+    .base_Info_top {
+        text-align: center;
+        padding: 5px;
+        position: relative;
+    }
+    
+    .base_Info_top:after {
+        clear: both;
+        content: '';
+    }
+    
+    .base_custname {
+        font-size: 1.3em;
+    }
+    
+    .base_custInfo {
+        display: inline-block;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 60%;
+        font-weight: 300;
+        font-family: sans-serif;
+    }
+</style>

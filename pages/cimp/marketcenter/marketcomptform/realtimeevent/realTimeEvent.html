@@ -1,0 +1,452 @@
+<!--
+  @created by 刘杰 on 2018/11/16.
+  @description 营销组件FORM表单-营销组件-实时事件活动
+  update by chenlin2
+-->
+<div>
+    <el-collapse v-model="inactiveNames">
+      <el-collapse-item title="活动维护输入项" name="1">
+        <el-form-x ref="eventform"
+            :group-fields="eventUpdateFields" :buttons="eventUpdateButtons"
+            :disabled="eventFormDisabled" label-width="100px">
+        </el-form-x>
+      </el-collapse-item>
+      <el-collapse-item title="操作" name="2">
+        <!-- 规则配置-->
+    <div class="incidentMarketing" v-bind:style="{height:height + 'px'}">
+        <link rel="stylesheet" type="text/css" href="./pages/context/incidentMarketing/incidentMarketing.css" />
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <h3>事件名称：{{eventName}}</h3>
+            <el-collapse v-model="activeNames">
+              <el-collapse-item title="条件字段" name="1">
+                <div class="conditionfield" v-for="(item,index) in conditionField">
+                  <span v-bind:class="{selectedbg:item.state=='1'}" draggable="true" @dragstart="drag($event,item,conditionField)" @dragend="dragend($event,item,conditionField)">{{item.title}}</span>
+                </div>
+              </el-collapse-item>
+              <el-collapse-item title="引用参数" name="2">
+                <div class="conditionfield" v-for="(item,index) in parameterField">
+                  <span v-bind:class="{selectedbg:item.state=='1'}" draggable="true" @dragstart="drag($event,item,parameterField)" @dragend="dragend($event,item,parameterField)">{{item.title}}</span>
+                </div>
+              </el-collapse-item>
+              <!-- <el-collapse-item title="连续动作" name="3">
+                <div class="conditionfield" v-for="(item,index) in continuityactionField">
+                  <span v-bind:class="{selectedbg:item.state=='1'}" draggable="true" @dragstart="drag($event,item,continuityactionField)" @dragend="dragend($event,item,continuityactionField)">{{item.title}}</span>
+                </div>
+              </el-collapse-item> -->
+              <el-collapse-item title="营销动作" name="4">
+                <div class="conditionfield" v-for="(item,index) in actionField">
+                  <span v-bind:class="{selectedbg:item.state=='1'}" draggable="true" @dragstart="dragmarketingaction($event,item)" @dragend="dragendmarketingaction($event,item)">{{item.title}}</span>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </el-col>
+          <el-col :span="18">
+            <h3>规则配置</h3>
+              <el-collapse v-model="activeNames1">
+                <el-collapse-item title="条件字段" name="1">
+                  <div class="field_list" @drop="allowDrop($event,conditionlist,conditionlist)" @dragover='allowDropover($event)'>
+                    <div class="nothingbg" v-if="conditionlist.length=='0'"><img src="./themes/default/images/noting.jpg" alt="" />您还没有配置条件字段！</div>
+                    <div v-else v-for="(item1,index1) in conditionlist">
+                      <div>
+                        <div v-show="!index1=='0'" style="margin: 10px 15px;">
+                          <el-radio class="radio" v-model="item1.radio" label="1">并</el-radio>
+                          <el-radio class="radio" v-model="item1.radio" label="2">或</el-radio>
+                        </div>
+                        <div>
+                          <div v-bind:class="[{fields_items:item1.children.length=='0'},{fields_items_b:item1.children.length>0},{fields_items_ee:item1.title==''&&item1.children.length=='1'}]" @drop="allowDrop($event,item1.children,conditionlist)" @dragover='allowDropover($event)'>
+                            <div v-bind:class="{fields_items_a:item1.children.length>'0'}" v-if="item1.title" draggable="true" @dragstart="drag1(item1,conditionlist)" @dragend="delfirstitem(item1,index1,item1.title,conditionlist)">
+                              <div style="margin:-6px -10px;padding:6px 10px;">
+                                <div class="fields_text">{{item1.title}}：</div>
+                                <div class="formitempart" :class="{partstyle:item1.itempart[0].length>1}">
+                                  <div class="sectiondiv">
+                                    <yu-xform-item-part v-model="item1.section.value" rules="required" :ctype="item1.section.ctype" :options="item1.section.options" ></yu-xform-item-part>
+                                  </div>
+                                  <div class="sectiondiv" :class="{othersection:item1.itempart[0].length>1}" v-for="(item5,index5) in item1.itempart">
+                                        <div class="" v-for="(item5part,index5part) in item5">
+                                            <yu-xform-item-part v-model="item5part.value" rules="required" :unit="item5part.unit" :ctype="item5part.ctype" :type="item5part.type" :options="item5part.options" ></yu-xform-item-part>
+                                      </div>
+                                  </div>
+                                  <!-- <span v-show='item1.itempart[0].length>1' @click="addsectionFun(item1.itempart)">新增区间</span> -->
+                                  </div>
+                              </div>
+                              <i class="iconfont icon-yeqianbaisejiantou" @click="delfirstitem(item1,index1,item1.title,conditionlist)"></i>
+                            </div>
+                            <div v-for="(item2,index) in item1.children">
+                              <div style="margin:10px;" v-show="item2.radio">
+                                <el-radio class="radio" v-model="item2.radio" label="1">并</el-radio>
+                                <el-radio class="radio" v-model="item2.radio" label="2">或</el-radio>
+                              </div>
+                              <div class="borderstyle" v-bind:class="[{fields_items_f:item2.children.length=='0'},{fields_items_c:item2.title||item2.children.length>'1'}]" @drop="allowDrop($event,item2.children,conditionlist)" @dragover='allowDropover($event)'>
+                                <div v-bind:class="{fields_items_e:item2.children.length>0}" v-if="item2.title" draggable="true" @dragstart="drag1(item2,conditionlist)" @dragend="delItemfun(index,item1,index1,item2.title,conditionlist)">
+                                  <div style="margin:-6px -10px;padding:6px 10px;">
+                                    <div class="fields_text">{{item2.title}}：</div>
+                                    <div class="formitempart" :class="{partstyle:item2.itempart[0].length>1}">
+                                      <div class="sectiondiv">
+                                        <yu-xform-item-part v-model="item2.section.value" :ctype="item2.section.ctype" :options="item2.section.options" ></yu-xform-item-part>
+                                      </div>
+                                      <div class="sectiondiv" :class="{othersection:item2.itempart[0].length>1}"  v-for="(item6,index6) in item2.itempart">
+                                            <div v-for="(item6part,index6part) in item6">
+                                                <yu-xform-item-part v-model="item6part.value" :unit="item6part.unit" :ctype="item6part.ctype" :type="item6part.type" :options="item6part.options" ></yu-xform-item-part>
+                                          </div>
+                                        </div>
+                                          <!-- <span v-show='item2.itempart[0].length>1' @click="addsectionFun(item2.itempart)">新增区间</span> -->
+                                    </div>
+                                  </div>
+                                  <i class="iconfont icon-yeqianbaisejiantou" @click="delItemfun(index,item1,index1,item2.title,conditionlist)"></i>
+                                </div>
+                                <div v-for="(item3,index) in item2.children">
+                                  <div style="margin:10px" v-show="item3.radio">
+                                    <el-radio class="radio" v-model="item3.radio" label="1">并</el-radio>
+                                    <el-radio class="radio" v-model="item3.radio" label="2">或</el-radio>
+                                  </div>
+                                  <div class="fields_items_d" v-bind:class="{fields_items_g:!item3.radio}" draggable="true" @dragstart="drag1(item3,conditionlist)" @dragend="delItem(item1,item2,index,index1,item3.title,conditionlist)" @drop="lastdrop($event)" @dragover="allowDropover($event)">
+                                    <div>
+                                      <div class="fields_text">{{item3.title}}：</div>
+                                      <div class="formitempart" :class="{partstyle:item3.itempart[0].length>1}">
+                                        <div class="sectiondiv">
+                                          <yu-xform-item-part v-model="item3.section.value" :ctype="item3.section.ctype" :options="item3.section.options" ></yu-xform-item-part>
+                                        </div>
+                                        <div class="sectiondiv" :class="{othersection:item3.itempart[0].length>1}" v-for="(item7,index7) in item3.itempart">
+                                          <div v-for="(item7part,index7part) in item7">
+                                                      <yu-xform-item-part v-model="item7part.value" :unit="item7part.unit" :ctype="item7part.ctype" :type="item7part.type" :options="item7part.options" ></yu-xform-item-part>
+                                              </div>
+                                        </div>
+                                        <!-- <span v-show='item3.itempart[0].length>1' @click="addsectionFun(item3.itempart)">新增区间</span> -->
+                                      </div>
+                                    </div>
+                                    <i class="iconfont icon-yeqianbaisejiantou" @click="delItem(item1,item2,index,index1,item3.title,conditionlist)"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="drop_box1" v-show="dropshow">拖拽一级字段</div>
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item title="引用参数" name="2">
+                  <div class="field_list" @drop="allowDrop($event,parameterlist,parameterlist)" @dragover='allowDropover($event)'>
+                    <div class="nothingbg" v-if="parameterlist.length=='0'"><img src="./themes/default/images/noting.jpg" alt="" />您还没有配置引用参数！</div>
+                    <div v-else v-for="(item1,index1) in parameterlist">
+                      <div>
+                        <div v-show="!index1=='0'" style="margin: 10px 15px;">
+                          <el-radio class="radio" v-model="item1.radio" label="1">并</el-radio>
+                          <el-radio class="radio" v-model="item1.radio" label="2">或</el-radio>
+                        </div>
+                        <div>
+                          <div v-bind:class="[{fields_items:item1.children.length=='0'},{fields_items_b:item1.children.length>0},{fields_items_ee:item1.title==''&&item1.children.length=='1'}]" @drop="allowDrop($event,item1.children,parameterlist)" @dragover='allowDropover($event)'>
+                            <div v-bind:class="{fields_items_a:item1.children.length>'0'}" v-if="item1.title" draggable="true" @dragstart="drag1(item1,parameterlist)" @dragend="delfirstitem(item1,index1,item1.title,parameterlist)">
+                              <div style="margin: -10px;padding: 10px;">
+                                <div class="fields_text">{{item1.title}}：</div>
+                                <div class="formitempart" :class="{partstyle:item1.itempart[0].length>1}">
+                                  <div class="sectiondiv">
+                                    <yu-xform-item-part v-model="item1.section.value" :ctype="item1.section.ctype" :options="item1.section.options" ></yu-xform-item-part>
+                                  </div>
+                                  <div class="sectiondiv" :class="{othersection:item1.itempart[0].length>1}" v-for="(item5,index5) in item1.itempart">
+                                        <div class="" v-for="(item5part,index5part) in item5">
+                                            <yu-xform-item-part v-model="item5part.value" :unit="item5part.unit" :ctype="item5part.ctype" :type="item5part.type" :options="item5part.options" ></yu-xform-item-part>
+                                      </div>
+                                  </div>
+                                  <!-- <span v-show='item1.itempart[0].length>1' @click="addsectionFun(item1.itempart)">新增区间</span> -->
+                                  </div>
+                              </div>
+                              <i class="iconfont icon-yeqianbaisejiantou" @click="delfirstitem(item1,index1,item1.title,parameterlist)"></i>
+                            </div>
+                            <div v-for="(item2,index) in item1.children">
+                              <div style="margin:10px;" v-show="item2.radio">
+                                <el-radio class="radio" v-model="item2.radio" label="1">并</el-radio>
+                                <el-radio class="radio" v-model="item2.radio" label="2">或</el-radio>
+                              </div>
+                              <div class="borderstyle" v-bind:class="[{fields_items_f:item2.children.length=='0'},{fields_items_c:item2.title||item2.children.length>'1'}]" @drop="allowDrop($event,item2.children,parameterlist)" @dragover='allowDropover($event)'>
+                                <div v-bind:class="{fields_items_e:item2.children.length>0}" v-if="item2.title" draggable="true" @dragstart="drag1(item2,parameterlist)" @dragend="delItemfun(index,item1,index1,item2.title,parameterlist)">
+                                  <div style="margin: -10px;padding: 10px;">
+                                    <div class="fields_text">{{item2.title}}：</div>
+                                    <div class="formitempart" :class="{partstyle:item2.itempart[0].length>1}">
+                                      <div class="sectiondiv">
+                                        <yu-xform-item-part v-model="item2.section.value" :ctype="item2.section.ctype" :options="item2.section.options" ></yu-xform-item-part>
+                                      </div>
+                                      <div class="sectiondiv" :class="{othersection:item2.itempart[0].length>1}"  v-for="(item6,index6) in item2.itempart">
+                                            <div v-for="(item6part,index6part) in item6">
+                                                <yu-xform-item-part v-model="item6part.value" :unit="item6part.unit" :ctype="item6part.ctype" :type="item6part.type" :options="item6part.options" ></yu-xform-item-part>
+                                          </div>
+                                        </div>
+                                          <!-- <span v-show='item2.itempart[0].length>1' @click="addsectionFun(item2.itempart)">新增区间</span> -->
+                                    </div>
+                                  </div>
+                                  <i class="iconfont icon-yeqianbaisejiantou" @click="delItemfun(index,item1,index1,item2.title,parameterlist)"></i>
+                                </div>
+                                <div v-for="(item3,index) in item2.children">
+                                  <div style="margin:10px" v-show="item3.radio">
+                                    <el-radio class="radio" v-model="item3.radio" label="1">并</el-radio>
+                                    <el-radio class="radio" v-model="item3.radio" label="2">或</el-radio>
+                                  </div>
+                                  <div class="fields_items_d" v-bind:class="{fields_items_g:!item3.radio}" draggable="true" @dragstart="drag1(item3,parameterlist)" @dragend="delItem(item1,item2,index,index1,item3.title,parameterlist)"  @drop="lastdrop($event)" @dragover="allowDropover($event)">
+                                    <div>
+                                      <div class="fields_text">{{item3.title}}：</div>
+                                      <div class="formitempart" :class="{partstyle:item3.itempart[0].length>1}">
+                                        <div class="sectiondiv">
+                                          <yu-xform-item-part v-model="item3.section.value" :ctype="item3.section.ctype" :options="item3.section.options" ></yu-xform-item-part>
+                                        </div>
+                                        <div class="sectiondiv" :class="{othersection:item3.itempart[0].length>1}" v-for="(item7,index7) in item3.itempart">
+                                          <div v-for="(item7part,index7part) in item7">
+                                                      <yu-xform-item-part v-model="item7part.value" :unit="item7part.unit" :ctype="item7part.ctype" :type="item7part.type" :options="item7part.options" ></yu-xform-item-part>
+                                              </div>
+                                        </div>
+                                        <!-- <span v-show='item3.itempart[0].length>1' @click="addsectionFun(item3.itempart)">新增区间</span> -->
+                                      </div>
+                                    </div>
+                                    <i class="iconfont icon-yeqianbaisejiantou" @click="delItem(item1,item2,index,index1,item3.title,parameterlist)"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="drop_box1" v-show="dropparametershow">拖拽一级字段</div>
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item title="连续动作配置" name="3">
+                  <div class="field_list" @drop="allowDrop($event,continuitylist,continuitylist)" @dragover='allowDropover($event)'>
+                    <div class="nothingbg" v-if="continuitylist.length=='0'"><img src="./themes/default/images/noting.jpg" alt="" />您还没有配置连续动作！</div>
+                    <div v-else v-for="(item1,index1) in continuitylist">
+                      <div>
+                        <div v-show="!index1=='0'" style="margin: 10px 15px;">
+                          <el-radio class="radio" v-model="item1.radio" label="1">并</el-radio>
+                          <el-radio class="radio" v-model="item1.radio" label="2">或</el-radio>
+                        </div>
+                        <div>
+                          <div v-bind:class="[{fields_items:item1.children.length=='0'},{fields_items_b:item1.children.length>0},{fields_items_ee:item1.title==''&&item1.children.length=='1'}]" @drop="allowDrop($event,item1.children,continuitylist)" @dragover='allowDropover($event)'>
+                            <div v-bind:class="{fields_items_a:item1.children.length>'0'}" v-if="item1.title" draggable="true" @dragstart="drag1(item1,continuitylist)" @dragend="delfirstitem(item1,index1,item1.title,continuitylist)">
+                              <div style="margin: -10px;padding: 10px;">
+                                <div class="fields_text">{{item1.title}}：</div>
+                                <div class="formitempart" :class="{partstyle:item1.itempart[0].length>1}">
+                                  <div class="sectiondiv">
+                                    <yu-xform-item-part v-model="item1.section.value" :ctype="item1.section.ctype" :options="item1.section.options" ></yu-xform-item-part>
+                                  </div>
+                                  <div class="sectiondiv" :class="{actionsection:item1.itempart[0].length>1}" v-for="(item5,index5) in item1.itempart">
+                                        <div class="conAction" v-for="(item5part,index5part) in item5">
+                                            <yu-xform-item-part v-model="item5part.value" :unit="item5part.unit" :ctype="item5part.ctype" :type="item5part.type" :options="item5part.options" ></yu-xform-item-part>
+                                      </div>
+                                  </div>
+                                  <!-- <span v-show='item1.itempart[0].length>1' @click="addsectionFun(item1.itempart)">新增区间</span> -->
+                                  </div>
+                              </div>
+                              <i class="iconfont icon-yeqianbaisejiantou" @click="delfirstitem(item1,index1,item1.title,continuitylist)"></i>
+                            </div>
+                            <div v-for="(item2,index) in item1.children">
+                              <div style="margin:10px;" v-show="item2.radio">
+                                <el-radio class="radio" v-model="item2.radio" label="1">并</el-radio>
+                                <el-radio class="radio" v-model="item2.radio" label="2">或</el-radio>
+                              </div>
+                              <div class="borderstyle" v-bind:class="[{fields_items_f:item2.children.length=='0'},{fields_items_c:item2.title||item2.children.length>'1'}]" @drop="allowDrop($event,item2.children,continuitylist)" @dragover='allowDropover($event)'>
+                                <div v-bind:class="{fields_items_e:item2.children.length>0}" v-if="item2.title" draggable="true" @dragstart="drag1(item2,parameterlist)" @dragend="delItemfun(index,item1,index1,item2.title,continuitylist)">
+                                  <div style="margin: -10px;padding: 10px;">
+                                    <div class="fields_text">{{item2.title}}：</div>
+                                    <div class="formitempart" :class="{partstyle:item2.itempart[0].length>1}">
+                                      <div class="sectiondiv">
+                                        <yu-xform-item-part v-model="item2.section.value" :ctype="item2.section.ctype" :options="item2.section.options" ></yu-xform-item-part>
+                                      </div>
+                                      <div class="sectiondiv" :class="{othersection:item2.itempart[0].length>1}"  v-for="(item6,index6) in item2.itempart">
+                                            <div v-for="(item6part,index6part) in item6">
+                                                <yu-xform-item-part v-model="item6part.value" :unit="item6part.unit" :ctype="item6part.ctype" :type="item6part.type" :options="item6part.options" ></yu-xform-item-part>
+                                          </div>
+                                        </div>
+                                          <!-- <span v-show='item2.itempart[0].length>1' @click="addsectionFun(item2.itempart)">新增区间</span> -->
+                                    </div>
+                                  </div>
+                                  <i class="iconfont icon-yeqianbaisejiantou" @click="delItemfun(index,item1,index1,item2.title,continuitylist)"></i>
+                                </div>
+                                <div v-for="(item3,index) in item2.children">
+                                  <div style="margin:10px" v-show="item3.radio">
+                                    <el-radio class="radio" v-model="item3.radio" label="1">并</el-radio>
+                                    <el-radio class="radio" v-model="item3.radio" label="2">或</el-radio>
+                                  </div>
+                                  <div class="fields_items_d" v-bind:class="{fields_items_g:!item3.radio}" draggable="true" @dragstart="drag1(item3,continuitylist)" @dragend="delItem(item1,item2,index,index1,item3.title,continuitylist)"  @drop="lastdrop($event)" @dragover="allowDropover($event)">
+                                    <div>
+                                      <div class="fields_text">{{item3.title}}：</div>
+                                      <div class="formitempart" :class="{partstyle:item3.itempart[0].length>1}">
+                                        <div class="sectiondiv">
+                                          <yu-xform-item-part v-model="item3.section.value" :ctype="item3.section.ctype" :options="item3.section.options" ></yu-xform-item-part>
+                                        </div>
+                                        <div class="sectiondiv" :class="{othersection:item3.itempart[0].length>1}" v-for="(item7,index7) in item3.itempart">
+                                          <div v-for="(item7part,index7part) in item7">
+                                                      <yu-xform-item-part v-model="item7part.value" :unit="item7part.unit" :ctype="item7part.ctype" :type="item7part.type" :options="item7part.options" ></yu-xform-item-part>
+                                              </div>
+                                        </div>
+                                        <!-- <span v-show='item3.itempart[0].length>1' @click="addsectionFun(item3.itempart)">新增区间</span> -->
+                                      </div>
+                                    </div>
+                                    <i class="iconfont icon-yeqianbaisejiantou" @click="delItem(item1,item2,index,index1,item3.title,continuitylist)"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="drop_box1" v-show="dropactionshow">拖拽一级字段</div>
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item title="营销动作" name="4">
+                <el-tabs v-model="activeName2"  @tab-click="tabsHandleClick">
+                  <el-tab-pane label="单次动作" name="first">
+                    <div class="field_list" @drop="allowDropMarketingaction($event)" @dragover='allowDropover($event)'>
+                      <div class="nothingbg" v-if="actionlist.length=='0'"><img src="./themes/default/images/noting.jpg" alt="" />您还没有配置营销动作！</div>
+                        <div v-else>
+                          <div class="marketing_products" >
+                            <div class="borderstyle_mkation" v-show="productsShow">
+                              <div class="fields_items_title">营销产品<b class="moretitle"></b><span class="iconfont icon-Y selectedslist" @click="selectModel('PRODUCT')">选择产品</span></div>
+                              <div>
+                                  <template>
+                                    <el-table-x ref="products" :table-data="productsdata" :pageable="false"
+                                      :stripe="false" :table-columns="tableColumns" @custom-row-op="customRowOpProducts">
+                                    </el-table-x>
+                                  </template>
+                              </div>
+                              <i class="iconfont icon-yeqianbaisejiantou" @click="delproducts()"></i>
+                            </div>
+                          </div>
+                          <div class="marketing_products" >
+                            <div class="borderstyle_mkation" v-show="risksShow">
+                              <div class="fields_items_title">关注风险<span class="iconfont icon-Y selectedslist" @click="selectModel('RISK')">选择风险</span></div>
+                                <div>
+                                  <template>
+                                    <el-table-x ref="risks" :pageable="false" :table-data="risksdata"
+                                      :stripe="false" :table-columns="tableColumns1"  @custom-row-op="customRowOpRisks">
+                                    </el-table-x>
+                                  </template>
+                                      <!-- <div class="addmini">
+                                        <input type="text" placeholder="请输入风险介绍"/><el-button type='primary' size='mini'>添加</el-button>
+                                      </div> -->
+                                </div>
+                                <i class="iconfont icon-yeqianbaisejiantou" @click="delrisks()"></i>
+                            </div>
+                          </div>
+                          <div class="marketing_products" >
+                            <div class="borderstyle_mkation" v-show="customercaresShow">
+                              <div class="fields_items_title">客户关怀<span class="iconfont icon-Y selectedslist" @click="selectModel('CARE')">选择关怀</span></div>
+                                <div>
+                                  <template>
+                                    <el-table-x ref="customercares" :pageable="false" :table-data="caresdata"
+                                      :stripe="false" :table-columns="tableColumns2" @custom-row-op="customRowOpCaresdata">
+                                    </el-table-x>
+                                  </template>
+                                      <!-- <div class="addmini">
+                                        <input type="text" placeholder="请输入客户关怀"/><el-button type='primary' size='mini'>添加</el-button>
+                                      </div> -->
+                                </div>
+                                <i class="iconfont icon-yeqianbaisejiantou" @click="delcares()"></i>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="连续动作" name="second">
+                      <div class="field_list" @drop="allowDropMarketingaction($event)" @dragover='allowDropover($event)'>
+                        <div class="nothingbg" v-if="conactionlist.length=='0'"><img src="./themes/default/images/noting.jpg" alt="" />您还没有配置营销动作！</div>
+                          <div v-else>
+                            <div class="marketing_products" >
+                              <div class="borderstyle_mkation" v-show="conproductsShow">
+                                <div class="fields_items_title">营销产品<b class="moretitle"></b><span class="iconfont icon-Y selectedslist" @click="selectModel('PRODUCT')">选择产品</span></div>
+                                <div>
+                                    <template>
+                                      <el-table-x ref="conproducts" :table-data="conproductsdata" :pageable="false"
+                                        :stripe="false" :table-columns="tableColumns" @custom-row-op="concustomRowOpProducts">
+                                      </el-table-x>
+                                    </template>
+                                </div>
+                                <i class="iconfont icon-yeqianbaisejiantou" @click="condelproducts()"></i>
+                              </div>
+                            </div>
+                            <div class="marketing_products" >
+                              <div class="borderstyle_mkation" v-show="conrisksShow">
+                                <div class="fields_items_title">关注风险<span class="iconfont icon-Y selectedslist" @click="selectModel('RISK')">选择风险</span></div>
+                                  <div>
+                                    <template>
+                                      <el-table-x ref="conrisks" :pageable="false" :table-data="conrisksdata"
+                                        :stripe="false" :table-columns="tableColumns1"  @custom-row-op="concustomRowOpRisks">
+                                      </el-table-x>
+                                    </template>
+                                        <!-- <div class="addmini">
+                                          <input type="text" placeholder="请输入风险介绍"/><el-button type='primary' size='mini'>添加</el-button>
+                                        </div> -->
+                                  </div>
+                                  <i class="iconfont icon-yeqianbaisejiantou" @click="condelrisks()"></i>
+                              </div>
+                            </div>
+                            <div class="marketing_products" >
+                              <div class="borderstyle_mkation" v-show="concustomercaresShow">
+                                <div class="fields_items_title">客户关怀<span class="iconfont icon-Y selectedslist" @click="selectModel('CARE')">选择关怀</span></div>
+                                  <div>
+                                    <template>
+                                      <el-table-x ref="concustomercares" :pageable="false" :table-data="concaresdata"
+                                        :stripe="false" :table-columns="tableColumns2" @custom-row-op="concustomRowOpCaresdata">
+                                      </el-table-x>
+                                    </template>
+                                        <!-- <div class="addmini">
+                                          <input type="text" placeholder="请输入客户关怀"/><el-button type='primary' size='mini'>添加</el-button>
+                                        </div> -->
+                                  </div>
+                                  <i class="iconfont icon-yeqianbaisejiantou" @click="condelcares()"></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </el-tab-pane>
+                    <!-- 
+                     -->
+                </el-tabs>
+              </el-collapse-item>
+              </el-collapse>
+            <div class="ruleconfiguration">
+              <el-button type="primary" @click="savefun()">保存</el-button>
+              <el-button @click="returnFn()">重置</el-button>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+      </el-collapse-item>
+      <el-collapse-item title="输出" name="3">
+          <el-tabs :active-name="activeName" @tab-click="handleClick" >
+          <el-tab-pane label="营销产品" name="PRODUCT">
+            <template>
+                <el-table-x ref="eventResultTable" :checkbox="false"	:data-url="eventResultUrl" 
+                :base-params = "eventTableParams"
+                :table-columns="eventResultColumns">
+                </el-table-x>
+            </template>
+          </el-tab-pane>
+          <el-tab-pane label="客戶关怀" name="CARE">
+            <template>
+                <el-table-x ref="eventResultTableCare" :checkbox="false"	:data-url="eventResultUrlCare" 
+                :table-columns="eventResultColumnsCare">
+                </el-table-x>
+            </template>
+          </el-tab-pane>
+          <el-tab-pane label="关注风险" name="RISK">
+            <template>
+                <el-table-x ref="eventResultTableRisk" :checkbox="false"	:data-url="eventResultUrlRisk" 
+                :table-columns="eventResultColumnsRisk">
+                </el-table-x>
+            </template>
+          </el-tab-pane>
+        </el-tabs>
+      </el-collapse-item>
+    </el-collapse>
+    <el-dialog-x :title="modelViewTitle" :visible.sync="viewDialogVisible" width="60%">
+        <el-form-q ref="modelQuery" :field-data="modelqueryFields" :buttons="modelqueryButtons"></el-form-q>
+        <el-table-x ref="modeltable" :checkbox="true" data-url="/api/cmfrcsystype/list" 
+              :table-columns="modeltableColumns">
+        </el-table-x>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" icon="yx-compass" @click="checkModel">选取</el-button>
+          <el-button type="primary" icon="yx-spinner11" @click="cancelModelfn">取消</el-button>
+        </div>
+      </el-dialog-x>
+  </div>

@@ -1,0 +1,75 @@
+<!-- 
+  @Created by lixt1 lixt1@yusys.com.cn on 2019-2-18 15:30:14.
+  @updated by
+  @description 提醒规则设计
+-->
+<div>
+  <yu-row>
+    <yu-col :span="5">
+      <yu-xtree ref="ruleTree" :height="height - 20" @node-click="nodeClickFn" :data-url="treeUrl" 
+        data-id="typeId" data-label="typeName" data-pid="upTypeId" data-root="R01" style="margin:10px 10px 0 0;">
+      </yu-xtree>
+    </yu-col>
+    <yu-col :span="19">
+      <div class="yu-toolBar">
+        <yu-button-group>
+          <yu-button icon="plus" @click="addFn">新增</yu-button>
+          <yu-button icon="edit" @click="modifyFn">修改</yu-button>
+          <yu-button icon="document" @click="infoFn">详情</yu-button>
+        </yu-button-group>
+      </div>
+      <yu-xtable ref="refTable" row-number :data-url="dataUrl" selection-type="radio" :default-load="false">
+        <yu-xtable-column label="规则类别名称" prop="typeName" width="180"></yu-xtable-column>
+        <yu-xtable-column label="是否启用" prop="isEnable" width="110" data-code="CD0238"></yu-xtable-column>
+        <yu-xtable-column label="适用机构" prop="adjustOrgName" width="180" v-if="false"></yu-xtable-column>
+        <yu-xtable-column label="规则名称" prop="ruleName" width="150"></yu-xtable-column>
+        <yu-xtable-column label="客户类型" prop="custType" width="180" :options="custTypeOptions"></yu-xtable-column>
+        <yu-xtable-column label="提醒提前天数" prop="beforeDays" width="110"></yu-xtable-column>
+        <yu-xtable-column label="提醒持续天数" prop="lastDays" width="110"></yu-xtable-column>
+        <yu-xtable-column label="变动阀值" prop="threshhold" width="110"></yu-xtable-column>
+      </yu-xtable>
+      <yu-dialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="80%">
+        <yu-xform label-width="150px" ref="refForm" v-model="formdata" :disabled="formDisabled">
+          <yu-xform-group>
+            <yu-xform-item label="规则类别编号" ctype="input" name="typeId" :hidden="true"></yu-xform-item>
+            <yu-xform-item label="规则类别" ctype="input" name="typeName" rules="required" :disabled="true"></yu-xform-item>
+            <yu-xform-item label="规则名称" ctype="input" name="ruleName" rules="required"></yu-xform-item>
+            <yu-xform-item label="接收角色编号" ctype="input" name="receRoleId" rules="required" :hidden="true"></yu-xform-item>
+            <yu-xform-item label="接收角色" ctype="yufp-role-selector" name="receRoleName" 
+              rules="required" :raw-value="formdata.receRoleName" @select-fn="rolSelFn"></yu-xform-item>
+            <yu-xform-item label="客户类型" ctype="select" name="custType" :options="custTypeOptions" @change="custTypeChgFn" rules="required"></yu-xform-item>
+            <yu-xform-item label="适用机构名称" ctype="input" name="adjustOrgName" :hidden="true"></yu-xform-item>
+            <yu-xform-item label="适用机构" ctype="yufp-org-tree" name="adjustOrgId" @select-fn="orgSelFn" v-if="false"></yu-xform-item>
+            <yu-xform-item label="个人基线层级" ctype="select" name="perCustLevel" data-code="CD0032" :rules="isPer ? rule.requireRule : ''" :hidden="!isPer"></yu-xform-item>
+            <yu-xform-item label="个人变动阀值" ctype="input" name="perThreshhold" :rules="isPer ? rule.checkDigit : ''" :hidden="!isPer"></yu-xform-item>
+            <yu-xform-item label="对公基线层级" ctype="select" name="orgCustLevel" data-code="CD0032" :rules="isCor ? rule.requireRule : ''" :hidden="!isCor"></yu-xform-item>
+            <yu-xform-item label="对公变动阀值" ctype="input" name="orgThreshhold" :rules="isCor ? rule.checkDigit : ''" :hidden="!isCor"></yu-xform-item>
+            <yu-xform-item label="提醒提前天数" ctype="input" name="beforeDays" :rules="rule.checkNum"></yu-xform-item>
+            <yu-xform-item label="提醒持续天数" ctype="input" name="lastDays" :rules="rule.checkNum"></yu-xform-item>
+            <yu-xform-item label="是否批量发短信" ctype="select" name="isBatchMess" data-code="CD0238"></yu-xform-item>
+            <yu-xform-item label="是否发短信" ctype="select" name="isSendMes" data-code="CD0238" @change="isSendChgFn" rules="required"></yu-xform-item>
+            <yu-xform-item label="是否启用" ctype="select" name="isEnable" data-code="CD0238" rules="required"></yu-xform-item>
+            <yu-xform-item label="提醒模板" ctype="textarea" name="remindModel" :rows="2" :colspan="24" placeholder="300个字符以内" :rules="rule.remindModel"></yu-xform-item>
+            <yu-xform-item label="短信模板" ctype="textarea" name="messageModel" :rows="2" :colspan="24" placeholder="300个字符以内" 
+              :rules="isSendMes ? rule.messageModel : ''" :disabled="!isSendMes"></yu-xform-item>
+          </yu-xform-group>
+          <div>&nbsp;</div>
+          <div style="color:red">提醒模板变量命名规则:</div>
+          <div>
+            客户号：@CUST_ID,客户名称：@CUST_NAME, 客户经理号：@USER_ID,客户经理姓名：@USER_NAME ,
+            机构号：@ORG_ID, 机构名称：@ORG_NAME, 产品号：@PROD_ID,产品名称：@PROD_NAME, 账号：@ACCT_NO,
+            金额：@MONEY ,日期：@DATE,联系电话：@LX_PHONE,预期收益率：@EXPECT_RATE,最高利率：@MAX_RATE,
+            利率：@RATE,期限：@LIMIT,期数：@PERIODS,本金：@PRINCIPAL,利息：@INTEREST, 汇票号 ：ORDER_NUM,
+            证件类型名称：@CERTIFICATE_TYPE_NAME,月份：@MONTH_NUM,原服务等级：@OLD_SERVICE_LEVEL ,
+            新服务等级：@NEW_SERVICE_LEVEL,营销活动名称：@ACTIVIT_NAME 
+            更多表达式，请和ETL后台共同确定. 
+          </div>
+          <div class="yu-grpButton">
+            <yu-button v-show="cancelBtnShow" icon="yx-undo2" type="primary" @click="cancelFn">取消</yu-button>
+            <yu-button v-show="saveBtnShow" icon="check" type="primary" @click="saveFn">保存</yu-button>
+          </div>
+        </yu-xform>
+      </yu-dialog>
+    </yu-col>
+  </yu-row>
+</div>

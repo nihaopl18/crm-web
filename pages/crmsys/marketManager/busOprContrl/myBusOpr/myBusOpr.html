@@ -1,0 +1,239 @@
+<!-- 
+  @Created by zhuly6 zhuly6@yusys.com.cn on 2018-1-8
+  @updated by
+  @description 营销活动管理-商机管理-我的商机
+-->
+<div>
+  <yu-xform related-table-name="OCRM_F_MK_MKT_SALESOPPOR" form-type="search">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="商机类型" name="businessType" ctype="select" data-code="BUS_TYPE" :colspan="3"></yu-xform-item>
+      <yu-xform-item placeholder="商机名称" name="businessName" ctype="input" :colspan="3"></yu-xform-item>
+      <yu-xform-item placeholder="商机状态" name="businessState" ctype="select" data-code="BUS_STATE" :colspan="3"></yu-xform-item>
+      <yu-xform-item placeholder="商机阶段" name="businessStage" ctype="select" data-code="BUS_STAGE" :colspan="3"></yu-xform-item>
+      <yu-xform-item placeholder="商机来源" name="businessSource" ctype="select" data-code="BUS-SRC" :colspan="3"></yu-xform-item>
+      <yu-xform-item placeholder="商机产品" name="contactProdId" ctype="select" :colspan="3"></yu-xform-item>
+      <yu-xform-item placeholder="达成概率" name="successChance" ctype="select" data-code="SUC_CHANGE" :colspan="3"></yu-xform-item>
+      <yu-xform-item placeholder="商机开始日期" name="businessStartDate" ctype="datepicker" :colspan="3"></yu-xform-item>
+      <yu-xform-item placeholder="商机完成日期" name="businessEndDate" ctype="datepicker" :colspan="3"></yu-xform-item>
+      <yu-xform-item placeholder="商机有效期" name="businessValidDate" ctype="datepicker" :colspan="3"></yu-xform-item>
+    </yu-xform-group>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="plus" @click="handFn('add')">新增</yu-button>
+      <yu-button icon="edit" @click="handFn('edit')">修改</yu-button>
+      <yu-button icon="delete" @click="deleteFn">删除商机</yu-button>
+      <yu-button icon="document" @click="infoFn">详情</yu-button>
+      <yu-button icon="close" @click="busCloseFn">关闭</yu-button>
+      <yu-button icon="minus" @click="saleActFn">销售活动</yu-button>
+      <yu-button icon="arrow-left" @click="busBackFn">商机退回</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="OCRM_F_MK_MKT_SALESOPPOR" row-number :data-url="dataUrl" @row-dblclick="infoFn" :data="businessTabData" @row-dblclick="infoFn" :base-params="userId" :default-load = false  selection-type="checkbox">
+    <!-- <yu-xtable-column label="商机编号" prop="businessNo" :hidden=true></yu-xtable-column> -->
+    <yu-xtable-column label="商机名称" prop="businessName"></yu-xtable-column>
+    <yu-xtable-column label="商机状态" prop="businessState"  data-code="BUS_STATE"></yu-xtable-column>
+    <yu-xtable-column label="商机阶段" prop="businessStage" data-code="BUS_STAGE"></yu-xtable-column>
+    <yu-xtable-column label="商机来源" prop="businessSource" data-code="BUS-SRC"></yu-xtable-column>
+    <yu-xtable-column label="商机类型" prop="businessType" data-code="BUS_TYPE"></yu-xtable-column>
+    <yu-xtable-column label="商机开始日期" prop="businessStartDate" width="100"></yu-xtable-column>
+    <yu-xtable-column label="商机完成日期" prop="businessEndDate" width="100"></yu-xtable-column>
+    <yu-xtable-column label="商机有效期" prop="businessValidDate" width="100"></yu-xtable-column>
+    <yu-xtable-column label="营销活动" prop="marketActivityName"></yu-xtable-column>
+    <yu-xtable-column label="商机内容" prop="businessContent"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName"></yu-xtable-column>
+    <yu-xtable-column label="客户联系人" prop="custContact" width="100"></yu-xtable-column>
+    <yu-xtable-column label="客户类型" prop="custType" data-code="CD0016"></yu-xtable-column>
+    <yu-xtable-column label="预计金额" prop="expectAmount"></yu-xtable-column>
+    <yu-xtable-column label="达成概率" prop="successChance"></yu-xtable-column>
+    <yu-xtable-column label="费用预算" prop="businessBudget"></yu-xtable-column>
+    <yu-xtable-column label="创建人" prop="createUserName"></yu-xtable-column>
+    <yu-xtable-column label="创建机构" prop="createOrgName"></yu-xtable-column>
+    <yu-xtable-column label="创建时间" prop="createDate" width="100"></yu-xtable-column>
+    <yu-xtable-column label="最近更新人" prop="updataUserName" width="100"></yu-xtable-column>
+    <yu-xtable-column label="最近更新机构" prop="updataOrgName" width="100"></yu-xtable-column>
+    <yu-xtable-column label="最近更新时间" prop="updataDate" width="100"></yu-xtable-column>
+    <yu-xtable-column label="执行人" prop="executeUser"></yu-xtable-column>
+    <yu-xtable-column label="执行机构" prop="executeOrg"></yu-xtable-column>
+    <yu-xtable-column label="待分配机构" prop="assignOrg" width="100"></yu-xtable-column>
+    <yu-xtable-column label="认领人" prop="receiveUserName"></yu-xtable-column>
+    <yu-xtable-column label="认领机构" prop="receiveOrgName"></yu-xtable-column>
+  </yu-xtable>
+  <!-- 商机详情弹框 -->
+  <yu-xdialog :title="viewTitle[0]" :visible.sync="busOprInfoVisible">
+    <yu-tabs v-model="activeName">
+      <yu-tab-pane label="商机信息" name="first">
+        <yu-xform ref="businessInfoForm" label-width="120px" v-model="businessInfoData" disabled>
+          <yu-xform-group :column="3">
+            <yu-xform-item label="商机编号" name="businessNo"></yu-xform-item>
+            <yu-xform-item label="商机名称" name="businessName"></yu-xform-item>
+            <yu-xform-item label="商机状态" name="businessState" ctype="select" data-code="BUS_STATE"></yu-xform-item>
+            <yu-xform-item label="商机阶段" name="businessStage" ctype="select" data-code="BUS_STAGE"></yu-xform-item>
+            <yu-xform-item label="商机来源" name="businessSource" ctype="select" data-code="BUS-SRC"></yu-xform-item>
+            <yu-xform-item label="商机定向条线" name="businessFitCust" data-code="BUS_FITCUST"></yu-xform-item>
+            <yu-xform-item label="商机类型" name="businessType" stype="select" data-code="BUS_TYPE"></yu-xform-item>
+            <yu-xform-item label="客户编号" name="custId" ctype="input"></yu-xform-item>
+            <yu-xform-item label="客户名称" name="custName" ctype="input"></yu-xform-item>
+            <yu-xform-item label="客户类型" name="custType" ctype="select" data-code="CD0016"></yu-xform-item>
+            <yu-xform-item label="客户状态" name="custStatus" ctype="select" data-code="CD0019"></yu-xform-item>
+            <yu-xform-item label="客户群编号" name="custGroupId" ctype="input"></yu-xform-item>
+            <yu-xform-item label="客户群名称" name="custGroupName"></yu-xform-item>
+            <yu-xform-item label="商机开始日期" name="businessStartDate" ctype="datepicker"></yu-xform-item>
+            <yu-xform-item label="商机结束日期" name="businessEndDate" ctype="datepicker"></yu-xform-item>
+            <yu-xform-item label="商机有效期" name="businessValidDate" ctype="datepicker"></yu-xform-item>
+            <yu-xform-item label="关联活动" name="marketActivityId"></yu-xform-item>
+            <yu-xform-item label="客户联系人" name="custContact"></yu-xform-item>
+            <yu-xform-item label="联系方式" name="custConcactInfo"></yu-xform-item>
+            <yu-xform-item label="关联产品" name="contactProdId"></yu-xform-item>
+            <yu-xform-item label="预计金额" name="expectAmount"></yu-xform-item>
+            <yu-xform-item label="实际达成金额" name="reachAmount"></yu-xform-item>
+            <yu-xform-item label="预计达成概率" name="successChance"></yu-xform-item>
+            <yu-xform-item label="商机内容描述" name="businessContent"></yu-xform-item>
+            <yu-xform-item label="执行人" name="executeUser" ctype="input"></yu-xform-item>
+            <yu-xform-item label="执行机构" name="executeOrg" ctype="input"></yu-xform-item>
+            <yu-xform-item label="认领人" name="authExecuteOrGor" ctype="input"></yu-xform-item>
+            <yu-xform-item label="认领人机构" name="receiveOrg"></yu-xform-item>
+            <yu-xform-item label="认领日期" name="receiveDate"></yu-xform-item>
+            <yu-xform-item label="待分配机构" name="assignOrg"></yu-xform-item>
+            <yu-xform-item label="分配日期" name="assignDate"></yu-xform-item>
+            <yu-xform-item label="分配人" name="assignUser"></yu-xform-item>
+            <yu-xform-item label="创建时间" name="createDate"></yu-xform-item>
+            <yu-xform-item label="创建人" name=""></yu-xform-item>
+            <yu-xform-item label="创建机构" name="createOrg"></yu-xform-item>
+            <yu-xform-item label="最近维护人名称" name="updateUser"></yu-xform-item>
+            <yu-xform-item label="最近维护日期" name="updateDate"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
+      </yu-tab-pane>
+      <yu-tab-pane label="销售活动" name="second">
+        <yu-xtable  row-number :data-url="saleActDataUrl"  @row-dblclick="infoFn" :data="businessTabData" :base-params="marketActivityId">
+          <yu-xtable-column label="销售活动名称" prop="activityName"></yu-xtable-column>
+          <yu-xtable-column label="活动执行日期" prop="activityExecuteDate"></yu-xtable-column>
+          <yu-xtable-column label="销售阶段" prop="activityStage" data-code="ACT_STAGE"></yu-xtable-column>
+          <yu-xtable-column label="活动执行方式" prop="activityExecuteType" data-code="ACT_EXE_TYPE"></yu-xtable-column>
+          <yu-xtable-column label="活动执行人" prop="activityExecuteUser"></yu-xtable-column>
+          <yu-xtable-column label="活动执行机构" prop="activityExecuteOrg" data-code="PUB_STS" ctype="select"></yu-xtable-column>
+          <yu-xtable-column label="下次联系时间" prop="nextContactDate"></yu-xtable-column>
+          <yu-xtable-column label="下次执行方式" prop="nextExecuteType"></yu-xtable-column>
+          <yu-xtable-column label="活动内容" prop="activityContent"></yu-xtable-column>
+          <yu-xtable-column label="下次活动内容" prop="nextActivityContent"></yu-xtable-column>
+          <yu-xtable-column label="备注" prop="remark"></yu-xtable-column>
+        </yu-xtable>
+      </yu-tab-pane>
+    </yu-tabs>
+  </yu-xdialog>
+  <!-- 销售活动弹框 -->
+  <yu-xdialog :title="viewTitle[1]" :visible.sync="saleActVisible">
+    <div class="yu-toolBar">
+      <yu-button-group>
+        <yu-button icon="edit" @click="saleActHandFn('add')">新增</yu-button>
+        <yu-button icon="document" @click="saleActHandFn('edit')">修改</yu-button>
+        <yu-button icon="edit" @click="saleActDeleteFn">删除</yu-button>
+      </yu-button-group>
+    </div>
+    <yu-xtable ref="OCRM_F_MK_MKT_ACTIVITY" row-number :data-url="saleActDataUrl" @row-dblclick="infoFn" :data="businessTabData" :base-params="marketActivityId">
+      <yu-xtable-column label="销售活动名称" prop="activityName"></yu-xtable-column>
+      <yu-xtable-column label="活动执行日期" prop="activityExecuteDate"></yu-xtable-column>
+      <yu-xtable-column label="销售阶段" prop="activityStage" data-code="ACT_STAGE"></yu-xtable-column>
+      <yu-xtable-column label="活动执行方式" prop="activityExecuteType" data-code="ACT_EXE_TYPE"></yu-xtable-column>
+      <yu-xtable-column label="活动执行人" prop="activityExecuteUser"></yu-xtable-column>
+      <yu-xtable-column label="活动执行机构" prop="activityExecuteOrg" data-code="PUB_STS" ctype="select"></yu-xtable-column>
+      <yu-xtable-column label="下次联系时间" prop="nextContactDate"></yu-xtable-column>
+      <yu-xtable-column label="下次执行方式" prop="nextExecuteType"></yu-xtable-column>
+      <yu-xtable-column label="活动内容" prop="activityContent"></yu-xtable-column>
+      <yu-xtable-column label="下次活动内容" prop="nextActivityContent"></yu-xtable-column>
+      <yu-xtable-column label="备注" prop="remark"></yu-xtable-column>
+    </yu-xtable>
+    <div class="yu-grpButton">
+      <yu-button icon="" @click="cancleFn('saleActForm')" type="primary">关闭</yu-button>
+    </div>
+  </yu-xdialog>
+  <!-- 销售活动新增 ，修改 详情弹窗 -->
+  <yu-xdialog :title="viewTitle[5]" :visible.sync="saleActHandVisible">
+    <yu-xform ref="saleActHandForm" v-model="saleActHandFormdata" label-width="120px">
+      <yu-xform-group :column="3">
+        <yu-xform-item label="销售活动名称" name="activityName" ctype="input" :disabled="saleActHandDisable" rules="required"></yu-xform-item>
+        <yu-xform-item label="活动执行日期" name="activityExecuteDate" ctype="datepicker" rules="required"></yu-xform-item>
+        <yu-xform-item label="销售阶段" name="activityStage" ctype="select" rules="required" data-code="ACT_STAGE"></yu-xform-item>
+        <yu-xform-item label="活动执行方式" name="activityExecuteType" ctype="select" rules="required" data-code="ACT_EXE_TYPE"></yu-xform-item>
+        <yu-xform-item label="下次联系时间" name="nextContactDate" ctype="datepicker"></yu-xform-item>
+        <yu-xform-item label="下次执行方式" name="nextExecuteType" ctype="select" data-code="ACT_EXE_TYPE"></yu-xform-item>
+        <yu-xform-item label="活动内容" name="activityContent" ctype="textarea"  rules="required"></yu-xform-item>
+        <yu-xform-item label="下次活动内容" name="nextActivityContent" ctype="textarea"></yu-xform-item>
+        <yu-xform-item label="备注" name="remark" ctype="textarea" :colspan="24" :row="2"></yu-xform-item>
+      </yu-xform-group>
+    </yu-xform>
+    <div class="yu-grpButton">
+      <yu-button icon="close" @click="cancleFn('saleActHandForm')" type="primary">取消</yu-button>
+      <yu-button icon="check" @click="saveSaleActHandFn" type="primary">保存</yu-button>
+    </div>
+  </yu-xdialog>
+  <!-- 商机新增，修改弹框 -->
+  <yu-xdialog :title="viewTitle[2]" :visible.sync="busOprHandVisible" width="1000px">
+    <yu-xform label-width="120px" ref="busOprHandForm" v-model="busOprHandFormdata">
+      <yu-xform-group :column="3">
+        <yu-xform-item label="商机名称" name="businessName" rules="required"></yu-xform-item>
+        <yu-xform-item label="商机定向条线" name="businessFitCust" rules="required" ctype="select"  data-code="BUS_FITCUST"></yu-xform-item>
+        <yu-xform-item label="商机类型" name="businessType" ctype="select" rules="required" data-code="BUS_TYPE"></yu-xform-item>
+        <!-- 客户选择器 必输-->
+        <yu-xform-item label="客户名称" name="custName" ctype="yufp-governed-cust-selector" @select-fn="getCustDataFn" rules="required"></yu-xform-item>
+        <yu-xform-item label="客户编号" name="custId" ctype="input" rules="required" :disabled="custDisabled"></yu-xform-item>
+        <yu-xform-item label="客户类型" name="custType" ctype="select"  rules="required" :disabled="custDisabled" data-code="CD0016"></yu-xform-item>
+        <yu-xform-item label="客户状态" name="custStatus" ctype="select" rules="required" :disabled="custDisabled" data-code="CD0019"></yu-xform-item>
+        <yu-xform-item label="客户联系人" name="custContact" ctype="input" ></yu-xform-item>
+        <yu-xform-item label="联系方式" name="custConcactInfo" ctype="input" ></yu-xform-item>
+        <!-- 执行人 -->
+        <yu-xform-item label="执行人" name="executeUser" ctype="select" :options="exemgrOptions" @change="changeExeFn"></yu-xform-item>
+        <yu-xform-item label="执行机构" name="executeOrg" ctype="input" :disabled="custDisabled"></yu-xform-item>
+        <!-- 客户群选择器
+          <yu-xform-item label="客户群编号" name="custGroupId" ctype="input"></yu-xform-item>
+        <yu-xform-item label="客户群名称" name="custGroupName" ctype="input"></yu-xform-item> -->
+        <yu-xform-item label="商机开始日期" name="businessStartDate" ctype="datepicker" rules="required"></yu-xform-item>
+        <yu-xform-item label="商机结束日期" name="businessEndDate" ctype="datepicker" rules="required"></yu-xform-item>
+        <yu-xform-item label="商机有效期" name="businessValidDate" ctype="datepicker"></yu-xform-item>
+        <!-- 营销活动选择控件 -->
+        <yu-xform-item label="关联活动" name="marketActivityId" ctype="yufp-mktacti-selector" :params="MktParams" ></yu-xform-item>
+        <!-- 产品选择控件 -->
+        <yu-xform-item label="关联产品" name="contactProdId" ctype="yufp-prod-selector" rules="" :prodParams="prodParams"></yu-xform-item>
+        <yu-xform-item label="预计金额" name="expectAmount" rules="required" ctype="num"></yu-xform-item>
+        <yu-xform-item label="预计达成概率" name="successChance" ctype="select" data-code="SUC_CHANGE" rules="required"></yu-xform-item>
+        <yu-xform-item label="商机内容描述" name="businessContent" ctype="textarea" rules="required" :colspan="24"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="close"  type="primary" @click="cancleFn('busOprHandForm')">取消</yu-button>
+        <yu-button icon="check" type="primary" @click="saveFn">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 商机退回 -->
+  <yu-xdialog :title="viewTitle[3]" :visible.sync="busBackVisible">
+    <yu-xform label-width="120px" ref="busBackForm" v-model="busBackFormdata">
+      <yu-xform-group :column="3">
+        <yu-xform-item label="商机名称" name="businessName" rules="required" ></yu-xform-item>
+        <yu-xform-item label="退回理由" name="backReason" ctype="input" rules="required"></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="" type="primary" @click="cancleFn('busBackForm')">取消</yu-button>
+        <yu-button icon="check" @click="saveBackFn" type="primary">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <!-- 商机关闭 -->
+  <yu-xdialog :title="viewTitle[4]" :visible.sync="busCloseVisible">
+    <yu-xform label-width="120px" ref="busCloseForm" v-model="busCloseFormdata">
+      <yu-xform-group :column="3">
+        <yu-xform-item label="商机名称" name="businessName" rules="required"></yu-xform-item>
+        <!-- 营销活动选择控件 -->
+        <yu-xform-item label="关联营销活动" name="marketActivityId" ctype="input" ></yu-xform-item>
+        <yu-xform-item label="达成金额" name="reachAmount" rules="required" ctype="input"></yu-xform-item>
+        <yu-xform-item label="关闭状态" name="offStat" rules="required" ctype="select" data-code="OFF_STAT"></yu-xform-item>
+        <yu-xform-item label="失败关闭原因" name="offFailReason" ctype="input" :required="fallReason"></yu-xform-item>
+        <yu-xform-item label="备注" name="remark" ctype=""></yu-xform-item>
+      </yu-xform-group>
+      <div class="yu-grpButton">
+        <yu-button icon="close" type="primary" @click="cancleFn('busCloseForm')">取消</yu-button>
+        <yu-button icon="check" @click="saveCloseFn" type="primary">保存</yu-button>
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+</div>

@@ -1,0 +1,114 @@
+<!--
+  @Created by houyx3 houyx3@yusys.com.cn on 2022-5-10 14:59:05.
+  @updated by
+  @description 团队业绩结果
+-->
+<div>
+  <link href="./themes/common/custom.css" rel="stylesheet" type="text/css">
+  <yu-xform ref="refForm" v-model="formdata">
+    <yu-xform-group :column="4">
+      <yu-xform-item placeholder="年份" name="schemeCycle" ctype="datepicker" type="year"></yu-xform-item>
+      <yu-xform-item placeholder="考核方案" name="schemeId" ctype="yufp-scheme-selector" :params="quoteSchemeSelParams" @select-fn="querySchemeFn">
+      </yu-xform-item>
+      <yu-xform-item :hidden="queryindexFlag" placeholder="考核指标" name="indexIds" ctype="select" :options="queryIndexOptions" multiple>
+      </yu-xform-item>
+      <yu-xform-item :hidden="queryMgrObjType"  placeholder="考核对象名称" name="objIds" ctype="yufp-mkt-selectors" :params="queryParams">
+      </yu-xform-item>
+      <yu-xform-item :hidden="queryTeamObjType"  placeholder="考核对象名称" name="objIds" ctype="yufp-scheme-team-selectors" :params="queryParams">
+      </yu-xform-item>
+      <yu-xform-item :hidden="queryOrgObjType"  placeholder="考核对象名称" name="objIds" ctype="yufp-scheme-org-selectors" :params="queryParams">
+      </yu-xform-item>
+
+      </yu-xform-group>
+      <div class="button-group" style="float: right;">
+        <el-button type="primary" @click="queryFn">查询</el-button>
+        <el-button type="primary" @click="resetFn">重置</el-button>
+
+      </div>
+  </yu-xform>
+  <div class="yu-toolBar" style="margin-top: 20px;">
+    <yu-button-group>
+      <yu-button icon="plus" @click="inportExcel">导入</yu-button>
+      <yu-button icon="plus" @click="exportExcel">导出模板</yu-button>
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" :data-url="dataUrl" :default-load="false" v-show="hasDataFlag" style="width: 100%">
+  <yu-xtable-column label="年份" prop="years" width="100"></yu-xtable-column>
+  <yu-xtable-column label="考核方案" prop="schemeName" width="120"></yu-xtable-column>
+  <yu-xtable-column label="考核对象" prop="evlObjName" width="120"></yu-xtable-column>
+  <yu-xtable-column label="指标编号" prop="indexId" width="120"></yu-xtable-column>
+  <yu-xtable-column label="指标名称" prop="indexName" width="120"></yu-xtable-column>
+  <yu-xtable-column label="考核周期类型" prop="schemeCycleType" width="100" data-code="SCHEME_CYCLE_TYPE"></yu-xtable-column>
+  <yu-xtable-column label="考核对象类型" prop="evlObjType" width="100" data-code="OBJ"></yu-xtable-column>
+  <yu-xtable-column label="任务值（年）" prop="yearValue"></yu-xtable-column>
+  <yu-xtable-column label="上半年" prop="fhyValue" ></yu-xtable-column>
+  <yu-xtable-column label="下半年" prop="shyValue" ></yu-xtable-column>
+  <yu-xtable-column label="第一季度" prop="q1Value" ></yu-xtable-column>
+  <yu-xtable-column label="第二季度" prop="q2Value" ></yu-xtable-column>
+  <yu-xtable-column label="第三季度" prop="q3Value" ></yu-xtable-column>
+  <yu-xtable-column label="第四季度" prop="q4Value" ></yu-xtable-column>
+  <yu-xtable-column label="一月" prop="m1Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="二月" prop="m2Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="三月" prop="m3Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="四月" prop="m4Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="五月" prop="m5Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="六月" prop="m6Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="七月" prop="m7Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="八月" prop="m8Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="九月" prop="m9Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="十月" prop="m10Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="十一月" prop="m11Value" width="100"></yu-xtable-column>
+  <yu-xtable-column label="十二月" prop="m12Value" width="100"></yu-xtable-column>
+  </yu-xtable>
+  <div style="font-size: 16px;margin-top: 30px;color: red;text-align: center;" v-if="!hasDataFlag">暂无数据，请选择考核方案查询</div>
+  <yu-xdialog title="指标引用信息" :visible.sync="exportDialogVisible" width="900px">
+    <yu-xform ref="exportForm" v-model="exportformdata">
+      <yu-xform-group :column="2">
+        <yu-xform-item placeholder="年份" name="years" ctype="datepicker" type="year" :rules="rule[0]"></yu-xform-item>
+        <yu-xform-item placeholder="考核方案" name="schemeId" ctype="yufp-scheme-selector" :params="quoteSchemeSelParams" @select-fn="selectSchemeFn" :rules="rule[0]">
+        </yu-xform-item>
+        <yu-xform-item :hidden="mgrObjType"  placeholder="考核对象名称" name="mgrIds" ctype="yufp-mkt-selectors" :params="queryMktParams">
+        </yu-xform-item>
+        <yu-xform-item :hidden="teamObjType"  placeholder="考核对象名称" name="teamIds" ctype="yufp-scheme-team-selectors" :params="queryMktParams">
+        </yu-xform-item>
+        <yu-xform-item :hidden="orgObjType"  placeholder="考核对象名称" name="orgIds" ctype="yufp-scheme-org-selectors-org" :params="queryMktParams">
+        </yu-xform-item>
+        <yu-xform-item :hidden="indexFlag" placeholder="指标名称" name="indexIds" ctype="select" :options="indexOptions" multiple></yu-xform-item>
+      </yu-xform-group>
+
+      <div class="button-group" style="float: right;">
+        <el-button type="primary" @click="exportFn">确认</el-button>
+        <el-button type="primary" @click="exportDialogVisible = false">取消</el-button>
+
+      </div>
+    </yu-xform>
+  </yu-xdialog>
+  <yu-xdialog title="上传" :visible.sync="importShow"  width="40%">
+    
+    <yu-upload
+            class="upload-demo"
+            ref="upload"
+            :action="action"
+            :data="uploadData"
+            :headers="uploadHeaders"
+            :before-upload="beforeFileUpload"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :on-success="uploadSuccessFn"
+            :on-error="uploadErrorFn"
+            :on-timeout="uploadTimeoutFn"
+            :timeout="720000"
+            :show-file-list="false"
+            :auto-upload="true">
+      <yu-button slot="trigger" size="small" type="primary">选取文件</yu-button>
+      <div slot="tip" class="el-upload__tip">只能上传.xsl和.xslx结尾文件</div>
+    </yu-upload>
+  </yu-xdialog>
+</div>
+
+<style>
+  .el-form-item {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+</style>

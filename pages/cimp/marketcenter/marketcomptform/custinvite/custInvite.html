@@ -1,0 +1,72 @@
+<!--
+  @created by 罗顺 on 2018/11/16.
+  @description 营销组件FORM表单-客户筛选-客户邀约
+-->
+<div>
+  <el-collapse v-model="activeNames">
+    <el-collapse-item title="输入" name="1">
+    </el-collapse-item>
+    <el-collapse-item title="操作" name="2">
+      <el-form ref="myform" label-width="100px" :model="model" label-position="left" label-suffix=":">
+        <el-row :gutter="15">
+          <el-col :span="8">
+            <el-form-item label="客户群" required>
+              <el-input v-model="model.input1" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="16">
+            <el-form-item label="客户群描述" required>
+              <el-input v-model="model.input2" placeholder="请输入内容" :account="true" type="textarea" :rows="4"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-collapse-item>
+    <el-collapse-item title="输出" name="3">
+      <el-form ref="myform1" label-width="100px" :model="model1" label-position="left" label-suffix=":">
+        <el-row :gutter="15">
+          <el-col :span="8">
+            <el-form-item label="客户群名称">
+              <el-input v-model="model1.input1" :readonly="true" placeholder="客户群名称"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="客户数">
+              <el-input v-model="model1.input2" :readonly="true" placeholder="客户数"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="15">
+          <el-col :span="8">
+            <el-form-item label="客户查询条件">
+              <el-input v-model="model1.input3" :readonly="true" placeholder="客户查询条件"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <el-table border style="width: 100%" height="120">
+        <el-table-column type="index" label="序号" width="120"></el-table-column>
+        <el-table-column prop="data4" label="客户类型" width="120"></el-table-column>
+        <el-table-column prop="data5" label="客户状态" width="120"></el-table-column>
+        <el-table-column prop="data6" label="客户号" width="120"></el-table-column>
+        <el-table-column prop="data7" label="客户名称" width="120"></el-table-column>
+        <el-table-column prop="data8" label="证件类型" width="120"></el-table-column>
+        <el-table-column prop="data9" label="证件号码" width="120"></el-table-column>
+        <el-table-column prop="data3" label="主办机构" width="120"></el-table-column>
+        <el-table-column prop="data3" label="主办客户经理" width="120"></el-table-column>
+        <el-table-column prop="data3" label="AUM时点" width="120"></el-table-column>
+        <el-table-column prop="data3" label="贷款余额时点" width="120"></el-table-column>
+        <el-table-column prop="data3" label="存款余额时点" width="120"></el-table-column>
+        <el-table-column prop="data3" label="存款年日均" width="120"></el-table-column>
+        <el-table-column prop="data3" label="贷款年日均" width="120"></el-table-column>
+        <el-table-column prop="data3" label="上月存款贡献度" width="120"></el-table-column>
+        <el-table-column prop="data3" label="上月贷款贡献度" width="120"></el-table-column>
+        <el-table-column prop="data3" label="上月综合贡献度" width="120"></el-table-column>
+        <el-table-column prop="data3" label="中间业务持有产品数量" width="120"></el-table-column>
+        <el-table-column prop="data3" label="客户价值等级" width="120"></el-table-column>
+        <el-table-column prop="data3" label="客户服务等级"></el-table-column>
+      </el-table>
+      </el-tabs>
+    </el-collapse-item>
+  </el-collapse>
+</div>

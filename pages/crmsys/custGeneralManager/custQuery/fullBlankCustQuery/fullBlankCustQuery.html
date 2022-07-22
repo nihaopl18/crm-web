@@ -1,0 +1,61 @@
+<!--
+ * @create by: ranxun@yusys.com.cn
+ * @Date: 2021-08-10 18:03:36
+ * @update by: 
+ * @description: 
+-->
+<!-- 
+  @Created by taoting1 taoting1@yusys.com.cn on 2019-1-4 15:14:52.
+  @updated by
+  @description 全行客户查询
+-->
+<div>
+  <yu-xform ref="searchrefForm" v-model="searchformData" form-type="search" class="hide-form-search-btn" :custom-search-fn="searchFn" :custom-rest-fn="resetMainFn">
+    <yu-xform-group :column="6">
+      <yu-xform-item placeholder="客户类型" name="custType" ctype="select" data-code="CD0016" rules="required"></yu-xform-item>
+      <yu-xform-item placeholder="客户号" name="custId" rules="required" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户名称" name="custName" rules="required" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="searchformData.custType != '1'" data-code="CD0348"></yu-xform-item>
+      <!-- 对公证件类型 -->
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="searchformData.custType != '2'" data-code="CD0349"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="searchformData.custType != ''" data-code="CD0011"></yu-xform-item>
+      <yu-xform-item placeholder="证件类型" name="certType" ctype="select" :hidden="searchformData.custType != undefined" data-code="CD0011"></yu-xform-item>      
+      <yu-xform-item placeholder="证件号码" name="certNo" rules="required" ctype="input"></yu-xform-item>
+      <yu-xform-item placeholder="客户状态" name="custStatus" ctype="select" data-code="CD0019"></yu-xform-item>
+    </yu-xform-group>
+    <div slot="custom" class="yu-grpButton" style="text-align: right;">
+      <yu-button icon="search" type="primary" @click="searchFn">查询</yu-button>
+      <yu-button icon="yx-loop2" type="primary" @click="resetMainFn">重置</yu-button>
+    </div>
+  </yu-xform>
+  <div class="yu-toolBar">
+    <yu-button-group>
+      <yu-button icon="document" @click="infoFn">简版客户视图</yu-button>
+      <!-- <yu-button icon="document" @click="opencustViewFn">标准客户视图</yu-button> -->
+      <!-- <yu-button icon="document" @click="openpercustViewFn">零售客户视图</yu-button>
+      <yu-button icon="document" @click="openorgcustViewFn">对公客户视图</yu-button> -->
+    </yu-button-group>
+  </div>
+  <yu-xtable ref="refTable" @contextmenu.prevent.stop.native class="permitSelect" row-number :data-url="dataUrl" :default-load="false" :highlight-current-row="true" @row-dblclick="showCustViewPortFn">
+    <yu-xtable-column label="客户类型" prop="custType" width="120" data-code="CD0016"></yu-xtable-column>
+    <yu-xtable-column label="客户状态" prop="custStatus" width="80" data-code="CD0019"></yu-xtable-column>
+    <yu-xtable-column label="客户号" prop="custId" width="120"></yu-xtable-column>
+    <yu-xtable-column label="客户名称" prop="custName" width="180"></yu-xtable-column>
+    <yu-xtable-column label="证件类型" prop="certType" width="120" data-code="CD0011"></yu-xtable-column>
+    <yu-xtable-column label="证件号码" prop="certNo" width="180"></yu-xtable-column>
+    <yu-xtable-column label="主办机构" prop="orgName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="主办客户经理" prop="userName" width="120"></yu-xtable-column>
+    <yu-xtable-column label="客户价值等级" prop="valueLev"  data-code="CD0243"></yu-xtable-column>
+    <yu-xtable-column label="客户服务等级" prop="servLev"  data-code="CD0032"></yu-xtable-column>
+  </yu-xtable>
+</div>
+<style type="text/css">
+  .permitSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+</style>

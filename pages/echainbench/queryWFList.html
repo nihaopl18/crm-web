@@ -1,0 +1,7 @@
+
+<!-- 必须全局拥有唯一的id -->
+<div id="queryWFList">
+    <el-form-q form="query" :field-data="queryFields" search-table="WFList" :buttons="WFListButtons"></el-form-q>
+    <el-table-x ref="WFList"  :data-url="urls.dataUrl" :base-params="dataParams" :table-columns="tableColumns"
+               ></el-table-x>
+</div>
